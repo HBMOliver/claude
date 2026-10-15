@@ -1,0 +1,1065 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SocialStream — Interest media ügynökség</title>
+<meta name="description" content="A social media meghalt. Az érdeklődés vette át a helyét. A SocialStream interest media ügynökség: videó tartalom, social jelenlét és performance hirdetések egy growth rendszerben.">
+<meta name="theme-color" content="#1f3fff">
+<meta property="og:title" content="SocialStream — Interest media">
+<meta property="og:description" content="A social media meghalt. Az érdeklődés vette át a helyét. Mi ebben a korban győzünk.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%231f3fff'/><text x='16' y='24' font-family='Arial Narrow,Arial,sans-serif' font-weight='900' font-size='20' text-anchor='middle' fill='%23ffffff'>S</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/hero-cut.webp">
+<link rel="stylesheet" href="scrollcraft.css">
+<style>
+  /* Gallery wall: one cobalt, cool paper, true ink. Condensed Archivo shouts, Geist explains, Geist Mono counts.
+     Photography is black and white so the cobalt is the only colour on the page. */
+  :root {
+    --paper: #f1f0ec;
+    --paper-2: #e6e5df;
+    --ink: #0e0f11;
+    --gray: #585a60;
+    --line: #d3d2cb;
+    --cobalt: #1f3fff;
+    --cobalt-d: #1532d9;
+    --white: #ffffff;
+
+    --sc-canvas: var(--paper);
+    --sc-ink: var(--ink);
+    --sc-ink-soft: var(--gray);
+    --sc-accent: var(--cobalt);
+    --sc-hairline: var(--line);
+    --f-disp: "Archivo", "Arial Narrow", Arial, sans-serif;
+    --f-text: "Geist", system-ui, -apple-system, sans-serif;
+    --f-mono: "Geist Mono", ui-monospace, Menlo, monospace;
+    --sc-font-display: var(--f-disp);
+    --sc-font-text: var(--f-text);
+    --rail: 0px;
+    --mx: 0; --my: 0;
+    color-scheme: light;
+  }
+  @media (min-width: 1100px) { :root { --rail: 6.5rem; } }
+
+  html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--f-text); font-size: var(--sc-t-base); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--cobalt); outline-offset: 3px; }
+  ::selection { background: var(--cobalt); color: var(--white); }
+  .sc-grain { opacity: 0.05; }
+
+  /* Themes: each section owns its wall. Restate color with the tokens. */
+  .t-paper { background: var(--paper); color: var(--ink); --fg: var(--ink); --fg-soft: var(--gray); --hl: var(--line); --acc: var(--cobalt); }
+  .t-paper2 { background: var(--paper-2); color: var(--ink); --fg: var(--ink); --fg-soft: var(--gray); --hl: #c9c8c0; --acc: var(--cobalt); }
+  .t-ink { background: var(--ink); color: var(--paper); --fg: var(--paper); --fg-soft: #a9abb2; --hl: rgb(241 240 236 / 0.16); --acc: #8fa0ff; }
+  .t-cobalt { background: var(--cobalt); color: var(--white); --fg: var(--white); --fg-soft: #d5dbff; --hl: rgb(255 255 255 / 0.28); --acc: var(--white); }
+  .t-ink :focus-visible, .t-cobalt :focus-visible { outline-color: var(--white); }
+  .t-cobalt ::selection { background: var(--white); color: var(--cobalt); }
+
+  main { padding-left: var(--rail); }
+  main > section { position: relative; }
+  .wrap { width: 100%; max-width: 92rem; margin-inline: auto; padding-inline: max(var(--sc-gutter), env(safe-area-inset-left)); box-sizing: border-box; }
+  .sec { padding-block: clamp(5rem, 10vw, 9rem); }
+  .g12 { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(1rem, 2vw, 2rem); }
+
+  .disp { font-family: var(--f-disp); font-stretch: 62%; font-weight: 800; text-transform: uppercase; line-height: 0.86; letter-spacing: -0.005em; margin: 0; text-wrap: balance; }
+  .h2 { font-size: clamp(3.2rem, 1.4rem + 7.2vw, 9.5rem); }
+  .h3 { font-size: clamp(2.2rem, 1.2rem + 3.6vw, 4.6rem); }
+  .mono { font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  .chap { display: flex; gap: 1.1rem; align-items: baseline; margin: 0 0 var(--sc-6); color: var(--fg-soft); }
+  .chap b { color: var(--acc); font-weight: 500; }
+  .lede { margin: var(--sc-5) 0 0; max-width: 50ch; font-size: var(--sc-t-lg); line-height: 1.5; color: var(--fg-soft); text-wrap: pretty; }
+  .small { font-size: var(--sc-t-xs); color: var(--fg-soft); }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.7em; padding: 1.05em 1.6em; border: 0; border-radius: 0; cursor: pointer; white-space: nowrap; text-decoration: none;
+         font: 600 var(--sc-t-sm)/1 var(--f-text); letter-spacing: 0.01em;
+         transition: transform 140ms var(--sc-ease-out), background-color 160ms var(--sc-ease-out), color 160ms var(--sc-ease-out), box-shadow 160ms var(--sc-ease-out); }
+  .btn svg { width: 1em; height: 1em; transition: transform 160ms var(--sc-ease-out); }
+  .btn--solid { background: var(--fg); color: var(--cobalt); }
+  .t-paper .btn--solid, .t-paper2 .btn--solid { background: var(--cobalt); color: var(--white); }
+  .t-ink .btn--solid { background: var(--paper); color: var(--ink); }
+  .btn--line { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1px var(--fg); }
+  @media (hover: hover) and (pointer: fine) {
+    .btn--solid:hover { background: var(--ink); color: var(--white); }
+    .t-ink .btn--solid:hover { background: var(--cobalt); color: var(--white); }
+    .btn--line:hover { background: var(--fg); color: var(--cobalt); }
+    .t-paper .btn--line:hover, .t-paper2 .btn--line:hover { color: var(--paper); }
+    .t-ink .btn--line:hover { color: var(--ink); }
+    .btn:hover svg { transform: translateX(3px); }
+  }
+  .btn:active { transform: scale(0.97); }
+
+  /* ---------- chrome: top bar, chapter rail, mobile index ---------- */
+  .bar { position: fixed; inset: 0 0 auto 0; z-index: 70; display: flex; align-items: center; gap: var(--sc-4);
+         padding: max(12px, env(safe-area-inset-top)) max(var(--sc-gutter), env(safe-area-inset-right)) 12px calc(var(--rail) + max(var(--sc-gutter), env(safe-area-inset-left)));
+         color: var(--white); transition: background-color 240ms var(--sc-ease-out), color 240ms var(--sc-ease-out), box-shadow 240ms var(--sc-ease-out); }
+  .bar.is-stuck { background: rgb(241 240 236 / 0.9); color: var(--ink); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 1px 0 var(--line); }
+  .mark { margin-right: auto; text-decoration: none; font: 800 1.15rem/1 var(--f-disp); font-stretch: 100%; letter-spacing: -0.02em; text-transform: uppercase; padding: 8px 0; }
+  .mark span { font-stretch: 62%; font-weight: 300; }
+  .lang { display: flex; box-shadow: inset 0 0 0 1px currentColor; }
+  .lang button { border: 0; background: none; cursor: pointer; padding: 8px 10px; font: 500 0.7rem/1 var(--f-mono); letter-spacing: 0.06em; color: inherit; }
+  .lang button[aria-pressed="true"] { background: currentColor; }
+  .lang button[aria-pressed="true"] span { color: var(--cobalt); }
+  .bar.is-stuck .lang button[aria-pressed="true"] span { color: var(--paper); }
+  .bar .cta { padding: 0.85em 1.15em; background: var(--white); color: var(--cobalt); }
+  .bar.is-stuck .cta { background: var(--cobalt); color: var(--white); }
+  @media (hover: hover) and (pointer: fine) { .bar .cta:hover { background: var(--ink); color: var(--white); } }
+  .bar.menu-open { background: transparent; box-shadow: none; color: var(--white); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .bar.menu-open .lang button[aria-pressed="true"] span { color: var(--cobalt); }
+  .menu-btn { display: none; border: 0; background: none; cursor: pointer; width: 44px; height: 44px; position: relative; }
+  .menu-btn::before, .menu-btn::after { content: ""; position: absolute; left: 10px; right: 10px; height: 2px; background: currentColor; transition: transform 200ms var(--sc-ease-out); }
+  .menu-btn::before { top: 17px; } .menu-btn::after { top: 25px; }
+  .menu-btn[aria-expanded="true"]::before { transform: translateY(4px) rotate(45deg); }
+  .menu-btn[aria-expanded="true"]::after { transform: translateY(-4px) rotate(-45deg); }
+
+  .rail { position: fixed; z-index: 60; left: 0; top: 0; bottom: 0; width: var(--rail); display: none; flex-direction: column; justify-content: center;
+          padding-left: max(1.4rem, env(safe-area-inset-left)); color: var(--ink); }
+  .rail ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.35rem; }
+  .rail a { display: flex; align-items: center; gap: 0.55rem; text-decoration: none; padding: 0.35rem 0; font: 500 0.72rem/1 var(--f-mono); letter-spacing: 0.04em; opacity: 0.55; transition: opacity 200ms var(--sc-ease-out); }
+  .rail a::before { content: ""; width: 0.9rem; height: 1px; background: currentColor; transition: width 260ms var(--sc-ease-out); }
+  .rail a[aria-current="true"] { opacity: 1; }
+  .rail a[aria-current="true"]::before { width: 1.8rem; }
+  @media (hover: hover) and (pointer: fine) { .rail a:hover { opacity: 1; } }
+  @media (min-width: 1100px) { .rail { display: flex; } }
+
+  .sheet { position: fixed; inset: 0; z-index: 65; background: var(--cobalt); color: var(--white); display: flex; flex-direction: column; justify-content: center;
+           padding: 6rem max(var(--sc-gutter), env(safe-area-inset-right)) 3rem max(var(--sc-gutter), env(safe-area-inset-left)); }
+  .sheet[hidden] { display: none; }
+  .sheet ol { list-style: none; margin: 0; padding: 0; }
+  .sheet a { display: flex; align-items: baseline; gap: 1rem; text-decoration: none; padding: 0.35rem 0; font: 800 clamp(2.4rem, 11vw, 4rem)/0.95 var(--f-disp); font-stretch: 62%; text-transform: uppercase; }
+  .sheet a span { font: 500 0.75rem/1 var(--f-mono); }
+
+  /* ---------- 00 · hero ---------- */
+  .hero [data-sc-stage] { overflow: hidden; }
+  .plane { position: absolute; pointer-events: none; will-change: transform; }
+  .p-stream { left: -2vw; right: -2vw; bottom: -4vh; z-index: 1; transform: translate3d(calc(var(--mx) * -10px), calc(var(--sc-p, 0) * -6vh), 0); }
+  .p-stream span { display: block; font: 800 36vw/0.8 var(--f-disp); font-stretch: 62%; text-transform: uppercase; letter-spacing: -0.01em; color: transparent;
+                   -webkit-text-stroke: 1px rgb(255 255 255 / 0.28); white-space: nowrap; }
+  .p-man { z-index: 3; right: 3vw; bottom: 0; height: 90vh; transform-origin: 50% 100%;
+           transform: translate3d(calc(var(--mx) * -22px), 0, 0) scale(calc(1 + var(--sc-p, 0) * 0.06)); }
+  .p-man img { height: 100%; width: auto; }
+  .hero-type { position: absolute; z-index: 2; left: max(var(--sc-gutter), env(safe-area-inset-left)); top: 17vh;
+               transform: translate3d(calc(var(--mx) * -8px), calc(var(--sc-p, 0) * -10vh), 0); }
+  .hero-type .kick { margin: 0 0 1.1rem; color: var(--fg-soft); }
+  h1.title { margin: 0; font: 800 clamp(3.4rem, 0.6rem + 7.4vw, 9.6rem)/0.84 var(--f-disp); font-stretch: 62%; text-transform: uppercase; letter-spacing: -0.005em; }
+  .board { display: flex; gap: 0.06em; margin-bottom: 0.06em; cursor: pointer; background: none; border: 0; padding: 0; color: inherit; font: inherit; }
+  .board .cell { position: relative; width: 0.62em; height: 0.98em; display: grid; place-items: center; background: #1229b8;
+                 box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12), 0 0.04em 0.08em rgb(0 0 40 / 0.35); overflow: hidden; }
+  .board .cell::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: max(1px, 0.012em); background: rgb(0 0 50 / 0.55); }
+  .board .cell span { display: block; line-height: 1; transform: translateY(0.02em); }
+  .board .cell.flip span { animation: flap 70ms linear; }
+  @keyframes flap { 0% { transform: translateY(-0.12em) scaleY(0.6); opacity: 0.4; } 100% { transform: translateY(0.02em); opacity: 1; } }
+  .media-word { display: block; padding-left: 0.02em; }
+  .hero-copy { position: absolute; z-index: 4; left: max(var(--sc-gutter), env(safe-area-inset-left)); bottom: clamp(2rem, 8vh, 5rem); max-width: min(32rem, 42vw); }
+  .hero-copy .sub { margin: 0; font: 600 var(--sc-t-xl)/1.15 var(--f-disp); font-stretch: 88%; letter-spacing: -0.01em; text-wrap: balance; }
+  .hero-copy .ctas { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: var(--sc-5); }
+  .replay { position: absolute; z-index: 4; right: max(var(--sc-gutter), env(safe-area-inset-right)); bottom: clamp(2rem, 8vh, 5rem); color: var(--fg-soft); background: none; border: 0; cursor: pointer; padding: 10px 0; }
+
+  /* ---------- ticker ---------- */
+  .ticker { overflow: hidden; padding: 1.1rem 0; }
+  .ticker .track { display: inline-flex; align-items: baseline; gap: 3.5rem; padding-right: 3.5rem; white-space: nowrap; animation: mq 50s linear infinite; }
+  .ticker b { font: 800 1.9rem/1 var(--f-disp); font-stretch: 62%; letter-spacing: 0; margin-right: 0.5rem; color: var(--white); }
+  .ticker span { color: #a9abb2; }
+  .ticker i { font-style: normal; color: #8fa0ff; }
+  .ticker:hover .track { animation-play-state: paused; }
+  @keyframes mq { to { transform: translateX(-50%); } }
+
+  /* ---------- 01 · philosophy ---------- */
+  .phil .h2 { grid-column: 1 / -1; }
+  .phil .c1 { grid-column: 1 / span 5; margin-top: var(--sc-7); }
+  .phil .c2 { grid-column: 7 / span 5; margin-top: var(--sc-7); }
+  .phil p { margin: 0; text-wrap: pretty; }
+  .phil .c1 p { font-size: var(--sc-t-lg); line-height: 1.5; }
+  .phil .c2 p { color: var(--gray); }
+  .namebox { grid-column: 1 / -1; margin-top: clamp(4rem, 9vw, 8rem); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: inherit; background: var(--cobalt); color: var(--white); }
+  .namebox .q { grid-column: 1 / span 8; padding: clamp(2rem, 5vw, 4.5rem); }
+  .namebox .q p { margin: 0; font: 800 clamp(2.2rem, 1rem + 4vw, 5.4rem)/0.9 var(--f-disp); font-stretch: 62%; text-transform: uppercase; text-wrap: balance; }
+  .namebox .q p + p { margin-top: var(--sc-5); font: 400 var(--sc-t-base)/1.55 var(--f-text); text-transform: none; color: #dfe3ff; max-width: 48ch; }
+  .namebox .w { grid-column: 9 / span 4; position: relative; overflow: hidden; border-left: 1px solid rgb(255 255 255 / 0.25); display: grid; place-items: center; padding: 2rem; }
+  .namebox .w span { font: 800 clamp(1.6rem, 0.8rem + 1.6vw, 2.6rem)/1 var(--f-disp); font-stretch: 125%; text-transform: uppercase; letter-spacing: -0.02em; text-align: center; }
+  .namebox .w s { display: block; opacity: 0.55; text-decoration-thickness: 3px; }
+
+  /* ---------- laws: a sideways ride ---------- */
+  .laws [data-sc-stage] { overflow: hidden; display: flex; align-items: stretch; }
+  .laws .track { display: flex; height: 100%; padding-right: var(--rail); }
+  .panel { flex: none; width: calc(100vw - var(--rail)); height: 100%; box-sizing: border-box; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(1rem, 2vw, 2rem);
+           align-content: center; padding: 6rem max(var(--sc-gutter), env(safe-area-inset-right)) 4rem max(var(--sc-gutter), env(safe-area-inset-left)); }
+  .panel .mono { grid-column: 1 / -1; color: var(--fg-soft); margin: 0 0 var(--sc-5); }
+  .panel .mono b { color: var(--acc); font-weight: 500; }
+  .panel h3 { grid-column: 1 / span 11; font-size: clamp(3rem, 1rem + 8.4vw, 11rem); }
+  .panel p { grid-column: 7 / span 5; margin: var(--sc-6) 0 0; font-size: var(--sc-t-lg); line-height: 1.5; color: var(--fg-soft); text-wrap: pretty; }
+
+  /* ---------- 02 · simulator ---------- */
+  .sim .intro { grid-column: 1 / span 5; position: sticky; top: 14vh; align-self: start; }
+  .sim .stage { grid-column: 7 / span 6; display: flex; flex-direction: column; align-items: center; gap: var(--sc-5); }
+  .modes { display: grid; grid-template-columns: 1fr 1fr; width: min(26rem, 100%); box-shadow: inset 0 0 0 1px var(--hl); }
+  .modes button { border: 0; background: none; cursor: pointer; padding: 0.95em 0.6em; text-align: left; color: var(--fg-soft); transition: background-color 200ms var(--sc-ease-out), color 200ms var(--sc-ease-out); }
+  .modes button b { display: block; font: 800 1.35rem/1 var(--f-disp); font-stretch: 62%; text-transform: uppercase; color: inherit; }
+  .modes button span { font: 500 0.66rem/1.3 var(--f-mono); text-transform: uppercase; letter-spacing: 0.04em; }
+  .modes button[aria-pressed="true"] { background: var(--cobalt); color: var(--white); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; min-height: 2.4rem; transition: opacity 200ms var(--sc-ease-out); }
+  .chips[aria-disabled="true"] { opacity: 0.3; pointer-events: none; }
+  .chip { border: 0; cursor: pointer; padding: 0.6em 0.95em; font: 500 0.72rem/1 var(--f-mono); letter-spacing: 0.04em; text-transform: uppercase;
+          background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1px var(--hl); transition: background-color 160ms var(--sc-ease-out), color 160ms var(--sc-ease-out); }
+  .chip[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: none; }
+  .chip:active { transform: scale(0.97); }
+  .phone { width: min(22rem, 100%); height: min(39rem, 76svh); background: #000; padding: 0.55rem; border-radius: 2.4rem; box-shadow: 0 0 0 1px rgb(255 255 255 / 0.14), 0 40px 80px -40px rgb(31 63 255 / 0.55); }
+  .screen { height: 100%; border-radius: 1.95rem; overflow: hidden; background: var(--paper); color: var(--ink); display: flex; flex-direction: column; }
+  .screen header { flex: none; display: flex; justify-content: space-between; align-items: center; padding: 0.95rem 1rem 0.7rem; border-bottom: 1px solid var(--line); }
+  .screen header b { font: 800 1.15rem/1 var(--f-disp); font-stretch: 62%; text-transform: uppercase; }
+  .screen header span { color: var(--cobalt); }
+  .posts { list-style: none; margin: 0; padding: 0.55rem 0.6rem 1rem; overflow-y: auto; flex: 1; scrollbar-width: none; }
+  .posts::-webkit-scrollbar { display: none; }
+  .post { background: var(--white); margin-bottom: 0.55rem; box-shadow: 0 1px 0 var(--line); }
+  .post.is-hidden { display: none; }
+  .post .who { display: flex; align-items: center; gap: 0.55rem; padding: 0.6rem 0.7rem; }
+  .post .av { flex: none; width: 1.85rem; height: 1.85rem; border-radius: 50%; display: grid; place-items: center; font: 800 0.9rem/1 var(--f-disp); color: var(--white); }
+  .post .nm { display: block; font-size: 0.78rem; font-weight: 600; line-height: 1.2; }
+  .post .tag { display: block; font: 500 0.6rem/1.3 var(--f-mono); text-transform: uppercase; letter-spacing: 0.03em; color: var(--gray); }
+  .post .tag.rec { color: var(--cobalt); }
+  .post .rank { margin-left: auto; font: 800 1.1rem/1 var(--f-disp); font-stretch: 62%; color: var(--cobalt); }
+  .post .media { aspect-ratio: 16 / 10; background: var(--line) center / cover; }
+  .post .media.reel { position: relative; aspect-ratio: 16 / 11; display: grid; place-items: center; background: var(--ink); color: var(--white); }
+  .post .media.reel i { width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 1px solid rgb(255 255 255 / 0.6); display: grid; place-items: center; font-style: normal; font-size: 0.75rem; }
+  .post .media.reel em { position: absolute; left: 0.7rem; right: 0.7rem; bottom: 0.6rem; font: 800 1.05rem/1 var(--f-disp); font-style: normal; font-stretch: 62%; text-transform: uppercase; }
+  .post p { margin: 0; padding: 0.55rem 0.7rem 0.7rem; font-size: 0.8rem; line-height: 1.45; }
+  .post .q { height: 3px; margin: 0 0.7rem 0.7rem; background: var(--line); }
+  .post .q span { display: block; height: 100%; background: var(--cobalt); width: calc(var(--q) * 100%); }
+  .verdict { width: min(26rem, 100%); margin: 0; padding: 1rem 1.15rem; box-shadow: inset 0 0 0 1px var(--hl); font-size: var(--sc-t-sm); line-height: 1.5; min-height: 4.6rem; text-wrap: pretty; }
+  .verdict b { color: var(--white); font-weight: 600; }
+
+  /* ---------- 03 · system board ---------- */
+  .sys .head { grid-column: 1 / -1; margin-bottom: var(--sc-8); }
+  .board-list { grid-column: 1 / span 7; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+  .board-list button { width: 100%; display: grid; grid-template-columns: 3rem minmax(0, 1fr) auto; align-items: center; gap: 1rem; text-align: left; border: 0; border-bottom: 1px solid var(--line); background: none; cursor: pointer;
+                       padding: 1.15rem 0.6rem; transition: background-color 200ms var(--sc-ease-out), color 200ms var(--sc-ease-out), padding 0ms; }
+  .board-list .n { font: 500 0.75rem/1 var(--f-mono); color: var(--gray); }
+  .board-list .t { font: 800 clamp(1.7rem, 1rem + 2vw, 2.9rem)/0.95 var(--f-disp); font-stretch: 62%; text-transform: uppercase; }
+  .board-list .s { font: 500 0.66rem/1 var(--f-mono); text-transform: uppercase; letter-spacing: 0.04em; color: var(--cobalt); opacity: 0; transition: opacity 200ms var(--sc-ease-out); }
+  .board-list button.rel .s { opacity: 1; }
+  .board-list button.rel .t { color: var(--cobalt); }
+  .board-list button[aria-selected="true"] { background: var(--cobalt); color: var(--white); }
+  .board-list button[aria-selected="true"] .n, .board-list button[aria-selected="true"] .s { color: #dfe3ff; }
+  @media (hover: hover) and (pointer: fine) { .board-list button:not([aria-selected="true"]):hover { background: var(--paper-2); } }
+  .svc-panel { grid-column: 9 / span 4; align-self: start; position: sticky; top: 16vh; }
+  .svc-panel .big { font: 800 clamp(6rem, 4rem + 6vw, 11rem)/0.8 var(--f-disp); font-stretch: 62%; color: var(--cobalt); margin: 0; }
+  .svc-panel h3 { margin: var(--sc-5) 0 0; font-size: clamp(1.9rem, 1rem + 1.7vw, 3.1rem); overflow-wrap: break-word; hyphens: auto; }
+  .svc-panel p { margin: var(--sc-4) 0 0; color: var(--gray); font-size: var(--sc-t-lg); line-height: 1.5; text-wrap: pretty; }
+  .svc-panel .links { margin-top: var(--sc-6); padding-top: var(--sc-4); border-top: 1px solid var(--line); font-size: var(--sc-t-sm); }
+  .svc-panel.swap > * { animation: rise 340ms var(--sc-ease-out) both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+
+  /* ---------- 04 · results wall ---------- */
+  .res .head { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: end; gap: 2rem; flex-wrap: wrap; margin-bottom: var(--sc-7); }
+  .wall { grid-column: 1 / -1; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+  .wall button { width: 100%; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 5fr) auto; gap: 1.5rem; align-items: center; text-align: left; border: 0; border-bottom: 1px solid var(--hl);
+                 background: none; cursor: pointer; padding: clamp(1rem, 2vw, 1.6rem) 0.8rem; color: inherit; transition: background-color 220ms var(--sc-ease-out), color 220ms var(--sc-ease-out); }
+  .wall .num { font: 800 clamp(4.5rem, 2rem + 9vw, 12rem)/0.8 var(--f-disp); font-stretch: 62%; color: var(--cobalt); font-variant-numeric: lining-nums tabular-nums; transition: color 220ms var(--sc-ease-out); }
+  .wall .num small { font-size: 0.42em; margin-left: 0.06em; }
+  .wall .meta { display: block; color: var(--gray); margin-bottom: 0.5rem; }
+  .wall .desc { display: block; font-size: var(--sc-t-lg); line-height: 1.35; max-width: 32ch; }
+  .wall .open { font: 500 0.72rem/1 var(--f-mono); text-transform: uppercase; letter-spacing: 0.04em; }
+  .wall .thumb { position: fixed; pointer-events: none; width: 18rem; aspect-ratio: 16 / 9.4; object-fit: cover; z-index: 50; opacity: 0; transform: translate(-50%, -50%) scale(0.95);
+                 transition: opacity 200ms var(--sc-ease-out), transform 260ms var(--sc-ease-out); mix-blend-mode: multiply; }
+  @media (hover: hover) and (pointer: fine) {
+    .wall button:hover { background: var(--cobalt); color: var(--white); }
+    .wall button:hover .num, .wall button:hover .meta { color: var(--white); }
+  }
+  dialog.case { width: min(48rem, calc(100vw - 2rem)); max-height: calc(100svh - 2rem); border: 0; padding: 0; background: var(--cobalt); color: var(--white); overflow: auto; box-shadow: 0 60px 120px -40px rgb(0 0 0 / 0.6); }
+  dialog.case::backdrop { background: rgb(14 15 17 / 0.72); }
+  dialog.case[open] { animation: rise 300ms var(--sc-ease-out); }
+  dialog.case img { width: 100%; aspect-ratio: 16 / 7; object-fit: cover; }
+  dialog.case .in { padding: 2rem clamp(1.25rem, 4vw, 2.75rem) 2.75rem; }
+  dialog.case .num { font: 800 clamp(5rem, 3rem + 7vw, 9rem)/0.8 var(--f-disp); font-stretch: 62%; margin: 1rem 0 0; }
+  dialog.case h3 { margin: 0.6rem 0 0; }
+  dialog.case dl { display: grid; grid-template-columns: 10rem minmax(0, 1fr); gap: 0.9rem 1.5rem; margin: 2rem 0 0; padding-top: 1.5rem; border-top: 1px solid rgb(255 255 255 / 0.3); }
+  dialog.case dt { color: #dfe3ff; padding-top: 0.15rem; }
+  dialog.case dd { margin: 0; }
+  dialog.case blockquote { margin: 2rem 0 0; font: 600 var(--sc-t-xl)/1.2 var(--f-disp); font-stretch: 88%; letter-spacing: -0.01em; }
+  dialog.case .act { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 2.2rem; }
+  dialog.case .act .btn--solid { background: var(--white); color: var(--cobalt); }
+  dialog.case .act .btn--line { color: var(--white); box-shadow: inset 0 0 0 1px var(--white); }
+  dialog.case .x { position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; border: 0; cursor: pointer; background: var(--white); color: var(--cobalt); font-size: 1.3rem; }
+
+  /* ---------- 05 · test ---------- */
+  .quiz .intro { grid-column: 1 / span 5; }
+  .qbox { grid-column: 7 / span 6; min-height: 30rem; display: flex; flex-direction: column; }
+  .qprog { display: flex; gap: 4px; margin-bottom: 2rem; }
+  .qprog span { flex: 1; height: 4px; background: rgb(255 255 255 / 0.25); transition: background-color 240ms var(--sc-ease-out); }
+  .qprog span.on { background: var(--white); }
+  .qbox h3 { margin: 0.8rem 0 1.6rem; font-size: clamp(2rem, 1.2rem + 2.6vw, 3.6rem); }
+  .opts { display: grid; gap: 6px; }
+  .opt { text-align: left; border: 0; cursor: pointer; padding: 1.05rem 1.15rem; background: rgb(255 255 255 / 0.08); color: var(--white); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.35);
+         font-size: var(--sc-t-base); line-height: 1.4; display: flex; gap: 1rem; align-items: baseline; transition: background-color 160ms var(--sc-ease-out), color 160ms var(--sc-ease-out); }
+  .opt .k { font: 500 0.72rem/1 var(--f-mono); opacity: 0.7; }
+  @media (hover: hover) and (pointer: fine) { .opt:hover { background: var(--white); color: var(--cobalt); } }
+  .opt:active { transform: scale(0.99); }
+  .qres .score { margin: 0; font: 800 clamp(7rem, 5rem + 8vw, 13rem)/0.8 var(--f-disp); font-stretch: 62%; }
+  .qres .score small { font-size: 0.3em; opacity: 0.7; }
+  .qres p { margin: 0; color: #dfe3ff; font-size: var(--sc-t-lg); line-height: 1.5; text-wrap: pretty; }
+  .qbox .act { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: auto; padding-top: 2rem; }
+  .qbox .swap { animation: rise 300ms var(--sc-ease-out) both; display: flex; flex-direction: column; flex: 1; }
+  .qbox .back { margin-top: auto; padding-top: 1.5rem; }
+
+  /* ---------- fit ---------- */
+  .fit .head { grid-column: 1 / span 9; margin-bottom: var(--sc-8); }
+  .fit .col { grid-column: span 6; }
+  .fit h3 { margin: 0 0 1.2rem; font: 500 0.75rem/1 var(--f-mono); text-transform: uppercase; letter-spacing: 0.04em; }
+  .fit .yes h3 { color: #8fa0ff; } .fit .no h3 { color: var(--fg-soft); }
+  .fit ul { list-style: none; margin: 0; padding: 0; counter-reset: k; }
+  .fit li { counter-increment: k; display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); padding: 1rem 0; border-top: 1px solid var(--hl); font-size: var(--sc-t-lg); line-height: 1.4; text-wrap: pretty; }
+  .fit li::before { content: counter(k, decimal-leading-zero); font: 500 0.72rem/2 var(--f-mono); color: var(--fg-soft); }
+  .fit .no li { color: var(--fg-soft); text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: rgb(241 240 236 / 0.35); }
+  .fit .seal { grid-column: 1 / -1; margin-top: clamp(4rem, 8vw, 7rem); font-size: clamp(3rem, 1rem + 8vw, 10rem); text-align: center; color: var(--white); }
+  .fit .seal span { color: #8fa0ff; }
+
+  /* ---------- 06 · about ---------- */
+  .about .photo { grid-column: 1 / span 6; margin: 0; position: relative; }
+  .about .photo img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 35%; }
+  .about .photo figcaption { position: absolute; left: 0; bottom: 0; background: var(--cobalt); color: var(--white); padding: 0.7rem 1rem; }
+  .about .txt { grid-column: 8 / span 5; align-self: center; }
+  .about .txt p { margin: 1.2rem 0 0; color: var(--gray); text-wrap: pretty; }
+  .about .sig { margin-top: 2rem; font: 800 2.2rem/1 var(--f-disp); font-stretch: 62%; text-transform: uppercase; color: var(--ink); }
+  .team { grid-column: 1 / -1; margin-top: clamp(5rem, 10vw, 9rem); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1rem, 2vw, 2rem); }
+  .member .ph { position: relative; aspect-ratio: 3 / 4; background: var(--paper-2); overflow: hidden; }
+  .member .ph img { position: relative; width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; filter: grayscale(1) contrast(1.15); transition: transform 600ms var(--sc-ease-out); }
+  .member .ph .mono-l { position: absolute; inset: 0; display: grid; place-items: center; font: 800 9rem/1 var(--f-disp); font-stretch: 62%; color: var(--cobalt); }
+  @media (hover: hover) and (pointer: fine) { .member:hover .ph img { transform: scale(1.03); } }
+  .member h3 { margin: 1rem 0 0; font-size: 2.4rem; }
+  .member .role { margin: 0.4rem 0 0; color: var(--cobalt); }
+  .member p { margin: 0.7rem 0 0; color: var(--gray); font-size: var(--sc-t-sm); text-wrap: pretty; }
+  .shop { grid-column: 1 / -1; margin-top: clamp(4rem, 8vw, 7rem); position: relative; overflow: hidden; }
+  .shop img { width: 100%; aspect-ratio: 21 / 9; object-fit: cover; }
+  .shop p { position: absolute; left: 0; bottom: 0; margin: 0; background: var(--paper); padding: 1rem 1.2rem 0 0; font-size: clamp(2rem, 1rem + 3vw, 4rem); max-width: 16ch; }
+
+  /* ---------- voices ---------- */
+  .voices .wrap { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(1rem, 2vw, 2rem); }
+  .voices .chap { grid-column: 1 / -1; }
+  .vq { grid-column: 1 / span 10; min-height: 22rem; margin: 0; }
+  .vq p { margin: 0; font: 700 clamp(1.8rem, 0.9rem + 2.8vw, 3.8rem)/1.05 var(--f-disp); font-stretch: 75%; letter-spacing: -0.01em; text-wrap: pretty; }
+  .vq footer { margin-top: 1.6rem; display: flex; gap: 1rem; align-items: baseline; flex-wrap: wrap; }
+  .vq footer b { font-weight: 600; }
+  .vq footer span { color: var(--gray); }
+  .vq.swap > * { animation: rise 320ms var(--sc-ease-out) both; }
+  .vnav { grid-column: 1 / -1; display: flex; align-items: center; gap: 1rem; margin-top: 2rem; }
+  .vnav button { width: 52px; height: 52px; border: 0; cursor: pointer; background: var(--ink); color: var(--paper); font-size: 1.1rem; transition: background-color 160ms var(--sc-ease-out); }
+  @media (hover: hover) and (pointer: fine) { .vnav button:hover { background: var(--cobalt); } }
+  .vnav button:active { transform: scale(0.96); }
+  .vnav .count { color: var(--gray); }
+
+  /* ---------- 07 · audit ---------- */
+  .audit .head { grid-column: 1 / span 6; }
+  .audit .scar { margin: 2rem 0 0; display: inline-flex; gap: 0.6rem; padding: 0.8rem 1rem; background: var(--cobalt); color: var(--white); }
+  form.app { grid-column: 8 / span 5; display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem 1rem; align-content: start; }
+  .field { display: flex; flex-direction: column; gap: 0.45rem; min-width: 0; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { color: var(--gray); }
+  .field input, .field select, .field textarea { width: 100%; box-sizing: border-box; padding: 0.85rem 0; border: 0; border-bottom: 1px solid var(--ink); background: transparent; border-radius: 0;
+         font-size: var(--sc-t-base); caret-color: var(--cobalt); transition: border-color 160ms var(--sc-ease-out); }
+  .field textarea { min-height: 7rem; resize: vertical; line-height: 1.5; padding-top: 0.6rem; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-bottom: 2px solid var(--cobalt); }
+  .field [aria-invalid="true"] { border-bottom-color: #c4321d; }
+  .field .err { font-size: var(--sc-t-xs); color: #b42b18; min-height: 1em; }
+  .form-act { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: 0.6rem; }
+  .sent { grid-column: 1 / -1; margin: 0; padding: 1.2rem; background: var(--cobalt); color: var(--white); font-size: var(--sc-t-sm); }
+  .sent b { display: block; font: 800 1.6rem/1 var(--f-disp); font-stretch: 62%; text-transform: uppercase; margin-bottom: 0.4rem; }
+  .sent a { color: var(--white); }
+  .sent .btn { margin-top: 0.8rem; background: var(--white); color: var(--cobalt); }
+
+  /* ---------- footer: the name, wall to wall ---------- */
+  .foot { padding: clamp(4rem, 8vw, 7rem) 0 max(1.5rem, env(safe-area-inset-bottom)); overflow: hidden; }
+  .foot .giant { margin: 0; font: 800 15.6vw/0.8 var(--f-disp); font-stretch: 62%; text-transform: uppercase; letter-spacing: -0.01em; white-space: nowrap; color: var(--paper); }
+  .foot .giant span { color: var(--cobalt); }
+  .foot .meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem 2rem; margin-top: 2.5rem; padding-top: 1.2rem; border-top: 1px solid var(--hl); color: var(--fg-soft); }
+  .foot .meta a { color: var(--paper); }
+
+  /* ---------- phone art direction ---------- */
+  @media (max-width: 860px) {
+    .bar .cta { display: none; }
+    .menu-btn { display: block; }
+    .hero-type { top: calc(84px + env(safe-area-inset-top)); }
+    h1.title { font-size: 15.5vw; }
+    .p-man { top: 27svh; bottom: auto; right: 0; height: 45svh; transform-origin: 50% 0; }
+    .p-man img { -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 98%); mask-image: linear-gradient(to bottom, #000 72%, transparent 98%); }
+    .p-stream span { font-size: 60vw; }
+    .hero-copy { max-width: 62vw; bottom: 1.5rem; }
+    .hero-copy .sub { font-size: var(--sc-t-lg); }
+    .hero-copy .ctas { flex-direction: column; align-items: flex-start; }
+    .replay { display: none; }
+    .phil .c1, .phil .c2, .sim .intro, .sim .stage, .board-list, .svc-panel, .quiz .intro, .qbox, .fit .head, .fit .col, .about .photo, .about .txt, .audit .head, form.app, .vq { grid-column: 1 / -1; }
+    .phil .c2 { margin-top: var(--sc-5); }
+    .namebox .q, .namebox .w { grid-column: 1 / -1; }
+    .namebox .w { border-left: 0; border-top: 1px solid rgb(255 255 255 / 0.25); }
+    .panel h3, .panel p { grid-column: 1 / -1; }
+    .sim .intro, .svc-panel { position: static; }
+    .svc-panel { margin-top: var(--sc-7); }
+    .qbox { margin-top: var(--sc-6); min-height: 0; }
+    .wall button { grid-template-columns: 1fr; gap: 0.6rem; }
+    .fit .col.no { margin-top: var(--sc-7); }
+    .about .txt { margin-top: var(--sc-6); }
+    .team { grid-template-columns: 1fr; gap: 3rem; }
+    .shop img { aspect-ratio: 4 / 3; }
+    form.app { grid-template-columns: 1fr; margin-top: var(--sc-6); }
+    dialog.case dl { grid-template-columns: 1fr; gap: 0.2rem; }
+    dialog.case dd { margin-bottom: 0.8rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .plane, .hero-type { transform: none !important; }
+    .ticker .track { animation: none; }
+    html { scroll-behavior: auto; }
+    .svc-panel.swap > *, .qbox .swap, .vq.swap > *, dialog.case[open], .board .cell.flip span { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<span data-sc-progress></span>
+<div class="sc-grain" aria-hidden="true"></div>
+
+<header class="bar" id="bar">
+  <a class="mark" href="#top" aria-label="SocialStream">Social<span>Stream</span></a>
+  <div class="lang" role="group" aria-label="Nyelv / Language">
+    <button type="button" data-set-lang="hu" aria-pressed="true" lang="hu"><span>HU</span></button>
+    <button type="button" data-set-lang="en" aria-pressed="false" lang="en"><span>EN</span></button>
+  </div>
+  <a class="btn cta" href="#audit"><span data-en="Free audit">Ingyenes audit</span><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></a>
+  <button class="menu-btn" id="menubtn" type="button" aria-expanded="false" aria-controls="sheet" aria-label="Menü" data-en-aria="Menu"></button>
+</header>
+
+<nav class="rail" id="rail" aria-label="Fejezetek" data-en-aria="Chapters">
+  <ol>
+    <li><a href="#top" data-spy="top">00</a></li>
+    <li><a href="#filozofia" data-spy="filozofia">01</a></li>
+    <li><a href="#probald" data-spy="probald">02</a></li>
+    <li><a href="#rendszer" data-spy="rendszer">03</a></li>
+    <li><a href="#eredmenyek" data-spy="eredmenyek">04</a></li>
+    <li><a href="#teszt" data-spy="teszt">05</a></li>
+    <li><a href="#rolunk" data-spy="rolunk">06</a></li>
+    <li><a href="#audit" data-spy="audit">07</a></li>
+  </ol>
+</nav>
+
+<div class="sheet" id="sheet" hidden>
+  <ol>
+    <li><a href="#filozofia"><span>01</span><b data-en="Philosophy">Filozófia</b></a></li>
+    <li><a href="#probald"><span>02</span><b data-en="Try it">Próbáld ki</b></a></li>
+    <li><a href="#rendszer"><span>03</span><b data-en="System">Rendszer</b></a></li>
+    <li><a href="#eredmenyek"><span>04</span><b data-en="Results">Eredmények</b></a></li>
+    <li><a href="#teszt"><span>05</span><b data-en="The test">Teszt</b></a></li>
+    <li><a href="#rolunk"><span>06</span><b data-en="About">Rólunk</b></a></li>
+    <li><a href="#audit"><span>07</span><b data-en="Audit">Audit</b></a></li>
+  </ol>
+</div>
+
+<main id="top">
+
+  <!-- 00 · Hero: the departures board re-labels the category -->
+  <section class="hero t-cobalt" data-theme="dark" data-sc-act="pin" data-sc-span="1.3" data-spy-target="top">
+    <div data-sc-stage>
+      <div class="plane p-stream" aria-hidden="true"><span>Stream</span></div>
+      <div class="hero-type">
+        <p class="kick mono" data-en="SocialStream · Interest media agency · Est. 2022">SocialStream · Interest media ügynökség · Est. 2022</p>
+        <h1 class="title" aria-label="Interest media." data-en-aria="Interest media.">
+          <button class="board" id="board" type="button" aria-hidden="true" tabindex="-1"></button>
+          <span class="media-word" aria-hidden="true">Media.</span>
+        </h1>
+      </div>
+      <div class="plane p-man"><img src="assets/hero-cut.webp" width="1100" height="1514" alt="Olivér, a SocialStream alapítója" data-en-alt="Olivér, founder of SocialStream" fetchpriority="high"></div>
+      <div class="hero-copy" data-sc-cue="0 0.92 0">
+        <p class="sub" data-en="Social media is dead. Interest has taken its place. We win in this age.">A social media meghalt. Az érdeklődés vette át a helyét. Mi ebben a korban győzünk.</p>
+        <div class="ctas">
+          <a class="btn btn--solid" href="#audit"><span data-en="Request a free audit">Kérek ingyenes auditot</span><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></a>
+          <a class="btn btn--line" href="#probald"><span data-en="See the difference">Nézd meg a különbséget</span></a>
+        </div>
+      </div>
+      <button class="replay mono" id="replay" type="button" data-en="Flip again ↻">Újra ↻</button>
+    </div>
+  </section>
+
+  <!-- Ticker -->
+  <section class="ticker t-ink" data-theme="dark" aria-label="Eredmények röviden" data-en-aria="Results at a glance">
+    <div class="track">
+      <span><b>81×</b><span data-en="best ROAS">legjobb ROAS</span></span>
+      <span><b>79M Ft</b><span data-en="in one week">egy hét alatt</span></span>
+      <span><b>300M+ Ft</b><span data-en="budget managed">kezelt büdzsé</span></span>
+      <span><b>~5700</b><span data-en="webinar registrants">webinár jelentkező</span></span>
+      <i class="mono" data-en="Interest media, not social media">Interest media, nem social media</i>
+      <span class="mono" data-en="Tenerife · Budapest">Tenerife · Budapest</span>
+    </div><div class="track" aria-hidden="true">
+      <span><b>81×</b><span data-en="best ROAS">legjobb ROAS</span></span>
+      <span><b>79M Ft</b><span data-en="in one week">egy hét alatt</span></span>
+      <span><b>300M+ Ft</b><span data-en="budget managed">kezelt büdzsé</span></span>
+      <span><b>~5700</b><span data-en="webinar registrants">webinár jelentkező</span></span>
+      <i class="mono" data-en="Interest media, not social media">Interest media, nem social media</i>
+      <span class="mono" data-en="Tenerife · Budapest">Tenerife · Budapest</span>
+    </div>
+  </section>
+
+  <!-- 01 · Philosophy -->
+  <section class="sec phil t-paper" id="filozofia" data-theme="light" data-sc-act="flow">
+    <div class="wrap g12">
+      <p class="chap mono" style="grid-column:1/-1"><b>01</b><span data-en="Philosophy">Filozófia</span></p>
+      <h2 class="disp h2" data-sc-reveal="up" data-sc-reveal-at="0.04 0.2" data-en="Social media is dead. Interest has taken its place.">A social media meghalt. Az érdeklődés vette át a helyét.</h2>
+      <div class="c1" data-sc-in><p data-en="For ten years, what mattered was how many followers you had. That era is over. The feed no longer shows who you follow, but what genuinely interests you.">Tíz évig az számított, hány követőd van. Ez a kor véget ért. A feed már nem azt mutatja, kit követsz — hanem azt, ami valóban érdekel.</p></div>
+      <div class="c2" data-sc-in data-sc-stagger="80">
+        <p data-en="The algorithm redistributes every single impression: not on the basis of your past, but on whether you are interesting today. Most businesses still play by the old rules: post and hope.">Az algoritmus minden egyes megjelenést újraoszt: nem a múltad alapján, hanem aszerint, hogy ma érdekes vagy-e. A legtöbb vállalkozás még a régi kor szabályaival játszik: posztol és reménykedik.</p>
+        <p style="margin-top:1rem;color:var(--ink);font-weight:500" data-en="We don't build visibility, we build a system that turns interest into revenue. And it shows in every number.">Mi nem láthatóságot építünk, hanem rendszert, ami az érdeklődést bevétellé alakítja. És ez minden számon látszik.</p>
+      </div>
+      <div class="namebox" data-sc-reveal="up" data-sc-reveal-at="0.4 0.66">
+        <div class="q">
+          <p data-en="The stream stayed. What flows in it changed.">A stream maradt. Ami benne folyik, az változott.</p>
+          <p data-en="Yes, our name still says social. We kept it because the stream is still the place: the endless feed where your customer spends their day. What we rewrote are the rules of what gets into it.">Igen, a nevünkben még ott a social. Megtartottuk, mert a stream ma is ugyanaz a hely: a végtelen feed, ahol az ügyfeled a napját tölti. Azt írtuk újra, hogy mi kerül bele.</p>
+        </div>
+        <div class="w" aria-hidden="true"><span><s>Social</s>Interest<br>Stream</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The three laws, ridden sideways -->
+  <section class="laws" data-theme="dark" data-sc-act="pan" data-sc-span="3">
+    <div data-sc-stage>
+      <div class="track" data-sc-pan="0">
+        <article class="panel t-ink">
+          <p class="mono"><b>I.</b> <span data-en="The first law of the new age">Az új kor első törvénye</span></p>
+          <h3 class="disp" data-en="Follower count is a relic of the old age.">A követőszám a régi kor relikviája.</h3>
+          <p data-en="10,000 followers, 40 likes. Sound familiar? In the new age every post starts with a clean slate. What matters is not how many follow you, but how many watch to the end.">10 000 követő, 40 kedvelés — ismerős? Az új korban minden poszt tiszta lappal indul. Nem az számít, hányan követnek, hanem hogy hányan nézik végig.</p>
+        </article>
+        <article class="panel t-cobalt">
+          <p class="mono"><b>II.</b> <span data-en="The second law of the new age">Az új kor második törvénye</span></p>
+          <h3 class="disp" data-en="Attention cannot be bought. Only earned.">A figyelmet nem lehet megvenni. Csak kiérdemelni.</h3>
+          <p data-en="For every impression you compete with the best creators, not with your competitors. What is interesting, the platform carries to millions for free. What is boring, no budget can save.">Minden megjelenésért a legjobb alkotókkal versenyzel, nem a konkurenciáddal. Ami érdekes, azt a platform ingyen viszi el milliókhoz. Ami unalmas, azt büdzsével sem lehet megmenteni.</p>
+        </article>
+        <article class="panel t-paper">
+          <p class="mono"><b>III.</b> <span data-en="The third law of the new age">Az új kor harmadik törvénye</span></p>
+          <h3 class="disp" data-en="Whoever plays by the old rules loses.">Aki a régi szabályokkal játszik, veszít.</h3>
+          <p data-en="Posting and hoping was the old age's strategy. The new one: knowing from data what interests people, and building a system that turns interest into revenue.">Posztolni és reménykedni — ez volt a régi kor stratégiája. Az újé: adatból tudni, mi érdekli az embereket, és rendszert építeni, ami az érdeklődést bevétellé alakítja.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 · Try it -->
+  <section class="sec sim t-ink" id="probald" data-theme="dark" data-sc-act="flow">
+    <div class="wrap g12">
+      <div class="intro" data-sc-in data-sc-stagger="80">
+        <p class="chap mono"><b>02</b><span data-en="Try it">Próbáld ki</span></p>
+        <h2 class="disp h3" data-en="The same nine posts. Two ages.">Ugyanaz a kilenc poszt. Két korszak.</h2>
+        <p class="lede" data-en="Switch between the feed of 2014 and today's. Then tell the feed what you're interested in, and watch who wins: not the account with the most followers, but the most interesting post.">Válts a 2014-es és a mai feed között. Aztán mondd meg a feednek, mi érdekel, és nézd meg, ki nyer: nem a legtöbb követővel rendelkező fiók, hanem a legérdekesebb poszt.</p>
+        <p class="small" style="margin-top:1.5rem" data-en="Illustrative sample accounts and posts. The ranking is a simplified model of how interest-based feeds work.">Szemléltető minta: a fiókok és posztok kitaláltak. A rangsor az érdeklődés-alapú feedek egyszerűsített modellje.</p>
+      </div>
+      <div class="stage">
+        <div class="modes" role="group" aria-label="Korszak" data-en-aria="Era">
+          <button type="button" data-mode="social" aria-pressed="false"><b data-en="Social era">Social kor</b><span data-en="2014 · who you follow">2014 · akit követsz</span></button>
+          <button type="button" data-mode="interest" aria-pressed="true"><b data-en="Interest era">Interest kor</b><span data-en="today · what interests you">ma · ami érdekel</span></button>
+        </div>
+        <div class="chips" id="chips" role="group" aria-label="Mi érdekel?" data-en-aria="What interests you?"></div>
+        <div class="phone"><div class="screen">
+          <header><b data-en="Your feed">A feeded</b><span class="mono" id="feedmode"></span></header>
+          <ul class="posts" id="posts" aria-live="polite"></ul>
+        </div></div>
+        <p class="verdict" id="verdict" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 · The system board -->
+  <section class="sec sys t-paper" id="rendszer" data-theme="light" data-sc-act="flow">
+    <div class="wrap g12">
+      <div class="head" data-sc-in>
+        <p class="chap mono"><b>03</b><span data-en="The system">A rendszer</span></p>
+        <h2 class="disp h2" data-en="Six services. One strategy.">Hat szolgáltatás. Egy stratégia.</h2>
+        <p class="lede" data-en="Not just ads: we cover your entire online presence, with a single team. Choose a service to see what it works with.">Nem csak hirdetések — a teljes online jelenlétedet lefedjük, egyetlen csapattal. Válassz egy szolgáltatást, és megmutatjuk, mivel dolgozik együtt.</p>
+      </div>
+      <ul class="board-list" id="svclist" role="tablist" aria-label="Szolgáltatások" data-en-aria="Services"></ul>
+      <div class="svc-panel" id="svcpanel" role="tabpanel" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- 04 · Results wall -->
+  <section class="sec res t-paper2" id="eredmenyek" data-theme="light">
+    <div class="wrap g12">
+      <div class="head">
+        <div>
+          <p class="chap mono"><b>04</b><span data-en="Results">Eredmények</span></p>
+          <h2 class="disp h2" data-en="Not promises. Numbers.">Nem ígéretek. Számok.</h2>
+        </div>
+        <p class="lede" style="margin:0;max-width:30ch" data-en="Real campaigns, real dashboards. Open any number for the story behind it.">Valódi kampányok, valódi dashboardok. Nyiss meg bármelyik számot a mögötte álló történetért.</p>
+      </div>
+      <ul class="wall">
+        <li><button type="button" data-case="0"><span class="num"><span data-sc-count="0 81">81</span><small>×</small></span><span><span class="meta mono" data-en="№ I · Door webshop · Google Pmax">№ I · Ajtó webshop · Google Pmax</span><span class="desc" data-en="ROAS: best result, in an e-commerce campaign">ROAS — legjobb eredmény, e-commerce kampányban</span></span><span class="open" data-en="Open +">Megnyitás +</span></button></li>
+        <li><button type="button" data-case="1"><span class="num"><span data-sc-count="0 79">79</span><small>M Ft</small></span><span><span class="meta mono" data-en="№ II · Industrial halls · B2B Meta">№ II · Csarnokok · B2B Meta</span><span class="desc" data-en="Revenue in one week, from a B2B Meta campaign">Bevétel egy hét alatt, B2B Meta kampányból</span></span><span class="open" data-en="Open +">Megnyitás +</span></button></li>
+        <li><button type="button" data-case="2"><span class="num"><span data-sc-count="0 23">23</span><small>×</small></span><span><span class="meta mono" data-en="№ III · Watch webshop · Christmas">№ III · Karóra webshop · Karácsony</span><span class="desc" data-en="ROAS in a holiday campaign: 8M+ Ft revenue">ROAS ünnepi kampányban — 8M+ Ft bevétel</span></span><span class="open" data-en="Open +">Megnyitás +</span></button></li>
+        <li><button type="button" data-case="3"><span class="num"><span data-sc-count="0 105">105</span><small>Ft</small></span><span><span class="meta mono" data-en="№ IV · Healthcare webinar · Lead gen">№ IV · Egészségügyi webinár · Lead gen</span><span class="desc" data-en="Per registrant: ~5,700 registrants from 600K Ft spend">Jelentkezőnként — ~5700 jelentkező 600K Ft költésből</span></span><span class="open" data-en="Open +">Megnyitás +</span></button></li>
+      </ul>
+    </div>
+    <img class="thumb" id="thumb" src="assets/case-ajto.webp" alt="" aria-hidden="true">
+  </section>
+
+  <dialog class="case" id="casedlg" aria-labelledby="case-h">
+    <button type="button" class="x" id="casex" aria-label="Bezárás" data-en-aria="Close">×</button>
+    <img id="case-img" src="" alt="">
+    <div class="in" id="case-body"></div>
+  </dialog>
+
+  <!-- 05 · The test -->
+  <section class="sec quiz t-cobalt" id="teszt" data-theme="dark" data-sc-act="flow">
+    <div class="wrap g12">
+      <div class="intro" data-sc-in data-sc-stagger="80">
+        <p class="chap mono"><b>05</b><span data-en="The test">A teszt</span></p>
+        <h2 class="disp h3" data-en="Which age does your marketing live in?">Melyik korban él a marketinged?</h2>
+        <p class="lede" data-en="Five questions, one minute. The result goes straight into your audit request, so we start where you actually are.">Öt kérdés, egy perc. Az eredmény egyenesen az audit-kérésedbe kerül, így ott kezdjük, ahol valóban tartasz.</p>
+      </div>
+      <div class="qbox" id="qbox" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- Fit -->
+  <section class="sec fit t-ink" id="kivel" data-theme="dark" data-sc-act="flow">
+    <div class="wrap g12">
+      <div class="head" data-sc-in>
+        <p class="chap mono"><b>—</b><span data-en="Selective by design">Szándékosan válogatósak</span></p>
+        <h2 class="disp h3" data-en="We don't work with everyone. That is the point.">Nem dolgozunk mindenkivel. Pont ez a lényeg.</h2>
+        <p class="lede" data-en="We start with at most two new partners a month, because that is what quality allows.">Havonta legfeljebb két új partnerrel indulunk el — ennyit bír el a minőség.</p>
+      </div>
+      <div class="col yes" data-sc-in data-sc-stagger="60">
+        <h3 data-en="We work with brands that">Akikkel dolgozunk</h3>
+        <ul>
+          <li data-en="have reliable, stable revenue.">Megbízható és stabil bevétellel rendelkeznek.</li>
+          <li data-en="are aiming for long-term success.">Hosszú távú sikerre törekszenek.</li>
+          <li data-en="are willing to commit fully to the collaboration.">Hajlandóak teljes mértékben elköteleződni az együttműködés során.</li>
+          <li data-en="see marketing as an investment, and are willing to invest in it.">A marketinget befektetésnek tekintik, és hajlandóak erre áldozni.</li>
+          <li data-en="know their market and are sure their product deserves to exist.">Ismerik a piac igényeit, és biztosak termékeik vagy szolgáltatásaik létjogosultságában.</li>
+        </ul>
+      </div>
+      <div class="col no" data-sc-in data-sc-stagger="60">
+        <h3 data-en="We are not right for brands that">Akiknek nem vagyunk jó választás</h3>
+        <ul>
+          <li data-en="only want a subcontractor to execute tasks without a word, like a machine.">Csak egy alvállalkozót keresnek, aki szó nélkül, gépként megcsinálja a kiadott feladatokat.</li>
+          <li data-en="are not looking to grow and are content where they are.">Nem törekednek a fejlődésre, és megelégednek a jelenlegi helyzetükkel.</li>
+          <li data-en="are not yet stable and are constantly uncertain.">Vállalkozásuk még nem stabil, és folyamatosan bizonytalan helyzetben vannak.</li>
+          <li data-en="believe online marketing can conjure overnight success.">Úgy gondolják, hogy az online marketinggel egy éjszaka alatti sikert lehet varázsolni.</li>
+          <li data-en="want cheap half-solutions with mediocre results.">Olcsó félmegoldásokat keresnek, középszerű eredményekkel.</li>
+        </ul>
+      </div>
+      <p class="disp seal"><span data-en="Partners,">Partnerek,</span> <span data-en="not contractors.">nem kivitelezők.</span></p>
+    </div>
+  </section>
+
+  <!-- 06 · About -->
+  <section class="sec about t-paper" id="rolunk" data-theme="light" data-sc-act="flow">
+    <div class="wrap g12">
+      <figure class="photo" data-sc-reveal="up" data-sc-reveal-at="0.02 0.18"><img src="assets/founder.webp" width="1100" height="1653" alt="Olivér laptoppal a fotelben" data-en-alt="Olivér with a laptop in an armchair" loading="lazy"><figcaption class="mono" data-en="Olivér · Founder · Meta Marketing Pro">Olivér · Alapító · Meta Marketing Pro</figcaption></figure>
+      <div class="txt" data-sc-in data-sc-stagger="80">
+        <p class="chap mono"><b>06</b><span data-en="The founder">Az alapító</span></p>
+        <h2 class="disp h3" data-en="I saw the shift from the inside.">A korszakváltást belülről láttam.</h2>
+        <p data-en="I landed my first client while studying in Denmark. Then, as a Meta Marketing Pro, I saw up close how the most serious brands think when there is real money in a campaign, and watched the old rules lose their force before our eyes. Not recipes, not formulas, but systems, data and real knowledge of the platform.">Dánia tanulmányaim alatt szereztem meg az első ügyfelemet. Aztán Meta Marketing Pro-ként közelről láttam, hogyan gondolkodnak a legkomolyabb márkák, amikor valódi pénz van a kampányban — és azt is, ahogy a régi szabályok a szemünk előtt érvényüket vesztik. Nem receptek, nem formulák, hanem rendszerek, adatok, és a platform valódi ismerete.</p>
+        <p data-en="I founded SocialStream in 2022 because very few businesses here had been given this way of thinking. Since then we have managed 300M+ Ft in budget, and I have built a team of specialists and fanatics around me.">2022-ben azért alapítottam a SocialStreamet, mert ezt a gondolkodásmódot itthon nagyon kevés vállalkozás kapta meg eddig. Azóta 300M+ Ft büdzsét kezeltünk, és specialistákból, fanatikusokból álló csapatot építettem magam köré.</p>
+        <p class="sig" data-en="Olivér, Founder">— Olivér, Alapító</p>
+      </div>
+      <div class="team" data-sc-in data-sc-stagger="80">
+        <article class="member">
+          <div class="ph"><img src="assets/team-oliver.webp" width="900" height="1195" alt="Olivér" loading="lazy"></div>
+          <h3 class="disp">Olivér</h3>
+          <p class="role mono" data-en="Founder · Campaign strategist">Alapító · Kampánystratéga</p>
+          <p data-en="He reads the rules of the new age: he decides from data where to invest attention, and why anyone will watch it.">Ő olvassa az új kor szabályait: adatból dönti el, mibe fektessük a figyelmet — és miért fogja azt bárki megnézni.</p>
+        </article>
+        <article class="member">
+          <div class="ph"><span class="mono-l" aria-hidden="true">D</span><img src="https://assets.cdn.filesafe.space/NdHDMaHZr00LMGUHcMcZ/media/6a24d429f607d4002bae65fb.jpg" alt="David" loading="lazy" data-hide-on-error></div>
+          <h3 class="disp">David</h3>
+          <p class="role mono" data-en="Creative · Content production">Kreatív · Tartalomgyártás</p>
+          <p data-en="Whatever stops the thumb is his handiwork. Hooks, shooting, creative direction, in the language of the new age.">Ami megállítja a hüvelykujjat, az ő keze munkája. Hook-ok, forgatás, kreatív irány — az új kor nyelvén.</p>
+        </article>
+        <article class="member">
+          <div class="ph"><span class="mono-l" aria-hidden="true">L</span><img src="https://assets.cdn.filesafe.space/NdHDMaHZr00LMGUHcMcZ/media/6a24d956da24932f1241ae56.jpg" alt="Lidi" loading="lazy" data-hide-on-error></div>
+          <h3 class="disp">Lidi</h3>
+          <p class="role mono" data-en="Production · Editing">Produkció · Szerkesztés</p>
+          <p data-en="The engine of production. Raw footage becomes finished content in her hands: editing, rhythm, precision, on deadline.">A gyártás motorja. Nála áll össze nyersanyagból kész tartalom — vágás, ritmus, precizitás, határidőre.</p>
+        </article>
+      </div>
+      <figure class="shop" style="margin-inline:0" data-sc-reveal="up" data-sc-reveal-at="0.62 0.86"><img src="assets/workshop.webp" width="1800" height="1182" alt="A SocialStream műhelye forgatás közben" data-en-alt="The SocialStream workshop during a shoot" loading="lazy"><p class="disp" data-en="Behind the camera and in front of it.">A kamera mögött és előtt.</p></figure>
+    </div>
+  </section>
+
+  <!-- Voices: one at a time -->
+  <section class="sec voices t-paper2" data-theme="light" aria-labelledby="vq-h">
+    <div class="wrap">
+      <p class="chap mono" id="vq-h"><b>—</b><span data-en="We don't say it. They do.">Nem mi mondjuk. Ők mondják.</span></p>
+      <blockquote class="vq" id="vq" aria-live="polite"></blockquote>
+      <div class="vnav">
+        <button type="button" id="vprev" aria-label="Előző vélemény" data-en-aria="Previous testimonial">←</button>
+        <button type="button" id="vnext" aria-label="Következő vélemény" data-en-aria="Next testimonial">→</button>
+        <span class="count mono" id="vcount"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 · Audit -->
+  <section class="sec audit t-paper" id="audit" data-theme="light" data-sc-act="flow">
+    <div class="wrap g12">
+      <div class="head" data-sc-in data-sc-stagger="80">
+        <p class="chap mono"><b>07</b><span data-en="The audit">Az audit</span></p>
+        <h2 class="disp h2" data-en="Your market lives in the new age. Does your marketing?">A piacod már az új korban jár. A marketinged is?</h2>
+        <p class="lede" data-en="A free 30-minute audit: your campaigns, your landing page, your offer. We tell you honestly where you still play by the old rules, before you pay anything.">30 perces ingyenes audit — megnézzük a kampányaidat, a landing page-edet, az ajánlatodat. Megmondjuk őszintén, hol játszol még a régi kor szabályaival — még fizetés előtt.</p>
+        <p class="scar mono"><span data-en="Max. two new partners a month">Havonta max. két új partner</span><span aria-hidden="true">·</span><span data-en="No obligation">Nincs kötelezettség</span></p>
+      </div>
+      <form class="app" id="appform" novalidate>
+        <div class="field"><label class="mono" for="f-name" data-en="Your name">Neved</label><input id="f-name" name="name" autocomplete="name" required><span class="err" id="e-name"></span></div>
+        <div class="field"><label class="mono" for="f-email" data-en="Email">E-mail</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="err" id="e-email"></span></div>
+        <div class="field"><label class="mono" for="f-brand" data-en="Company or brand">Cég vagy márka</label><input id="f-brand" name="brand" autocomplete="organization" required><span class="err" id="e-brand"></span></div>
+        <div class="field"><label class="mono" for="f-web" data-en="Website or Instagram">Weboldal vagy Instagram</label><input id="f-web" name="web" autocomplete="url"><span class="err"></span></div>
+        <div class="field"><label class="mono" for="f-budget" data-en="Monthly budget">Havi büdzsé</label>
+          <select id="f-budget" name="budget"><option value="" data-en="Choose a range">Válassz sávot</option><option data-en="Under 300K Ft">300K Ft alatt</option><option>300K – 1M Ft</option><option>1M – 3M Ft</option><option data-en="Over 3M Ft">3M Ft felett</option></select><span class="err"></span></div>
+        <div class="field"><label class="mono" for="f-goal" data-en="Main goal">Fő cél</label>
+          <select id="f-goal" name="goal"><option value="" data-en="Choose a goal">Válassz célt</option><option data-en="More sales (e-commerce)">Több eladás (webshop)</option><option data-en="More leads and enquiries">Több érdeklődő és ajánlatkérés</option><option data-en="Brand and content">Márka és tartalom</option><option data-en="Website or landing page">Weboldal vagy landing</option></select><span class="err"></span></div>
+        <div class="field full"><label class="mono" for="f-msg" data-en="Where are you now?">Hol tartasz most?</label><textarea id="f-msg" name="msg"></textarea><span class="err"></span></div>
+        <div class="form-act">
+          <button class="btn btn--solid" type="submit"><span data-en="Request my audit">Kérem az auditot</span><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></button>
+          <span class="small"><span data-en="Or write directly:">Vagy írj közvetlenül:</span> <a class="js-mail" href="mailto:hello@socialstream.hu">hello@socialstream.hu</a></span>
+        </div>
+        <p class="sent" id="sent" hidden></p>
+      </form>
+    </div>
+  </section>
+
+  <footer class="foot t-ink" data-theme="dark">
+    <div class="wrap">
+      <p class="giant" aria-label="SocialStream">Social<span>Stream</span></p>
+      <div class="meta mono">
+        <span data-en="Interest media agency · Est. 2022">Interest media ügynökség · Est. 2022</span>
+        <span>Tenerife · Budapest</span>
+        <a class="js-mail" href="mailto:hello@socialstream.hu">hello@socialstream.hu</a>
+        <span data-en="© 2026 SocialStream. All rights reserved.">© 2026 SocialStream. Minden jog fenntartva.</span>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script src="scrollcraft.js"></script>
+<script>
+(function () {
+  'use strict';
+  var CONTACT = 'hello@socialstream.hu';
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
+  var L = 'hu';
+  var T = function (o) { return o[L] || o.hu; };
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var listeners = [];
+
+  /* ================= language ================= */
+  var swaps = [['[data-en]', 'text', 'en', 'hu'], ['[data-en-alt]', 'alt', 'enAlt', 'huAlt'], ['[data-en-aria]', 'aria-label', 'enAria', 'huAria']];
+  swaps.forEach(function (s) { $$(s[0]).forEach(function (el) { el.dataset[s[3]] = s[1] === 'text' ? el.textContent : (el.getAttribute(s[1]) || ''); }); });
+  var TITLE = { hu: document.title, en: 'SocialStream — Interest media agency' };
+  function setLang(l, save) {
+    if (l !== 'hu' && l !== 'en') return;
+    L = l; root.lang = l; document.title = TITLE[l];
+    swaps.forEach(function (s) { $$(s[0]).forEach(function (el) { var v = el.dataset[l === 'en' ? s[2] : s[3]]; if (s[1] === 'text') el.textContent = v; else el.setAttribute(s[1], v); }); });
+    $$('[data-set-lang]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.setLang === l)); });
+    $$('.js-mail').forEach(function (a) { a.href = 'mailto:' + CONTACT + '?subject=' + encodeURIComponent(l === 'en' ? 'Free audit' : 'Ingyenes audit'); });
+    listeners.forEach(function (fn) { fn(); });
+    if (save) { try { localStorage.setItem('ss-lang', l); } catch (e) {} }
+  }
+  $$('[data-set-lang]').forEach(function (b) { b.addEventListener('click', function () { setLang(b.dataset.setLang, true); }); });
+
+  /* ================= chrome ================= */
+  $$('img[data-hide-on-error]').forEach(function (img) { img.addEventListener('error', function () { img.hidden = true; }, { once: true }); });
+  var bar = $('#bar'), rail = $('#rail');
+  var onBar = function () { bar.classList.toggle('is-stuck', scrollY > 24); };
+  addEventListener('scroll', onBar, { passive: true }); onBar();
+  // Chapter rail: which chapter is current, and is the wall under the rail dark or light?
+  var spyLinks = $$('[data-spy]');
+  var chapters = spyLinks.map(function (a) { return a.dataset.spy === 'top' ? $('.hero') : document.getElementById(a.dataset.spy); });
+  var themed = $$('[data-theme]');
+  function spy() {
+    var mid = innerHeight / 2, cur = 0;
+    chapters.forEach(function (el, i) { if (el && el.getBoundingClientRect().top <= mid) cur = i; });
+    spyLinks.forEach(function (a, i) { a.setAttribute('aria-current', String(i === cur)); });
+    var on = 'dark';
+    themed.forEach(function (el) { var r = el.getBoundingClientRect(); if (r.top <= mid && r.bottom > mid) on = el.dataset.theme; });
+    rail.dataset.on = on;
+  }
+  var spyT = false;
+  addEventListener('scroll', function () { if (spyT) return; spyT = true; requestAnimationFrame(function () { spyT = false; spy(); }); }, { passive: true });
+  spy();
+  // Mobile index sheet
+  var menu = $('#menubtn'), sheet = $('#sheet');
+  function setMenu(open) { menu.setAttribute('aria-expanded', String(open)); sheet.hidden = !open; document.body.style.overflow = open ? 'hidden' : ''; bar.classList.toggle('menu-open', open); }
+  menu.addEventListener('click', function () { setMenu(sheet.hidden); });
+  sheet.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sheet.hidden) { setMenu(false); menu.focus(); } });
+
+  /* ================= hero: the departures board ================= */
+  var board = $('#board');
+  var FROM = 'SOCIAL', TO = 'INTEREST', N = 8, AZ = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  board.innerHTML = Array.apply(null, Array(N)).map(function () { return '<span class="cell"><span>&nbsp;</span></span>'; }).join('');
+  var cells = $$('.cell span', board);
+  var pad = function (w) { return (w + '        ').slice(0, N); };
+  function setCells(w) { pad(w).split('').forEach(function (ch, i) { cells[i].textContent = ch === ' ' ? ' ' : ch; }); }
+  var flipping = false;
+  function flip(from, to) {
+    if (reduce) { setCells(to); return; }
+    if (flipping) return; flipping = true;
+    setCells(from);
+    var target = pad(to).split(''), done = 0;
+    target.forEach(function (ch, i) {
+      var spins = 6 + i * 2, k = 0;
+      var tick = function () {
+        k++;
+        var cell = cells[i];
+        if (k >= spins) {
+          cell.textContent = ch === ' ' ? ' ' : ch;
+          if (++done === N) flipping = false;
+        } else {
+          cell.textContent = AZ[(AZ.indexOf(cell.textContent) + 1 + Math.floor(Math.random() * 3)) % 26] || 'A';
+          setTimeout(tick, 52);
+        }
+        cell.parentNode.classList.remove('flip'); void cell.offsetWidth; cell.parentNode.classList.add('flip');
+      };
+      setTimeout(tick, 650 + i * 40);
+    });
+  }
+  setCells(FROM);
+  flip(FROM, TO);
+  var shown = TO;
+  function replay() { var next = shown === TO ? FROM : TO; flip(shown, next); shown = next; if (next === FROM) setTimeout(function () { flip(FROM, TO); shown = TO; }, 1600); }
+  board.addEventListener('click', replay);
+  $('#replay').addEventListener('click', function () { flip(FROM, TO); shown = TO; });
+
+  var hero = $('.hero');
+  if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    var tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+    var step = function () {
+      cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
+      hero.style.setProperty('--mx', cx.toFixed(4)); hero.style.setProperty('--my', cy.toFixed(4));
+      raf = (Math.abs(tx - cx) + Math.abs(ty - cy) > 0.001) ? requestAnimationFrame(step) : 0;
+    };
+    hero.addEventListener('pointermove', function (e) { tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1; if (!raf) raf = requestAnimationFrame(step); });
+  }
+
+  /* ================= feed simulator ================= */
+  (function () {
+    var INTERESTS = [{ id: 'design', hu: 'Design', en: 'Design' }, { id: 'food', hu: 'Gasztro', en: 'Food' }, { id: 'travel', hu: 'Utazás', en: 'Travel' }, { id: 'business', hu: 'Üzlet', en: 'Business' }, { id: 'style', hu: 'Stílus', en: 'Style' }];
+    var POSTS = [
+      { h: 'kati.neni', av: '#8b8d93', fol: true, t: 4, q: 0.12, tags: [], text: { hu: 'Jó reggelt mindenkinek! Szép napot!', en: 'Good morning everyone! Have a lovely day!' } },
+      { h: 'gabor.szomszed', av: '#6f7176', fol: true, t: 18, q: 0.2, tags: ['travel'], text: { hu: 'Balaton, megint. 14 fotó következik.', en: 'Lake Balaton, again. 14 photos coming up.' } },
+      { h: 'sarok.bisztro', av: '#55575c', fol: true, t: 35, q: 0.26, tags: ['food'], text: { hu: 'Holnap is nyitva vagyunk 8-tól. Várunk!', en: 'Open tomorrow from 8 too. See you!' } },
+      { h: 'regi.iskolatars', av: '#9c9ea3', fol: true, t: 52, q: 0.1, tags: [], text: { hu: 'Megosztotta egy oldal bejegyzését.', en: 'Shared a page\'s post.' } },
+      { h: 'ora.manufaktura', av: '#1f3fff', fol: false, t: 240, q: 0.93, tags: ['design', 'style'], img: 'assets/case-karora.webp', text: { hu: 'Egy számlap születése, 40 másodpercben. Hangot fel.', en: 'A watch dial is born, in 40 seconds. Sound on.' } },
+      { h: 'kilincs.studio', av: '#0e0f11', fol: false, t: 600, q: 0.84, tags: ['design', 'business'], img: 'assets/case-ajto.webp', text: { hu: 'Miért ér egy kilincs 60 000 forintot? Megmutatjuk.', en: 'Why is a door handle worth 60,000 forints? We\'ll show you.' } },
+      { h: 'espresso.labor', av: '#1532d9', fol: false, t: 90, q: 0.9, tags: ['food'], reel: { hu: '60 mp: a tökéletes espresso', en: '60 sec: the perfect espresso' }, text: { hu: 'A hiba, amit szinte mindenki elkövet otthon.', en: 'The mistake almost everyone makes at home.' } },
+      { h: 'csarnok.epito', av: '#3a3c41', fol: false, t: 1440, q: 0.78, tags: ['business'], img: 'assets/case-csarnok.webp', text: { hu: 'Egy csarnok acélváza, 30 nap timelapse-ben.', en: 'A hall\'s steel frame, as a 30-day timelapse.' } },
+      { h: 'utazo.par', av: '#4a62ff', fol: false, t: 300, q: 0.82, tags: ['travel', 'style'], reel: { hu: 'Tenerife, amit a turisták nem látnak', en: 'The Tenerife tourists never see' }, text: { hu: 'Mentsd el a következő utadhoz.', en: 'Save it for your next trip.' } }
+    ];
+    var mode = 'interest', chosen = ['design', 'food'];
+    var chipsEl = $('#chips'), list = $('#posts'), verdict = $('#verdict'), modeLabel = $('#feedmode');
+    var STR = { fol: { hu: 'Követed', en: 'You follow' }, rec: { hu: 'Ajánlott · nem követed', en: 'Suggested · not followed' },
+      ago: function (m) { return m < 60 ? m + (L === 'en' ? ' min' : ' perce') : m < 1440 ? Math.round(m / 60) + (L === 'en' ? ' h' : ' órája') : (L === 'en' ? '1 day' : '1 napja'); },
+      mSoc: { hu: 'Időrend', en: 'Chronological' }, mInt: { hu: 'Érdeklődés', en: 'By interest' } };
+    function score(p) {
+      if (mode === 'social') return p.fol ? 1 - p.t / 2000 : -1;
+      var hit = p.tags.filter(function (t) { return chosen.indexOf(t) > -1; }).length;
+      var match = chosen.length ? Math.min(1, hit / Math.min(2, chosen.length)) : 0.5;
+      return 0.55 * match + 0.45 * p.q;
+    }
+    function renderChips() {
+      chipsEl.innerHTML = INTERESTS.map(function (it) { return '<button type="button" class="chip" data-int="' + it.id + '" aria-pressed="' + (chosen.indexOf(it.id) > -1) + '">' + esc(T(it)) + '</button>'; }).join('');
+      chipsEl.setAttribute('aria-disabled', String(mode === 'social'));
+    }
+    function card(p, i) {
+      var media = p.img ? '<div class="media" style="background-image:url(' + p.img + ')" role="img" aria-label="' + esc(T(p.text)) + '"></div>' : p.reel ? '<div class="media reel"><i aria-hidden="true">▶</i><em>' + esc(T(p.reel)) + '</em></div>' : '';
+      return '<li class="post" data-k="' + i + '"><div class="who"><span class="av" style="background:' + p.av + '" aria-hidden="true">' + p.h[0].toUpperCase() + '</span><span><span class="nm">' + p.h + '</span><span class="tag' + (p.fol ? '' : ' rec') + '">' + esc(p.fol ? T(STR.fol) : T(STR.rec)) + ' · ' + STR.ago(p.t) + '</span></span><span class="rank"></span></div>' +
+        media + '<p>' + esc(T(p.text)) + '</p><div class="q"><span style="--q:' + p.q + '"></span></div></li>';
+    }
+    function build() { list.innerHTML = POSTS.map(card).join(''); }
+    function rank(animate) {
+      var items = $$('.post', list), first = {};
+      if (animate) items.forEach(function (el) { first[el.dataset.k] = el.getBoundingClientRect().top; });
+      var order = POSTS.map(function (p, i) { return { i: i, s: score(p) }; }).sort(function (a, b) { return b.s - a.s; });
+      var shownN = 0;
+      order.forEach(function (o) { var el = list.querySelector('[data-k="' + o.i + '"]'), vis = o.s >= 0; el.classList.toggle('is-hidden', !vis); if (vis) { shownN++; $('.rank', el).textContent = '#' + shownN; } list.appendChild(el); });
+      if (animate && !reduce) items.forEach(function (el) { if (el.classList.contains('is-hidden') || first[el.dataset.k] === undefined) return; var dy = first[el.dataset.k] - el.getBoundingClientRect().top; if (dy) el.animate([{ transform: 'translateY(' + dy + 'px)' }, { transform: 'none' }], { duration: 520, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' }); });
+      list.scrollTop = 0;
+      modeLabel.textContent = T(mode === 'social' ? STR.mSoc : STR.mInt);
+      var top = POSTS[order[0].i], unf = order.filter(function (o) { return o.s >= 0 && !POSTS[o.i].fol; }).length;
+      if (mode === 'social') verdict.innerHTML = L === 'en' ? '<b>2014.</b> Only the 4 accounts you follow, newest first. The best post is a good-morning wish. Your brand only reaches people who already know it.' : '<b>2014.</b> Csak a 4 fiók, akit követsz, időrendben. A legjobb poszt egy jó reggelt kívánás. A márkád csak azokat éri el, akik már ismerik.';
+      else verdict.innerHTML = L === 'en' ? '<b>Today.</b> #1 is <b>' + esc(top.h) + '</b>, an account you ' + (top.fol ? 'follow.' : 'don\'t follow.') + ' ' + unf + ' of the ' + shownN + ' posts come from strangers. Interest decided this ranking, not followers.' : '<b>Ma.</b> Az első helyen <b>' + esc(top.h) + '</b> áll, akit ' + (top.fol ? 'követsz.' : 'nem is követsz.') + ' A ' + shownN + ' posztból ' + unf + ' idegentől jön. A sorrendet az érdeklődés döntötte el, nem a követők.';
+    }
+    function render(animate) { renderChips(); rank(animate); }
+    $$('[data-mode]').forEach(function (b) { b.addEventListener('click', function () { mode = b.dataset.mode; $$('[data-mode]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); render(true); }); });
+    chipsEl.addEventListener('click', function (e) { var b = e.target.closest('[data-int]'); if (!b) return; var k = chosen.indexOf(b.dataset.int); if (k > -1) chosen.splice(k, 1); else chosen.push(b.dataset.int); render(true); });
+    listeners.push(function () { build(); render(false); });
+    build(); render(false);
+  })();
+
+  /* ================= system board ================= */
+  (function () {
+    var S = [
+      { hu: 'Videó tartalomgyártás', en: 'Video content production', d: { hu: 'Hook-ok, kreatív irány, gyártás — a kampány motorja a kreatív. Ezt mi is elkészítjük, a koncepciótól a kész videóig.', en: 'Hooks, creative direction, production: creative is the engine of the campaign. We make it too, from concept to finished video.' }, rel: [1, 2, 5] },
+      { hu: 'Social média jelenlét', en: 'Social media presence', d: { hu: 'Feed, Stories, Reels, TikTok — egységes stratégiával, egységes hanggal. Content calendar, community management, copywriting.', en: 'Feed, Stories, Reels, TikTok, with one strategy and one voice. Content calendar, community management, copywriting.' }, rel: [0, 5] },
+      { hu: 'Fizetett hirdetés', en: 'Paid advertising', d: { hu: 'Meta, TikTok és Google kampányok, amik nem csak elköltik a büdzsét — hanem ROAS-t termelnek. Napi optimalizálás, A/B tesztelés, skálázás.', en: 'Meta, TikTok and Google campaigns that don\'t just spend the budget, they generate ROAS. Daily optimisation, A/B testing, scaling.' }, rel: [0, 3, 4, 5] },
+      { hu: 'Weboldal & Landing', en: 'Website & landing pages', d: { hu: 'Gyors, mobilra optimalizált landingek és weboldalak, amik konvertálnak — nem csak jól néznek ki.', en: 'Fast, mobile-optimised landing pages and websites that convert, not just look good.' }, rel: [2, 4, 5] },
+      { hu: 'Automatizáció & Email', en: 'Automation & email', d: { hu: 'Lead-követés, email szekvenciák, automatizált tölcsérek. Egyszer beállítjuk — utána dolgozik helyetted.', en: 'Lead follow-up, email sequences, automated funnels. We set it up once, then it works for you.' }, rel: [2, 3, 5] },
+      { hu: 'Növekedési stratégia', en: 'Growth strategy', d: { hu: 'Stratégiai szintű marketing tanácsadás — kampánystratégia, funnel audit, piaci pozicionálás. Partnerek vagyunk, nem kivitelezők.', en: 'Strategy-level marketing consulting: campaign strategy, funnel audit, market positioning. We are partners, not contractors.' }, rel: [0, 1, 2, 3, 4] }
+    ];
+    var listEl = $('#svclist'), panel = $('#svcpanel'), sel = 0;
+    function draw() {
+      listEl.innerHTML = S.map(function (s, i) { return '<li><button type="button" role="tab" id="svc-' + i + '" aria-controls="svcpanel"><span class="n">0' + (i + 1) + '</span><span class="t">' + esc(T(s)) + '</span><span class="s">' + (L === 'en' ? 'Connected' : 'Kapcsolódik') + '</span></button></li>'; }).join('');
+      update(false);
+    }
+    function update(swap) {
+      var s = S[sel];
+      $$('button', listEl).forEach(function (b, i) { b.setAttribute('aria-selected', String(i === sel)); b.tabIndex = i === sel ? 0 : -1; b.classList.toggle('rel', s.rel.indexOf(i) > -1); });
+      panel.setAttribute('aria-labelledby', 'svc-' + sel);
+      panel.innerHTML = '<p class="big">0' + (sel + 1) + '</p><h3 class="disp h3">' + esc(T(s)) + '</h3><p>' + esc(T(s.d)) + '</p><p class="links"><span class="mono" style="color:var(--gray)">' + (L === 'en' ? 'Works together with' : 'Együtt dolgozik') + '</span><br>' + s.rel.map(function (j) { return esc(T(S[j])); }).join(' · ') + '</p>';
+      if (swap) { panel.classList.remove('swap'); void panel.offsetWidth; panel.classList.add('swap'); }
+    }
+    listEl.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; sel = $$('button', listEl).indexOf(b); update(true); });
+    listEl.addEventListener('keydown', function (e) { var d = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key]; if (!d) return; e.preventDefault(); sel = (sel + d + S.length) % S.length; update(true); $$('button', listEl)[sel].focus(); });
+    listeners.push(draw);
+    draw();
+  })();
+
+  /* ================= results: hover preview + case dialog ================= */
+  (function () {
+    var C = [
+      { img: 'assets/case-ajto.webp', href: 'case-ajto-webshop.html', no: 'I', t: { hu: 'Ajtó webshop', en: 'Door webshop' }, ch: 'Google Performance Max', n: '81×', res: { hu: 'ROAS — a legjobb eredményünk e-commerce kampányban.', en: 'ROAS: our best result in an e-commerce campaign.' }, what: { hu: 'E-commerce kampány Google Performance Max-szel.', en: 'E-commerce campaign on Google Performance Max.' } },
+      { img: 'assets/case-csarnok.webp', href: 'case-csarnokok.html', no: 'II', t: { hu: 'Csarnoképítő', en: 'Industrial hall builder' }, ch: 'Meta (B2B)', n: '79M Ft', res: { hu: 'Bevétel egy hét alatt, B2B Meta kampányból.', en: 'Revenue in one week from a B2B Meta campaign.' }, what: { hu: 'B2B Meta kampány egy ipari szereplőnek, aki nem hitt a Facebookban.', en: 'A B2B Meta campaign for an industrial firm that didn\'t believe in Facebook.' }, q: { hu: '„Azt hittük, a Facebook a fiataloknak és a webshopoknak való — mi csarnokot építünk. Aztán egy hét alatt annyi ajánlatkérésünk lett, mint korábban fél év alatt összesen.”', en: '“We thought Facebook was for young people and webshops; we build industrial halls. Then in one week we got as many quote requests as we used to get in half a year.”' } },
+      { img: 'assets/case-karora.webp', href: 'case-karora-webshop.html', no: 'III', t: { hu: 'Karóra webshop', en: 'Watch webshop' }, ch: { hu: 'Ünnepi kampány', en: 'Holiday campaign' }, n: '23×', res: { hu: 'ROAS ünnepi kampányban — 8M+ Ft bevétel.', en: 'ROAS in a holiday campaign: 8M+ Ft revenue.' }, what: { hu: 'Karácsonyi e-commerce kampány a legdrágább hirdetési szezonban.', en: 'A Christmas e-commerce campaign in the most expensive ad season.' }, q: { hu: '„Minden decemberben rettegtünk a hirdetési áraktól. Idén először éreztük úgy, hogy az ünnepi szezon nekünk dolgozik — nem ellenünk.”', en: '“Every December we dreaded ad prices. This year, for the first time, the holiday season felt like it was working for us, not against us.”' } },
+      { img: 'assets/case-webinar.webp', href: 'case-egeszsegugyi-webinar.html', no: 'IV', t: { hu: 'Egészségügyi webinár', en: 'Healthcare webinar' }, ch: 'Lead generation', n: '105 Ft', res: { hu: 'Jelentkezőnként — ~5700 jelentkező 600K Ft költésből.', en: 'Per registrant: ~5,700 registrants from 600K Ft spend.' }, what: { hu: 'Lead generation kampány egy egészségügyi szolgáltató webinárjára.', en: 'A lead generation campaign for a healthcare provider\'s webinar.' }, q: { hu: '„Pár száz jelentkezőre számítottunk a webinárra. Amikor a számláló majdnem 5700-nál állt meg, alig hittük el, hogy ez ugyanabból a büdzséből jött ki.”', en: '“We expected a few hundred registrants for the webinar. When the counter stopped at almost 5,700, we could hardly believe it came from the same budget.”' } }
+    ];
+    var dlg = $('#casedlg'), body = $('#case-body'), img = $('#case-img'), thumb = $('#thumb');
+    function open(i) {
+      var c = C[i];
+      img.src = c.img; img.alt = T(c.t);
+      body.innerHTML = '<p class="mono" style="margin:0;color:#dfe3ff">№ ' + c.no + ' · ' + (L === 'en' ? 'Note from the new age' : 'Feljegyzés az új korból') + '</p><p class="num">' + esc(c.n) + '</p><h3 class="disp h3" id="case-h">' + esc(T(c.t)) + '</h3>' +
+        '<dl><dt class="mono">' + (L === 'en' ? 'Channel' : 'Csatorna') + '</dt><dd>' + esc(typeof c.ch === 'string' ? c.ch : T(c.ch)) + '</dd><dt class="mono">' + (L === 'en' ? 'What we did' : 'Mit csináltunk') + '</dt><dd>' + esc(T(c.what)) + '</dd><dt class="mono">' + (L === 'en' ? 'Result' : 'Eredmény') + '</dt><dd>' + esc(T(c.res)) + '</dd></dl>' +
+        (c.q ? '<blockquote>' + esc(T(c.q)) + '</blockquote>' : '') +
+        '<div class="act"><a class="btn btn--solid" href="' + c.href + '">' + (L === 'en' ? 'Full case study' : 'A teljes esettanulmány') + '</a><a class="btn btn--line" href="#audit" data-close>' + (L === 'en' ? 'I want results like this' : 'Ilyen eredményt szeretnék') + '</a></div>';
+      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    }
+    $$('[data-case]').forEach(function (b) {
+      b.addEventListener('click', function () { thumb.style.opacity = 0; open(+b.dataset.case); });
+      if (matchMedia('(hover: hover) and (pointer: fine)').matches && !reduce) {
+        b.addEventListener('pointerenter', function () { thumb.src = C[+b.dataset.case].img; thumb.style.opacity = 1; thumb.style.transform = 'translate(-50%, -50%) scale(1)'; });
+        b.addEventListener('pointermove', function (e) { thumb.style.left = (e.clientX + 170) + 'px'; thumb.style.top = e.clientY + 'px'; });
+        b.addEventListener('pointerleave', function () { thumb.style.opacity = 0; thumb.style.transform = 'translate(-50%, -50%) scale(0.95)'; });
+      }
+    });
+    var close = function () { if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); };
+    $('#casex').addEventListener('click', close);
+    dlg.addEventListener('click', function (e) { if (e.target === dlg || e.target.closest('[data-close]')) close(); });
+  })();
+
+  /* ================= the test ================= */
+  var quizResult = null;
+  (function () {
+    var Q = [
+      { q: { hu: 'Mi alapján méred a sikert a socialon?', en: 'How do you measure success on social?' }, a: [{ hu: 'Követőszám alapján.', en: 'By follower count.' }, { hu: 'Elérés és kedvelések alapján.', en: 'By reach and likes.' }, { hu: 'Végignézés, megtartás és bevétel alapján.', en: 'By watch-through, retention and revenue.' }] },
+      { q: { hu: 'Mi alapján születik meg egy poszt?', en: 'What decides that a post gets made?' }, a: [{ hu: 'Posztolni kell valamit.', en: 'We have to post something.' }, { hu: 'Ott van a naptárban.', en: 'It\'s in the calendar.' }, { hu: 'Adat arról, mi érdekli a közönségünket.', en: 'Data on what interests our audience.' }] },
+      { q: { hu: 'Hogyan készülnek a videóid?', en: 'How are your videos made?' }, a: [{ hu: 'Nincs videónk.', en: 'We don\'t make video.' }, { hu: 'Telefonnal, ha jut rá idő.', en: 'On a phone, when there\'s time.' }, { hu: 'Hookra és kreatív irányra épített gyártással.', en: 'Produced around hooks and creative direction.' }] },
+      { q: { hu: 'Mi történik azzal, aki rákattint a hirdetésedre?', en: 'What happens to someone who clicks your ad?' }, a: [{ hu: 'Őszintén? Nem tudom.', en: 'Honestly? I don\'t know.' }, { hu: 'Eljut a weboldalra.', en: 'They land on the website.' }, { hu: 'Landing, automatikus követés, email szekvencia.', en: 'Landing page, automatic follow-up, email sequence.' }] },
+      { q: { hu: 'Milyen gyakran optimalizálod a kampányaidat?', en: 'How often are your campaigns optimised?' }, a: [{ hu: 'Ritkán vagy soha.', en: 'Rarely or never.' }, { hu: 'Havonta egyszer.', en: 'Once a month.' }, { hu: 'Naponta, A/B tesztekkel.', en: 'Daily, with A/B tests.' }] }
+    ];
+    var R = [
+      { max: 3, t: { hu: 'A régi korban játszol.', en: 'You\'re playing in the old age.' }, d: { hu: 'A marketinged még a követőkre és a reménykedésre épül. Jó hír: itt a legnagyobb a mozgástér. Egy audit megmutatja, hol kezdd.', en: 'Your marketing still runs on followers and hope. The good news: this is where the upside is biggest. An audit shows you where to start.' } },
+      { max: 7, t: { hu: 'Átmenetben vagy.', en: 'You\'re in transition.' }, d: { hu: 'Néhány elem már az új kor szabályai szerint működik, de a rendszer még nem áll össze. Ott veszik el a legtöbb pénz, ahol a részek nem beszélnek egymással.', en: 'Some parts already follow the new rules, but the system isn\'t joined up. Most money is lost where the parts don\'t talk to each other.' } },
+      { max: 10, t: { hu: 'Az új korban élsz.', en: 'You live in the new age.' }, d: { hu: 'Erős alapokon állsz. A kérdés innen már a skálázás: hol van még plusz bevétel ugyanabból a büdzséből.', en: 'You\'re on strong foundations. The question now is scale: where is there more revenue in the same budget.' } }
+    ];
+    var box = $('#qbox'), i = 0, pts = [];
+    function prog() { return '<div class="qprog" aria-hidden="true">' + Q.map(function (_, k) { return '<span class="' + (k < pts.length ? 'on' : '') + '"></span>'; }).join('') + '</div>'; }
+    function show() {
+      if (i < Q.length) {
+        box.innerHTML = prog() + '<div class="swap"><p class="mono" style="margin:0;color:#dfe3ff">' + (L === 'en' ? 'Question ' : 'Kérdés ') + (i + 1) + ' / ' + Q.length + '</p><h3 class="disp">' + esc(T(Q[i].q)) + '</h3><div class="opts">' +
+          Q[i].a.map(function (a, k) { return '<button type="button" class="opt" data-p="' + k + '"><span class="k">' + 'ABC'[k] + '</span><span>' + esc(T(a)) + '</span></button>'; }).join('') + '</div>' +
+          (i ? '<p class="back"><button type="button" class="btn btn--line" data-back>' + (L === 'en' ? 'Back' : 'Vissza') + '</button></p>' : '') + '</div>';
+      } else {
+        var s = pts.reduce(function (a, b) { return a + b; }, 0), r = R.filter(function (x) { return s <= x.max; })[0];
+        quizResult = { s: s, r: r };
+        box.innerHTML = prog() + '<div class="swap qres"><p class="mono" style="margin:0;color:#dfe3ff">' + (L === 'en' ? 'Your result' : 'Az eredményed') + '</p><p class="score">' + s + '<small>/10</small></p><h3 class="disp">' + esc(T(r.t)) + '</h3><p>' + esc(T(r.d)) + '</p>' +
+          '<div class="act"><a class="btn btn--solid" href="#audit" data-carry>' + (L === 'en' ? 'Take this into my audit' : 'Viszem az auditra') + '</a><button type="button" class="btn btn--line" data-restart>' + (L === 'en' ? 'Start again' : 'Újrakezdem') + '</button></div></div>';
+        fillMsg();
+      }
+    }
+    box.addEventListener('click', function (e) {
+      var o = e.target.closest('[data-p]');
+      if (o) { pts.push(+o.dataset.p); i++; show(); var f = box.querySelector('.opt, [data-carry]'); if (f) f.focus({ preventScroll: true }); return; }
+      if (e.target.closest('[data-back]')) { pts.pop(); i--; show(); return; }
+      if (e.target.closest('[data-restart]')) { pts = []; i = 0; quizResult = null; show(); return; }
+      if (e.target.closest('[data-carry]')) fillMsg();
+    });
+    listeners.push(show);
+    show();
+  })();
+
+  /* ================= voices ================= */
+  (function () {
+    var V = [
+      { n: 'Péter', c: { hu: 'Hoofbútor · Bútor webshop', en: 'Hoofbútor · Furniture webshop' }, q: { hu: '„Egyszer már leállítottuk a Facebook hirdetéseinket, mert egyszerűen nem érte meg. Miután megismertük Olivért, adtunk egy újabb esélyt. Már az induláskor is volt vásárlás — olyan számokat produkált, amit eddig nem is láttunk.”', en: '“We had already switched off our Facebook ads once because they simply weren\'t worth it. After meeting Olivér we gave it another chance. There were purchases from launch day, and he produced numbers we had never seen before.”' } },
+      { n: 'Rita', c: { hu: "Rita's Beauty Corner", en: "Rita's Beauty Corner" }, q: { hu: '„Profi csapatot szerettem volna az indulás után. Mind Facebook/Instagram, mind weboldal és hirdetés területén profi kampányokat készítenek. Rövid időn belül jöttek az eredmények — nekem semmi dolgom nem volt velük.”', en: '“I wanted a professional team after launch. They build professional campaigns across Facebook/Instagram, the website and ads. Results came quickly, and I had nothing to do.”' } },
+      { n: 'János', c: { hu: 'EJ Massage Therapies', en: 'EJ Massage Therapies' }, q: { hu: '„A SocialStream profi módon készítette el a weboldalam. Mindenkinek tetszett az igényes és könnyen áttekinthető tartalom! Csak ajánlani tudom őket.”', en: '“SocialStream built my website professionally. Everyone loved the polished, easy-to-follow content! I can only recommend them.”' } },
+      { n: { hu: 'Csarnoképítő ügyfél', en: 'Hall-building client' }, c: { hu: 'B2B · ipari szektor', en: 'B2B · Industrial sector' }, q: { hu: '„Azt hittük, a Facebook a fiataloknak és a webshopoknak való — mi csarnokot építünk. Aztán egy hét alatt annyi ajánlatkérésünk lett, mint korábban fél év alatt összesen.”', en: '“We thought Facebook was for young people and webshops; we build industrial halls. Then in one week we got as many quote requests as we used to get in half a year.”' } },
+      { n: { hu: 'Karóra webshop', en: 'Watch webshop' }, c: { hu: 'E-commerce · ünnepi kampány', en: 'E-commerce · Holiday campaign' }, q: { hu: '„Minden decemberben rettegtünk a hirdetési áraktól. Idén először éreztük úgy, hogy az ünnepi szezon nekünk dolgozik — nem ellenünk.”', en: '“Every December we dreaded ad prices. This year, for the first time, the holiday season felt like it was working for us, not against us.”' } },
+      { n: { hu: 'Egészségügyi szolgáltató', en: 'Healthcare provider' }, c: { hu: 'Lead generation · webinár', en: 'Lead generation · Webinar' }, q: { hu: '„Pár száz jelentkezőre számítottunk a webinárra. Amikor a számláló majdnem 5700-nál állt meg, alig hittük el, hogy ez ugyanabból a büdzséből jött ki.”', en: '“We expected a few hundred registrants for the webinar. When the counter stopped at almost 5,700, we could hardly believe it came from the same budget.”' } }
+    ];
+    var vq = $('#vq'), cnt = $('#vcount'), k = 0;
+    function show(swap) {
+      var v = V[k], name = typeof v.n === 'string' ? v.n : T(v.n);
+      vq.innerHTML = '<p>' + esc(T(v.q)) + '</p><footer><b>' + esc(name) + '</b><span class="mono">' + esc(T(v.c)) + '</span><span class="mono" aria-label="5/5">★★★★★</span></footer>';
+      cnt.textContent = '0' + (k + 1) + ' / 0' + V.length;
+      if (swap) { vq.classList.remove('swap'); void vq.offsetWidth; vq.classList.add('swap'); }
+    }
+    $('#vprev').addEventListener('click', function () { k = (k - 1 + V.length) % V.length; show(true); });
+    $('#vnext').addEventListener('click', function () { k = (k + 1) % V.length; show(true); });
+    listeners.push(function () { show(false); });
+    show(false);
+  })();
+
+  /* ================= application ================= */
+  var form = $('#appform'), msg = $('#f-msg'), sent = $('#sent'), userTyped = false;
+  msg.addEventListener('input', function () { userTyped = true; });
+  function fillMsg() { if (!quizResult || userTyped) return; msg.value = (L === 'en' ? 'Interest test: ' : 'Interest teszt: ') + quizResult.s + '/10, ' + T(quizResult.r.t) + '\n\n'; }
+  var ERR = { req: { hu: 'Ezt kérjük kitölteni.', en: 'Please fill this in.' }, mail: { hu: 'Ez nem tűnik e-mail címnek.', en: 'That doesn\'t look like an email address.' } };
+  function check() {
+    var ok = true;
+    [['f-name', 'e-name'], ['f-email', 'e-email'], ['f-brand', 'e-brand']].forEach(function (p) {
+      var el = $('#' + p[0]), er = $('#' + p[1]), v = el.value.trim(), m = '';
+      if (!v) m = T(ERR.req); else if (el.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) m = T(ERR.mail);
+      er.textContent = m; el.setAttribute('aria-invalid', String(!!m));
+      if (m && ok) { el.focus(); ok = false; }
+    });
+    return ok;
+  }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!check()) return;
+    var v = function (id) { var el = $('#' + id); return el.tagName === 'SELECT' ? (el.value ? el.options[el.selectedIndex].text : '') : el.value.trim(); };
+    var lines = L === 'en'
+      ? ['Name: ' + v('f-name'), 'Email: ' + v('f-email'), 'Company: ' + v('f-brand'), 'Web / Instagram: ' + v('f-web'), 'Monthly budget: ' + v('f-budget'), 'Main goal: ' + v('f-goal'), '', v('f-msg')]
+      : ['Név: ' + v('f-name'), 'E-mail: ' + v('f-email'), 'Cég: ' + v('f-brand'), 'Web / Instagram: ' + v('f-web'), 'Havi büdzsé: ' + v('f-budget'), 'Fő cél: ' + v('f-goal'), '', v('f-msg')];
+    var body = lines.join('\n'), subject = (L === 'en' ? 'Audit request: ' : 'Audit kérés: ') + v('f-brand');
+    sent.hidden = false;
+    sent.innerHTML = '<b>' + (L === 'en' ? 'Your email is ready.' : 'Az e-mailed elkészült.') + '</b>' + (L === 'en' ? 'We opened your mail app with everything filled in. Press send there. If nothing opened, copy the text and send it to ' : 'Megnyitottuk a levelezőt kitöltve, ott már csak küldened kell. Ha nem nyílt meg semmi, másold ki a szöveget, és küldd el ide: ') +
+      '<a href="mailto:' + CONTACT + '">' + CONTACT + '</a>.<br><button type="button" class="btn" id="copybtn">' + (L === 'en' ? 'Copy the text' : 'Szöveg másolása') + '</button>';
+    $('#copybtn').addEventListener('click', function () {
+      var b = this, done = function () { b.textContent = L === 'en' ? 'Copied' : 'Kimásolva'; };
+      if (navigator.clipboard) navigator.clipboard.writeText(body).then(done, function () { msg.value = body; msg.select(); }); else { msg.value = body; msg.select(); }
+    });
+    location.href = 'mailto:' + CONTACT + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  });
+
+  /* ================= start ================= */
+  var initial = new URLSearchParams(location.search).get('lang');
+  if (!initial) { try { initial = localStorage.getItem('ss-lang'); } catch (e) {} }
+  setLang(initial === 'en' ? 'en' : 'hu', false);
+})();
+</script>
+<script>ScrollCraft.mount(document.body);</script>
+</body>
+</html>
