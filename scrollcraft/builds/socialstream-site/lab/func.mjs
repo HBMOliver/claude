@@ -1,0 +1,40 @@
+import { chromium } from 'playwright-core';
+const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+for (const [w,h,n] of [[1440,900,'d'],[390,844,'m']]) {
+  const p = await b.newPage({ viewport: { width: w, height: h } });
+  const errs=[]; p.on('pageerror',e=>errs.push(e.message));
+  await p.goto('http://localhost:4502/'); await p.waitForTimeout(2300);
+  await p.screenshot({ path: `lab/x-hero-${n}.png` });
+  const sec = async (id) => { await p.evaluate(i=>{document.getElementById(i).scrollIntoView({block:'start',behavior:'instant'})}, id); await p.waitForTimeout(500); };
+  await sec('probald');
+  const top1 = await p.locator('#posts .post:not(.is-hidden) .nm').first().innerText();
+  await p.screenshot({ path: `lab/x-sim-${n}.png` });
+  await p.click('[data-mode="social"]'); await p.waitForTimeout(700);
+  const socialCount = await p.locator('#posts .post:not(.is-hidden)').count();
+  const topSoc = await p.locator('#posts .post:not(.is-hidden) .nm').first().innerText();
+  await p.click('[data-mode="interest"]'); await p.click('[data-int="travel"]'); await p.click('[data-int="design"]'); await p.waitForTimeout(700);
+  const topTravel = await p.locator('#posts .post:not(.is-hidden) .nm').first().innerText();
+  const verdict = await p.locator('#verdict').innerText();
+  await sec('rendszer-szolg'); await p.locator('.node').nth(2).click(); await p.waitForTimeout(400);
+  const svc = await p.locator('#svcpanel h3').innerText(); const lit = await p.locator('#links line.on').count();
+  await p.screenshot({ path: `lab/x-sys-${n}.png` });
+  await sec('teszt');
+  for (const k of [2,1,2,0,2]) { await p.locator('.opt').nth(k).click(); await p.waitForTimeout(120); }
+  const score = await p.locator('.qres .score').innerText();
+  await p.screenshot({ path: `lab/x-quiz-${n}.png` });
+  await p.click('[data-carry]'); await p.waitForTimeout(900);
+  const msg = await p.inputValue('#f-msg');
+  await p.screenshot({ path: `lab/x-form-${n}.png` });
+  await p.click('#appform button[type=submit]'); const err = await p.locator('#e-name').innerText();
+  await sec('eredmenyek'); await p.evaluate(()=>document.querySelector('[data-case="1"]').click()); await p.waitForTimeout(500);
+  const dlgOpen = await p.evaluate(()=>document.getElementById('casedlg').open);
+  await p.screenshot({ path: `lab/x-case-${n}.png` });
+  await p.keyboard.press('Escape');
+  await p.click('[data-set-lang="en"]'); await p.evaluate(()=>scrollTo(0,0)); await p.waitForTimeout(600);
+  await p.screenshot({ path: `lab/x-hero-en-${n}.png` });
+  const untranslated = await p.evaluate(()=>[...document.querySelectorAll('h1,h2,h3,p,a,li,label,option,button,figcaption')].filter(e=>e.offsetParent!==null && /[őűéáíóú]/i.test(e.textContent) && !/Olivér|Péter|János|Hoofbútor|Rita|Tenerife|kati|szomsz/.test(e.textContent)).map(e=>e.textContent.trim().slice(0,40)).slice(0,10));
+  const ov = await p.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+  console.log(n, JSON.stringify({top1, socialCount, topSoc, topTravel, verdict:verdict.slice(0,90), svc, lit, score, msg:msg.slice(0,60), err, dlgOpen, untranslated, ov, errs}));
+  await p.close();
+}
+await b.close();
