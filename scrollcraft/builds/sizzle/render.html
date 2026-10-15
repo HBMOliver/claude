@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<title>SocialStream sizzle renderer</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* SocialStream sizzle: black stage, cream type, one dusty-blue accent. 1920x1080, 25 fps. */
+  :root { --ink: #0a0a0a; --cream: #f8f4ec; --blue: #7c9ebe; --blue-d: #3e5f7e; --line: #e2dacb; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: var(--ink); }
+  body { font-family: "Plus Jakarta Sans", sans-serif; color: var(--cream); -webkit-font-smoothing: antialiased; }
+  .layer { position: absolute; inset: 0; display: none; overflow: hidden; }
+  .layer.on { display: block; }
+
+  /* Video wall */
+  #wall { perspective: 1600px; background: var(--ink); }
+  #wall .grid { position: absolute; left: 50%; top: 50%; width: 2600px; display: grid; grid-template-columns: repeat(10, 232px); gap: 22px;
+                transform-origin: 50% 50%; }
+  #wall .col { display: flex; flex-direction: column; gap: 22px; }
+  #wall .tile { width: 232px; height: 412px; border-radius: 16px; overflow: hidden; background: #1a1a1a; box-shadow: 0 30px 60px -20px rgba(0,0,0,0.8); }
+  #wall img, .phone img, .panel img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #wall .shade { position: absolute; inset: 0; background: radial-gradient(60% 60% at 50% 50%, rgba(10,10,10,0.15), rgba(10,10,10,0.85) 100%); }
+  #wall .dim { position: absolute; inset: 0; background: var(--ink); }
+
+  .logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); white-space: nowrap; text-align: center; }
+  .logo .w { font-family: "Fraunces", serif; font-weight: 400; font-size: 190px; letter-spacing: -0.03em; line-height: 1; text-shadow: 0 10px 60px rgba(0,0,0,0.55); }
+  .logo .w i { color: var(--blue); }
+  .logo .sub { margin-top: 26px; font-size: 30px; font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(248,244,236,0.85); }
+
+  /* Kinetic type */
+  #type { background: var(--ink); }
+  #type .stage { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center; }
+  #type .line { display: block; font-size: 150px; font-weight: 700; letter-spacing: -0.035em; line-height: 1.08; white-space: nowrap; }
+  #type .word { display: inline-block; margin: 0 0.12em; position: relative; }
+  #type .ser { font-family: "Fraunces", serif; font-style: italic; font-weight: 400; color: var(--blue); letter-spacing: -0.02em; }
+  #type .strike::after { content: ""; position: absolute; left: -0.04em; right: -0.04em; top: 55%; height: 0.075em; background: var(--blue); transform-origin: 0 50%; transform: scaleX(var(--k, 0)); }
+  .glow { position: absolute; left: 50%; top: 50%; width: 1400px; height: 700px; transform: translate(-50%, -50%); background: radial-gradient(closest-side, rgba(124,158,190,0.16), transparent); }
+
+  /* Client block */
+  #client .pattern { position: absolute; inset: -200px; display: flex; flex-direction: column; justify-content: center; gap: 6px; transform: rotate(-8deg); }
+  #client .pattern div { font-size: 96px; font-weight: 800; letter-spacing: -0.02em; white-space: nowrap; line-height: 1; }
+  #client .phones { position: absolute; left: 0; right: 0; top: 0; bottom: 0; display: flex; justify-content: flex-end; align-items: center; gap: 64px; padding-right: 150px; }
+  .phone { width: 360px; height: 740px; border-radius: 54px; background: #0a0a0a; padding: 12px; box-shadow: 0 50px 100px -30px rgba(0,0,0,0.65), inset 0 0 0 2px rgba(255,255,255,0.12); position: relative; }
+  .phone .scr { width: 100%; height: 100%; border-radius: 43px; overflow: hidden; background: #222; }
+  .phone::after { content: ""; position: absolute; top: 26px; left: 50%; width: 96px; height: 28px; border-radius: 20px; background: #0a0a0a; transform: translateX(-50%); }
+  #client .label { position: absolute; left: 90px; top: 80px; font-family: "Fraunces", serif; font-size: 64px; letter-spacing: -0.02em; }
+  #client .label small { display: block; margin-top: 12px; font-family: "Plus Jakarta Sans", sans-serif; font-size: 24px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.8; }
+
+  /* Number scene */
+  #num .panels { position: absolute; inset: 0; display: flex; gap: 10px; }
+  #num .panel { flex: 1; overflow: hidden; }
+  #num .panel img { filter: saturate(0.85); }
+  #num .veil { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.72) 55%, rgba(10,10,10,0.5) 100%); }
+  #num .copy { position: absolute; left: 140px; top: 50%; transform: translateY(-50%); }
+  #num .big { font-family: "Fraunces", serif; font-size: 360px; line-height: 0.82; letter-spacing: -0.05em; font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
+  #num .big small { font-size: 0.42em; letter-spacing: -0.02em; color: var(--blue); }
+  #num .lab { margin-top: 30px; font-size: 54px; font-weight: 700; letter-spacing: -0.02em; }
+  #num .cap { margin-top: 16px; font-size: 26px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); }
+
+  /* Services rapid cut */
+  #svc .word { position: absolute; left: 140px; top: 50%; transform: translateY(-50%); font-size: 190px; font-weight: 800; letter-spacing: -0.045em; line-height: 1; }
+  #svc .word i { font-family: "Fraunces", serif; font-weight: 400; color: var(--blue); }
+  #svc .phone { position: absolute; right: 220px; top: 50%; transform: translateY(-50%) rotate(4deg); }
+  #svc .count { position: absolute; left: 146px; top: calc(50% + 140px); font-size: 26px; font-weight: 600; letter-spacing: 0.2em; color: rgba(248,244,236,0.55); }
+
+  .grain { position: absolute; inset: 0; pointer-events: none; opacity: 0.06; mix-blend-mode: overlay; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); z-index: 50; }
+  .flash { position: absolute; inset: 0; background: var(--cream); opacity: 0; z-index: 40; pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="layer" id="wall"><div class="grid" id="grid"></div><div class="shade"></div><div class="dim" id="walldim"></div>
+  <div class="logo" id="logo"><div class="w">Social<i>Stream</i></div><div class="sub" id="logosub">Interest media ügynökség</div></div></div>
+<div class="layer" id="type"><div class="glow"></div><div class="stage" id="typestage"></div></div>
+<div class="layer" id="client"><div class="pattern" id="pattern"></div><div class="phones" id="phones"></div><div class="label" id="clabel"></div></div>
+<div class="layer" id="num"><div class="panels" id="panels"></div><div class="veil"></div><div class="copy"><div class="big" id="big"></div><div class="lab" id="nlab"></div><div class="cap" id="ncap"></div></div></div>
+<div class="layer" id="svc"><div class="word" id="sword"></div><div class="count" id="scount"></div><div class="phone"><div class="scr"><img id="simg" alt=""></div></div></div>
+<div class="flash" id="flash"></div>
+<div class="grain"></div>
+
+<script>
+const FPS = 25, DUR = 30;
+const M = window.MANIFEST || {};           // { clip: frameCount }
+const CLIPS = Object.keys(M);
+const FR = (clip, size, n) => `frames/${clip}-${size}/${String(n).padStart(4, '0')}.jpg`;
+const frameAt = (clip, t, off = 0) => (Math.floor(t * FPS) + off) % M[clip] + 1;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ease = (x) => { x = clamp(x); return 1 - Math.pow(1 - x, 3); };
+const easeIO = (x) => { x = clamp(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const $ = (id) => document.getElementById(id);
+const pending = [];
+function setSrc(img, src) { if (img.dataset.s !== src) { img.dataset.s = src; img.src = src; pending.push(img.decode().catch(() => {})); } }
+function show(id) { document.querySelectorAll('.layer').forEach(l => l.classList.toggle('on', l.id === id)); }
+
+/* ---------- build static DOM once ---------- */
+const COLS = 10, ROWS = 4;
+const grid = $('grid'), tiles = [];
+for (let c = 0; c < COLS; c++) {
+  const col = document.createElement('div'); col.className = 'col';
+  for (let r = 0; r < ROWS + 1; r++) {
+    const tile = document.createElement('div'); tile.className = 'tile';
+    const img = document.createElement('img'); tile.appendChild(img); col.appendChild(tile);
+    const k = (c * 3 + r * 2) % CLIPS.length;
+    tiles.push({ img, clip: CLIPS[k], off: (c * 137 + r * 61) % 400, col: c });
+  }
+  grid.appendChild(col);
+}
+const cols = [...grid.children];
+
+/* ---------- scenes ---------- */
+const S = [];
+const scene = (a, b, fn) => S.push({ a, b, fn });
+
+function wall(t, lt, opts) {
+  show('wall');
+  const z = opts.zoom(lt);
+  grid.style.transform = `translate(-50%, -50%) rotateX(24deg) rotateZ(-11deg) scale(${z})`;
+  cols.forEach((col, i) => { const dir = i % 2 ? 1 : -1; col.style.transform = `translateY(${dir * ((lt * 46 + i * 70) % 434) - 200}px)`; });
+  tiles.forEach(T => setSrc(T.img, FR(T.clip, 's', frameAt(T.clip, t, T.off))));
+  $('walldim').style.opacity = opts.dim(lt);
+  const lo = opts.logo(lt);
+  $('logo').style.opacity = lo;
+  $('logo').style.transform = `translate(-50%, -50%) scale(${1.06 - 0.06 * lo})`;
+  $('logo').style.filter = `blur(${(1 - lo) * 14}px)`;
+  $('logosub').style.opacity = opts.sub(lt);
+}
+
+/* 0-3.6 wall in, logo lands */
+scene(0, 3.6, (t, lt) => wall(t, lt, {
+  zoom: l => 1.28 - 0.2 * easeIO(l / 3.6), dim: l => 0.25 * seg(l, 2.9, 3.6),
+  logo: l => ease(seg(l, 0.7, 1.5)) * (1 - seg(l, 3.0, 3.6)), sub: l => ease(seg(l, 1.3, 2.0)) * (1 - seg(l, 3.0, 3.6)) }));
+
+/* kinetic type helpers */
+function typeLines(lines, lt) {
+  show('type');
+  const st = $('typestage');
+  const key = JSON.stringify(lines.map(l => l.map(w => w.t)));
+  if (st.dataset.k !== key) {
+    st.dataset.k = key;
+    st.innerHTML = lines.map(l => '<span class="line">' + l.map(w => `<span class="word ${w.c || ''}">${w.t}</span>`).join('') + '</span>').join('');
+  }
+  const words = st.querySelectorAll('.word'); let i = 0;
+  lines.flat().forEach(w => {
+    const el = words[i++]; const p = ease(seg(lt, w.at, w.at + 0.32));
+    el.style.opacity = p; el.style.transform = `translateY(${(1 - p) * 46}px)`; el.style.filter = `blur(${(1 - p) * 10}px)`;
+    if (w.k !== undefined) el.style.setProperty('--k', easeIO(seg(lt, w.k, w.k + 0.35)));
+  });
+  st.style.opacity = 1;
+}
+/* 3.6-7.0 "A social media meghalt." with the strike */
+scene(3.6, 7.0, (t, lt) => {
+  typeLines([[{ t: 'A', at: 0.05 }, { t: 'social', at: 0.22, c: 'strike', k: 1.55 }, { t: 'media', at: 0.39, c: 'strike', k: 1.7 }], [{ t: 'meghalt.', at: 2.05, c: 'ser' }]], lt);
+  $('typestage').style.opacity = 1 - seg(lt, 3.15, 3.4);
+});
+/* 7.0-9.0 "Az érdeklődés vette át a helyét." */
+scene(7.0, 9.0, (t, lt) => {
+  typeLines([[{ t: 'Az', at: 0.0 }, { t: 'érdeklődés', at: 0.16, c: 'ser' }], [{ t: 'vette', at: 0.5 }, { t: 'át', at: 0.62 }, { t: 'a', at: 0.72 }, { t: 'helyét.', at: 0.84 }]], lt);
+  $('typestage').style.opacity = 1 - seg(lt, 1.75, 2.0);
+});
+
+/* client block */
+function client(t, lt, o) {
+  show('client');
+  const c = $('client'); c.style.background = o.bg;
+  const pat = $('pattern');
+  if (pat.dataset.k !== o.name) {
+    pat.dataset.k = o.name;
+    pat.innerHTML = Array.from({ length: 14 }, () => `<div style="color:${o.pc}">${(o.name + ' · ').repeat(8)}</div>`).join('');
+    $('phones').innerHTML = o.phones.map(() => '<div class="phone"><div class="scr"><img alt=""></div></div>').join('');
+    $('clabel').innerHTML = `${o.label}<small>${o.sub}</small>`; $('clabel').style.color = o.fg;
+  }
+  [...pat.children].forEach((row, i) => row.style.transform = `translateX(${(i % 2 ? -1 : 1) * lt * 60 - 300}px)`);
+  const ph = [...$('phones').children];
+  ph.forEach((p, i) => {
+    const q = ease(seg(lt, 0.1 + i * 0.14, 0.75 + i * 0.14)), out = easeIO(seg(lt, o.d - 0.4, o.d));
+    const rot = [-6, 0, 6][i];
+    p.style.transform = `translateY(${(1 - q) * 900 - out * 900}px) rotate(${rot * (1 - q * 0.4)}deg) scale(${i === 1 ? 1.08 : 0.96})`;
+    setSrc(p.querySelector('img'), FR(o.phones[i][0], 'l', frameAt(o.phones[i][0], t, o.phones[i][1])));
+  });
+  $('clabel').style.opacity = ease(seg(lt, 0.4, 0.9)) * (1 - seg(lt, o.d - 0.4, o.d));
+}
+/* 9.0-12.0 FlyX Tenerife */
+scene(9.0, 12.0, (t, lt) => client(t, lt, { name: 'FLYX TENERIFE', bg: '#7c9ebe', pc: 'rgba(10,10,10,0.09)', fg: '#0a0a0a', label: 'FlyX Tenerife', sub: 'Élményközpont · Social & videó', phones: [['flyx-a', 40], ['flyx-b', 200], ['flyx-a', 520]], d: 3.0 }));
+
+/* number scene */
+function number(t, lt, o) {
+  show('num');
+  const pn = $('panels');
+  if (pn.dataset.k !== o.key) { pn.dataset.k = o.key; pn.innerHTML = o.panels.map(() => '<div class="panel"><img alt=""></div>').join(''); }
+  [...pn.children].forEach((p, i) => { setSrc(p.querySelector('img'), FR(o.panels[i][0], 'l', frameAt(o.panels[i][0], t, o.panels[i][1]))); p.style.transform = `scale(${1.08 - 0.06 * ease(lt / o.d)})`; });
+  const n = Math.round(o.to * ease(seg(lt, 0.15, 0.85)));
+  $('big').innerHTML = `${o.pre || ''}${n}${o.post ? `<small>${o.post}</small>` : ''}`;
+  const a = ease(seg(lt, 0.0, 0.35)), out = 1 - seg(lt, o.d - 0.3, o.d);
+  $('big').style.opacity = a * out; $('big').style.transform = `translateY(${(1 - a) * 60}px)`;
+  $('nlab').textContent = o.lab; $('nlab').style.opacity = ease(seg(lt, 0.45, 0.8)) * out;
+  $('ncap').textContent = o.cap; $('ncap').style.opacity = ease(seg(lt, 0.65, 1.0)) * out;
+}
+scene(12.0, 14.2, (t, lt) => number(t, lt, { key: 'a', to: 81, post: '×', lab: 'ROAS — legjobb eredmény', cap: 'Ajtó webshop · Google Pmax', panels: [['clip-3995', 100], ['interview', 300], ['clip-33f9', 50]], d: 2.2 }));
+scene(14.2, 16.4, (t, lt) => number(t, lt, { key: 'b', to: 79, post: 'M Ft', lab: 'bevétel egy hét alatt', cap: 'B2B Meta kampány', panels: [['clip-33f9', 200], ['flyx-b', 700], ['flyx-a', 300]], d: 2.2 }));
+
+/* 16.4-19.4 podcast & interview block, cream */
+scene(16.4, 19.4, (t, lt) => client(t, lt, { name: 'PODCAST · INTERJÚ', bg: '#f8f4ec', pc: 'rgba(62,95,126,0.10)', fg: '#0a0a0a', label: 'Podcast & interjú', sub: 'Gyártás · vágás · feliratozás', phones: [['clip-3995', 400], ['interview', 120], ['clip-3995', 1100]], d: 3.0 }));
+
+/* 19.4-22.4 services, a cut every half second */
+const SV = [['Videó', 'flyx-a', 150], ['Social', 'interview', 500], ['Hirdetés', 'flyx-b', 900], ['Weboldal', 'clip-33f9', 300], ['Automatizáció', 'clip-3995', 700], ['Stratégia', 'flyx-a', 640]];
+scene(19.4, 22.4, (t, lt) => {
+  show('svc');
+  const i = Math.min(5, Math.floor(lt / 0.5)), s = SV[i];
+  $('sword').innerHTML = `${s[0]}<i>.</i>`;
+  const q = ease(seg(lt - i * 0.5, 0, 0.18));
+  $('sword').style.opacity = q; $('sword').style.transform = `translateY(calc(-50% + ${(1 - q) * 30}px))`;
+  $('scount').textContent = `0${i + 1} / 06`;
+  setSrc($('simg'), FR(s[1], 'l', frameAt(s[1], t, s[2])));
+});
+scene(22.4, 24.6, (t, lt) => number(t, lt, { key: 'c', to: 300, post: 'M+ Ft', lab: 'kezelt hirdetési büdzsé', cap: '2022 óta az új korban', panels: [['interview', 900], ['flyx-a', 800], ['clip-3995', 1500]], d: 2.2 }));
+
+/* 24.6-27.0 "Mi ebben a korban győzünk." */
+scene(24.6, 27.0, (t, lt) => {
+  typeLines([[{ t: 'Mi', at: 0.0 }, { t: 'ebben', at: 0.12 }, { t: 'a', at: 0.22 }, { t: 'korban', at: 0.32 }], [{ t: 'győzünk.', at: 0.8, c: 'ser' }]], lt);
+  $('typestage').style.opacity = 1 - seg(lt, 2.1, 2.4);
+});
+/* 27.0-30.0 wall returns, end card; matches frame 0 for the loop */
+scene(27.0, 30.0, (t, lt) => wall(t, lt, {
+  zoom: l => 1.0 + 0.28 * easeIO(seg(l, 1.6, 3.0)), dim: l => 0.35 * (1 - seg(l, 2.4, 3.0)),
+  logo: l => ease(seg(l, 0.15, 0.8)) * (1 - seg(l, 2.4, 2.95)), sub: l => ease(seg(l, 0.5, 1.1)) * (1 - seg(l, 2.4, 2.95)) }));
+
+/* cut flashes on hard scene changes */
+const FLASH = [9.0, 12.0, 16.4, 19.4, 22.4];
+
+window.render = async function (t) {
+  pending.length = 0;
+  const s = S.find(x => t >= x.a && t < x.b) || S[S.length - 1];
+  s.fn(t, t - s.a);
+  const f = FLASH.reduce((m, x) => Math.max(m, 1 - Math.abs(t - x) / 0.12), 0);
+  $('flash').style.opacity = Math.max(0, f) * 0.55;
+  await Promise.all(pending);
+};
+window.DUR = DUR; window.FPS = FPS;
+</script>
+</body>
+</html>
