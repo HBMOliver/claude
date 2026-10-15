@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HB Marketing Social: közösségi média, mértékre szabva</title>
+<meta name="description" content="Instagram, TikTok és LinkedIn prémium márkáknak. Művészeti irány, szerkesztőségi gyártás, közösségi concierge és fizetett kampányok Budapestről.">
+<meta name="theme-color" content="#1c0e10">
+<meta property="og:title" content="HB Marketing Social">
+<meta property="og:description" content="Közösségi média, mértékre szabva.">
+<meta property="og:image" content="assets/satin.webp">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231c0e10'/><text x='16' y='22.5' font-family='Didot,Bodoni 72,serif' font-size='17' text-anchor='middle' fill='%23f2eae0'>HB</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/satin.webp">
+<link rel="stylesheet" href="scrollcraft.css">
+<style>
+  :root {
+    --sc-canvas:     #1c0e10;
+    --sc-surface:    #2a1518;
+    --sc-ink:        #f2eae0;
+    --sc-ink-soft:   #c9b3ab;
+    --sc-accent:     #e9a99a;
+    --sc-accent-ink: #1c0e10;
+    --sc-font-display: "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+    --sc-font-text:    "Hanken Grotesk", system-ui, sans-serif;
+    --sc-shadow-color: 350 45% 5%;
+
+    --bone: #f1e9dd;
+    --oxblood: #1c0e10;
+    --claret: #8a2232;
+    --wine-mid: #4a1d23;
+    --mx: 0; --my: 0;
+  }
+
+  html { scroll-behavior: smooth; }
+  body { background: var(--sc-canvas); color: var(--sc-ink); font-family: var(--sc-font-text);
+         font-size: var(--sc-t-base); line-height: var(--sc-leading-body); letter-spacing: 0.005em; }
+  /* Light-on-dark compensation: a touch more weight and leading than paper. */
+  body { font-weight: 400; -webkit-font-smoothing: antialiased; }
+  .sc-display { font-family: var(--sc-font-display); font-weight: 400; font-optical-sizing: auto; }
+
+  /* Language: both versions are real markup, one is hidden. */
+  html[lang="hu"] [data-l="en"], html[lang="en"] [data-l="hu"] { display: none !important; }
+
+  /* Hard grounds, no interpolation: each section owns its paper. */
+  main > section { background: var(--oxblood); }
+  main > section.on-bone { background: var(--bone); }
+  main > section.method { background: #efe5d8; }
+  /* Light ground. Restate color, not just the token. */
+  .on-bone { --sc-ink: #2a1316; --sc-ink-soft: #6a4a48; --sc-accent: var(--claret);
+             --sc-hairline: color-mix(in oklab, #2a1316 16%, transparent); color: var(--sc-ink); }
+
+  a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.22em; }
+  :focus-visible { outline: 2px solid var(--sc-accent); outline-offset: 4px; border-radius: 2px; }
+
+  /* ---------- chrome: language only ---------- */
+  .lang { position: fixed; top: max(14px, env(safe-area-inset-top)); right: var(--sc-gutter); z-index: 80;
+          display: flex; gap: 2px; padding: 3px; border-radius: 999px;
+          background: color-mix(in oklab, var(--oxblood) 62%, transparent);
+          backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+          box-shadow: inset 0 0 0 1px color-mix(in oklab, #f2eae0 14%, transparent); }
+  .lang button { font: 500 var(--sc-t-xs)/1 var(--sc-font-text); letter-spacing: 0.02em; color: #c9b3ab;
+                 background: none; border: 0; border-radius: 999px; padding: 9px 13px; cursor: pointer;
+                 transition: background-color 160ms var(--sc-ease-out), color 160ms var(--sc-ease-out); }
+  .lang button[aria-pressed="true"] { background: #f2eae0; color: var(--oxblood); }
+  @media (hover: hover) and (pointer: fine) { .lang button:not([aria-pressed="true"]):hover { color: #f2eae0; } }
+  .lang button:active { transform: scale(0.97); }
+
+  /* ---------- 1 · hero: four planes ---------- */
+  .hero [data-sc-stage] { overflow: hidden; background: var(--oxblood); }
+  .plane { position: absolute; will-change: transform; pointer-events: none; }
+  .p-satin { inset: -7%; }
+  .p-satin img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .p-satin {
+    transform: translate3d(calc(var(--mx) * -10px), calc(var(--sc-p, 0) * -5vh + var(--my) * -8px), 0)
+               scale(calc(1.02 + var(--sc-p, 0) * 0.05));
+  }
+  .p-word {
+    inset: 0; display: grid; place-items: center; z-index: 2;
+    transform: translate3d(calc(var(--mx) * -22px), calc(var(--sc-p, 0) * -9vh + var(--my) * -14px), 0)
+               scale(calc(1 - var(--sc-p, 0) * 0.16));
+    opacity: calc(1 - var(--sc-p, 0) * 0.55);
+  }
+  .p-word span {
+    font-family: var(--sc-font-display); font-style: italic; font-weight: 400; font-optical-sizing: auto;
+    font-size: 27vw; line-height: 1; letter-spacing: -0.045em; color: #f2eae0;
+    opacity: 0.13; translate: 0 -6vh; white-space: nowrap; padding-right: 0.08em;
+  }
+  .p-amp {
+    right: -4vw; bottom: -22vh; z-index: 4;
+    transform: translate3d(calc(var(--mx) * -46px), calc(var(--sc-p, 0) * -42vh + var(--my) * -26px), 0);
+  }
+  .p-amp span {
+    display: block; font-family: var(--sc-font-display); font-style: italic; font-size: 78vh; line-height: 1;
+    color: transparent; -webkit-text-stroke: 1px color-mix(in oklab, #f2eae0 34%, transparent);
+  }
+  .hero-scrim { position: absolute; inset: 0; z-index: 3; pointer-events: none;
+    background: radial-gradient(120% 90% at 0% 100%, rgb(18 7 9 / 0.86) 0%, rgb(18 7 9 / 0.5) 38%, transparent 66%); }
+  .mark { position: absolute; z-index: 6; top: max(18px, env(safe-area-inset-top)); left: var(--sc-gutter);
+          display: flex; align-items: baseline; gap: 0.6em; text-decoration: none; }
+  .mark b { font: 500 1.45rem/1 var(--sc-font-display); letter-spacing: -0.01em; }
+  .mark i { font: italic 400 1.05rem/1 var(--sc-font-display); color: var(--sc-ink-soft); }
+  .hero-copy { position: absolute; z-index: 5; left: var(--sc-gutter); bottom: clamp(2.5rem, 11vh, 8rem);
+               max-width: min(40rem, 86vw); }
+  .hero h1 { font-size: clamp(2.6rem, 1.6rem + 3.6vw, 5.4rem); line-height: 1.0; letter-spacing: -0.028em;
+             margin: 0; text-wrap: balance; }
+  .hero .sub { margin: var(--sc-5) 0 0; max-width: 34ch; color: var(--sc-ink-soft); font-size: var(--sc-t-lg);
+               line-height: 1.5; text-wrap: pretty; }
+  .cta { display: inline-flex; align-items: center; gap: 0.7em; margin-top: var(--sc-6);
+         font: 500 var(--sc-t-base)/1 var(--sc-font-text); letter-spacing: 0.01em; text-decoration: none;
+         color: var(--sc-accent-ink); background: var(--sc-ink); padding: 1.05em 1.6em; border-radius: 999px;
+         box-shadow: 0 10px 30px -12px rgb(0 0 0 / 0.6);
+         transition: transform 140ms var(--sc-ease-out), background-color 160ms var(--sc-ease-out); }
+  .cta svg { width: 1em; height: 1em; transition: transform 160ms var(--sc-ease-out); }
+  @media (hover: hover) and (pointer: fine) {
+    .cta:hover { background: #fff8ef; }
+    .cta:hover svg { transform: translateX(3px); }
+  }
+  .cta:active { transform: scale(0.97); }
+
+  /* ---------- 2 · thesis ---------- */
+  .thesis { padding-block: clamp(6rem, 16vw, 15rem) clamp(3rem, 7vw, 6rem); }
+  .thesis .cols { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--sc-5); }
+  .thesis .txt { grid-column: 5 / span 6; }
+  .thesis p { margin: 0; font-size: var(--sc-t-lg); line-height: 1.6; max-width: 36ch; color: var(--sc-ink-soft); text-wrap: pretty; }
+  .thesis p + p { margin-top: var(--sc-6); color: var(--sc-ink); }
+
+  /* ---------- 3 · statement ---------- */
+  .statement { padding-block: clamp(3rem, 8vw, 7rem) clamp(5rem, 10vw, 9rem); overflow: hidden; }
+  .statement h2 { margin: 0; font-size: clamp(3.2rem, 11.2vw, 13rem); line-height: 0.92; letter-spacing: -0.045em; }
+  .statement .l1 { display: block; padding-left: var(--sc-gutter); }
+  .statement .l2 { display: block; padding-left: calc(var(--sc-gutter) + 18vw); font-style: italic; }
+  .statement .l2 span { padding-right: 0.06em; }
+
+  /* ---------- 4 · peak: the grid takeover ---------- */
+  .takeover [data-sc-stage] { display: grid; grid-template-columns: minmax(22rem, 1fr) auto; align-items: center;
+    column-gap: clamp(2rem, 6vw, 7rem); padding-inline: var(--sc-gutter); overflow: hidden; }
+  .takeover .cap { max-width: 30rem; justify-self: end; }
+  .takeover h2 { font-size: var(--sc-t-3xl); line-height: 1; letter-spacing: -0.03em; margin: 0; text-wrap: balance; }
+  .takeover .cap p { margin: var(--sc-5) 0 0; color: var(--sc-ink-soft); max-width: 34ch; text-wrap: pretty; }
+  .feed { --gap: 3px; --tile: min(calc((80vh - 2 * var(--gap)) / 3), 13.5rem);
+          position: relative; width: calc(var(--tile) * 3 + var(--gap) * 2); aspect-ratio: 1; margin-right: 4vw; }
+  .feed::before { /* ghost of the empty grid the tiles fly into */
+    content: ""; position: absolute; inset: 0; opacity: calc(0.9 - var(--done, 0) * 0.9);
+    background:
+      linear-gradient(var(--sc-hairline), var(--sc-hairline)) calc(var(--tile)) 0 / var(--gap) 100% no-repeat,
+      linear-gradient(var(--sc-hairline), var(--sc-hairline)) calc(var(--tile) * 2 + var(--gap)) 0 / var(--gap) 100% no-repeat,
+      linear-gradient(var(--sc-hairline), var(--sc-hairline)) 0 calc(var(--tile)) / 100% var(--gap) no-repeat,
+      linear-gradient(var(--sc-hairline), var(--sc-hairline)) 0 calc(var(--tile) * 2 + var(--gap)) / 100% var(--gap) no-repeat;
+    outline: 1px solid var(--sc-hairline); }
+  .tile { position: absolute; width: var(--tile); height: var(--tile); overflow: hidden;
+          left: calc(var(--c) * (var(--tile) + var(--gap))); top: calc(var(--r) * (var(--tile) + var(--gap)));
+          will-change: transform; transform-origin: 50% 50%; border-radius: 1px;
+          box-shadow: 0 calc(var(--lift, 1) * 26px) calc(var(--lift, 1) * 50px) -18px rgb(40 12 16 / calc(var(--lift, 1) * 0.55)); }
+  .art { position: absolute; width: calc(var(--tile) * 3 + var(--gap) * 2); aspect-ratio: 1;
+         left: calc(var(--c) * (var(--tile) + var(--gap)) * -1); top: calc(var(--r) * (var(--tile) + var(--gap)) * -1);
+         background: #2a1214 url(assets/satin-sq.webp) center / cover; color: #f2eae0; container-type: inline-size; }
+  .art .ring { position: absolute; inset: 13%; border: 1px solid color-mix(in oklab, #f2eae0 40%, transparent); border-radius: 50%; }
+  .art .mono { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--sc-font-display);
+               font-style: italic; font-size: 44cqi; line-height: 1; letter-spacing: -0.06em; padding-right: 0.05em; translate: 0 -2%; }
+  .art .line { position: absolute; left: 0; right: 0; bottom: 8.5%; text-align: center; font-family: var(--sc-font-display);
+               font-size: 3.4cqi; letter-spacing: 0.02em; color: color-mix(in oklab, #f2eae0 80%, transparent); }
+  .art .line-t { top: 8.5%; bottom: auto; font-style: italic; }
+  .tile .ord { position: absolute; left: 8px; top: 6px; z-index: 2; font: 500 11px/1 var(--sc-font-text);
+               font-variant-numeric: tabular-nums; color: #f2eae0; opacity: calc(var(--lift, 1));
+               background: rgb(28 14 16 / 0.62); padding: 4px 6px; border-radius: 2px; }
+
+  /* ---------- 5 · atelier (services) ---------- */
+  .atelier { padding-block: clamp(6rem, 12vw, 12rem); }
+  .atelier .cols { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--sc-5); align-items: start; }
+  .atelier header { grid-column: 1 / span 4; position: sticky; top: 14vh; }
+  .atelier header h2 { font-size: var(--sc-t-3xl); line-height: 1; letter-spacing: -0.03em; margin: 0; }
+  .atelier header p { margin: var(--sc-5) 0 0; color: var(--sc-ink-soft); max-width: 28ch; }
+  .atelier ul { grid-column: 6 / span 7; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--sc-hairline); }
+  .atelier li { border-bottom: 1px solid var(--sc-hairline); }
+  .atelier summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; justify-content: space-between;
+                     gap: var(--sc-5); padding: var(--sc-6) 0; }
+  .atelier summary::-webkit-details-marker { display: none; }
+  .atelier summary h3 { margin: 0; font: 400 var(--sc-t-2xl)/1.05 var(--sc-font-display); letter-spacing: -0.02em; text-wrap: balance;
+                        transition: transform 220ms var(--sc-ease-out); }
+  .atelier .plus { flex: none; width: 22px; height: 22px; position: relative; translate: 0 -0.2em; }
+  .atelier .plus::before, .atelier .plus::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+     background: currentColor; transition: transform 240ms var(--sc-ease-out); }
+  .atelier .plus::after { transform: rotate(90deg); }
+  .atelier details[open] .plus::after { transform: rotate(0deg); }
+  @media (hover: hover) and (pointer: fine) { .atelier summary:hover h3 { transform: translateX(8px); } }
+  .atelier .body { padding: 0 0 var(--sc-7); display: grid; grid-template-columns: 1fr 1fr; gap: var(--sc-6); }
+  .atelier .body p { margin: 0; color: var(--sc-ink-soft); text-wrap: pretty; }
+  .atelier .body dl { margin: 0; }
+  .atelier .body dt { font: italic 400 var(--sc-t-base)/1.3 var(--sc-font-display); color: var(--sc-ink); }
+  .atelier .body dd { margin: var(--sc-2) 0 0; color: var(--sc-ink-soft); }
+  details[open] .body { animation: open 320ms var(--sc-ease-out); }
+  @keyframes open { from { opacity: 0; transform: translateY(-6px); } }
+
+  /* ---------- 6 · method: an actual sequence ---------- */
+  .method { padding-block: clamp(4rem, 9vw, 9rem) clamp(7rem, 14vw, 13rem); }
+  .method h2 { font-size: var(--sc-t-3xl); line-height: 1; letter-spacing: -0.03em; margin: 0 0 var(--sc-9); }
+  .method ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); column-gap: var(--sc-5); }
+  .method li { padding-top: var(--sc-5); border-top: 1px solid var(--sc-ink); }
+  .method li:nth-child(2) { margin-top: 3.5rem; } .method li:nth-child(3) { margin-top: 7rem; }
+  .method li:nth-child(4) { margin-top: 10.5rem; } .method li:nth-child(5) { margin-top: 14rem; }
+  .method .n { font: italic 400 var(--sc-t-2xl)/1 var(--sc-font-display); font-variant-numeric: lining-nums; color: var(--sc-accent); }
+  .method h3 { margin: var(--sc-4) 0 var(--sc-3); font: 500 var(--sc-t-lg)/1.25 var(--sc-font-text); letter-spacing: -0.01em; }
+  .method p { margin: 0; color: var(--sc-ink-soft); font-size: var(--sc-t-sm); text-wrap: pretty; }
+
+  /* ---------- 7 · close: the quietest screen ---------- */
+  .close { min-height: 100svh; display: grid; grid-template-rows: 1fr auto; position: relative; overflow: hidden; }
+  .close .satin-edge { position: absolute; inset: auto 0 0 0; height: 48%; pointer-events: none;
+    background: url(assets/satin.webp) center bottom / cover; opacity: 0.55;
+    -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 100%); mask-image: linear-gradient(to top, #000 0%, transparent 100%); }
+  .close .inner { position: relative; align-self: center; padding: var(--sc-10) var(--sc-gutter) var(--sc-8); max-width: 44rem; }
+  .close p { margin: 0; font-size: var(--sc-t-base); color: var(--sc-ink-soft); max-width: 40ch; }
+  .close .ask { margin-top: var(--sc-5); font: 400 var(--sc-t-xl)/1.3 var(--sc-font-display); color: var(--sc-ink); }
+  .close .ask a { text-decoration-color: var(--sc-accent); text-decoration-thickness: 1px; text-underline-offset: 0.3em;
+                  transition: text-decoration-color 160ms var(--sc-ease-out), color 160ms var(--sc-ease-out); }
+  @media (hover: hover) and (pointer: fine) { .close .ask a:hover { color: var(--sc-accent); } }
+  .close .mail { margin-top: var(--sc-3); font-size: var(--sc-t-sm); }
+  .close .mail a { color: var(--sc-ink-soft); }
+  .foot { position: relative; display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--sc-3) var(--sc-6);
+          padding: var(--sc-5) var(--sc-gutter) max(var(--sc-5), env(safe-area-inset-bottom));
+          font-size: var(--sc-t-xs); color: var(--sc-ink-soft); border-top: 1px solid var(--sc-hairline); }
+  .foot a { color: inherit; }
+
+  /* ---------- phone art direction ---------- */
+  @media (max-width: 860px) {
+    .p-word span { font-size: 38vw; translate: 0 -16vh; }
+    .p-amp { right: -18vw; bottom: -6vh; } .p-amp span { font-size: 58vh; }
+    .hero-scrim { background: linear-gradient(to top, rgb(18 7 9 / 0.9) 0%, rgb(18 7 9 / 0.6) 45%, transparent 75%); }
+    .hero h1 { font-size: var(--sc-t-2xl); }
+    .hero .sub { font-size: var(--sc-t-base); }
+    .thesis .txt { grid-column: 2 / -1; }
+    .statement .l2 { padding-left: calc(var(--sc-gutter) + 8vw); }
+    .takeover [data-sc-stage] { grid-template-columns: 1fr; grid-template-rows: auto auto; align-content: center; row-gap: var(--sc-6); }
+    .takeover .cap { order: 2; justify-self: start; }
+    .takeover h2 { font-size: var(--sc-t-2xl); }
+    .feed { --tile: min(calc((100vw - 2 * var(--sc-gutter) - 2 * var(--gap)) / 3), calc((52svh - 2 * var(--gap)) / 3));
+            margin: 0 auto; }
+    .atelier header { grid-column: 1 / -1; position: static; margin-bottom: var(--sc-7); }
+    .atelier ul { grid-column: 1 / -1; }
+    .atelier summary { padding: var(--sc-5) 0; }
+    .atelier .body { grid-template-columns: 1fr; gap: var(--sc-4); }
+    .method h2 { margin-bottom: var(--sc-7); }
+    .method ol { grid-template-columns: 1fr; row-gap: var(--sc-6); }
+    .method li { margin-top: 0 !important; display: grid; grid-template-columns: 3.2rem 1fr; column-gap: var(--sc-4); }
+    .method li .n { grid-row: span 2; }
+    .method h3 { margin-top: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .plane { transform: none !important; }
+    .p-word { opacity: 1; }
+    details[open] .body { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<span data-sc-progress></span>
+<div class="sc-grain" aria-hidden="true"></div>
+
+<div class="lang" role="group" aria-label="Nyelv / Language">
+  <button type="button" data-set-lang="hu" aria-pressed="true" lang="hu">Magyar</button>
+  <button type="button" data-set-lang="en" aria-pressed="false" lang="en">English</button>
+</div>
+
+<main id="top">
+
+  <!-- 1 · Hush: one word at monumental scale, four planes moving at four rates -->
+  <section class="hero" data-sc-act="pin" data-sc-span="1.25">
+    <div data-sc-stage>
+      <div class="plane p-satin" aria-hidden="true">
+        <picture>
+          <source media="(max-width: 860px)" srcset="assets/satin-m.webp">
+          <img src="assets/satin.webp" width="2400" height="1500" alt="" fetchpriority="high">
+        </picture>
+      </div>
+      <div class="plane p-word" aria-hidden="true"><span>Atelier</span></div>
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <div class="plane p-amp" aria-hidden="true"><span>&amp;</span></div>
+
+      <a class="mark" href="https://hbmarketing.hu/" aria-label="HB Marketing">
+        <b>HB Marketing</b><i>Social</i>
+      </a>
+
+      <div class="hero-copy" data-sc-cue="0 0.96 0">
+        <h1 class="sc-display">
+          <span data-l="hu">Közösségi média, mértékre szabva.</span>
+          <span data-l="en">Social media, made to measure.</span>
+        </h1>
+        <p class="sub">
+          <span data-l="hu">Instagram, TikTok és LinkedIn azoknak a márkáknak, amelyeket lassan építenek és gondosan adnak el.</span>
+          <span data-l="en">Instagram, TikTok and LinkedIn for brands that are built slowly and sold with care.</span>
+        </p>
+        <a class="cta js-book" href="#foglalas">
+          <span data-l="hu">Konzultáció foglalása</span><span data-l="en">Book a consultation</span>
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.3"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · Recognition: small, honest, after the volume -->
+  <section class="thesis" data-sc-act="flow">
+    <div class="sc-wrap cols">
+      <div class="txt" data-sc-in data-sc-stagger="80">
+        <p>
+          <span data-l="hu">A legtöbb hírfolyam sietve készül. Napi egy poszt, egy sablon, egy trend, aztán elölről. A közönség udvariasan görget tovább.</span>
+          <span data-l="en">Most feeds are made in a hurry. A post a day, a template, a trend, then again. The audience scrolls on, politely.</span>
+        </p>
+        <p>
+          <span data-l="hu">Mi kevesebbet posztolunk, de minden képnek, mondatnak és válasznak oka van. Úgy dolgozunk egy márka csatornáin, ahogy a szabó egy öltönyön: mérünk, próbálunk, igazítunk.</span>
+          <span data-l="en">We post less, and every image, sentence and reply has a reason to exist. We work on a brand's channels the way a tailor works on a suit: measure, fit, adjust.</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · Conviction: the line, wiped across the letterforms -->
+  <section class="statement" data-sc-act="flow">
+    <h2 class="sc-display">
+      <span class="l1" data-sc-reveal="right" data-sc-reveal-at="0.16 0.42">
+        <span data-l="hu">Kevesebb poszt.</span><span data-l="en">Fewer posts.</span>
+      </span>
+      <span class="l2" data-sc-reveal="right" data-sc-reveal-at="0.30 0.56">
+        <span data-l="hu">Jobbak.</span><span data-l="en">Better ones.</span>
+      </span>
+    </h2>
+  </section>
+
+  <!-- 4 · Delight, the peak: nine posts fly together into one picture -->
+  <section class="takeover on-bone" id="grid" data-sc-act="pin" data-sc-span="3.2">
+    <div data-sc-stage>
+      <div class="cap" data-sc-cue="0.58">
+        <h2 class="sc-display">
+          <span data-l="hu">Kilenc poszt. Egyetlen kép.</span>
+          <span data-l="en">Nine posts. One picture.</span>
+        </h2>
+        <p>
+          <span data-l="hu">A grid takeover a nagy divatházak bemutatkozása: kilenc külön poszt, amely a profilon egyetlen kompozícióvá áll össze. Kollekcióindításra, megnyitóra, évfordulóra tervezzük, a közzététel sorrendjéig.</span>
+          <span data-l="en">A grid takeover is how the great houses launch: nine separate posts that come together as one composition on the profile. We design them for collection launches, openings and anniversaries, down to the order they go live.</span>
+        </p>
+      </div>
+
+      <div class="feed" role="img" aria-label="Kilenc négyzetes poszt, amelyek együtt egy HB monogramot adnak oxblood szaténon. / Nine square posts that together form an HB monogram on oxblood satin.">
+        <!-- Instagram fills a grid newest-first, so the bottom-right tile is published first. -->
+        <div class="tile" style="--c:0;--r:0"><span class="ord">9</span><div class="art"><div class="ring"></div><div class="mono">HB</div><div class="line line-t">Atelier</div><div class="line">Budapest</div></div></div>
+        <div class="tile" style="--c:1;--r:0"><span class="ord">8</span><div class="art"><div class="ring"></div><div class="mono">HB</div><div class="line line-t">Atelier</div><div class="line">Budapest</div></div></div>
+        <div class="tile" style="--c:2;--r:0"><span class="ord">7</span><div class="art"><div class="ring"></div><div class="mono">HB</div><div class="line line-t">Atelier</div><div class="line">Budapest</div></div></div>
+        <div class="tile" style="--c:0;--r:1"><span class="ord">6</span><div class="art"><div class="ring"></div><div class="mono">HB</div><div class="line line-t">Atelier</div><div class="line">Budapest</div></div></div>
+        <div class="tile" style="--c:1;--r:1"><span class="ord">5</span><div class="art"><div class="ring"></div><div class="mono">HB</div><div class="line line-t">Atelier</div><div class="line">Budapest</div></div></div>
+        <div class="tile" style="--c:2;--r:1"><span class="ord">4</span><div class="art"><div class="ring"></div><div class="mono">HB</div><div class="line line-t">Atelier</div><div class="line">Budapest</div></div></div>
+        <div class="tile" style="--c:0;--r:2"><span class="ord">3</span><div class="art"><div class="ring"></div><div class="mono">HB</div><div class="line line-t">Atelier</div><div class="line">Budapest</div></div></div>
+        <div class="tile" style="--c:1;--r:2"><span class="ord">2</span><div class="art"><div class="ring"></div><div class="mono">HB</div><div class="line line-t">Atelier</div><div class="line">Budapest</div></div></div>
+        <div class="tile" style="--c:2;--r:2"><span class="ord">1</span><div class="art"><div class="ring"></div><div class="mono">HB</div><div class="line line-t">Atelier</div><div class="line">Budapest</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · Appetite: the atelier, opened on request -->
+  <section class="atelier on-bone" id="atelier" data-sc-act="flow">
+    <div class="sc-wrap cols">
+      <header>
+        <h2 class="sc-display"><span data-l="hu">Az atelier</span><span data-l="en">The atelier</span></h2>
+        <p>
+          <span data-l="hu">Hat szolgáltatás, amelyekből a márkájára szabott csomagot állítunk össze. Nyisson ki bármelyiket.</span>
+          <span data-l="en">Six services we combine into a package cut for your brand. Open any of them.</span>
+        </p>
+      </header>
+      <ul>
+        <li><details>
+          <summary><h3><span data-l="hu">Művészeti irány és stratégia</span><span data-l="en">Art direction and strategy</span></h3><span class="plus" aria-hidden="true"></span></summary>
+          <div class="body">
+            <p><span data-l="hu">Hangnem, vizuális nyelv, tartalmi pillérek és egy negyedéves terv, amelyhez az Ön csapata is tud igazodni.</span><span data-l="en">Tone of voice, visual language, content pillars and a quarterly plan your own team can work to.</span></p>
+            <dl><dt><span data-l="hu">Amit kézbe kap</span><span data-l="en">What you receive</span></dt><dd><span data-l="hu">Közösségi márkakönyv és negyedéves tartalomnaptár.</span><span data-l="en">A social brand book and a quarterly content calendar.</span></dd></dl>
+          </div>
+        </details></li>
+        <li><details>
+          <summary><h3><span data-l="hu">Szerkesztőségi gyártás</span><span data-l="en">Editorial production</span></h3><span class="plus" aria-hidden="true"></span></summary>
+          <div class="body">
+            <p><span data-l="hu">Fotó- és videónapok az Ön helyszínén vagy budapesti lokációkon. Állóképek, Reels és TikTok vágások ugyanabból a forgatásból.</span><span data-l="en">Photo and video days at your venue or on location in Budapest. Stills, Reels and TikTok edits from the same shoot.</span></p>
+            <dl><dt><span data-l="hu">Amit kézbe kap</span><span data-l="en">What you receive</span></dt><dd><span data-l="hu">Retusált képsorozat és függőleges videók, platformra vágva.</span><span data-l="en">A retouched image series and vertical video, cut for each platform.</span></dd></dl>
+          </div>
+        </details></li>
+        <li><details>
+          <summary><h3><span data-l="hu">Közösségi concierge</span><span data-l="en">Community concierge</span></h3><span class="plus" aria-hidden="true"></span></summary>
+          <div class="body">
+            <p><span data-l="hu">Kommentekre és üzenetekre válaszolunk a márka hangján, magyarul és angolul, egyeztetett időablakban. Foglalást és panaszt azonnal továbbítunk a csapatához.</span><span data-l="en">We answer comments and messages in your brand's voice, in Hungarian and English, within agreed hours. Bookings and complaints go straight to your team.</span></p>
+            <dl><dt><span data-l="hu">Amit kézbe kap</span><span data-l="en">What you receive</span></dt><dd><span data-l="hu">Válaszkönyv a gyakori kérdésekre és heti összefoglaló.</span><span data-l="en">A reply guide for common questions and a weekly summary.</span></dd></dl>
+          </div>
+        </details></li>
+        <li><details>
+          <summary><h3><span data-l="hu">Fizetett kampányok</span><span data-l="en">Paid social</span></h3><span class="plus" aria-hidden="true"></span></summary>
+          <div class="body">
+            <p><span data-l="hu">Meta, TikTok és LinkedIn hirdetések azoknak a keveseknek, akik számítanak. A kreatívot és a célzást együtt tervezzük, nem egymás után.</span><span data-l="en">Meta, TikTok and LinkedIn campaigns aimed at the few people who matter. Creative and targeting are planned together, not one after the other.</span></p>
+            <dl><dt><span data-l="hu">Amit kézbe kap</span><span data-l="en">What you receive</span></dt><dd><span data-l="hu">Kampányterv, hirdetési kreatívok és kétheti optimalizálás.</span><span data-l="en">A campaign plan, ad creative and fortnightly optimisation.</span></dd></dl>
+          </div>
+        </details></li>
+        <li><details>
+          <summary><h3><span data-l="hu">Alkotói és tehetségpartnerségek</span><span data-l="en">Creator and talent partnerships</span></h3><span class="plus" aria-hidden="true"></span></summary>
+          <div class="body">
+            <p><span data-l="hu">Olyan alkotókat választunk, akiknek a közönsége és az ízlése illik a márkához. Brief, szerződés és jóváhagyás egy kézben.</span><span data-l="en">We choose creators whose audience and taste fit the brand. Brief, contract and approvals handled in one place.</span></p>
+            <dl><dt><span data-l="hu">Amit kézbe kap</span><span data-l="en">What you receive</span></dt><dd><span data-l="hu">Rövid lista indoklással, majd a teljes együttműködés lebonyolítása.</span><span data-l="en">A shortlist with reasons, then the whole collaboration run for you.</span></dd></dl>
+          </div>
+        </details></li>
+        <li><details>
+          <summary><h3><span data-l="hu">Havi áttekintés</span><span data-l="en">Monthly review</span></h3><span class="plus" aria-hidden="true"></span></summary>
+          <div class="body">
+            <p><span data-l="hu">Egy oldal arról, mi működött, mi nem, és mit változtatunk. Személyesen vagy videóhívásban beszéljük át, nem csak e-mailben küldjük.</span><span data-l="en">One page on what worked, what didn't and what we change. We talk it through in person or on a call, not just by email.</span></p>
+            <dl><dt><span data-l="hu">Amit kézbe kap</span><span data-l="en">What you receive</span></dt><dd><span data-l="hu">Egyoldalas riport és a következő hónap terve.</span><span data-l="en">A one-page report and next month's plan.</span></dd></dl>
+          </div>
+        </details></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6 · Trust: the method is a real sequence, so it is numbered -->
+  <section class="method on-bone" data-sc-act="flow">
+    <div class="sc-wrap">
+      <h2 class="sc-display"><span data-l="hu">Így dolgozunk</span><span data-l="en">How we work</span></h2>
+      <ol>
+        <li data-sc-reveal="up" data-sc-reveal-at="0.12 0.30"><span class="n">1</span>
+          <h3><span data-l="hu">Beszélgetés</span><span data-l="en">Conversation</span></h3>
+          <p><span data-l="hu">Megismerjük a márkát, a közönséget és a célokat.</span><span data-l="en">We get to know the brand, its audience and its goals.</span></p></li>
+        <li data-sc-reveal="up" data-sc-reveal-at="0.17 0.35"><span class="n">2</span>
+          <h3><span data-l="hu">Javaslat</span><span data-l="en">Proposal</span></h3>
+          <p><span data-l="hu">Csatornák, ütem, csapat és fix havidíj, írásban.</span><span data-l="en">Channels, cadence, team and a fixed monthly fee, in writing.</span></p></li>
+        <li data-sc-reveal="up" data-sc-reveal-at="0.22 0.40"><span class="n">3</span>
+          <h3><span data-l="hu">Atelier-nap</span><span data-l="en">Atelier day</span></h3>
+          <p><span data-l="hu">Stratégiai műhely és az első forgatás egy napon.</span><span data-l="en">A strategy workshop and the first shoot, in one day.</span></p></li>
+        <li data-sc-reveal="up" data-sc-reveal-at="0.27 0.45"><span class="n">4</span>
+          <h3><span data-l="hu">Jóváhagyás, megjelenés</span><span data-l="en">Approval, then live</span></h3>
+          <p><span data-l="hu">Minden posztot Ön hagy jóvá, mielőtt élesbe megy.</span><span data-l="en">You approve every post before it goes live.</span></p></li>
+        <li data-sc-reveal="up" data-sc-reveal-at="0.32 0.50"><span class="n">5</span>
+          <h3><span data-l="hu">Havi áttekintés</span><span data-l="en">Monthly review</span></h3>
+          <p><span data-l="hu">Átnézzük az eredményeket, és igazítunk a terven.</span><span data-l="en">We review the results and adjust the plan.</span></p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 7 · Resolve: the smallest type on the site -->
+  <section class="close" id="foglalas" data-sc-act="flow">
+    <div class="satin-edge" aria-hidden="true"></div>
+    <div class="inner" data-sc-in data-sc-stagger="70">
+      <p>
+        <span data-l="hu">Néhány márkával dolgozunk egyszerre, hogy mindegyikre jusson idő. Ha a márkája megérdemli a figyelmet, beszéljünk.</span>
+        <span data-l="en">We work with a few brands at a time, so each one gets the attention. If yours deserves it, let's talk.</span>
+      </p>
+      <p class="ask">
+        <a class="js-mail" href="mailto:social@hbmarketing.hu">
+          <span data-l="hu">Konzultáció foglalása</span><span data-l="en">Book a consultation</span>
+        </a>
+      </p>
+      <p class="mail"><a class="js-mail js-mail-text" href="mailto:social@hbmarketing.hu">social@hbmarketing.hu</a></p>
+    </div>
+    <footer class="foot">
+      <span>© 2026 HB Marketing, Budapest</span>
+      <a href="https://hbmarketing.hu/"><span data-l="hu">Vissza a hbmarketing.hu oldalra</span><span data-l="en">Back to hbmarketing.hu</span></a>
+    </footer>
+  </section>
+
+</main>
+
+<script src="scrollcraft.js"></script>
+<script>
+(function () {
+  'use strict';
+  /* One address for the whole page. Change it here. */
+  var CONTACT = 'social@hbmarketing.hu';
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
+
+  /* ---------- language ---------- */
+  var META = {
+    hu: { title: 'HB Marketing Social: közösségi média, mértékre szabva',
+          subject: 'Konzultáció: közösségi média' },
+    en: { title: 'HB Marketing Social: social media, made to measure',
+          subject: 'Consultation: social media' }
+  };
+  function setLang(l, save) {
+    if (!META[l]) return;
+    root.lang = l;
+    document.title = META[l].title;
+    document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.setLang === l));
+    });
+    document.querySelectorAll('.js-mail').forEach(function (a) {
+      a.href = 'mailto:' + CONTACT + '?subject=' + encodeURIComponent(META[l].subject);
+    });
+    if (save) { try { localStorage.setItem('hb-lang', l); } catch (e) {} }
+  }
+  document.querySelectorAll('.js-mail-text').forEach(function (a) { a.textContent = CONTACT; });
+  var initial = new URLSearchParams(location.search).get('lang');
+  if (!initial) { try { initial = localStorage.getItem('hb-lang'); } catch (e) {} }
+  setLang(initial === 'en' ? 'en' : 'hu', false);
+  document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+    b.addEventListener('click', function () { setLang(b.dataset.setLang, true); });
+  });
+
+  /* ---------- hero pointer depth (fine pointers only, never captured) ---------- */
+  var hero = document.querySelector('.hero');
+  if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    var tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+    var step = function () {
+      cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
+      hero.style.setProperty('--mx', cx.toFixed(4));
+      hero.style.setProperty('--my', cy.toFixed(4));
+      raf = (Math.abs(tx - cx) + Math.abs(ty - cy) > 0.001) ? requestAnimationFrame(step) : 0;
+    };
+    hero.addEventListener('pointermove', function (e) {
+      tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1;
+      if (!raf) raf = requestAnimationFrame(step);
+    });
+  }
+
+  /* ---------- signature: the grid takeover ----------
+     Each tile starts scattered in depth across the viewport and flies home as
+     the act's progress (--sc-p, written by the engine) advances. Tiles land in
+     publishing order: post 1 (bottom right) first, post 9 (top left) last. */
+  var act = document.getElementById('grid');
+  var feed = act.querySelector('.feed');
+  var tiles = Array.prototype.slice.call(feed.querySelectorAll('.tile'));
+  // Scattered pose per tile, in DOM order: [x, y] as fractions of the stage
+  // (where the tile's centre starts), rotation in degrees, scale.
+  var SCATTER = [
+    [0.10, 0.16, -9, 0.74], [0.40, 0.10, 6, 0.86], [0.88, 0.14, -4, 0.7],
+    [0.24, 0.50, 5, 0.82],  [0.56, 0.86, -6, 1.04], [0.92, 0.52, 8, 0.78],
+    [0.08, 0.84, 4, 0.72],  [0.36, 0.80, -10, 0.9], [0.74, 0.88, 5, 1.0]
+  ];
+  var ORDER = [8, 7, 6, 5, 4, 3, 2, 1, 0]; // landing rank per DOM index
+  var easeOut = function (t) { return 1 - Math.pow(1 - t, 3.2); };
+  var clamp01 = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x; };
+  var last = -1, offs = [];
+  var stage = feed.parentElement;
+
+  // Translation from each tile's home cell to its scattered spot, measured on
+  // the untransformed layout so it holds at any viewport size.
+  function measure() {
+    var sw = stage.clientWidth, sh = stage.clientHeight;
+    offs = tiles.map(function (el, i) {
+      var hx = feed.offsetLeft + el.offsetLeft + el.offsetWidth / 2;
+      var hy = feed.offsetTop + el.offsetTop + el.offsetHeight / 2;
+      return [SCATTER[i][0] * sw - hx, SCATTER[i][1] * sh - hy];
+    });
+  }
+
+  function pose(p) {
+    if (p === last) return; last = p;
+    if (!offs.length) measure();
+    var lifted = 0;
+    tiles.forEach(function (el, i) {
+      var start = 0.03 + ORDER[i] * 0.045, t = easeOut(clamp01((p - start) / 0.26));
+      var s = SCATTER[i], u = 1 - t;
+      el.style.transform =
+        'translate3d(' + (offs[i][0] * u).toFixed(1) + 'px,' + (offs[i][1] * u).toFixed(1) + 'px,0) ' +
+        'rotate(' + (s[2] * u).toFixed(2) + 'deg) scale(' + (s[3] + (1 - s[3]) * t).toFixed(4) + ')';
+      el.style.setProperty('--lift', u.toFixed(3));
+      el.style.zIndex = String(10 + Math.round(u * 10));
+      lifted += u;
+    });
+    feed.style.setProperty('--done', (1 - lifted / tiles.length).toFixed(3));
+  }
+
+  // Re-measure once the engine has sized the pinned stage, and again after
+  // fonts and images settle, since all three move the home cells.
+  var remeasure = function () { offs = []; last = -1; if (reduce) pose(1); else if (window.__hbRead) window.__hbRead(); };
+  addEventListener('load', remeasure);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
+
+  if (reduce) { requestAnimationFrame(function () { requestAnimationFrame(remeasure); }); }
+  else {
+    var read = function () {
+      var p = parseFloat(getComputedStyle(act).getPropertyValue('--sc-p'));
+      pose(isNaN(p) ? 0 : Math.round(p * 1000) / 1000);
+    };
+    var ticking = false;
+    var onScroll = function () {
+      if (ticking) return; ticking = true;
+      requestAnimationFrame(function () { ticking = false; read(); });
+    };
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', function () { last = -1; offs = []; onScroll(); });
+    window.__hbRead = read;
+    // The engine mounts and writes --sc-p on its own frame; measure after it.
+    requestAnimationFrame(function () { requestAnimationFrame(remeasure); });
+  }
+})();
+</script>
+<script>ScrollCraft.mount(document.body);</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+node_modules/
+package-lock.json
+lab/*
+!lab/satin.py
+!lab/render.mjs
+!lab/func.mjs
