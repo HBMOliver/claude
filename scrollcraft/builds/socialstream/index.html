@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Social Stream — Social Media Marketing Ügynökség</title>
+<meta name="description" content="A Social Stream egy social media marketing ügynökség: videó tartalom, social jelenlét és performance hirdetések egy growth rendszerben. 81× ROAS, 300M+ Ft kezelt büdzsé.">
+<meta name="theme-color" content="#f8f4ec">
+<meta property="og:title" content="Social Stream — marketing az érdeklődés korában">
+<meta property="og:description" content="Egy korszak véget ért — mi a következőt építjük. Videó tartalom, social jelenlét és performance hirdetések egy growth rendszerben.">
+<meta property="og:image" content="assets/workshop.webp">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230a0a0a'/><text x='16' y='22' font-family='Georgia,serif' font-style='italic' font-size='17' text-anchor='middle' fill='%23f8f4ec'>S</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/oliver-cut.webp">
+<link rel="stylesheet" href="scrollcraft.css">
+<style>
+  /* Social Stream brand: cream paper, true ink, one dusty blue. Fraunces speaks, Jakarta explains. */
+  :root {
+    --cream: #f8f4ec;
+    --paper: #fffdf8;
+    --ink: #0a0a0a;
+    --gray: #5f5b55;
+    --line: #e2dacb;
+    --blue: #7c9ebe;
+    --blue-d: #3e5f7e;
+    --night: #0d0d0c;
+
+    --sc-canvas: var(--cream);
+    --sc-surface: var(--paper);
+    --sc-ink: var(--ink);
+    --sc-ink-soft: var(--gray);
+    --sc-accent: var(--blue-d);
+    --sc-accent-ink: var(--cream);
+    --sc-hairline: var(--line);
+    --sc-font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --sc-font-text: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+    --sc-shadow-color: 35 25% 30%;
+    --mx: 0; --my: 0;
+  }
+
+  html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+  body { background: var(--cream); color: var(--ink); font-family: var(--sc-font-text);
+         font-size: var(--sc-t-base); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+  .sc-display { font-family: var(--sc-font-display); font-weight: 400; font-optical-sizing: auto; letter-spacing: -0.02em; }
+  a { color: inherit; text-underline-offset: 0.22em; text-decoration-thickness: 1px; }
+  :focus-visible { outline: 2px solid var(--blue-d); outline-offset: 4px; border-radius: 3px; }
+  img { display: block; max-width: 100%; }
+  main > section { position: relative; }
+  .dark { background: var(--night); color: var(--cream); --sc-ink: var(--cream); --sc-ink-soft: #b9b2a6;
+          --sc-hairline: rgb(248 244 236 / 0.14); --sc-accent: var(--blue); }
+  .dark :focus-visible { outline-color: var(--blue); }
+
+  /* Chapter folio: the source site numbers its chapters, so the sequence is real. */
+  .folio { display: flex; align-items: baseline; gap: 0.75em; margin: 0 0 var(--sc-6);
+           font: 600 var(--sc-t-xs)/1.2 var(--sc-font-text); letter-spacing: 0.16em; text-transform: uppercase; color: var(--sc-ink-soft); }
+  .folio b { font: italic 400 1.35rem/1 var(--sc-font-display); letter-spacing: 0; text-transform: none; color: var(--sc-accent); }
+
+  .btn { display: inline-flex; align-items: center; gap: 0.6em; padding: 1em 1.55em; border-radius: 999px;
+         font: 600 var(--sc-t-sm)/1 var(--sc-font-text); letter-spacing: 0.01em; text-decoration: none; white-space: nowrap;
+         transition: transform 140ms var(--sc-ease-out), background-color 160ms var(--sc-ease-out), color 160ms var(--sc-ease-out); }
+  .btn--ink { background: var(--ink); color: var(--cream); box-shadow: 0 12px 28px -14px rgb(10 10 10 / 0.55); }
+  .btn--ghost { color: var(--ink); box-shadow: inset 0 0 0 1px rgb(10 10 10 / 0.22); }
+  .btn--cream { background: var(--cream); color: var(--ink); }
+  .btn svg { width: 1em; height: 1em; transition: transform 160ms var(--sc-ease-out); }
+  @media (hover: hover) and (pointer: fine) {
+    .btn--ink:hover { background: var(--blue-d); }
+    .btn--ghost:hover { background: rgb(10 10 10 / 0.05); }
+    .btn--cream:hover { background: #fff; }
+    .btn:hover svg { transform: translateX(3px); }
+  }
+  .btn:active { transform: scale(0.97); }
+
+  /* ---------- navigation ---------- */
+  .bar { position: fixed; inset: 0 0 auto 0; z-index: 70; display: flex; align-items: center; gap: var(--sc-5);
+         padding: max(12px, env(safe-area-inset-top)) var(--sc-gutter) 12px;
+         transition: background-color 240ms var(--sc-ease-out), box-shadow 240ms var(--sc-ease-out); }
+  .bar.is-stuck { background: rgb(248 244 236 / 0.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+                  box-shadow: 0 1px 0 var(--line); }
+  .logo { font: 700 0.82rem/1 var(--sc-font-text); letter-spacing: 0.32em; text-decoration: none; margin-right: auto; padding: 8px 0; }
+  .bar nav { display: flex; gap: var(--sc-5); }
+  .bar nav a { font-size: var(--sc-t-sm); font-weight: 500; text-decoration: none; color: var(--gray); padding: 8px 0;
+               transition: color 160ms var(--sc-ease-out); }
+  @media (hover: hover) and (pointer: fine) { .bar nav a:hover { color: var(--ink); } }
+  .lang { display: flex; gap: 2px; padding: 3px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line); background: var(--paper); }
+  .lang button { font: 600 0.7rem/1 var(--sc-font-text); letter-spacing: 0.06em; border: 0; background: none; color: var(--gray);
+                 padding: 8px 10px; border-radius: 999px; cursor: pointer; transition: background-color 160ms var(--sc-ease-out), color 160ms var(--sc-ease-out); }
+  .lang button[aria-pressed="true"] { background: var(--ink); color: var(--cream); }
+  .bar .btn { padding: 0.85em 1.2em; }
+
+  /* ---------- 1 · hero: wall, word, man, copy ---------- */
+  .hero [data-sc-stage] { overflow: hidden; background: var(--cream); }
+  .plane { position: absolute; pointer-events: none; will-change: transform; }
+  .p-wall { inset: -6%; transform: translate3d(calc(var(--mx) * -6px), calc(var(--sc-p, 0) * -3vh), 0) scale(calc(1.02 + var(--sc-p, 0) * 0.03)); }
+  .p-wall img { width: 100%; height: 100%; object-fit: cover; }
+  .p-word { inset: 0; display: grid; place-items: center; z-index: 2;
+            transform: translate3d(calc(var(--mx) * -16px), calc(var(--sc-p, 0) * -14vh + var(--my) * -8px), 0) scale(calc(1 - var(--sc-p, 0) * 0.08)); }
+  .p-word span { font: italic 300 22.5vw/1 var(--sc-font-display); letter-spacing: -0.055em; color: var(--blue);
+                 opacity: 0.32; white-space: nowrap; translate: 6vw -4vh; padding-right: 0.06em; }
+  .p-man { z-index: 3; right: 7vw; bottom: -9vh; height: 99vh; transform-origin: 50% 100%;
+           transform: translate3d(calc(var(--mx) * -26px), calc(var(--sc-p, 0) * -4vh), 0) scale(calc(1 + var(--sc-p, 0) * 0.07)); }
+  .p-man img { height: 100%; width: auto; filter: drop-shadow(-18px 24px 30px rgb(80 60 30 / 0.16)); }
+  .hero-copy { position: absolute; z-index: 5; left: var(--sc-gutter); top: 50%; translate: 0 -46%; max-width: min(44rem, 52vw); }
+  .kicker { margin: 0 0 var(--sc-5); font: 600 var(--sc-t-xs)/1.4 var(--sc-font-text); letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue-d); }
+  .hero h1 { margin: 0; font-size: clamp(2.5rem, 1.2rem + 3.7vw, 5.1rem); line-height: 1.02; letter-spacing: -0.032em; text-wrap: balance; }
+  .hero h1 em { font-style: italic; color: var(--blue-d); }
+  .hero .lede { margin: var(--sc-5) 0 0; max-width: 46ch; font-size: var(--sc-t-lg); line-height: 1.55; color: var(--gray); text-wrap: pretty; }
+  .hero .ctas { display: flex; flex-wrap: wrap; gap: var(--sc-3); margin-top: var(--sc-6); }
+
+  /* ---------- 2 · marquee (from the source site) ---------- */
+  .marquee { overflow: hidden; border-block: 1px solid var(--line); background: var(--paper); padding: 16px 0; }
+  .marquee .track { display: inline-flex; gap: 56px; padding-right: 56px; white-space: nowrap; animation: mq 46s linear infinite; }
+  .marquee span { font: 600 0.72rem/1.4 var(--sc-font-text); letter-spacing: 0.24em; text-transform: uppercase; color: var(--gray); }
+  .marquee span b { font: 400 1.25rem/1 var(--sc-font-display); letter-spacing: -0.01em; color: var(--ink); margin-right: 0.45em; text-transform: none; }
+  .marquee em { font: italic 400 1rem/1.4 var(--sc-font-display); color: var(--blue-d); }
+  .marquee:hover .track { animation-play-state: paused; }
+  @keyframes mq { to { transform: translateX(-50%); } }
+
+  /* ---------- 3 · chapter I ---------- */
+  .ch1 { padding-block: clamp(6rem, 13vw, 12rem) clamp(4rem, 8vw, 7rem); }
+  .ch1 .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sc-5); row-gap: var(--sc-6); }
+  .ch1 .head { grid-column: 1 / span 7; }
+  .ch1 h2 { margin: 0; font-size: var(--sc-t-3xl); line-height: 1.02; text-wrap: balance; }
+  .ch1 .txt { grid-column: 8 / span 5; padding-top: 4.2rem; }
+  .ch1 .txt p { margin: 0; color: var(--gray); text-wrap: pretty; }
+  .ch1 .txt p + p { margin-top: var(--sc-5); color: var(--ink); font-weight: 500; }
+
+  /* ---------- 4 · the laws, on dark linen ---------- */
+  .laws { padding-block: clamp(6rem, 12vw, 11rem); overflow: hidden; }
+  .laws::before { content: ""; position: absolute; inset: 0; background: url(assets/linen-dark.webp) center / cover; opacity: 0.55; pointer-events: none; }
+  .law { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sc-5); }
+  .law + .law { margin-top: clamp(5rem, 11vw, 10rem); }
+  .law .lab { grid-column: 1 / span 3; margin: 0.9rem 0 0; font: italic 400 var(--sc-t-lg)/1.3 var(--sc-font-display); color: var(--blue); }
+  .law h3 { grid-column: 4 / span 9; margin: 0; font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.2rem); line-height: 0.98; letter-spacing: -0.035em; text-wrap: balance; }
+  .law p { grid-column: 4 / span 5; margin: var(--sc-6) 0 0; color: var(--sc-ink-soft); font-size: var(--sc-t-lg); line-height: 1.6; text-wrap: pretty; }
+  .law:nth-child(2) h3, .law:nth-child(2) p { grid-column-start: 5; }
+
+  /* ---------- 5 · peak: law III, the feed assembles ---------- */
+  .takeover { background: var(--paper); }
+  .takeover [data-sc-stage] { display: grid; grid-template-columns: minmax(20rem, 1fr) auto; align-items: center;
+                              column-gap: clamp(2rem, 6vw, 7rem); padding-inline: var(--sc-gutter); overflow: hidden; }
+  .cap { position: relative; justify-self: end; width: min(30rem, 100%); min-height: 19rem; }
+  .cap > div { position: absolute; inset: 0 0 auto 0; }
+  .cap .lab { margin: 0 0 var(--sc-4); font: italic 400 var(--sc-t-lg)/1.3 var(--sc-font-display); color: var(--blue-d); }
+  .cap h3 { margin: 0; font-size: var(--sc-t-2xl); line-height: 1.04; letter-spacing: -0.03em; text-wrap: balance; }
+  .cap p { margin: var(--sc-4) 0 0; color: var(--gray); text-wrap: pretty; }
+  .feed { --gap: 3px; --tile: min(calc((80vh - 2 * var(--gap)) / 3), 13.5rem);
+          position: relative; width: calc(var(--tile) * 3 + var(--gap) * 2); aspect-ratio: 1; max-width: 100%; margin-right: 3vw; }
+  .feed::before { content: ""; position: absolute; inset: 0; opacity: calc(1 - var(--done, 0));
+    background:
+      linear-gradient(var(--line), var(--line)) var(--tile) 0 / var(--gap) 100% no-repeat,
+      linear-gradient(var(--line), var(--line)) calc(var(--tile) * 2 + var(--gap)) 0 / var(--gap) 100% no-repeat,
+      linear-gradient(var(--line), var(--line)) 0 var(--tile) / 100% var(--gap) no-repeat,
+      linear-gradient(var(--line), var(--line)) 0 calc(var(--tile) * 2 + var(--gap)) / 100% var(--gap) no-repeat;
+    outline: 1px solid var(--line); }
+  .tile { position: absolute; width: var(--tile); height: var(--tile); overflow: hidden; will-change: transform; border-radius: 2px;
+          left: calc(var(--c) * (var(--tile) + var(--gap))); top: calc(var(--r) * (var(--tile) + var(--gap)));
+          box-shadow: 0 calc(var(--lift, 1) * 24px) calc(var(--lift, 1) * 46px) -18px rgb(60 45 25 / calc(var(--lift, 1) * 0.5)); }
+  .tile i { position: absolute; width: calc(var(--tile) * 3 + var(--gap) * 2); aspect-ratio: 1;
+            left: calc(var(--c) * (var(--tile) + var(--gap)) * -1); top: calc(var(--r) * (var(--tile) + var(--gap)) * -1);
+            background: url(assets/workshop-sq.webp) center / cover; }
+  .tile b { position: absolute; left: 7px; top: 6px; z-index: 2; font: 600 11px/1 var(--sc-font-text); font-variant-numeric: tabular-nums;
+            color: var(--cream); background: rgb(10 10 10 / 0.6); padding: 4px 6px; border-radius: 2px; opacity: var(--lift, 1); }
+
+  /* ---------- 6 · chapter II: services ---------- */
+  .ch2 { padding-block: clamp(6rem, 12vw, 11rem); }
+  .ch2 .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sc-5); align-items: start; }
+  .ch2 header { grid-column: 1 / span 4; position: sticky; top: 16vh; }
+  .ch2 h2 { margin: 0; font-size: var(--sc-t-3xl); line-height: 1; text-wrap: balance; }
+  .ch2 header p { margin: var(--sc-5) 0 0; color: var(--gray); max-width: 32ch; }
+  .svc { grid-column: 6 / span 7; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .svc li { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); column-gap: var(--sc-4); padding: var(--sc-6) 0; border-bottom: 1px solid var(--line); }
+  .svc .g { font-size: 1.15rem; line-height: 1.6; color: var(--blue-d); }
+  .svc h3 { margin: 0; font: 400 var(--sc-t-xl)/1.15 var(--sc-font-display); letter-spacing: -0.02em; }
+  .svc p { margin: var(--sc-3) 0 0; color: var(--gray); max-width: 52ch; text-wrap: pretty; }
+
+  /* ---------- 7 · chapter III: the notes, as a rail ---------- */
+  .notes { background: var(--paper); }
+  .notes [data-sc-stage] { display: flex; align-items: center; overflow: hidden; }
+  .rail { display: flex; align-items: stretch; gap: clamp(1.25rem, 2.6vw, 2.5rem); padding-inline: var(--sc-gutter); }
+  .rail-lead { flex: none; width: min(24rem, 78vw); align-self: center; }
+  .rail-lead h2 { margin: 0; font-size: var(--sc-t-3xl); line-height: 1; }
+  .rail-lead p { margin: var(--sc-5) 0 0; color: var(--gray); text-wrap: pretty; }
+  .note { flex: none; width: min(25rem, 78vw); display: flex; flex-direction: column; background: var(--cream);
+          border-radius: 4px; overflow: hidden; box-shadow: 0 1px 0 var(--line), 0 30px 60px -40px rgb(60 45 25 / 0.45); text-decoration: none; }
+  .note .ph { aspect-ratio: 16 / 9.4; overflow: hidden; background: var(--line); }
+  .note .ph img { width: 100%; height: 100%; object-fit: cover; transition: transform 600ms var(--sc-ease-out); }
+  @media (hover: hover) and (pointer: fine) { .note:hover .ph img { transform: scale(1.04); } }
+  .note .body { padding: var(--sc-5) var(--sc-5) var(--sc-6); display: flex; flex-direction: column; flex: 1; }
+  .note .no { margin: 0; font: italic 400 var(--sc-t-base)/1.2 var(--sc-font-display); color: var(--blue-d); }
+  .note .meta { margin: var(--sc-1) 0 0; font-size: var(--sc-t-xs); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray); }
+  .note .num { margin: var(--sc-5) 0 0; font: 400 clamp(3.4rem, 2.4rem + 3vw, 5rem)/0.9 var(--sc-font-display); letter-spacing: -0.04em; font-variant-numeric: lining-nums tabular-nums; }
+  .note .num small { font-size: 0.45em; letter-spacing: -0.01em; margin-left: 0.08em; }
+  .note .desc { margin: var(--sc-3) 0 0; color: var(--gray); font-size: var(--sc-t-sm); }
+  .note .go { margin-top: auto; padding-top: var(--sc-5); font-size: var(--sc-t-sm); font-weight: 600; }
+
+  /* ---------- 8 · the workshop ---------- */
+  .shop { padding-block: clamp(6rem, 12vw, 11rem) clamp(4rem, 8vw, 7rem); }
+  .shop .head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sc-5); margin-bottom: var(--sc-8); }
+  .shop .head > * { grid-column: 1 / span 8; }
+  .shop h2 { margin: 0; font-size: var(--sc-t-3xl); line-height: 1.02; text-wrap: balance; }
+  .mosaic { display: grid; grid-template-columns: 1.55fr 1fr; grid-template-rows: auto auto; gap: var(--sc-4); }
+  .mosaic figure { margin: 0; position: relative; overflow: hidden; border-radius: 4px; background: var(--line); }
+  .mosaic figure:first-child { grid-row: span 2; }
+  .mosaic img { width: 100%; height: 100%; object-fit: cover; }
+  .mosaic figure:first-child img { height: 112%; margin-top: -6%; }
+  .mosaic figcaption { position: absolute; left: 12px; bottom: 12px; padding: 7px 12px; border-radius: 999px;
+                       background: rgb(248 244 236 / 0.9); font-size: var(--sc-t-xs); font-weight: 600; color: var(--ink); }
+
+  /* ---------- 9 · testimonials ---------- */
+  .voices { padding-block: clamp(4rem, 9vw, 8rem); }
+  .voices .head { margin-bottom: var(--sc-7); }
+  .voices h2 { margin: 0; font-size: var(--sc-t-3xl); line-height: 1; }
+  .quotes { display: flex; gap: var(--sc-5); overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px var(--sc-gutter) var(--sc-6);
+            scrollbar-width: thin; scrollbar-color: var(--line) transparent; overscroll-behavior-x: contain; }
+  .quotes blockquote { flex: none; width: min(26rem, 82vw); scroll-snap-align: start; margin: 0; padding: var(--sc-6);
+                       background: var(--paper); border-radius: 4px; box-shadow: 0 1px 0 var(--line); display: flex; flex-direction: column; }
+  .quotes .stars { color: var(--blue-d); letter-spacing: 0.2em; font-size: 0.85rem; }
+  .quotes p { margin: var(--sc-4) 0 var(--sc-6); font: italic 400 var(--sc-t-lg)/1.45 var(--sc-font-display); letter-spacing: -0.01em; text-wrap: pretty; }
+  .quotes footer { margin-top: auto; font-size: var(--sc-t-sm); }
+  .quotes footer b { display: block; font-weight: 700; }
+  .quotes footer span { color: var(--gray); }
+  .rail-hint { display: flex; gap: var(--sc-2); justify-content: flex-end; }
+  .rail-hint button { width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--paper); box-shadow: inset 0 0 0 1px var(--line);
+                      cursor: pointer; color: var(--ink); font-size: 1rem; transition: background-color 160ms var(--sc-ease-out); }
+  @media (hover: hover) and (pointer: fine) { .rail-hint button:hover { background: #fff; } }
+  .rail-hint button:active { transform: scale(0.95); }
+
+  /* ---------- 10 · team ---------- */
+  .team { padding-block: clamp(4rem, 9vw, 8rem); }
+  .team h2 { margin: 0 0 var(--sc-8); font-size: var(--sc-t-3xl); line-height: 1.02; max-width: 18ch; text-wrap: balance; }
+  .people { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sc-6); }
+  .person:nth-child(2) { margin-top: var(--sc-8); } .person:nth-child(3) { margin-top: calc(var(--sc-8) * 2); }
+  .person .ph { aspect-ratio: 4 / 5; border-radius: 4px; overflow: hidden; background: var(--line); position: relative; }
+  .person .ph img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; }
+  .person .ph .mono { position: absolute; inset: 0; display: grid; place-items: center; font: italic 300 6rem/1 var(--sc-font-display); color: var(--blue-d); }
+  .person h3 { margin: var(--sc-5) 0 0; font: 400 var(--sc-t-xl)/1.1 var(--sc-font-display); }
+  .person .role { margin: var(--sc-1) 0 0; font-size: var(--sc-t-xs); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue-d); }
+  .person p { margin: var(--sc-3) 0 0; color: var(--gray); font-size: var(--sc-t-sm); text-wrap: pretty; }
+
+  /* ---------- 11 · founder ---------- */
+  .founder { padding-block: clamp(5rem, 10vw, 9rem); }
+  .founder .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sc-5); align-items: center; }
+  .founder figure { grid-column: 1 / span 5; margin: 0; border-radius: 4px; overflow: hidden; aspect-ratio: 4 / 5; }
+  .founder figure img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+  .founder .txt { grid-column: 7 / span 6; }
+  .founder h2 { margin: 0; font-size: var(--sc-t-3xl); line-height: 1.02; text-wrap: balance; }
+  .founder .txt p { margin: var(--sc-5) 0 0; color: var(--gray); text-wrap: pretty; }
+  .founder .sig { margin-top: var(--sc-6); font: italic 400 var(--sc-t-xl)/1 var(--sc-font-display); color: var(--ink); }
+
+  /* ---------- 12 · close ---------- */
+  .close { padding-block: clamp(6rem, 13vw, 12rem) 0; overflow: hidden; }
+  .close::before { content: ""; position: absolute; inset: 0; background: url(assets/linen-dark.webp) center / cover; opacity: 0.5; pointer-events: none; }
+  .close .inner { position: relative; max-width: 56rem; }
+  .close h2 { margin: 0; font-size: clamp(2.6rem, 1.3rem + 4.2vw, 5.6rem); line-height: 1; letter-spacing: -0.035em; text-wrap: balance; }
+  .close .lede { margin: var(--sc-6) 0 0; max-width: 50ch; font-size: var(--sc-t-lg); line-height: 1.55; color: var(--sc-ink-soft); text-wrap: pretty; }
+  .close .ctas { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sc-4) var(--sc-6); margin-top: var(--sc-7); }
+  .close .mail { font-size: var(--sc-t-sm); color: var(--sc-ink-soft); }
+  .close .mail a { color: var(--cream); }
+  .close .fine { margin: var(--sc-6) 0 0; font-size: var(--sc-t-xs); color: var(--sc-ink-soft); max-width: 60ch; }
+  .foot { position: relative; margin-top: clamp(5rem, 10vw, 9rem); display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--sc-3) var(--sc-6);
+          padding: var(--sc-5) var(--sc-gutter) max(var(--sc-5), env(safe-area-inset-bottom)); border-top: 1px solid var(--sc-hairline);
+          font-size: var(--sc-t-xs); color: var(--sc-ink-soft); }
+  .foot .logo { color: var(--cream); margin: 0; padding: 0; }
+
+  /* ---------- phone art direction ---------- */
+  @media (max-width: 960px) { .bar nav { display: none; } }
+  @media (max-width: 860px) {
+    .bar .btn { display: none; }
+    .p-word span { font-size: 34vw; translate: 0 -27vh; }
+    .p-man { right: -12vw; bottom: -10svh; height: 44svh; }
+    .hero-copy { top: calc(76px + env(safe-area-inset-top)); translate: none; max-width: none; right: var(--sc-gutter); }
+    .hero h1 { font-size: var(--sc-t-2xl); }
+    .hero .lede { font-size: var(--sc-t-sm); max-width: 30ch; }
+    .hero .ctas { flex-direction: column; align-items: flex-start; }
+    .ch1 .head, .ch1 .txt { grid-column: 1 / -1; padding-top: 0; }
+    .law .lab, .law h3, .law p, .law:nth-child(2) h3, .law:nth-child(2) p { grid-column: 1 / -1; }
+    .law .lab { margin-bottom: var(--sc-4); }
+    .takeover [data-sc-stage] { grid-template-columns: 1fr; align-content: center; row-gap: var(--sc-5); }
+    .cap { order: 2; justify-self: start; min-height: 15rem; }
+    .cap h3 { font-size: var(--sc-t-xl); }
+    .feed { --tile: min(calc((100vw - 2 * var(--sc-gutter) - 2 * var(--gap)) / 3), calc((46svh - 2 * var(--gap)) / 3)); margin: 0 auto; }
+    .ch2 header { grid-column: 1 / -1; position: static; margin-bottom: var(--sc-7); }
+    .svc { grid-column: 1 / -1; }
+    .mosaic { grid-template-columns: 1fr 1fr; }
+    .mosaic figure:first-child { grid-column: 1 / -1; grid-row: auto; aspect-ratio: 4 / 3; }
+    .people { grid-template-columns: 1fr; gap: var(--sc-8); }
+    .person:nth-child(n) { margin-top: 0; }
+    .founder figure, .founder .txt { grid-column: 1 / -1; }
+    .founder figure { margin-bottom: var(--sc-7); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .plane { transform: none !important; }
+    .marquee .track { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<span data-sc-progress></span>
+
+<header class="bar" id="bar">
+  <a class="logo" href="#top">SOCIAL STREAM</a>
+  <nav aria-label="Fő navigáció" data-en-aria="Main navigation">
+    <a href="#services" data-en="Services">Szolgáltatások</a>
+    <a href="#results" data-en="Results">Eredmények</a>
+    <a href="#team" data-en="Team">Csapat</a>
+    <a href="#contact" data-en="Contact">Kapcsolat</a>
+  </nav>
+  <div class="lang" role="group" aria-label="Nyelv / Language">
+    <button type="button" data-set-lang="hu" aria-pressed="true" lang="hu">HU</button>
+    <button type="button" data-set-lang="en" aria-pressed="false" lang="en">EN</button>
+  </div>
+  <a class="btn btn--ink" href="#contact"><span data-en="Free audit">Ingyenes audit</span><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.4"/></svg></a>
+</header>
+
+<main id="top">
+
+  <!-- 1 · Layered hero: wall plate, the word, Olivér, the claim -->
+  <section class="hero" data-sc-act="pin" data-sc-span="1.35">
+    <div data-sc-stage>
+      <div class="plane p-wall" aria-hidden="true"><img src="assets/wall.webp" width="1500" height="982" alt=""></div>
+      <div class="plane p-word" aria-hidden="true"><span>érdeklődés</span></div>
+      <div class="plane p-man"><img src="assets/oliver-cut.webp" width="670" height="1823" alt="Olivér, a Social Stream alapítója" data-en-alt="Olivér, founder of Social Stream" fetchpriority="high"></div>
+      <div class="hero-copy" data-sc-cue="0 0.92 0">
+        <p class="kicker" data-en="Social Stream: marketing in the age of interest">Social Stream — marketing az érdeklődés korában</p>
+        <h1 class="sc-display">
+          <span data-en="Social media is dead. Interest has taken its place.">A social media meghalt. Az érdeklődés vette át a helyét.</span>
+          <em data-en="We win in this age.">Mi ebben a korban győzünk.</em>
+        </h1>
+        <p class="lede" data-en="An era has ended: the feed no longer shows who you follow, but what genuinely interests you. Video content, social presence and performance ads in one growth system, built on the rules of the new age.">Egy korszak véget ért — a feed már nem azt mutatja, kit követsz, hanem azt, ami valóban érdekel. Videó tartalom, social jelenlét és performance hirdetések egy growth rendszerben, ami az új kor szabályaira épült.</p>
+        <div class="ctas">
+          <a class="btn btn--ink" href="#contact"><span data-en="Free audit">Ingyenes audit</span><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.4"/></svg></a>
+          <a class="btn btn--ghost" href="#results"><span data-en="Case studies">Esettanulmányok</span><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1v13M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.4"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · The ticker, as on the source site -->
+  <section class="marquee" aria-label="Eredmények röviden" data-en-aria="Results at a glance">
+    <div class="track">
+      <span><b>81×</b><i data-en="best ROAS">legjobb ROAS</i></span>
+      <span><b>79M Ft</b><i data-en="in one week">egy hét alatt</i></span>
+      <span><b>300M+</b><i data-en="budget managed">kezelt büdzsé</i></span>
+      <span><b>2022</b><i data-en="since, in the new age">óta az új korban</i></span>
+      <em data-en="Marketing in the age of interest">Marketing az érdeklődés korában</em>
+      <span data-en="Est. MMXXII">Est. MMXXII</span>
+      <span data-en="Tenerife, Budapest">Tenerife — Budapest</span>
+      <em data-en="Not promises. Numbers.">Nem ígéretek. Számok.</em>
+    </div><div class="track" aria-hidden="true">
+      <span><b>81×</b><i data-en="best ROAS">legjobb ROAS</i></span>
+      <span><b>79M Ft</b><i data-en="in one week">egy hét alatt</i></span>
+      <span><b>300M+</b><i data-en="budget managed">kezelt büdzsé</i></span>
+      <span><b>2022</b><i data-en="since, in the new age">óta az új korban</i></span>
+      <em data-en="Marketing in the age of interest">Marketing az érdeklődés korában</em>
+      <span data-en="Est. MMXXII">Est. MMXXII</span>
+      <span data-en="Tenerife, Budapest">Tenerife — Budapest</span>
+      <em data-en="Not promises. Numbers.">Nem ígéretek. Számok.</em>
+    </div>
+  </section>
+
+  <!-- 3 · Chapter I -->
+  <section class="ch1" data-sc-act="flow">
+    <div class="sc-wrap grid">
+      <div class="head" data-sc-in>
+        <p class="folio"><b>I.</b><span data-en="Chapter: the shift">fejezet — Korszakváltás</span></p>
+        <h2 class="sc-display" data-en="Social media is dead. Interest has taken its place.">A social media meghalt. Az érdeklődés vette át a helyét.</h2>
+      </div>
+      <div class="txt" data-sc-in data-sc-stagger="90">
+        <p data-en="For ten years, what mattered was how many followers you had. That era is over. The feed no longer shows who you follow, but what genuinely interests you. The algorithm redistributes every single impression: not on the basis of your past, but on whether you are interesting today.">Tíz évig az számított, hány követőd van. Ez a kor véget ért. A feed már nem azt mutatja, kit követsz — hanem azt, ami valóban érdekel. Az algoritmus minden egyes megjelenést újraoszt: nem a múltad alapján, hanem aszerint, hogy ma érdekes vagy-e.</p>
+        <p data-en="Most businesses still play by the old rules: post and hope. We don't build visibility, we build a system that turns interest into revenue. And it shows in every number.">A legtöbb vállalkozás még a régi kor szabályaival játszik: posztol és reménykedik. Mi nem láthatóságot építünk, hanem rendszert, ami az érdeklődést bevétellé alakítja. És ez minden számon látszik.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · Laws I and II, wiped in on dark linen -->
+  <section class="laws dark" data-sc-act="flow">
+    <div class="sc-wrap">
+      <article class="law">
+        <p class="lab" data-en="The first law of the new age">Az új kor I. törvénye</p>
+        <h3 class="sc-display" data-sc-reveal="right" data-sc-reveal-at="0.08 0.30" data-en="Follower count is a relic of the old age.">A követőszám a régi kor relikviája.</h3>
+        <p data-en="10,000 followers, 40 likes. Sound familiar? In the new age every post starts with a clean slate. What matters is not how many follow you, but how many watch to the end.">10 000 követő, 40 kedvelés — ismerős? Az új korban minden poszt tiszta lappal indul. Nem az számít, hányan követnek, hanem hogy hányan nézik végig.</p>
+      </article>
+      <article class="law">
+        <p class="lab" data-en="The second law of the new age">Az új kor II. törvénye</p>
+        <h3 class="sc-display" data-sc-reveal="right" data-sc-reveal-at="0.44 0.66" data-en="Attention cannot be bought. Only earned.">A figyelmet nem lehet megvenni. Csak kiérdemelni.</h3>
+        <p data-en="For every impression you compete with the best creators, not with your competitors. What is interesting, the platform carries to millions for free. What is boring, no budget can save.">Minden megjelenésért a legjobb alkotókkal versenyzel, nem a konkurenciáddal. Ami érdekes, azt a platform ingyen viszi el milliókhoz. Ami unalmas, azt büdzsével sem lehet megmenteni.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 5 · Peak: law III. Nine scattered posts become one system. -->
+  <section class="takeover" id="rendszer" data-sc-act="pin" data-sc-span="3">
+    <div data-sc-stage>
+      <div class="cap">
+        <div data-sc-cue="0 0.34 0">
+          <p class="lab" data-en="The old age">A régi kor</p>
+          <h3 class="sc-display" data-en="Posting and hoping: that was the old age's strategy.">Posztolni és reménykedni — ez volt a régi kor stratégiája.</h3>
+        </div>
+        <div data-sc-cue="0.6">
+          <p class="lab" data-en="The third law of the new age">Az új kor III. törvénye</p>
+          <h3 class="sc-display" data-en="Whoever plays by the old rules loses.">Aki a régi szabályokkal játszik, veszít.</h3>
+          <p data-en="The new age's strategy: knowing from data what interests people, and building a system that turns interest into revenue.">Az újé: adatból tudni, mi érdekli az embereket, és rendszert építeni, ami az érdeklődést bevétellé alakítja.</p>
+        </div>
+      </div>
+      <div class="feed" role="img" aria-label="Kilenc poszt, amely együtt egyetlen képet ad: a Social Stream műhelye forgatás közben." data-en-aria="Nine posts that together form one picture: the Social Stream workshop during a shoot.">
+        <!-- Instagram fills newest-first, so the bottom-right tile is posted first. -->
+        <div class="tile" style="--c:0;--r:0"><b>9</b><i></i></div>
+        <div class="tile" style="--c:1;--r:0"><b>8</b><i></i></div>
+        <div class="tile" style="--c:2;--r:0"><b>7</b><i></i></div>
+        <div class="tile" style="--c:0;--r:1"><b>6</b><i></i></div>
+        <div class="tile" style="--c:1;--r:1"><b>5</b><i></i></div>
+        <div class="tile" style="--c:2;--r:1"><b>4</b><i></i></div>
+        <div class="tile" style="--c:0;--r:2"><b>3</b><i></i></div>
+        <div class="tile" style="--c:1;--r:2"><b>2</b><i></i></div>
+        <div class="tile" style="--c:2;--r:2"><b>1</b><i></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · Chapter II: six services -->
+  <section class="ch2" id="services" data-sc-act="flow">
+    <div class="sc-wrap grid">
+      <header>
+        <p class="folio"><b>II.</b><span data-en="Chapter: what wins in the new age">fejezet — Amivel az új korban győzni lehet</span></p>
+        <h2 class="sc-display" data-en="Six services. One strategy.">Hat szolgáltatás. Egy stratégia.</h2>
+        <p data-en="Not just ads: we cover your entire online presence, with a single team, in a system built on the rules of the new age.">Nem csak hirdetések — a teljes online jelenlétedet lefedjük, egyetlen csapattal, az új kor szabályaira épített rendszerben.</p>
+      </header>
+      <ul class="svc" data-sc-in data-sc-stagger="60">
+        <li><span class="g" aria-hidden="true">▶</span><div><h3 data-en="Video content production">Videó tartalomgyártás</h3><p data-en="Hooks, creative direction, production: creative is the engine of the campaign. We make it too, from concept to finished video.">Hook-ok, kreatív irány, gyártás — a kampány motorja a kreatív. Ezt mi is elkészítjük, a koncepciótól a kész videóig.</p></div></li>
+        <li><span class="g" aria-hidden="true">◐</span><div><h3 data-en="Social media presence">Social média jelenlét</h3><p data-en="Feed, Stories, Reels, TikTok, with one strategy and one voice. Content calendar, community management, copywriting.">Feed, Stories, Reels, TikTok — egységes stratégiával, egységes hanggal. Content calendar, community management, copywriting.</p></div></li>
+        <li><span class="g" aria-hidden="true">▣</span><div><h3 data-en="Paid advertising">Fizetett hirdetés</h3><p data-en="Meta, TikTok and Google campaigns that don't just spend the budget, they generate ROAS. Daily optimisation, A/B testing, scaling.">Meta, TikTok és Google kampányok, amik nem csak elköltik a büdzsét — hanem ROAS-t termelnek. Napi optimalizálás, A/B tesztelés, skálázás.</p></div></li>
+        <li><span class="g" aria-hidden="true">◇</span><div><h3 data-en="Website and landing pages">Weboldal &amp; Landing</h3><p data-en="Fast, mobile-optimised landing pages and websites that convert, not just look good.">Gyors, mobilra optimalizált landingek és weboldalak, amik konvertálnak — nem csak jól néznek ki.</p></div></li>
+        <li><span class="g" aria-hidden="true">↻</span><div><h3 data-en="Automation and email">Automatizáció &amp; Email</h3><p data-en="Lead follow-up, email sequences, automated funnels. We set it up once, then it works for you.">Lead-követés, email szekvenciák, automatizált tölcsérek. Egyszer beállítjuk — utána dolgozik helyetted.</p></div></li>
+        <li><span class="g" aria-hidden="true">◆</span><div><h3 data-en="Growth strategy">Növekedési stratégia</h3><p data-en="Strategy-level marketing consulting: campaign strategy, funnel audit, market positioning. We are partners, not contractors.">Stratégiai szintű marketing tanácsadás — kampánystratégia, funnel audit, piaci pozicionálás. Partnerek vagyunk, nem kivitelezők.</p></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 7 · Chapter III: notes from the new age, travelling sideways -->
+  <section class="notes" id="results" data-sc-act="pan" data-sc-span="3.2">
+    <div data-sc-stage>
+      <div class="rail" data-sc-pan="0.08">
+        <div class="rail-lead">
+          <p class="folio"><b>III.</b><span data-en="Chapter: notes from the new age">fejezet — Feljegyzések az új korból</span></p>
+          <h2 class="sc-display" data-en="Not promises. Numbers.">Nem ígéretek. Számok.</h2>
+          <p data-en="Real campaigns, real dashboards: notes on what happens when a brand starts playing by the rules of the new age.">Valódi kampányok, valódi dashboardok — feljegyzések arról, mi történik, ha egy márka az új kor szabályaival kezd játszani.</p>
+        </div>
+        <a class="note" href="case-ajto-webshop.html">
+          <div class="ph" data-sc-tilt="4"><img src="assets/case-ajto.webp" width="900" height="471" alt="Ajtó webshop esettanulmány" data-en-alt="Door webshop case study" loading="lazy"></div>
+          <div class="body">
+            <p class="no" data-en="Note № I">Feljegyzés № I</p>
+            <p class="meta" data-en="Door webshop · Google Pmax">Ajtó webshop · Google Pmax</p>
+            <p class="num"><span data-sc-count="0 81" data-sc-count-at="0.08 0.34">81</span><small>×</small></p>
+            <p class="desc" data-en="ROAS: best result, in an e-commerce campaign">ROAS — legjobb eredmény, e-commerce kampányban</p>
+            <span class="go" data-en="Read the case study →">Esettanulmány elolvasása →</span>
+          </div>
+        </a>
+        <a class="note" href="case-csarnokok.html">
+          <div class="ph" data-sc-tilt="4"><img src="assets/case-csarnok.webp" width="900" height="471" alt="Csarnoképítő esettanulmány" data-en-alt="Industrial hall builder case study" loading="lazy"></div>
+          <div class="body">
+            <p class="no" data-en="Note № II">Feljegyzés № II</p>
+            <p class="meta" data-en="Industrial halls · Online ads">Csarnokok · Online hirdetés</p>
+            <p class="num"><span data-sc-count="0 79" data-sc-count-at="0.22 0.5">79</span><small>M Ft</small></p>
+            <p class="desc" data-en="Revenue in one week, from a B2B Meta campaign">Bevétel egy hét alatt, B2B Meta kampányból</p>
+            <span class="go" data-en="Read the case study →">Esettanulmány elolvasása →</span>
+          </div>
+        </a>
+        <a class="note" href="case-karora-webshop.html">
+          <div class="ph" data-sc-tilt="4"><img src="assets/case-karora.webp" width="900" height="471" alt="Karóra webshop esettanulmány" data-en-alt="Watch webshop case study" loading="lazy"></div>
+          <div class="body">
+            <p class="no" data-en="Note № III">Feljegyzés № III</p>
+            <p class="meta" data-en="Watch webshop · Christmas">Karóra webshop · Karácsony</p>
+            <p class="num"><span data-sc-count="0 23" data-sc-count-at="0.38 0.66">23</span><small>×</small></p>
+            <p class="desc" data-en="ROAS in a holiday campaign: 8M+ Ft revenue">ROAS ünnepi kampányban — 8M+ Ft bevétel</p>
+            <span class="go" data-en="Read the case study →">Esettanulmány elolvasása →</span>
+          </div>
+        </a>
+        <a class="note" href="case-egeszsegugyi-webinar.html">
+          <div class="ph" data-sc-tilt="4"><img src="assets/case-webinar.webp" width="900" height="578" alt="Webinár esettanulmány" data-en-alt="Webinar case study" loading="lazy"></div>
+          <div class="body">
+            <p class="no" data-en="Note № IV">Feljegyzés № IV</p>
+            <p class="meta" data-en="Healthcare webinar · Lead gen">Egészségügyi webinár · Lead gen</p>
+            <p class="num"><span data-sc-count="0 105" data-sc-count-at="0.54 0.82">105</span><small>Ft</small></p>
+            <p class="desc" data-en="Per registrant: ~5,700 registrants from 600K Ft spend">Jelentkezőnként — ~5700 jelentkező 600K Ft költésből</p>
+            <span class="go" data-en="Read the case study →">Esettanulmány elolvasása →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · The workshop -->
+  <section class="shop" data-sc-act="flow">
+    <div class="sc-wrap">
+      <div class="head" data-sc-in>
+        <p class="folio" data-en="The workshop: where the new age's content is made">A műhely — itt készül az új kor tartalma</p>
+        <h2 class="sc-display" data-en="A young, hard-hitting team behind the camera and in front of it">Egy fiatal, ütős csapat a kamera mögött és előtt</h2>
+      </div>
+      <div class="mosaic">
+        <figure data-sc-reveal="up" data-sc-reveal-at="0.12 0.42"><img src="assets/workshop.webp" width="1800" height="1182" alt="A Social Stream műhelye — forgatás közben" data-en-alt="The Social Stream workshop during a shoot" loading="lazy" data-sc-parallax="-0.06"><figcaption data-en="Story planning: the next campaign">Sztoritervezés — a következő kampány</figcaption></figure>
+        <figure data-sc-reveal="up" data-sc-reveal-at="0.18 0.48"><img src="assets/oliver-laptop.webp" width="1000" height="1503" alt="Olivér laptoppal" data-en-alt="Olivér with a laptop" loading="lazy" style="object-position:50% 35%"><figcaption data-en="Daily terrain: the feed">Napi terep: a feed</figcaption></figure>
+        <figure data-sc-reveal="up" data-sc-reveal-at="0.24 0.54"><img src="https://assets.cdn.filesafe.space/NdHDMaHZr00LMGUHcMcZ/media/6a24d429fc95b24549a4249b.jpg" data-fallback="assets/oliver-portrait.webp" alt="A Social Stream csapata munka közben" data-en-alt="The Social Stream team at work" loading="lazy" style="object-position:50% 30%"><figcaption data-en="We live what we do">Mi is éljük, amit csinálunk</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · Testimonials, a rail the visitor drives -->
+  <section class="voices" data-sc-act="flow" aria-labelledby="voices-h">
+    <div class="sc-wrap head" data-sc-in>
+      <p class="folio" data-en="Testimonies from the new age">Tanúságok az új korból</p>
+      <h2 class="sc-display" id="voices-h" data-en="We don't say it. They do.">Nem mi mondjuk. Ők mondják.</h2>
+    </div>
+    <div class="quotes" id="quotes" tabindex="0" aria-label="Ügyfélvélemények" data-en-aria="Client testimonials">
+      <blockquote><span class="stars" aria-label="5 csillag" data-en-aria="5 stars">★★★★★</span><p data-en="“We had already switched off our Facebook ads once because they simply weren't worth it. After meeting Olivér we gave it another chance. There were purchases from launch day, and he produced numbers we had never seen before.”">„Egyszer már leállítottuk a Facebook hirdetéseinket, mert egyszerűen nem érte meg. Miután megismertük Olivért, adtunk egy újabb esélyt. Már az induláskor is volt vásárlás — olyan számokat produkált, amit eddig nem is láttunk.”</p><footer><b>Péter</b><span data-en="Hoofbútor · Furniture webshop">Hoofbútor · Bútor webshop</span></footer></blockquote>
+      <blockquote><span class="stars" aria-label="5 csillag" data-en-aria="5 stars">★★★★★</span><p data-en="“I wanted a professional team after launch. They build professional campaigns across Facebook/Instagram, the website and ads. Results came quickly, and I had nothing to do.”">„Profi csapatot szerettem volna az indulás után. Mind Facebook/Instagram, mind weboldal és hirdetés területén profi kampányokat készítenek. Rövid időn belül jöttek az eredmények — nekem semmi dolgom nem volt velük.”</p><footer><b>Rita</b><span>Rita's Beauty Corner</span></footer></blockquote>
+      <blockquote><span class="stars" aria-label="5 csillag" data-en-aria="5 stars">★★★★★</span><p data-en="“Social Stream built my website professionally. Everyone loved the polished, easy-to-follow content! I can only recommend them.”">„A Social Stream profi módon készítette el a weboldalam. Mindenkinek tetszett az igényes és könnyen áttekinthető tartalom! Csak ajánlani tudom őket.”</p><footer><b>János</b><span>EJ Massage Therapies</span></footer></blockquote>
+      <blockquote><span class="stars" aria-label="5 csillag" data-en-aria="5 stars">★★★★★</span><p data-en="“We thought Facebook was for young people and webshops; we build industrial halls. Then in one week we got as many quote requests as we used to get in half a year.”">„Azt hittük, a Facebook a fiataloknak és a webshopoknak való — mi csarnokot építünk. Aztán egy hét alatt annyi ajánlatkérésünk lett, mint korábban fél év alatt összesen.”</p><footer><b data-en="Hall-building client">Csarnoképítő ügyfél</b><span data-en="B2B · Industrial sector">B2B · ipari szektor</span></footer></blockquote>
+      <blockquote><span class="stars" aria-label="5 csillag" data-en-aria="5 stars">★★★★★</span><p data-en="“Every December we dreaded ad prices. This year, for the first time, the holiday season felt like it was working for us, not against us.”">„Minden decemberben rettegtünk a hirdetési áraktól. Idén először éreztük úgy, hogy az ünnepi szezon nekünk dolgozik — nem ellenünk.”</p><footer><b data-en="Watch webshop">Karóra webshop</b><span data-en="E-commerce · Holiday campaign">E-commerce · ünnepi kampány</span></footer></blockquote>
+      <blockquote><span class="stars" aria-label="5 csillag" data-en-aria="5 stars">★★★★★</span><p data-en="“We expected a few hundred registrants for the webinar. When the counter stopped at almost 5,700, we could hardly believe it came from the same budget.”">„Pár száz jelentkezőre számítottunk a webinárra. Amikor a számláló majdnem 5700-nál állt meg, alig hittük el, hogy ez ugyanabból a büdzséből jött ki.”</p><footer><b data-en="Healthcare provider">Egészségügyi szolgáltató</b><span data-en="Lead generation · Webinar">Lead generation · webinár</span></footer></blockquote>
+    </div>
+    <div class="sc-wrap rail-hint">
+      <button type="button" data-q="-1" aria-label="Előző vélemény" data-en-aria="Previous testimonial">←</button>
+      <button type="button" data-q="1" aria-label="Következő vélemény" data-en-aria="Next testimonial">→</button>
+    </div>
+  </section>
+
+  <!-- 10 · Team -->
+  <section class="team" id="team" data-sc-act="flow">
+    <div class="sc-wrap">
+      <p class="folio" data-en="Masters of the new age">Az új kor mesterei</p>
+      <h2 class="sc-display" data-en="The people who will work on your brand">Az emberek, akik a márkádon dolgoznak majd</h2>
+      <div class="people" data-sc-in data-sc-stagger="80">
+        <article class="person">
+          <div class="ph"><img src="assets/oliver-portrait.webp" width="1000" height="1503" alt="Olivér" loading="lazy"></div>
+          <h3>Olivér</h3>
+          <p class="role" data-en="Founder &amp; Campaign strategist">Alapító &amp; Kampánystratéga</p>
+          <p data-en="He reads the rules of the new age: he decides from data where to invest attention, and why anyone will watch it.">Ő olvassa az új kor szabályait: adatból dönti el, mibe fektessük a figyelmet — és miért fogja azt bárki megnézni.</p>
+        </article>
+        <article class="person">
+          <div class="ph"><span class="mono" aria-hidden="true">D</span><img src="https://assets.cdn.filesafe.space/NdHDMaHZr00LMGUHcMcZ/media/6a24d429f607d4002bae65fb.jpg" alt="David" loading="lazy" data-hide-on-error></div>
+          <h3>David</h3>
+          <p class="role" data-en="Creative &amp; Content production">Kreatív &amp; Tartalomgyártás</p>
+          <p data-en="Whatever stops the thumb is his handiwork. Hooks, shooting, creative direction, in the language of the new age.">Ami megállítja a hüvelykujjat, az ő keze munkája. Hook-ok, forgatás, kreatív irány — az új kor nyelvén.</p>
+        </article>
+        <article class="person">
+          <div class="ph"><span class="mono" aria-hidden="true">L</span><img src="https://assets.cdn.filesafe.space/NdHDMaHZr00LMGUHcMcZ/media/6a24d956da24932f1241ae56.jpg" alt="Lidi" loading="lazy" data-hide-on-error></div>
+          <h3>Lidi</h3>
+          <p class="role" data-en="Production &amp; Editing">Produkció &amp; Szerkesztés</p>
+          <p data-en="The engine of production. Raw footage becomes finished content in her hands: editing, rhythm, precision, on deadline.">A gyártás motorja. Nála áll össze nyersanyagból kész tartalom — vágás, ritmus, precizitás, határidőre.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · The founder -->
+  <section class="founder" data-sc-act="flow">
+    <div class="sc-wrap grid">
+      <figure data-sc-reveal="left" data-sc-reveal-at="0.1 0.42"><img src="assets/oliver-founder.webp" width="1000" height="1503" alt="Olivér, a Social Stream alapítója" data-en-alt="Olivér, founder of Social Stream" loading="lazy"></figure>
+      <div class="txt" data-sc-in data-sc-stagger="80">
+        <p class="folio" data-en="The founder">Az alapító</p>
+        <h2 class="sc-display" data-en="I saw the shift from the inside.">A korszakváltást belülről láttam.</h2>
+        <p data-en="I landed my first client while studying in Denmark. Then, as a Meta Marketing Pro, I saw up close how the most serious brands think when there is real money in a campaign, and watched the old rules lose their force before our eyes. Not recipes, not formulas, but systems, data and real knowledge of the platform.">Dánia tanulmányaim alatt szereztem meg az első ügyfelemet. Aztán Meta Marketing Pro-ként közelről láttam, hogyan gondolkodnak a legkomolyabb márkák, amikor valódi pénz van a kampányban — és azt is, ahogy a régi szabályok a szemünk előtt érvényüket vesztik. Nem receptek, nem formulák, hanem rendszerek, adatok, és a platform valódi ismerete.</p>
+        <p data-en="I founded Social Stream in 2022 because very few businesses here had been given this way of thinking. Since then we have managed 300M+ Ft in budget, and I have built a team of specialists and fanatics around me. We bring the love of the craft, and the same mindset, to every single campaign.">2022-ben azért alapítottam a Social Streamet, mert ezt a gondolkodásmódot itthon nagyon kevés vállalkozás kapta meg eddig. Azóta 300M+ Ft büdzsét kezeltünk, és specialistákból, fanatikusokból álló csapatot építettem magam köré. Minden egyes kampányban a szakma szeretetét, valamint ugyanazt a szemléletet visszük bele.</p>
+        <p class="sig" data-en="Olivér, Founder">— Olivér, Alapító</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 · Close -->
+  <section class="close dark" id="contact" data-sc-act="flow">
+    <div class="sc-wrap">
+      <div class="inner" data-sc-in data-sc-stagger="80">
+        <h2 class="sc-display" data-en="Your market already lives in the new age. Does your marketing?">A piacod már az új korban jár. A marketinged is?</h2>
+        <p class="lede" data-en="A free 30-minute audit: we look at your campaigns, your landing page and your offer. We tell you honestly where you are still playing by the old rules, before you pay anything.">30 perces ingyenes audit — megnézzük a kampányaidat, a landing page-edet, az ajánlatodat. Megmondjuk őszintén, hol játszol még a régi kor szabályaival — még fizetés előtt.</p>
+        <div class="ctas">
+          <a class="btn btn--cream js-mail" href="mailto:hello@socialstream.hu"><span data-en="Request a free audit">Kérek ingyenes auditot</span><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.4"/></svg></a>
+          <span class="mail"><a class="js-mail" href="mailto:hello@socialstream.hu">hello@socialstream.hu</a></span>
+        </div>
+        <p class="fine" data-en="We start with at most two new partners a month, because that is what quality allows. No template proposals. No obligation.">Havonta legfeljebb két új partnerrel indulunk el — ennyit bír el a minőség · Nincs sablonajánlat · Nincs kötelezettség</p>
+      </div>
+    </div>
+    <footer class="foot">
+      <span class="logo">SOCIAL STREAM</span>
+      <span data-en="© 2026 Social Stream: marketing in the age of interest. All rights reserved.">© 2026 Social Stream — marketing az érdeklődés korában. Minden jog fenntartva.</span>
+    </footer>
+  </section>
+
+</main>
+
+<script src="scrollcraft.js"></script>
+<script>
+(function () {
+  'use strict';
+  var CONTACT = 'hello@socialstream.hu';
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
+
+  /* ---------- language: Hungarian is the markup, English rides in data-en ---------- */
+  var SUBJECT = { hu: 'Ingyenes audit', en: 'Free audit' };
+  var TITLE = { hu: document.title, en: 'Social Stream — Social Media Marketing Agency' };
+  var swaps = [
+    ['[data-en]', 'textContent', 'en', 'hu'],
+    ['[data-en-alt]', 'alt', 'enAlt', 'huAlt'],
+    ['[data-en-aria]', 'aria-label', 'enAria', 'huAria']
+  ];
+  swaps.forEach(function (s) {
+    document.querySelectorAll(s[0]).forEach(function (el) {
+      el.dataset[s[3]] = s[1] === 'textContent' ? el.textContent : el.getAttribute(s[1]) || '';
+    });
+  });
+  function setLang(l, save) {
+    if (l !== 'hu' && l !== 'en') return;
+    root.lang = l;
+    document.title = TITLE[l];
+    swaps.forEach(function (s) {
+      document.querySelectorAll(s[0]).forEach(function (el) {
+        var v = el.dataset[l === 'en' ? s[2] : s[3]];
+        if (s[1] === 'textContent') el.textContent = v; else el.setAttribute(s[1], v);
+      });
+    });
+    document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.setLang === l));
+    });
+    document.querySelectorAll('.js-mail').forEach(function (a) {
+      a.href = 'mailto:' + CONTACT + '?subject=' + encodeURIComponent(SUBJECT[l]);
+    });
+    if (save) { try { localStorage.setItem('ss-lang', l); } catch (e) {} }
+  }
+  var initial = new URLSearchParams(location.search).get('lang');
+  if (!initial) { try { initial = localStorage.getItem('ss-lang'); } catch (e) {} }
+  setLang(initial === 'en' ? 'en' : 'hu', false);
+  document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+    b.addEventListener('click', function () { setLang(b.dataset.setLang, true); });
+  });
+
+  /* ---------- images hosted on the live site: fall back cleanly ---------- */
+  document.querySelectorAll('img[data-fallback]').forEach(function (img) {
+    img.addEventListener('error', function () { if (img.src.indexOf(img.dataset.fallback) < 0) img.src = img.dataset.fallback; }, { once: true });
+  });
+  document.querySelectorAll('img[data-hide-on-error]').forEach(function (img) {
+    img.addEventListener('error', function () { img.hidden = true; }, { once: true });
+  });
+
+  /* ---------- bar gains paper once the page moves ---------- */
+  var bar = document.getElementById('bar');
+  var onBar = function () { bar.classList.toggle('is-stuck', scrollY > 24); };
+  addEventListener('scroll', onBar, { passive: true }); onBar();
+
+  /* ---------- testimonial rail buttons ---------- */
+  var quotes = document.getElementById('quotes');
+  document.querySelectorAll('[data-q]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var card = quotes.querySelector('blockquote');
+      var step = card ? card.getBoundingClientRect().width + 24 : 320;
+      quotes.scrollBy({ left: step * Number(b.dataset.q), behavior: reduce ? 'auto' : 'smooth' });
+    });
+  });
+
+  /* ---------- hero pointer depth (fine pointers only, never captured) ---------- */
+  var hero = document.querySelector('.hero');
+  if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    var tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+    var step = function () {
+      cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
+      hero.style.setProperty('--mx', cx.toFixed(4)); hero.style.setProperty('--my', cy.toFixed(4));
+      raf = (Math.abs(tx - cx) + Math.abs(ty - cy) > 0.001) ? requestAnimationFrame(step) : 0;
+    };
+    hero.addEventListener('pointermove', function (e) {
+      tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1;
+      if (!raf) raf = requestAnimationFrame(step);
+    });
+  }
+
+  /* ---------- signature: nine scattered posts become one picture ----------
+     Each tile starts scattered across the stage and flies home as the act's
+     --sc-p advances, landing in publishing order (post 1, bottom right, first). */
+  var act = document.getElementById('rendszer');
+  var feed = act.querySelector('.feed');
+  var stage = feed.parentElement;
+  var tiles = Array.prototype.slice.call(feed.querySelectorAll('.tile'));
+  var SCATTER = [ // [x, y] stage fractions for the tile centre, rotation, scale
+    [0.08, 0.12, -9, 0.7],  [0.46, 0.12, 6, 0.84], [0.90, 0.14, -4, 0.7],
+    [0.55, 0.48, 5, 0.8],   [0.62, 0.86, -6, 1.0], [0.93, 0.50, 8, 0.76],
+    [0.10, 0.88, 4, 0.7],   [0.36, 0.88, -10, 0.82], [0.80, 0.88, 5, 0.96]
+  ];
+  var ORDER = [8, 7, 6, 5, 4, 3, 2, 1, 0];
+  var easeOut = function (t) { return 1 - Math.pow(1 - t, 3.2); };
+  var clamp01 = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x; };
+  var last = -1, offs = [];
+  function measure() {
+    var sw = stage.clientWidth, sh = stage.clientHeight;
+    offs = tiles.map(function (el, i) {
+      var hx = feed.offsetLeft + el.offsetLeft + el.offsetWidth / 2;
+      var hy = feed.offsetTop + el.offsetTop + el.offsetHeight / 2;
+      return [SCATTER[i][0] * sw - hx, SCATTER[i][1] * sh - hy];
+    });
+  }
+  function pose(p) {
+    if (p === last) return; last = p;
+    if (!offs.length) measure();
+    var lifted = 0;
+    tiles.forEach(function (el, i) {
+      var t = easeOut(clamp01((p - 0.06 - ORDER[i] * 0.045) / 0.26)), s = SCATTER[i], u = 1 - t;
+      el.style.transform = 'translate3d(' + (offs[i][0] * u).toFixed(1) + 'px,' + (offs[i][1] * u).toFixed(1) + 'px,0) ' +
+        'rotate(' + (s[2] * u).toFixed(2) + 'deg) scale(' + (s[3] + (1 - s[3]) * t).toFixed(4) + ')';
+      el.style.setProperty('--lift', u.toFixed(3));
+      el.style.zIndex = String(10 + Math.round(u * 10));
+      lifted += u;
+    });
+    feed.style.setProperty('--done', (1 - lifted / tiles.length).toFixed(3));
+  }
+  var read = function () {
+    var p = parseFloat(getComputedStyle(act).getPropertyValue('--sc-p'));
+    pose(isNaN(p) ? 0 : Math.round(p * 1000) / 1000);
+  };
+  var remeasure = function () { offs = []; last = -1; if (reduce) pose(1); else read(); };
+  addEventListener('load', remeasure);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
+  if (!reduce) {
+    var ticking = false;
+    addEventListener('scroll', function () {
+      if (ticking) return; ticking = true;
+      requestAnimationFrame(function () { ticking = false; read(); });
+    }, { passive: true });
+    addEventListener('resize', remeasure);
+  }
+  requestAnimationFrame(function () { requestAnimationFrame(remeasure); });
+})();
+</script>
+<script>ScrollCraft.mount(document.body);</script>
+</body>
+</html>

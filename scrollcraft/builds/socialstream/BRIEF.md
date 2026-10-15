@@ -1,3 +1,23 @@
+# BRIEF: Social Stream (socialstream.hu)
+
+**Revision 2, from client material.** The client renamed the brand from HB Marketing
+to Social Stream and supplied their current page (`socialstream-erdeklodes-kora.html`)
+and four studio portraits of the founder. All copy, numbers (81× ROAS, 79M Ft in a
+week, 23× holiday ROAS, 105 Ft per lead, 300M+ Ft managed), testimonials, team and
+the chapter structure (I. Korszakváltás, II. szolgáltatások, III. feljegyzések) are
+theirs, verbatim. Brand system is theirs: cream, ink, dusty blue, Fraunces and Plus
+Jakarta Sans. The experience layer is ours: a layered hero (wall plate, 22vw
+"érdeklődés", rembg cutout of Olivér, claim), laws wiped in on dark linen, the
+grid-takeover peak recast as the third law (scattered posting becomes one system),
+results on a pinned sideways rail with scrubbed counters, and a dark close.
+
+Grammar: chaptered editorial, bent where the client's own site wins (fixed nav bar,
+marquee ticker, button CTAs).
+
+---
+
+The original self-authored brief for revision 1 follows for the record.
+
 # BRIEF: HB Marketing, /social
 
 **Self-authored under explicit creative delegation.** The request was "using all
