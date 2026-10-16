@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>FlyX Tenerife · 5D Flying Cinema</title>
-<meta name="description" content="The Tenerife you've never seen. A 30-minute indoor 5D flying cinema at The Duke Shops, Costa Adeje. Flights every 30 minutes, 10:00–22:00. From €23.">
+<meta name="description" content="The Tenerife you've never seen. A 30-minute indoor 5D flying cinema at The Duke Shops, Costa Adeje. Flights every 30 minutes, 10:00–22:00. Adults €29, kids €24, residents €18.">
 <link rel="icon" href="assets/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -178,6 +178,28 @@ section { position: relative; scroll-margin-top: 80px; }
 .facts span { font: 500 var(--t-xs)/1.3 var(--f-display); letter-spacing: .2em; text-transform: uppercase; color: var(--ink-soft); }
 @media (max-width: 760px) { .discover-foot { grid-template-columns: 1fr; } .facts { justify-content: flex-start; gap: 2rem; } .scrub-words { margin-left: 0; } }
 
+/* 2b · Intro film */
+.reel { background: var(--paper); padding-block: 0 var(--pad); }
+.reel-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.4rem 3rem; align-items: end; margin-bottom: 2.6rem; }
+.reel-head h2 { font-size: var(--t-2xl); margin-top: 1.2rem; }
+.reel-head h2 em { color: var(--gold); }
+.reel-head p { color: var(--ink-soft); max-width: 44ch; justify-self: end; }
+.reel-stage { padding-left: var(--gutter); padding-right: var(--gutter-r); }
+.reel-frame { position: relative; max-width: 1640px; margin-inline: auto; aspect-ratio: 16 / 9; border-radius: 32px; overflow: hidden; background: #0b2a30; transform-origin: 50% 30%; box-shadow: 0 60px 120px -60px rgba(13,43,49,.55); }
+.reel-poster, .reel-frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.reel-frame video { opacity: 0; transition: opacity 1s; }
+.reel-frame video.ready { opacity: 1; }
+.reel-shade { position: absolute; inset: 0; background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(6,26,31,.45), rgba(6,26,31,.15) 70%); transition: opacity .6s var(--ease); pointer-events: none; }
+.reel-play { all: unset; cursor: pointer; position: absolute; left: 50%; top: 50%; translate: -50% -50%; display: grid; justify-items: center; gap: 1rem; color: #fff; transition: opacity .6s var(--ease); }
+.reel-disc { width: clamp(84px, 9vw, 128px); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; background: var(--gold-metal); color: #1c1305; box-shadow: 0 0 0 0 rgba(220,171,85,.5), 0 20px 50px -14px rgba(0,0,0,.6); transition: transform .7s var(--ease); animation: reel-pulse 2.6s var(--ease) infinite; }
+.reel-disc svg { width: 34%; height: 34%; margin-left: 6%; }
+.reel-play:hover .reel-disc { transform: scale(1.08); }
+.reel-play:focus-visible .reel-disc { outline: 2px solid #fff; outline-offset: 6px; }
+.reel-label { font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .28em; text-transform: uppercase; text-shadow: 0 1px 12px rgba(0,0,0,.5); }
+@keyframes reel-pulse { 0% { box-shadow: 0 0 0 0 rgba(220,171,85,.55), 0 20px 50px -14px rgba(0,0,0,.6); } 70%, 100% { box-shadow: 0 0 0 26px rgba(220,171,85,0), 0 20px 50px -14px rgba(0,0,0,.6); } }
+.reel-frame.is-playing .reel-shade, .reel-frame.is-playing .reel-play { opacity: 0; pointer-events: none; }
+@media (max-width: 760px) { .reel-head { grid-template-columns: 1fr; } .reel-head p { justify-self: start; } .reel-frame { border-radius: 20px; } }
+
 /* 3 · Landscapes (horizontal travel) */
 .lands { background: var(--paper); overflow: hidden; }
 .lands-track { display: flex; gap: clamp(1rem, 2vw, 2rem); align-items: stretch; height: 100svh; padding: 8.5rem var(--gutter-r) 3.2rem var(--gutter); width: max-content; will-change: transform; }
@@ -298,9 +320,10 @@ section { position: relative; scroll-margin-top: 80px; }
 .tix-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; }
 .tix-info { display: grid; gap: 1.8rem; position: sticky; top: 14vh; }
 .tix-info h2 { font-size: var(--t-xl); }
-.price { display: flex; align-items: baseline; gap: 1rem; }
-.price small { font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .24em; text-transform: uppercase; color: var(--ink-soft); }
-.price b { font: 200 clamp(5rem, 11vw, 9.5rem)/.85 var(--f-display); letter-spacing: -.06em; color: var(--gold); }
+.prices { display: flex; flex-wrap: wrap; gap: 1.4rem 2.2rem; }
+.prices div { display: grid; gap: .5rem; }
+.prices small { font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .24em; text-transform: uppercase; color: var(--ink-soft); }
+.prices b { font: 200 clamp(2.8rem, 4.4vw, 4.4rem)/.85 var(--f-display); letter-spacing: -.05em; color: var(--gold); }
 .specs { display: grid; margin: 0; border-top: 1px solid var(--line); }
 .specs div { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); gap: 1rem; padding: .9rem 0; border-bottom: 1px solid var(--line); }
 .specs dt { font: 500 var(--t-xs)/1.9 var(--f-display); letter-spacing: .2em; text-transform: uppercase; color: var(--ink-soft); }
@@ -475,6 +498,7 @@ main { position: relative; }
     <a class="nav-logo" href="#top" aria-label="FlyX Tenerife, home"><img src="assets/logo.png" alt="FlyX Tenerife 5D Flying Cinema"></a>
     <nav aria-label="Main">
       <ul>
+        <li><a href="#film">The Film</a></li>
         <li><a href="#experience">The Experience</a></li>
         <li><a href="#feel">5D</a></li>
         <li><a href="#how">How it works</a></li>
@@ -492,6 +516,7 @@ main { position: relative; }
 
 <div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu">
   <button class="menu-close" type="button" id="menuClose" aria-label="Close menu">×</button>
+  <a href="#film">The Film</a>
   <a href="#experience">The Experience</a>
   <a href="#feel">5D</a>
   <a href="#how">How it works</a>
@@ -511,7 +536,7 @@ main { position: relative; }
       </div>
       <div class="hero-scrim"></div>
       <div class="mist mist--back"></div>
-      <div class="hero-beat" aria-hidden="true"><p><span style="display:block">Fifteen minutes of story.</span><em style="display:block">Fifteen minutes of flight.</em></p></div>
+      <div class="hero-beat" aria-hidden="true"><p><span style="display:block">Ten minutes of story.</span><em style="display:block">Fifteen minutes of flight.</em></p></div>
       <div class="hero-copy">
         <h1>
           <span class="hl hl-1">The Tenerife</span>
@@ -527,7 +552,7 @@ main { position: relative; }
       <div class="mist mist--front"></div>
     </div>
     <div class="gate">
-      <div class="cell"><small>Tickets</small><b>From €23</b></div>
+      <div class="cell"><small>Tickets</small><b>From €18</b></div>
       <div class="cell"><small>Duration</small><b>30 minutes</b></div>
       <div class="cell"><small>Where</small><b>The Duke Shops</b></div>
       <div class="next">Flights every 30 minutes · next at <b class="js-next">—</b></div>
@@ -554,6 +579,25 @@ main { position: relative; }
           <div><b>5D</b><span>Wind, motion, scent</span></div>
           <div><b>4+</b><span>Recommended age</span></div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2b · INTRO FILM -->
+  <section class="reel solid-ground" id="film" aria-label="Watch the FlyX film">
+    <div class="wrap reel-head">
+      <div><span class="kicker">The film</span><h2 data-split>See FlyX <em>in motion</em></h2></div>
+      <p>A first look inside the experience. Press play, turn the sound up, and see what 30 minutes over Tenerife feels like.</p>
+    </div>
+    <div class="reel-stage">
+      <div class="reel-frame" id="reelFrame" data-cursor="Play">
+        <img class="reel-poster" src="assets/sunset.jpg" alt="" loading="lazy">
+        <video id="introVideo" muted loop playsinline preload="none" aria-label="FlyX Tenerife intro film"></video>
+        <div class="reel-shade" aria-hidden="true"></div>
+        <button class="reel-play" id="reelPlay" type="button" aria-label="Play the FlyX film with sound">
+          <span class="reel-disc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span>
+          <span class="reel-label">Play the film</span>
+        </button>
       </div>
     </div>
   </section>
@@ -635,8 +679,9 @@ main { position: relative; }
       <div class="steps" id="steps">
         <div class="fill" aria-hidden="true"></div>
         <div class="step on" data-at="0"><span class="time">Arrive</span><h3>Take your seat</h3><p>Find us at The Duke Shops in Costa Adeje. Flights leave every 30 minutes, from 10:00 to 22:00, every day.</p></div>
-        <div class="step on" data-at=".5"><span class="time">00:00 – 15:00 · The story</span><h3>Meet the island</h3><p>Your experience starts with a short film exploring Tenerife’s history, geology and local stories: facts you’ll catch yourself repeating later.</p></div>
-        <div class="step on" data-at="1"><span class="time">15:00 – 30:00 · The flight</span><h3>Take flight</h3><p>Then you move on to the immersive flight. Gently moving seats carry you over cliffs, coastlines, valleys, forests and volcanic landscapes.</p></div>
+        <div class="step on" data-at=".33"><span class="time">10 min · The story</span><h3>Meet the island</h3><p>Your experience starts with a 10-minute film exploring Tenerife’s history, geology and local stories: facts you’ll catch yourself repeating later.</p></div>
+        <div class="step on" data-at=".66"><span class="time">15 min · The flight</span><h3>Take flight</h3><p>Then you move on to the immersive flight. Gently moving seats carry you over cliffs, coastlines, valleys, forests and volcanic landscapes.</p></div>
+        <div class="step on" data-at="1"><span class="time">About 5 min · Between the rooms</span><h3>Make your mark</h3><p>The rest of your visit you move from room to room, with little extras along the way, like signing the FlyX wall.</p></div>
       </div>
     </div>
   </section>
@@ -688,13 +733,14 @@ main { position: relative; }
       <div class="tix-info">
         <span class="kicker">Tickets</span>
         <h2 data-split>Book your ticket now</h2>
-        <div class="price"><small>From</small><b>€23</b></div>
+        <div class="prices"><div><small>Adults</small><b>€29</b></div><div><small>Kids</small><b>€24</b></div><div><small>Residents</small><b>€18</b></div></div>
         <dl class="specs">
           <div><dt>Duration</dt><dd>30 minutes in total</dd></div>
-          <div><dt>Film</dt><dd>15-minute Tenerife history &amp; storytelling film</dd></div>
+          <div><dt>Film</dt><dd>10-minute Tenerife history &amp; storytelling film</dd></div>
           <div><dt>Flight</dt><dd>15-minute immersive flight with moving seats</dd></div>
+          <div><dt>Extras</dt><dd>Moving between rooms and signing the FlyX wall</dd></div>
           <div><dt>Open</dt><dd>10:00–22:00 daily, flights every 30 minutes</dd></div>
-          <div><dt>Discounts</dt><dd>Resident &amp; group discounts available</dd></div>
+          <div><dt>Groups</dt><dd>Group discounts available</dd></div>
         </dl>
       </div>
       <div>
@@ -704,12 +750,12 @@ main { position: relative; }
           <fieldset class="fld"><legend>Departure</legend><div class="slots" id="slots"></div></fieldset>
           <fieldset class="fld"><legend>Tickets</legend><div class="tks" id="tks"></div></fieldset>
           <div class="book-foot">
-            <div class="sum"><small>Estimated from</small><b id="sum">€46</b><em id="sumNote" hidden></em></div>
+            <div class="sum"><small>Estimated total</small><b id="sum">€58</b><em id="sumNote" hidden></em></div>
             <a class="btn magnetic" id="bookLink" href="https://flyxtenerife.com/the-experience" target="_blank" rel="noopener">Book Your Experience
               <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4"/></svg></a>
           </div>
         </form>
-        <p class="book-note">Final prices, including resident and group discounts, are confirmed on the booking page.</p>
+        <p class="book-note">Group discounts available. You confirm your tickets and pay on the booking page.</p>
       </div>
     </div>
   </section>
@@ -764,7 +810,7 @@ main { position: relative; }
     <div class="wrap content-above">
       <h2 data-split>Frequently Asked <em>Questions</em></h2>
       <div class="qa-grid">
-        <div class="qa"><button type="button" aria-expanded="false">How long is the FlyX experience?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>About 30 minutes in total: a 15-minute film about Tenerife’s history, geology and local stories, then a 15-minute immersive flight on moving seats.</p></div></div></div>
+        <div class="qa"><button type="button" aria-expanded="false">How long is the FlyX experience?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>About 30 minutes in total: a 10-minute film about Tenerife’s history, geology and local stories, a 15-minute immersive flight on moving seats, and a few minutes moving between rooms, with extras like signing the FlyX wall.</p></div></div></div>
         <div class="qa"><button type="button" aria-expanded="false">Do I need to book in advance?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>Booking online secures the time you want. Flights leave every 30 minutes from 10:00 to 22:00.</p></div></div></div>
         <div class="qa"><button type="button" aria-expanded="false">Is FlyX suitable for children?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. We recommend FlyX for children aged 4 and up. Babies under 1 year cannot take part.</p></div></div></div>
         <div class="qa"><button type="button" aria-expanded="false">Is FlyX an indoor activity?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. FlyX is fully indoors at The Duke Shops, so every flight runs in any weather.</p></div></div></div>
@@ -788,7 +834,7 @@ main { position: relative; }
         <h2 data-split>The Tenerife you’ve never seen is <em>30 minutes away.</em></h2>
         <a class="btn magnetic" href="#tickets">Book Your Experience
           <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4"/></svg></a>
-        <p class="meta">From <b>€23</b> · The Duke Shops, Costa Adeje · 10:00–22:00 daily</p>
+        <p class="meta">From <b>€18</b> · The Duke Shops, Costa Adeje · 10:00–22:00 daily</p>
       </div>
     </div>
   </section>
@@ -809,7 +855,7 @@ main { position: relative; }
   </div>
 </footer>
 
-<div class="mbar" id="mbar"><span>From <b>€23</b> · 30 min</span><a class="btn" href="#tickets">Book Now</a></div>
+<div class="mbar" id="mbar"><span>From <b>€18</b> · 30 min</span><a class="btn" href="#tickets">Book Now</a></div>
 
 <script src="assets/js/gsap.min.js"></script>
 <script src="assets/js/ScrollTrigger.min.js"></script>
@@ -819,15 +865,16 @@ main { position: relative; }
 const MEDIA = 'https://assets.cdn.filesafe.space/qbsGYQptNIFNSZG2meOD/media/';
 const VIDEOS = {
   hero: MEDIA + '6aa063ed16ed327815afe8a7.mp4',
+  intro: MEDIA + '6aa063edd63e08439ccd924c.mp4', // Intro film (plays with sound on click)
   1: MEDIA + '6aa063edd63e08439ccd9250.mp4',   // Volcanic Landscapes
   2: MEDIA + '6aa063ed4d38c898d51947c4.mp4',   // Wild Coastlines
   3: MEDIA + '6aa063edfcce077c443d5769.mp4'    // Hidden Valleys & Forests
 };
-// Only the adult "from €23" price is confirmed. null shows "At checkout".
+// Ticket prices. A price of null shows "At checkout".
 const TICKETS = [
-  { name: 'Adult', note: 'Ages 12 and up', price: 23, qty: 2 },
-  { name: 'Child', note: 'Ages 4 to 11', price: null, qty: 0 },
-  { name: 'Resident', note: 'Canary Islands residents, with ID', price: null, qty: 0 }
+  { name: 'Adults', note: 'Adult ticket', price: 29, qty: 2 },
+  { name: 'Kids', note: 'Recommended from age 4', price: 24, qty: 0 },
+  { name: 'Residents', note: 'Canary Islands residents', price: 18, qty: 0 }
 ];
 /* ================================= */
 
@@ -869,6 +916,22 @@ function attachVideo(v, src, eager) {
 attachVideo($('#heroVideo'), VIDEOS.hero, true);
 attachVideo($('#finalVideo'), VIDEOS.hero, false);
 $$('video[data-clip]').forEach(v => attachVideo(v, VIDEOS[v.dataset.clip], false));
+
+/* ---------- Intro film: silent preview, plays with sound on click ---------- */
+(() => {
+  const frame = $('#reelFrame'), v = $('#introVideo'), btn = $('#reelPlay');
+  if (!v || !VIDEOS.intro) return;
+  attachVideo(v, VIDEOS.intro, false);
+  const play = () => {
+    if (!v.getAttribute('src')) v.src = VIDEOS.intro;
+    v.muted = false; v.loop = false; v.controls = true; v.currentTime = 0;
+    frame.classList.add('is-playing'); v.classList.add('ready');
+    const p = v.play(); if (p) p.catch(() => {});
+  };
+  btn.addEventListener('click', play);
+  frame.addEventListener('click', e => { if (!frame.classList.contains('is-playing') && e.target !== btn && !btn.contains(e.target)) play(); });
+  v.addEventListener('ended', () => { frame.classList.remove('is-playing'); v.controls = false; v.muted = true; v.loop = true; v.play().catch(() => {}); });
+})();
 
 /* ---------- Next departure ---------- */
 function nextFlight() {
@@ -918,7 +981,7 @@ $('#copyPhone').addEventListener('click', async e => {
   });
   TICKETS.forEach(t => {
     const row = document.createElement('div'); row.className = 'tk';
-    row.innerHTML = `<div><b>${t.name}</b><span>${t.note}</span></div><span class="pr${t.price == null ? ' tbc-p' : ''}">${t.price == null ? 'At checkout' : 'from €' + t.price}</span><div class="step-ctl"><button type="button" aria-label="Remove one ${t.name.toLowerCase()} ticket">−</button><output aria-live="polite"></output><button type="button" aria-label="Add one ${t.name.toLowerCase()} ticket">+</button></div>`;
+    row.innerHTML = `<div><b>${t.name}</b><span>${t.note}</span></div><span class="pr${t.price == null ? ' tbc-p' : ''}">${t.price == null ? 'At checkout' : '€' + t.price}</span><div class="step-ctl"><button type="button" aria-label="Remove one ${t.name.toLowerCase()} ticket">−</button><output aria-live="polite"></output><button type="button" aria-label="Add one ${t.name.toLowerCase()} ticket">+</button></div>`;
     const [minus, plus] = $$('button', row);
     minus.addEventListener('click', () => { t.qty = Math.max(0, t.qty - 1); render(); });
     plus.addEventListener('click', () => { t.qty = Math.min(20, t.qty + 1); render(); });
@@ -1050,6 +1113,9 @@ if (hasGsap) {
     const sw = sEl.querySelector('.wi') ? $$('.wi', sEl) : splitWords(sEl);
     sEl.classList.add('armed');
     gsap.to(sw, { opacity: 1, stagger: .1, ease: 'none', scrollTrigger: { trigger: sEl, start: 'top 82%', end: 'bottom 45%', scrub: true } });
+
+    /* Intro film: the frame grows into place */
+    gsap.fromTo('#reelFrame', { scale: desk ? .84 : .94, borderRadius: desk ? 56 : 28 }, { scale: 1, borderRadius: desk ? 32 : 20, ease: 'none', scrollTrigger: { trigger: '.reel-stage', start: 'top bottom', end: 'center 55%', scrub: true } });
 
     /* Landscapes: lateral travel (the peak) */
     if (desk) {
