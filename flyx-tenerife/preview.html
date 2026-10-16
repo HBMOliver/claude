@@ -1,0 +1,1194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FlyX Tenerife · Design concept</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="The Tenerife you've never seen. A 30-minute indoor 5D flying cinema at The Duke Shops, Costa Adeje. Flights every 30 minutes, 10:00–22:00. From €23.">
+<link rel="icon" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@200..600&family=Open+Sans:wght@400;500;600&display=swap">
+<link rel="preload" as="image" href="assets/hero.jpg">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+/* FlyX brand, made quieter and larger: white ground, deep teal ink, metallic gold from the logo. */
+:root {
+  --paper: #fdfdfb;
+  --mist: #eef3f3;
+  --ink: #0d2b31;
+  --ink-soft: #55676b;
+  --teal: #0e5866;
+  --deep: #082429;
+  --gold: #b07d27;
+  --gold-ink: #87601c;      /* gold for small text on white */
+  --gold-lite: #dcab55;     /* gold on dark grounds */
+  --gold-metal: linear-gradient(135deg, #e7bd6a 0%, #c18a33 45%, #9c6a1e 100%);
+  --line: rgba(13,43,49,.12);
+  --line-dark: rgba(253,253,251,.14);
+
+  --f-display: "Outfit", "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+  --f-text: "Open Sans", "Helvetica Neue", Arial, sans-serif;
+
+  --t-xs: .75rem; --t-sm: .875rem; --t-md: 1.0625rem; --t-lg: clamp(1.15rem, 1.4vw, 1.35rem);
+  --t-xl: clamp(1.9rem, 3.4vw, 3rem); --t-2xl: clamp(2.6rem, 5.6vw, 5.2rem); --t-hero: clamp(3rem, 8.4vw, 8.6rem);
+  --gutter: max(20px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(20px, env(safe-area-inset-right, 0px));
+  --wrap: 1320px;
+  --pad: clamp(6rem, 12vw, 11rem);
+  --ease: cubic-bezier(.16,1,.3,1);
+  color-scheme: light;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--paper); -webkit-text-size-adjust: 100%; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 var(--t-md)/1.7 var(--f-text); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+img, video { display: block; max-width: 100%; }
+a { color: inherit; }
+h1, h2, h3, h4 { font-family: var(--f-display); font-weight: 300; line-height: 1; letter-spacing: -.035em; margin: 0; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+em { font-style: normal; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 4px; }
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-left: var(--gutter); padding-right: var(--gutter-r); }
+.kicker { font: 500 var(--t-xs)/1.2 var(--f-display); letter-spacing: .32em; text-transform: uppercase; color: var(--gold-ink); }
+.gold { color: var(--gold); }
+.skip { position: absolute; left: -999px; }
+.skip:focus { left: 16px; top: 16px; z-index: 999; background: var(--ink); color: var(--paper); padding: .7rem 1rem; }
+
+/* Split text masks */
+.w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .1em; margin-bottom: -.1em; }
+.wi { display: inline-block; will-change: transform; }
+
+/* Buttons */
+.btn {
+  position: relative; display: inline-flex; align-items: center; gap: .8rem; justify-content: center;
+  padding: 1.15rem 1.9rem; border-radius: 999px; border: 0; cursor: pointer; text-decoration: none;
+  font: 500 var(--t-sm)/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase;
+  color: #1c1305; background: var(--gold-metal); overflow: hidden; isolation: isolate;
+  box-shadow: 0 14px 30px -14px rgba(156,106,30,.75), inset 0 1px 0 rgba(255,255,255,.45);
+  transition: box-shadow .5s var(--ease);
+}
+.btn::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.55) 50%, transparent 70%); transform: translateX(-120%); transition: transform .9s var(--ease); }
+.btn:hover::after { transform: translateX(120%); }
+.btn:hover { box-shadow: 0 20px 40px -14px rgba(156,106,30,.9), inset 0 1px 0 rgba(255,255,255,.45); }
+.btn svg { width: 15px; height: 15px; flex: none; transition: transform .5s var(--ease); }
+.btn:hover svg { transform: translateX(4px); }
+.btn--line { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+.btn--line::after { background: linear-gradient(110deg, transparent 30%, rgba(176,125,39,.18) 50%, transparent 70%); }
+.btn--line:hover { box-shadow: inset 0 0 0 1px var(--ink); }
+.btn--glass { background: rgba(253,253,251,.14); color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.4); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+
+/* Loader */
+.loader { display: none; }
+.js .loader { position: fixed; inset: 0; z-index: 200; background: var(--paper); display: grid; place-items: center; animation: loader-failsafe .01s 4.5s forwards; }
+@keyframes loader-failsafe { to { visibility: hidden; opacity: 0; } }
+.loader-inner { display: grid; gap: 1.6rem; justify-items: center; }
+.loader img { width: min(240px, 52vw); height: auto; }
+.loader-bar { width: 160px; height: 1px; background: var(--line); position: relative; overflow: hidden; }
+.loader-bar i { position: absolute; inset: 0; background: var(--gold); transform-origin: left; transform: scaleX(0); }
+
+/* Cursor */
+.cursor { position: fixed; left: 0; top: 0; z-index: 150; pointer-events: none; display: none; }
+.has-cursor .cursor { display: block; opacity: 0; transition: opacity .4s; }
+.has-cursor .cursor.live { opacity: 1; }
+.cursor-ring { width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 50%; border: 1px solid rgba(176,125,39,.7); display: grid; place-items: center; transition: width .5s var(--ease), height .5s var(--ease), margin .5s var(--ease), background .4s, border-color .4s; }
+.cursor-ring span { font: 500 .62rem/1 var(--f-display); letter-spacing: .2em; text-transform: uppercase; color: #fff; opacity: 0; transition: opacity .3s; }
+.cursor.is-link .cursor-ring { width: 64px; height: 64px; margin: -32px 0 0 -32px; background: rgba(176,125,39,.12); }
+.cursor.is-label .cursor-ring { width: 92px; height: 92px; margin: -46px 0 0 -46px; background: rgba(176,125,39,.92); border-color: transparent; }
+.cursor.is-label .cursor-ring span { opacity: 1; }
+
+/* Nav */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 101; background: var(--paper); }
+.nav { position: fixed; top: env(safe-area-inset-top, 0px); left: 0; right: 0; z-index: 100; color: #fff; transition: translate .7s var(--ease), color .5s, background .5s, box-shadow .5s; }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding-block: 1.1rem; }
+.nav-logo img { height: 52px; width: auto; filter: drop-shadow(0 2px 10px rgba(0,0,0,.25)); transition: height .5s var(--ease), filter .5s; }
+.nav ul { display: flex; gap: 2.2rem; list-style: none; margin: 0; padding: 0; }
+.nav ul a { position: relative; text-decoration: none; font: 400 var(--t-sm)/1 var(--f-display); letter-spacing: .06em; }
+.nav ul a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .6s var(--ease); }
+.nav ul a:hover::after, .nav ul a.active::after { transform: scaleX(1); transform-origin: left; }
+.nav-right { display: flex; align-items: center; gap: .8rem; }
+.nav .btn { padding: .85rem 1.4rem; }
+.nav.solid { color: var(--ink); background: rgba(253,253,251,.86); backdrop-filter: blur(16px) saturate(1.3); -webkit-backdrop-filter: blur(16px) saturate(1.3); box-shadow: 0 1px 0 var(--line); }
+.nav.solid .nav-logo img { height: 42px; filter: none; }
+.nav.hide { translate: 0 -110%; }
+.menu-btn { display: none; width: 46px; height: 46px; border-radius: 50%; border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer; place-items: center; }
+.menu-btn span { display: block; width: 16px; height: 1px; background: currentColor; box-shadow: 0 -5px 0 currentColor, 0 5px 0 currentColor; }
+@media (max-width: 980px) { .nav ul { display: none; } .menu-btn { display: grid; } .nav-logo img { height: 42px; } .nav .btn { display: none; } }
+.menu { position: fixed; inset: 0; z-index: 120; background: var(--deep); color: var(--paper); display: grid; align-content: center; gap: 2rem; padding: 6rem var(--gutter-r) 3rem var(--gutter); clip-path: inset(0 0 100% 0); transition: clip-path .9s var(--ease), visibility 0s .9s; visibility: hidden; }
+.menu.open { clip-path: inset(0 0 0 0); visibility: visible; transition: clip-path .9s var(--ease); }
+.menu a { font: 300 clamp(2.2rem, 9vw, 3.4rem)/1.1 var(--f-display); text-decoration: none; letter-spacing: -.03em; }
+.menu .btn { justify-self: start; font-size: var(--t-sm); }
+.menu-close { position: absolute; top: calc(1.1rem + env(safe-area-inset-top, 0px)); right: var(--gutter-r); width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line-dark); background: transparent; color: inherit; font-size: 1.4rem; cursor: pointer; }
+
+/* 1 · Hero */
+.hero { position: relative; height: 100svh; min-height: 620px; background: var(--paper); overflow: hidden; }
+.hero-frame { position: absolute; inset: 0; overflow: hidden; clip-path: inset(0% 0% 0% 0% round 0px); background: #0b2a30; }
+.hero-media { position: absolute; inset: 0; transform: scale(1.18); transform-origin: 50% 60%; }
+.hero-media img, .hero-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero-media video { opacity: 0; transition: opacity 1.4s; }
+.hero-media video.ready { opacity: 1; }
+.hero-scrim { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 55% at 50% 52%, rgba(6,26,31,.5), rgba(6,26,31,0) 72%), linear-gradient(to bottom, rgba(6,26,31,.45), rgba(6,26,31,0) 22%, rgba(6,26,31,0) 70%, rgba(6,26,31,.55)); }
+.mist { position: absolute; left: -10%; right: -10%; pointer-events: none; }
+.mist--back { top: 30%; height: 50%; background: radial-gradient(ellipse 40% 50% at 20% 60%, rgba(255,255,255,.18), transparent 70%), radial-gradient(ellipse 35% 45% at 80% 40%, rgba(255,255,255,.14), transparent 70%); filter: blur(10px); }
+.mist--front { bottom: -18%; height: 46%; background: radial-gradient(ellipse 30% 60% at 12% 80%, rgba(255,255,255,.55), transparent 70%), radial-gradient(ellipse 34% 55% at 50% 95%, rgba(255,255,255,.5), transparent 70%), radial-gradient(ellipse 30% 60% at 88% 85%, rgba(255,255,255,.55), transparent 70%); filter: blur(18px); }
+.hero-copy { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; text-align: center; padding: 6rem var(--gutter-r) 9rem var(--gutter); color: #fff; gap: 1.8rem; }
+.hero h1 { font-size: var(--t-hero); font-weight: 300; letter-spacing: -.045em; line-height: .94; text-shadow: 0 2px 40px rgba(6,26,31,.35); }
+.hero h1 .hl { display: block; }
+.hero h1 em { color: var(--gold-lite); font-weight: 400; }
+.hero-sub { max-width: 46ch; font-size: var(--t-lg); line-height: 1.55; color: rgba(255,255,255,.9); text-shadow: 0 1px 20px rgba(6,26,31,.5); }
+.hero-ctas { display: flex; gap: .8rem; flex-wrap: wrap; justify-content: center; }
+.hero-beat { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; color: #fff; padding: 0 12%; pointer-events: none; opacity: 0; }
+.hero-beat p { font: 300 var(--t-2xl)/1.02 var(--f-display); letter-spacing: -.04em; text-shadow: 0 2px 40px rgba(6,26,31,.4); }
+.hero-beat p em { color: var(--gold-lite); }
+.gate {
+  position: absolute; left: 50%; bottom: calc(1.6rem + env(safe-area-inset-bottom, 0px)); translate: -50% 0; width: min(var(--wrap), calc(100% - 40px));
+  display: grid; grid-template-columns: repeat(3, auto) 1fr auto; align-items: center;
+  background: rgba(8,36,41,.38); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  border: 1px solid rgba(255,255,255,.22); border-radius: 999px; color: #fff; padding: .5rem .5rem .5rem 1.2rem;
+}
+.gate .cell { padding: .3rem 1.4rem; border-right: 1px solid rgba(255,255,255,.18); display: grid; gap: .15rem; }
+.gate small { font: 500 .62rem/1 var(--f-display); letter-spacing: .26em; text-transform: uppercase; color: rgba(255,255,255,.7); }
+.gate b { font: 400 1.15rem/1.2 var(--f-display); white-space: nowrap; }
+.gate .next { padding: 0 1.4rem; font: 400 var(--t-sm)/1.3 var(--f-display); color: rgba(255,255,255,.85); }
+.gate .next b { font-size: var(--t-sm); font-variant-numeric: tabular-nums; color: var(--gold-lite); }
+@media (max-width: 980px) {
+  .gate { grid-template-columns: repeat(3, 1fr); border-radius: 22px; padding: .5rem; }
+  .gate .cell { padding: .6rem .8rem; } .gate .cell:nth-child(3) { border: 0; }
+  .gate .next { display: none; } .gate .btn { grid-column: 1 / -1; margin-top: .4rem; }
+  .hero-copy { padding-bottom: 13rem; }
+}
+@media (max-width: 520px) { .gate b { font-size: .95rem; white-space: normal; } .hero-ctas .btn--glass { display: none; } }
+
+section { position: relative; scroll-margin-top: 80px; }
+.solid-ground { z-index: 2; }
+
+/* 2 · Discover */
+.discover { padding-block: calc(var(--pad) * .55) var(--pad); }
+.discover-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 3rem; }
+.discover h2 { font-size: var(--t-2xl); color: var(--teal); max-width: 14ch; }
+.discover h2 em { color: var(--gold); }
+.scrub-words { font: 300 clamp(1.9rem, 4.3vw, 4rem)/1.12 var(--f-display); letter-spacing: -.03em; max-width: 22ch; margin-left: auto; color: var(--ink); }
+.js .scrub-words.armed .wi { opacity: .14; }
+.discover-foot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem 4rem; align-items: end; border-top: 1px solid var(--line); padding-top: 2rem; }
+.discover-foot p { color: var(--ink-soft); max-width: 52ch; }
+.facts { display: flex; gap: 3rem; justify-content: flex-end; flex-wrap: wrap; }
+.facts div { display: grid; gap: .3rem; }
+.facts b { font: 200 clamp(2.2rem, 3.4vw, 3.2rem)/1 var(--f-display); letter-spacing: -.04em; color: var(--teal); }
+.facts span { font: 500 var(--t-xs)/1.3 var(--f-display); letter-spacing: .2em; text-transform: uppercase; color: var(--ink-soft); }
+@media (max-width: 760px) { .discover-foot { grid-template-columns: 1fr; } .facts { justify-content: flex-start; gap: 2rem; } .scrub-words { margin-left: 0; } }
+
+/* 3 · Landscapes (horizontal travel) */
+.lands { background: var(--paper); overflow: hidden; }
+.lands-track { display: flex; gap: clamp(1rem, 2vw, 2rem); align-items: stretch; height: 100svh; padding: 8.5rem var(--gutter-r) 3.2rem var(--gutter); width: max-content; will-change: transform; }
+.lands-intro { width: min(34vw, 460px); flex: none; display: grid; align-content: space-between; padding-right: 2rem; }
+.lands-intro h2 { font-size: var(--t-xl); margin-top: 1.2rem; }
+.lands-intro p { color: var(--ink-soft); max-width: 34ch; margin-top: 1.4rem; }
+.lands-progress { display: grid; gap: .8rem; }
+.lands-progress .bar { height: 1px; background: var(--line); position: relative; }
+.lands-progress .bar i { position: absolute; inset: 0; background: var(--gold); transform-origin: left; transform: scaleX(0); }
+.lands-progress .names { display: flex; justify-content: space-between; font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .18em; text-transform: uppercase; color: var(--ink-soft); }
+.land { position: relative; flex: none; width: min(62vw, 980px); border-radius: 28px; overflow: hidden; color: #fff; background: #0b2a30; }
+.land-media { position: absolute; inset: 0 -10%; }
+.land-media img, .land-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.land-media video { opacity: 0; transition: opacity 1s; }
+.land-media video.ready { opacity: 1; }
+.land::after { content: ""; position: absolute; inset: 45% 0 0; background: linear-gradient(to bottom, rgba(6,26,31,0), rgba(6,26,31,.78)); pointer-events: none; }
+.land-copy { position: absolute; left: clamp(1.4rem, 3vw, 2.6rem); right: clamp(1.4rem, 3vw, 2.6rem); bottom: clamp(1.4rem, 3vw, 2.6rem); z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 30ch); gap: 1rem 2rem; align-items: end; }
+.land h3 { font-size: clamp(2.2rem, 4.4vw, 4.2rem); font-weight: 300; }
+.land p { color: rgba(255,255,255,.88); font-size: var(--t-md); }
+.lands-end { flex: none; width: min(34vw, 420px); display: grid; align-content: center; gap: 1.6rem; padding-left: 1rem; }
+.lands-end p { font: 300 var(--t-xl)/1.1 var(--f-display); letter-spacing: -.03em; }
+@media (max-width: 899px) {
+  .lands-track { flex-direction: column; height: auto; width: auto; padding: var(--pad) var(--gutter-r) 2rem var(--gutter); gap: 1rem; }
+  .lands-intro, .lands-end { width: auto; padding: 0 0 1rem; }
+  .lands-progress { display: none; }
+  .land { width: 100%; height: 76svh; min-height: 460px; border-radius: 22px; }
+  .land-media { inset: -8% 0; }
+  .land-copy { grid-template-columns: 1fr; }
+}
+
+/* 4 · The 5D experience (dark) */
+.feel { background: var(--deep); color: var(--paper); }
+.feel-stage { min-height: 100svh; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; padding-block: 7rem 4rem; }
+.feel-visual { position: relative; height: min(74svh, 680px); }
+.feel-visual figure { margin: 0; }
+.feel-visual .big { position: absolute; inset: 0 18% 10% 0; border-radius: 26px; overflow: hidden; }
+.feel-visual .big img { width: 100%; height: 120%; object-fit: cover; }
+.feel-visual .small { position: absolute; right: 0; bottom: 0; width: 42%; aspect-ratio: 3 / 4; border-radius: 20px; overflow: hidden; box-shadow: 0 40px 80px -30px rgba(0,0,0,.7); border: 6px solid var(--deep); }
+.feel-visual .small img { width: 100%; height: 100%; object-fit: cover; }
+.feel-visual .tag { position: absolute; left: 1.2rem; top: 1.2rem; font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .24em; text-transform: uppercase; background: rgba(8,36,41,.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: .6rem .9rem; border-radius: 999px; }
+.feel h2 { font-size: var(--t-2xl); margin-bottom: 2.6rem; }
+.feel h2 em { color: var(--gold-lite); }
+.feel .kicker { color: var(--gold-lite); display: block; margin-bottom: 1.4rem; }
+.features { display: grid; border-top: 1px solid var(--line-dark); }
+.feature { display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: 1.4rem; padding: 1.4rem 0; border-bottom: 1px solid var(--line-dark); position: relative; transition: opacity .6s var(--ease); }
+.js .features.armed .feature { opacity: .32; }
+.js .features.armed .feature.on { opacity: 1; }
+.feature::after { content: ""; position: absolute; left: 0; bottom: -1px; height: 1px; width: 100%; background: var(--gold-lite); transform: scaleX(0); transform-origin: left; transition: transform 1.2s var(--ease); }
+.feature.on::after { transform: scaleX(1); }
+.feature svg { width: 2.6rem; height: 2.6rem; color: var(--gold-lite); }
+.feature svg * { stroke-dasharray: 120; stroke-dashoffset: 0; transition: stroke-dashoffset 1.4s var(--ease); }
+.js .features.armed .feature:not(.on) svg * { stroke-dashoffset: 120; }
+.feature h3 { font: 400 1.5rem/1.2 var(--f-display); letter-spacing: -.02em; margin-bottom: .45rem; }
+.feature p { color: rgba(253,253,251,.72); font-size: var(--t-sm); max-width: 48ch; }
+@media (max-width: 899px) {
+  .feel-stage { grid-template-columns: 1fr; padding-block: var(--pad); }
+  .feel-visual { height: 64svh; min-height: 420px; }
+}
+
+/* 5 · How it works */
+.how { padding-block: var(--pad); }
+.how-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 6rem); }
+.clock { position: sticky; top: 22vh; align-self: start; display: grid; gap: 1.2rem; }
+.clock h2 { font-size: var(--t-xl); max-width: 14ch; }
+.clock-face { font: 200 clamp(5rem, 13vw, 12.5rem)/.9 var(--f-display); letter-spacing: -.06em; font-variant-numeric: tabular-nums; color: var(--teal); }
+.clock-face small { font-size: .2em; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-soft); margin-left: .4em; font-weight: 400; }
+.steps { display: grid; gap: clamp(5rem, 14vh, 9rem); padding-block: 12vh 18vh; position: relative; }
+.steps::before { content: ""; position: absolute; left: 11px; top: 12vh; bottom: 18vh; width: 1px; background: var(--line); }
+.steps .fill { position: absolute; left: 11px; top: 12vh; width: 1px; height: calc(100% - 30vh); background: var(--gold); transform-origin: top; transform: scaleY(var(--p, 1)); }
+.step { position: relative; padding-left: 3.4rem; display: grid; gap: .8rem; }
+.step::before { content: ""; position: absolute; left: 4px; top: .55rem; width: 15px; height: 15px; border-radius: 50%; background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow .6s var(--ease), background .6s; }
+.step.on::before { background: var(--gold); box-shadow: 0 0 0 6px rgba(176,125,39,.15); }
+.step .time { font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .24em; text-transform: uppercase; color: var(--gold-ink); }
+.step h3 { font-size: clamp(1.8rem, 2.8vw, 2.6rem); }
+.step p { color: var(--ink-soft); max-width: 44ch; }
+@media (max-width: 860px) { .how-grid { grid-template-columns: 1fr; } .clock { position: relative; top: 0; } .steps { padding-block: 2rem 0; } .steps::before, .steps .fill { top: 2rem; bottom: 0; height: auto; } }
+
+/* 6 · Who it's for */
+.who { padding-block: var(--pad) calc(var(--pad) * .7); overflow: hidden; }
+.who-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; align-items: end; margin-bottom: 3.5rem; }
+.who-head h2 { font-size: var(--t-xl); max-width: 16ch; }
+.who-head p { color: var(--ink-soft); max-width: 46ch; justify-self: end; }
+.rows { display: grid; gap: .4rem; }
+.row { display: flex; gap: 2.4rem; white-space: nowrap; font: 200 clamp(3.4rem, 9.5vw, 9.4rem)/1.05 var(--f-display); letter-spacing: -.05em; will-change: transform; }
+.row span { display: inline-flex; align-items: center; gap: 2.4rem; }
+.row span::after { content: ""; width: .14em; height: .14em; border-radius: 50%; background: var(--gold); flex: none; }
+.row .o { color: transparent; -webkit-text-stroke: 1px var(--ink); }
+.row--2 { justify-content: flex-end; }
+@media (max-width: 760px) { .who-head { grid-template-columns: 1fr; } .who-head p { justify-self: start; } }
+
+/* 7 · Why */
+.why { padding-block: var(--pad); background: var(--mist); }
+.why-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+.why-copy { position: sticky; top: 14vh; display: grid; gap: 1.5rem; }
+.why h2 { font-size: var(--t-2xl); color: var(--teal); }
+.why .subhead { font: 400 var(--t-lg)/1.3 var(--f-display); color: var(--gold-ink); letter-spacing: .01em; }
+.why-copy > p { color: var(--ink-soft); max-width: 46ch; }
+.pains { display: grid; gap: .2rem; font: 300 clamp(1.5rem, 2.3vw, 2.1rem)/1.3 var(--f-display); letter-spacing: -.02em; }
+.pain { position: relative; justify-self: start; }
+.pain::after { content: ""; position: absolute; left: -2%; right: -2%; top: 55%; height: 2px; background: var(--gold); transform-origin: left; transform: scaleX(var(--s, 1)); }
+.checks { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem 1.4rem; }
+.checks li { display: flex; gap: .7rem; align-items: center; font: 400 var(--t-md)/1.35 var(--f-display); }
+.checks svg { width: 22px; height: 22px; flex: none; color: var(--gold); }
+.checks svg path { stroke-dasharray: 30; stroke-dashoffset: 0; transition: stroke-dashoffset .9s var(--ease); }
+.js .checks.armed li:not(.on) svg path { stroke-dashoffset: 30; }
+.why-copy strong { color: var(--ink); font-weight: 600; }
+.collage { position: relative; display: grid; gap: 1.2rem; grid-template-columns: repeat(6, minmax(0, 1fr)); padding-top: 6vh; }
+.collage figure { margin: 0; border-radius: 22px; overflow: hidden; position: relative; }
+.collage img { width: 100%; height: 118%; object-fit: cover; }
+.collage .c1 { grid-column: 1 / -1; aspect-ratio: 16 / 11; }
+.collage .c2 { grid-column: 1 / 4; aspect-ratio: 4 / 5; margin-top: 4rem; }
+.collage .c3 { grid-column: 4 / -1; aspect-ratio: 4 / 5; }
+.collage figcaption { position: absolute; left: 1rem; bottom: 1rem; font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .2em; text-transform: uppercase; color: #fff; text-shadow: 0 1px 10px rgba(0,0,0,.5); }
+@media (max-width: 899px) { .why-grid { grid-template-columns: 1fr; } .why-copy { position: relative; top: 0; } .checks { grid-template-columns: 1fr; } }
+
+/* 8 · Tickets */
+.tickets { padding-block: var(--pad); }
+.tix-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+.tix-info { display: grid; gap: 1.8rem; position: sticky; top: 14vh; }
+.tix-info h2 { font-size: var(--t-xl); }
+.price { display: flex; align-items: baseline; gap: 1rem; }
+.price small { font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .24em; text-transform: uppercase; color: var(--ink-soft); }
+.price b { font: 200 clamp(5rem, 11vw, 9.5rem)/.85 var(--f-display); letter-spacing: -.06em; color: var(--gold); }
+.specs { display: grid; margin: 0; border-top: 1px solid var(--line); }
+.specs div { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); gap: 1rem; padding: .9rem 0; border-bottom: 1px solid var(--line); }
+.specs dt { font: 500 var(--t-xs)/1.9 var(--f-display); letter-spacing: .2em; text-transform: uppercase; color: var(--ink-soft); }
+.specs dd { margin: 0; }
+.book { background: #fff; border-radius: 30px; box-shadow: 0 50px 100px -50px rgba(13,43,49,.35), 0 0 0 1px var(--line); padding: clamp(1.4rem, 3vw, 2.4rem); display: grid; gap: 1.8rem; transition: transform .8s var(--ease); }
+.book-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.book-head img { height: 40px; width: auto; }
+.book-head span { font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .22em; text-transform: uppercase; color: var(--gold-ink); border: 1px solid rgba(176,125,39,.4); border-radius: 999px; padding: .55rem .8rem; }
+.fld { display: grid; gap: .8rem; border: 0; padding: 0; margin: 0; min-width: 0; }
+.fld legend { font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .22em; text-transform: uppercase; color: var(--ink-soft); padding: 0; margin-bottom: .9rem; }
+.days { display: flex; gap: .5rem; overflow-x: auto; padding: 2px 2px .3rem; scrollbar-width: none; }
+.days::-webkit-scrollbar { display: none; }
+.day, .slot { all: unset; box-sizing: border-box; cursor: pointer; transition: background .4s, color .4s, box-shadow .4s; }
+.day { flex: none; width: 4.3rem; padding: .75rem 0; border-radius: 16px; text-align: center; box-shadow: inset 0 0 0 1px var(--line); display: grid; gap: .2rem; }
+.day small { font: 500 .62rem/1 var(--f-display); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-soft); }
+.day b { font: 300 1.6rem/1 var(--f-display); }
+.day:hover, .slot:hover { box-shadow: inset 0 0 0 1px var(--ink); }
+.day[aria-pressed="true"] { background: var(--ink); color: var(--paper); box-shadow: none; }
+.day[aria-pressed="true"] small { color: var(--gold-lite); }
+.slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(4.4rem, 1fr)); gap: .4rem; }
+.slot { text-align: center; padding: .7rem 0; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line); font: 400 var(--t-sm)/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.slot[aria-pressed="true"] { background: var(--gold-metal); color: #1c1305; box-shadow: none; }
+.slot:disabled { opacity: .3; cursor: not-allowed; text-decoration: line-through; }
+.day:focus-visible, .slot:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.tks { display: grid; border-top: 1px solid var(--line); }
+.tk { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: .8rem 1.2rem; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+.tk b { font: 400 1.2rem/1.2 var(--f-display); display: block; }
+.tk span { font-size: var(--t-sm); color: var(--ink-soft); }
+.tk .pr { font: 500 var(--t-sm)/1 var(--f-display); white-space: nowrap; color: var(--ink); }
+.tk .pr.tbc-p { color: var(--ink-soft); font-weight: 400; }
+.step-ctl { display: flex; align-items: center; gap: .6rem; }
+.step-ctl button { all: unset; cursor: pointer; width: 2.2rem; height: 2.2rem; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--line); display: grid; place-items: center; font-size: 1.1rem; transition: box-shadow .3s, opacity .3s; }
+.step-ctl button:hover { box-shadow: inset 0 0 0 1px var(--ink); }
+.step-ctl button:disabled { opacity: .3; cursor: default; }
+.step-ctl button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.step-ctl output { font: 300 1.4rem/1 var(--f-display); min-width: 1.4ch; text-align: center; font-variant-numeric: tabular-nums; }
+.book-foot { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; padding-top: .4rem; }
+.book-foot small { font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .22em; text-transform: uppercase; color: var(--ink-soft); display: block; margin-bottom: .4rem; }
+.book-foot .sum b { font: 300 2.4rem/1 var(--f-display); letter-spacing: -.03em; }
+.book-foot .sum em { display: block; font-size: var(--t-xs); color: var(--ink-soft); margin-top: .35rem; }
+.book-note { font-size: var(--t-sm); color: var(--ink-soft); margin-top: 1rem; }
+@media (max-width: 899px) { .tix-grid { grid-template-columns: 1fr; } .tix-info { position: relative; top: 0; } }
+@media (max-width: 460px) { .tk { grid-template-columns: minmax(0, 1fr) auto; } .tk .pr { grid-row: 2; grid-column: 1; } .tk .step-ctl { grid-row: 1 / 3; grid-column: 2; } .specs div { grid-template-columns: 1fr; gap: .1rem; } }
+
+/* 9 · Reviews */
+.reviews { padding-block: var(--pad); background: var(--deep); color: var(--paper); overflow: hidden; }
+.rev-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+.rev-score { display: grid; gap: 1rem; justify-items: start; }
+.rev-score .kicker { color: var(--gold-lite); }
+.rev-score .num { font: 200 clamp(6rem, 14vw, 12rem)/.85 var(--f-display); letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+.stars { position: relative; display: inline-block; font-size: 1.5rem; letter-spacing: .25em; color: rgba(253,253,251,.18); }
+.stars i { position: absolute; inset: 0; color: var(--gold-lite); overflow: hidden; white-space: nowrap; width: var(--w, 100%); font-style: normal; }
+.rev-score p { color: rgba(253,253,251,.72); }
+.rev-score p b { color: var(--paper); font-weight: 600; font-variant-numeric: tabular-nums; }
+.quote { margin: 0; display: grid; gap: 1.6rem; }
+.quote blockquote { margin: 0; font: 300 clamp(1.7rem, 3.2vw, 2.9rem)/1.2 var(--f-display); letter-spacing: -.025em; }
+.quote blockquote::before { content: "“"; display: block; font-size: 4em; line-height: .6; color: var(--gold-lite); margin-bottom: .1em; }
+.quote figcaption { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .2em; text-transform: uppercase; color: rgba(253,253,251,.72); }
+.quote figcaption .s { color: var(--gold-lite); letter-spacing: .15em; }
+.rev-links { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 1rem; }
+.reviews .btn--line { color: var(--paper); box-shadow: inset 0 0 0 1px var(--line-dark); }
+.reviews .btn--line:hover { box-shadow: inset 0 0 0 1px var(--paper); }
+@media (max-width: 899px) { .rev-grid { grid-template-columns: 1fr; } }
+
+/* 10 · Visit */
+.visit { padding-block: var(--pad); }
+.visit-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(2rem, 6vw, 5rem); align-items: stretch; }
+.visit h2 { font-size: var(--t-2xl); margin: 1.2rem 0 2.4rem; }
+.visit h2 em { color: var(--gold); }
+.info { display: grid; margin: 0; border-top: 1px solid var(--line); }
+.info div { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+.info dt { font: 500 var(--t-xs)/1.9 var(--f-display); letter-spacing: .2em; text-transform: uppercase; color: var(--ink-soft); }
+.info dd { margin: 0; }
+.tbc { font: 500 .66rem/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); border: 1px dashed rgba(13,43,49,.3); padding: .35rem .55rem; border-radius: 6px; display: inline-block; margin-left: .4rem; vertical-align: middle; }
+.copy { all: unset; cursor: pointer; margin-left: .7rem; font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .16em; text-transform: uppercase; color: var(--gold-ink); border-bottom: 1px solid currentColor; }
+.copy:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.visit-actions { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 2rem; }
+.map { position: relative; border-radius: 28px; overflow: hidden; min-height: 460px; background: var(--mist); box-shadow: 0 0 0 1px var(--line); }
+.map iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: grayscale(1) contrast(1.05) brightness(1.04); }
+@media (max-width: 899px) { .visit-grid { grid-template-columns: 1fr; } .map { min-height: 340px; } }
+@media (max-width: 460px) { .info div { grid-template-columns: 1fr; gap: .1rem; } }
+
+/* 11 · FAQ */
+.faq { padding-block: 0 var(--pad); }
+.faq h2 { font-size: var(--t-2xl); color: var(--teal); margin-bottom: 3rem; }
+.faq h2 em { color: var(--gold); }
+.qa-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 3rem; align-items: start; }
+.qa { border-top: 1px solid var(--line); }
+.qa:nth-last-child(-n+2) { border-bottom: 1px solid var(--line); }
+.qa button { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 1.2rem; padding: 1.5rem 0; font: 400 clamp(1.15rem, 1.6vw, 1.4rem)/1.3 var(--f-display); letter-spacing: -.01em; }
+.qa button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.qa .pm { width: 2.2rem; height: 2.2rem; flex: none; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--line); position: relative; transition: background .5s var(--ease), box-shadow .5s; }
+.qa .pm::before, .qa .pm::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 1px; margin: 0 0 0 -6px; background: currentColor; transition: transform .5s var(--ease); }
+.qa .pm::after { transform: rotate(90deg); }
+.qa.open .pm { background: var(--gold-metal); box-shadow: none; }
+.qa.open .pm::after { transform: rotate(0deg); }
+.qa .ans { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .7s var(--ease); }
+.qa.open .ans { grid-template-rows: 1fr; }
+.qa .ans > div { overflow: hidden; }
+.qa .ans p { color: var(--ink-soft); padding-bottom: 1.5rem; max-width: 52ch; }
+@media (max-width: 860px) { .qa-grid { grid-template-columns: 1fr; } .qa:nth-last-child(2) { border-bottom: 0; } }
+
+/* 12 · Final */
+.final { height: 130svh; }
+.final-pin { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.final-frame { position: absolute; inset: 0; overflow: hidden; clip-path: inset(0% 0% 0% 0% round 0px); background: #0b2a30; }
+.final-frame img, .final-frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.final-frame video { opacity: 0; transition: opacity 1s; }
+.final-frame video.ready { opacity: 1; }
+.final-frame::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 65% 55% at 50% 50%, rgba(6,26,31,.55), rgba(6,26,31,.1) 75%); }
+.final-copy { position: absolute; inset: 0; z-index: 1; display: grid; place-content: center; justify-items: center; text-align: center; gap: 2rem; color: #fff; padding: 0 var(--gutter-r) 0 var(--gutter); }
+.final .kicker { color: var(--gold-lite); }
+.final h2 { font-size: var(--t-2xl); max-width: 15ch; text-shadow: 0 2px 40px rgba(6,26,31,.4); }
+.final h2 em { color: var(--gold-lite); }
+.final .meta { font: 400 var(--t-sm)/1.4 var(--f-display); letter-spacing: .08em; color: rgba(255,255,255,.88); }
+.final .meta b { color: var(--gold-lite); font-variant-numeric: tabular-nums; font-weight: 500; }
+
+/* Footer */
+.foot { padding-block: 5rem 2.4rem; position: relative; z-index: 2; background: var(--paper); }
+.foot-grid { display: grid; grid-template-columns: 1.3fr repeat(4, minmax(0, 1fr)); gap: 2rem; }
+.foot-grid img { height: 64px; width: auto; }
+.foot h4 { font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .24em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 1.2rem; }
+.foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem; }
+.foot ul a { text-decoration: none; font: 400 var(--t-md)/1.3 var(--f-display); transition: color .3s; }
+.foot ul a:hover { color: var(--gold-ink); }
+.foot-base { margin-top: 4rem; padding-top: 1.6rem; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-size: var(--t-sm); color: var(--ink-soft); }
+@media (max-width: 899px) { .foot-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .foot-grid > :first-child { grid-column: 1 / -1; } }
+
+/* Sticky phone booking bar */
+.mbar { display: none; }
+@media (max-width: 760px) {
+  .mbar { position: fixed; z-index: 90; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .5rem .5rem .5rem 1.2rem; border-radius: 999px; background: rgba(13,43,49,.92); color: var(--paper); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); transform: translateY(160%); transition: transform .7s var(--ease); }
+  .mbar.show { transform: none; }
+  .mbar span { font: 400 var(--t-sm)/1.2 var(--f-display); }
+  .mbar span b { color: var(--gold-lite); font-weight: 500; }
+  .mbar .btn { padding: .85rem 1.2rem; }
+  .foot { padding-bottom: 6rem; }
+}
+
+/* Signature: the gold flight path from the logo's swoosh */
+main { position: relative; }
+.flight { position: absolute; left: 0; top: 0; width: 100%; height: 0; pointer-events: none; z-index: 1; overflow: visible; }
+.flight .base { fill: none; stroke: rgba(176,125,39,.22); stroke-width: 1; stroke-dasharray: 2 7; }
+.flight .trail { fill: none; stroke: var(--gold); stroke-width: 1.6; stroke-linecap: round; }
+.flight .head { opacity: 0; }
+.flight .head .core { fill: var(--gold); }
+.flight .head .halo { fill: rgba(176,125,39,.16); }
+.content-above { position: relative; z-index: 2; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  .js .loader { display: none; }
+  .hero-media { transform: none; }
+  .final { height: auto; } .final-pin { position: relative; }
+  .lands-track { flex-direction: column; height: auto; width: auto; padding: var(--pad) var(--gutter-r) 2rem var(--gutter); }
+  .lands-intro, .lands-end { width: auto; padding: 0 0 1rem; }
+  .lands-progress { display: none; }
+  .land { width: 100%; height: 72svh; min-height: 420px; }
+}
+.concept { position: fixed; left: max(16px, env(safe-area-inset-left, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 95; font: 500 .66rem/1.3 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--paper); background: rgba(13,43,49,.86); padding: .55rem .8rem; border-radius: 8px; max-width: calc(100% - 32px); }
+@media (max-width: 760px) { .concept { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="concept" role="note">Design concept · not the official FlyX Tenerife website</div>
+
+<div class="loader" aria-hidden="true">
+  <div class="loader-inner"><img src="assets/logo.png" alt=""><div class="loader-bar"><i></i></div></div>
+</div>
+<div class="cursor" aria-hidden="true"><div class="cursor-ring"><span></span></div></div>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="nav-logo" href="#top" aria-label="FlyX Tenerife, home"><img src="assets/logo.png" alt="FlyX Tenerife 5D Flying Cinema"></a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="#experience">The Experience</a></li>
+        <li><a href="#feel">5D</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#visit">Visit</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </nav>
+    <div class="nav-right">
+      <a class="btn magnetic" href="#tickets">Book Now</a>
+      <button class="menu-btn" type="button" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu">
+  <button class="menu-close" type="button" id="menuClose" aria-label="Close menu">×</button>
+  <a href="#experience">The Experience</a>
+  <a href="#feel">5D</a>
+  <a href="#how">How it works</a>
+  <a href="#reviews">Reviews</a>
+  <a href="#visit">Visit</a>
+  <a href="#faq">FAQ</a>
+  <a class="btn" href="#tickets">Book Your Experience</a>
+</div>
+
+<main id="main">
+  <!-- 1 · HERO -->
+  <section class="hero" id="top" aria-label="The Tenerife you've never seen">
+    <div class="hero-frame">
+      <div class="hero-media">
+        <img src="assets/hero.jpg" alt="" fetchpriority="high">
+        <video id="heroVideo" muted loop playsinline preload="auto" aria-hidden="true"></video>
+      </div>
+      <div class="hero-scrim"></div>
+      <div class="mist mist--back"></div>
+      <div class="hero-beat" aria-hidden="true"><p><span style="display:block">Fifteen minutes of story.</span><em style="display:block">Fifteen minutes of flight.</em></p></div>
+      <div class="hero-copy">
+        <h1>
+          <span class="hl hl-1">The Tenerife</span>
+          <span class="hl hl-2">You’ve <em>Never Seen</em></span>
+        </h1>
+        <p class="hero-sub">A 30-minute cinematic journey through the island’s origins, culture and hidden landscapes, brought to life in one immersive experience.</p>
+        <div class="hero-ctas">
+          <a class="btn magnetic" href="#tickets">Book Your Experience
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4"/></svg></a>
+          <a class="btn btn--glass magnetic" href="#experience">Discover the flight</a>
+        </div>
+      </div>
+      <div class="mist mist--front"></div>
+    </div>
+    <div class="gate">
+      <div class="cell"><small>Tickets</small><b>From €23</b></div>
+      <div class="cell"><small>Duration</small><b>30 minutes</b></div>
+      <div class="cell"><small>Where</small><b>The Duke Shops</b></div>
+      <div class="next">Flights every 30 minutes · next at <b class="js-next">—</b></div>
+      <a class="btn magnetic" href="#tickets">Book Now
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4"/></svg></a>
+    </div>
+  </section>
+
+  <svg class="flight" id="flight" aria-hidden="true">
+    <path class="base" id="flightBase"/>
+    <path class="trail" id="flightTrail"/>
+    <g class="head" id="flightHead"><circle class="halo" r="12"/><circle class="core" r="4"/></g>
+  </svg>
+
+  <!-- 2 · DISCOVER -->
+  <section class="discover" data-flight="r">
+    <div class="wrap discover-grid content-above">
+      <h2 data-split>Discover Tenerife From <em>Above</em></h2>
+      <p class="scrub-words" id="scrubWords">You haven’t really seen Tenerife until you’ve seen the places no road can reach.</p>
+      <div class="discover-foot">
+        <p>FlyX Tenerife is a 30-minute indoor immersive sightseeing experience in Costa Adeje, combining storytelling and a gentle flying sensation to reveal the island’s most hidden landscapes.</p>
+        <div class="facts">
+          <div><b>30′</b><span>Story + flight</span></div>
+          <div><b>5D</b><span>Wind, motion, scent</span></div>
+          <div><b>4+</b><span>Recommended age</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · LANDSCAPES -->
+  <section class="lands solid-ground" id="experience" aria-label="The landscapes you fly over">
+    <div class="lands-track" id="landsTrack">
+      <div class="lands-intro">
+        <div>
+          <span class="kicker">The experience</span>
+          <h2 data-split>Three worlds. One flight.</h2>
+          <p>Real aerial footage carries you across the island, from volcanic peaks to the wildest stretches of coast.</p>
+        </div>
+        <div class="lands-progress" aria-hidden="true">
+          <div class="bar"><i id="landsBar"></i></div>
+          <div class="names"><span>Volcanic</span><span>Coast</span><span>Valleys</span></div>
+        </div>
+      </div>
+      <article class="land" data-cursor="Watch">
+        <div class="land-media"><img src="assets/volcanic.jpg" alt="Flying above a sea of clouds over volcanic ground" loading="lazy"><video muted loop playsinline preload="none" data-clip="1" aria-hidden="true"></video></div>
+        <div class="land-copy"><h3>Volcanic Landscapes</h3><p>Soar over ancient volcanic terrain and dramatic formations shaped by fire and time.</p></div>
+      </article>
+      <article class="land" data-cursor="Watch">
+        <div class="land-media"><img src="assets/coast.jpg" alt="Low flight over Atlantic waves toward the Tenerife coast" loading="lazy"><video muted loop playsinline preload="none" data-clip="2" aria-hidden="true"></video></div>
+        <div class="land-copy"><h3>Wild Coastlines</h3><p>Glide along Tenerife’s rugged cliffs and untouched coastline from a breathtaking aerial perspective.</p></div>
+      </article>
+      <article class="land" data-cursor="Watch">
+        <div class="land-media"><img src="assets/valleys.jpg" alt="Flying close along a green mountain ridge" loading="lazy"><video muted loop playsinline preload="none" data-clip="3" aria-hidden="true"></video></div>
+        <div class="land-copy"><h3>Hidden Valleys &amp; Forests</h3><p>Discover remote valleys and lush forests no tour bus or car can reach.</p></div>
+      </article>
+      <div class="lands-end">
+        <p>All of it in <span class="gold">30 minutes</span>, without leaving your seat.</p>
+        <div><a class="btn btn--line magnetic" href="#tickets">See times &amp; tickets</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · 5D EXPERIENCE -->
+  <section class="feel solid-ground" id="feel">
+    <div class="wrap feel-stage">
+      <div class="feel-visual">
+        <figure class="big"><img src="assets/terraces.jpg" alt="Green terraced hills of Tenerife under a soft sky" loading="lazy"></figure>
+        <figure class="small"><img src="assets/guests.jpg" alt="Guests raising their hands in the air during the FlyX flight" loading="lazy"></figure>
+        <span class="tag">Inside FlyX</span>
+      </div>
+      <div>
+        <span class="kicker">The 5D experience</span>
+        <h2 data-split>Not just a film. <em>A flight you feel.</em></h2>
+        <div class="features" id="features">
+          <div class="feature">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M4 15h20a5 5 0 1 0-5-5"/><path d="M4 22h28a5 5 0 1 1-5 5"/><path d="M4 29h12"/></svg>
+            <div><h3>Feel the Wind</h3><p>Gentle wind effects enhance the sensation of flight as you glide over cliffs and coastlines, adding realism without overwhelming the senses.</p></div>
+          </div>
+          <div class="feature">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5c2 0 3 1.5 3 3l2 14h11c2 0 3 1.5 3 3s-1 3-3 3H15c-2 0-3.5-1.5-4-3.5L8 9c-.3-2 1-4 3-4z"/><path d="M9 33h22"/></svg>
+            <div><h3>Flight Motion Seats</h3><p>Smooth, controlled motion seats follow the flight path, creating the feeling of lift and movement while remaining comfortable for all ages.</p></div>
+          </div>
+          <div class="feature">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 32C8 16 18 7 34 6c0 16-9 26-24 26"/><path d="M8 32 22 18"/></svg>
+            <div><h3>Scents of Nature</h3><p>Subtle natural scents accompany different landscapes, enhancing the feeling of forests, ocean air and volcanic environments without being overpowering.</p></div>
+          </div>
+          <div class="feature">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13V5h8M27 5h8v8M35 27v8h-8M13 35H5v-8"/><path d="M5 5l10 10M35 5 25 15M35 35 25 25M5 35l10-10"/></svg>
+            <div><h3>Wraparound Screen</h3><p>A large wraparound screen fills your field of vision, creating depth and scale that makes you feel fully surrounded by Tenerife’s landscapes.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · HOW IT WORKS -->
+  <section class="how" id="how" data-flight="l">
+    <div class="wrap how-grid content-above">
+      <div class="clock">
+        <span class="kicker">How FlyX works</span>
+        <h2 data-split>Thirty minutes, beautifully simple.</h2>
+        <div class="clock-face" aria-hidden="true"><span id="clock">30:00</span><small>min</small></div>
+      </div>
+      <div class="steps" id="steps">
+        <div class="fill" aria-hidden="true"></div>
+        <div class="step on" data-at="0"><span class="time">Arrive</span><h3>Take your seat</h3><p>Find us at The Duke Shops in Costa Adeje. Flights leave every 30 minutes, from 10:00 to 22:00, every day.</p></div>
+        <div class="step on" data-at=".5"><span class="time">00:00 – 15:00 · The story</span><h3>Meet the island</h3><p>Your experience starts with a short film exploring Tenerife’s history, geology and local stories: facts you’ll catch yourself repeating later.</p></div>
+        <div class="step on" data-at="1"><span class="time">15:00 – 30:00 · The flight</span><h3>Take flight</h3><p>Then you move on to the immersive flight. Gently moving seats carry you over cliffs, coastlines, valleys, forests and volcanic landscapes.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · WHO IT'S FOR -->
+  <section class="who" data-flight="r" aria-label="Who FlyX is for">
+    <div class="wrap who-head content-above">
+      <h2 data-split>Made for everyone you travel with.</h2>
+      <p>FlyX is one of the top indoor activities in Tenerife South, especially for families looking for something memorable, easy and genuinely enjoyable for everyone.</p>
+    </div>
+    <div class="rows content-above" aria-hidden="true">
+      <div class="row row--1"><span>Families</span><span class="o">Couples</span><span>Friends</span><span class="o">Groups</span><span>Families</span></div>
+      <div class="row row--2"><span class="o">Grandparents</span><span>Explorers</span><span class="o">Rainy days</span><span>Grandparents</span></div>
+    </div>
+  </section>
+
+  <!-- 7 · WHY -->
+  <section class="why solid-ground" id="why">
+    <div class="wrap why-grid">
+      <div class="why-copy">
+        <h2 data-split>Why FlyX is <em class="gold">different?</em></h2>
+        <p class="subhead">The smart way to see Tenerife</p>
+        <p>Tenerife is stunning, but exploring it isn’t always easy.</p>
+        <div class="pains">
+          <span class="pain">Long drives.</span>
+          <span class="pain">Winding mountain roads.</span>
+          <span class="pain">Heat, crowds, parking, tired kids.</span>
+        </div>
+        <p>FlyX offers a completely different way to experience the island.</p>
+        <ul class="checks" id="checks">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="10.5" stroke-opacity=".35"/><path d="M7 12.5l3.2 3.2L17 9"/></svg>No cars</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="10.5" stroke-opacity=".35"/><path d="M7 12.5l3.2 3.2L17 9"/></svg>No weather worries</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="10.5" stroke-opacity=".35"/><path d="M7 12.5l3.2 3.2L17 9"/></svg>No physical effort</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="10.5" stroke-opacity=".35"/><path d="M7 12.5l3.2 3.2L17 9"/></svg>No stress for parents or grandparents</li>
+        </ul>
+        <p>In just 30 minutes, you experience Tenerife’s most iconic and hidden landscapes, comfortably, indoors, and together.</p>
+      </div>
+      <div class="collage">
+        <figure class="c1" data-reveal><img src="assets/terraces.jpg" alt="Terraced valley in the north of Tenerife" loading="lazy" data-speed="1"><figcaption>Hidden valleys</figcaption></figure>
+        <figure class="c2" data-reveal><img src="assets/sunset.jpg" alt="Sunset over the Atlantic Ocean" loading="lazy" data-speed="1.6"><figcaption>Atlantic sunsets</figcaption></figure>
+        <figure class="c3" data-reveal><img src="assets/anaga.jpg" alt="Green cliffs and a coastal village in the Anaga mountains" loading="lazy" data-speed=".7"><figcaption>Anaga coast</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · TICKETS -->
+  <section class="tickets" id="tickets" data-flight="l">
+    <div class="wrap tix-grid content-above">
+      <div class="tix-info">
+        <span class="kicker">Tickets</span>
+        <h2 data-split>Book your ticket now</h2>
+        <div class="price"><small>From</small><b>€23</b></div>
+        <dl class="specs">
+          <div><dt>Duration</dt><dd>30 minutes in total</dd></div>
+          <div><dt>Film</dt><dd>15-minute Tenerife history &amp; storytelling film</dd></div>
+          <div><dt>Flight</dt><dd>15-minute immersive flight with moving seats</dd></div>
+          <div><dt>Open</dt><dd>10:00–22:00 daily, flights every 30 minutes</dd></div>
+          <div><dt>Discounts</dt><dd>Resident &amp; group discounts available</dd></div>
+        </dl>
+      </div>
+      <div>
+        <form class="book" id="book" novalidate>
+          <div class="book-head"><img src="assets/logo.png" alt=""><span>Choose your flight</span></div>
+          <fieldset class="fld"><legend>Day</legend><div class="days" id="days"></div></fieldset>
+          <fieldset class="fld"><legend>Departure</legend><div class="slots" id="slots"></div></fieldset>
+          <fieldset class="fld"><legend>Tickets</legend><div class="tks" id="tks"></div></fieldset>
+          <div class="book-foot">
+            <div class="sum"><small>Estimated from</small><b id="sum">€46</b><em id="sumNote" hidden></em></div>
+            <a class="btn magnetic" id="bookLink" href="https://flyxtenerife.com/the-experience" target="_blank" rel="noopener">Book Your Experience
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4"/></svg></a>
+          </div>
+        </form>
+        <p class="book-note">Final prices, including resident and group discounts, are confirmed on the booking page.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · REVIEWS -->
+  <section class="reviews solid-ground" id="reviews">
+    <div class="wrap rev-grid">
+      <div class="rev-score">
+        <span class="kicker">What our guests say</span>
+        <div class="num" id="revNum">5.00</div>
+        <span class="stars" aria-label="5 out of 5 stars">★★★★★<i id="revStars">★★★★★</i></span>
+        <p>Rated from <b id="revCount">388</b> guest reviews. Every guest experiences FlyX differently.</p>
+      </div>
+      <!-- Add more real reviews from the FlyX review widget here. -->
+      <figure class="quote" id="quote">
+        <blockquote>This is an experience not to be missed, made to feel very welcome by the young lady and two gentlemen that…</blockquote>
+        <figcaption><span class="s">★★★★★</span><span>Guest review</span><span>Oct 01, 2026</span></figcaption>
+        <div class="rev-links">
+          <a class="btn btn--line magnetic" href="https://www.tripadvisor.com/Attraction_Review-g662606-d34351514-Reviews-FlyX_Tenerife-Costa_Adeje_Adeje_Tenerife_Canary_Islands.html" target="_blank" rel="noopener">Read all reviews</a>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 10 · VISIT -->
+  <section class="visit" id="visit" data-flight="r">
+    <div class="wrap visit-grid content-above">
+      <div>
+        <span class="kicker">Plan your visit</span>
+        <h2 data-split>Find us in <em>Costa Adeje</em></h2>
+        <dl class="info">
+          <div><dt>Location</dt><dd>The Duke Shops, Avenida de Bruselas<br>Costa Adeje, Tenerife South</dd></div>
+          <div><dt>Open</dt><dd>10:00–22:00 daily</dd></div>
+          <div><dt>Flights</dt><dd>Every 30 minutes</dd></div>
+          <div><dt>Getting here</dt><dd>On the Costa Adeje seafront, a short walk from Playa del Duque.</dd></div>
+          <div><dt>Parking</dt><dd>Parking details <span class="tbc">To confirm</span></dd></div>
+          <div><dt>Phone</dt><dd><span id="phone">+34 689 40 67 90</span><button class="copy" type="button" id="copyPhone">Copy</button></dd></div>
+        </dl>
+        <div class="visit-actions">
+          <a class="btn magnetic" href="https://www.google.com/maps/dir/?api=1&amp;destination=FlyX+Tenerife+The+Duke+Shops+Costa+Adeje" target="_blank" rel="noopener">Get directions</a>
+          <a class="btn btn--line magnetic" href="tel:+34689406790">Call us</a>
+        </div>
+      </div>
+      <div class="map" data-reveal>
+        <iframe title="Map: FlyX Tenerife at The Duke Shops, Costa Adeje" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=The+Duke+Shops,+Avenida+de+Bruselas,+Costa+Adeje&amp;output=embed"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · FAQ -->
+  <section class="faq" id="faq" data-flight="l">
+    <div class="wrap content-above">
+      <h2 data-split>Frequently Asked <em>Questions</em></h2>
+      <div class="qa-grid">
+        <div class="qa"><button type="button" aria-expanded="false">How long is the FlyX experience?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>About 30 minutes in total: a 15-minute film about Tenerife’s history, geology and local stories, then a 15-minute immersive flight on moving seats.</p></div></div></div>
+        <div class="qa"><button type="button" aria-expanded="false">Do I need to book in advance?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>Booking online secures the time you want. Flights leave every 30 minutes from 10:00 to 22:00.</p></div></div></div>
+        <div class="qa"><button type="button" aria-expanded="false">Is FlyX suitable for children?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. We recommend FlyX for children aged 4 and up. Babies under 1 year cannot take part.</p></div></div></div>
+        <div class="qa"><button type="button" aria-expanded="false">Is FlyX an indoor activity?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. FlyX is fully indoors at The Duke Shops, so every flight runs in any weather.</p></div></div></div>
+        <div class="qa"><button type="button" aria-expanded="false">Is FlyX suitable for seniors?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. The motion is smooth and controlled and needs no physical effort. Guests with heart conditions or epilepsy, and pregnant guests, should not take part.</p></div></div></div>
+        <div class="qa"><button type="button" aria-expanded="false">Where is FlyX located?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>At The Duke Shops on Avenida de Bruselas, Costa Adeje, in the south of Tenerife.</p></div></div></div>
+        <div class="qa"><button type="button" aria-expanded="false">Is the experience scary or intense?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>No. The seats move gently and the wind and scent effects add realism without overwhelming the senses. It is designed to be enjoyable for all ages.</p></div></div></div>
+        <div class="qa"><button type="button" aria-expanded="false">Is FlyX accessible?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>Please contact us before your visit and we will help you plan access and seating. <span class="tbc">Details to confirm</span></p></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 · FINAL -->
+  <section class="final solid-ground" aria-label="Book your flight">
+    <div class="final-pin">
+      <div class="final-frame" id="finalFrame">
+        <img src="assets/hero.jpg" alt="" loading="lazy">
+        <video id="finalVideo" muted loop playsinline preload="none" aria-hidden="true"></video>
+      </div>
+      <div class="final-copy">
+        <span class="kicker">Next flight at <b class="js-next">—</b></span>
+        <h2 data-split>The Tenerife you’ve never seen is <em>30 minutes away.</em></h2>
+        <a class="btn magnetic" href="#tickets">Book Your Experience
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4"/></svg></a>
+        <p class="meta">From <b>€23</b> · The Duke Shops, Costa Adeje · 10:00–22:00 daily</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div><img src="assets/logo.png" alt="FlyX Tenerife 5D Flying Cinema"></div>
+      <div><h4>Quick Links</h4><ul><li><a href="#top">Home</a></li><li><a href="#experience">The Experience</a></li><li><a href="https://flyxtenerife.com/about-us">About Us</a></li></ul></div>
+      <div><h4>Support</h4><ul><li><a href="#tickets">Book Now</a></li><li><a href="#visit">Contact us</a></li></ul></div>
+      <!-- Link these to the existing legal pages -->
+      <div><h4>Legal</h4><ul><li><a href="#">Terms of Use</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Cancellation Policy</a></li><li><a href="#">Safety Warning and Participation Conditions</a></li></ul></div>
+      <!-- Link these to the FlyX social profiles -->
+      <div><h4>Follow Us</h4><ul><li><a href="#">Facebook</a></li><li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li></ul></div>
+    </div>
+    <div class="foot-base"><span>FlyX Tenerife, an indoor immersive flying experience in Costa Adeje, Tenerife South.</span><span>© 2026 FlyX Tenerife. All rights reserved.</span></div>
+  </div>
+</footer>
+
+<div class="mbar" id="mbar"><span>From <b>€23</b> · 30 min</span><a class="btn" href="#tickets">Book Now</a></div>
+
+<script src="assets/js/gsap.min.js"></script>
+<script src="assets/js/ScrollTrigger.min.js"></script>
+<script src="assets/js/lenis.min.js"></script>
+<script>
+/* ============ CONTENT ============ */
+const MEDIA = 'https://assets.cdn.filesafe.space/qbsGYQptNIFNSZG2meOD/media/';
+const VIDEOS = {
+  hero: MEDIA + '6aa063ed16ed327815afe8a7.mp4',
+  1: MEDIA + '6aa063edd63e08439ccd9250.mp4',   // Volcanic Landscapes
+  2: MEDIA + '6aa063ed4d38c898d51947c4.mp4',   // Wild Coastlines
+  3: MEDIA + '6aa063edfcce077c443d5769.mp4'    // Hidden Valleys & Forests
+};
+// Only the adult "from €23" price is confirmed. null shows "At checkout".
+const TICKETS = [
+  { name: 'Adult', note: 'Ages 12 and up', price: 23, qty: 2 },
+  { name: 'Child', note: 'Ages 4 to 11', price: null, qty: 0 },
+  { name: 'Resident', note: 'Canary Islands residents, with ID', price: null, qty: 0 }
+];
+/* ================================= */
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fine = matchMedia('(pointer: fine)').matches;
+const hasGsap = !!(window.gsap && window.ScrollTrigger);
+const hhmm = m => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+const TIMES = []; for (let m = 600; m <= 1290; m += 30) TIMES.push(m);
+
+/* ---------- Split words into masks ---------- */
+function splitWords(el) {
+  const walk = node => [...node.childNodes].forEach(n => {
+    if (n.nodeType === 3) {
+      const frag = document.createDocumentFragment();
+      n.textContent.split(/(\s+)/).forEach(part => {
+        if (!part) return;
+        if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(' ')); return; }
+        const w = document.createElement('span'); w.className = 'w';
+        const i = document.createElement('span'); i.className = 'wi'; i.textContent = part;
+        w.appendChild(i); frag.appendChild(w);
+      });
+      n.replaceWith(frag);
+    } else if (n.nodeType === 1 && !n.classList.contains('w')) walk(n);
+  });
+  walk(el);
+  return $$('.wi', el);
+}
+
+/* ---------- Videos: load near view, play while visible ---------- */
+function attachVideo(v, src, eager) {
+  if (!v || !src || reduce) return;
+  const go = () => { if (!v.getAttribute('src')) { v.src = src; v.load(); } const p = v.play(); if (p) p.catch(() => {}); };
+  v.addEventListener('playing', () => v.classList.add('ready'), { once: true });
+  if (eager) go();
+  new IntersectionObserver(([e]) => { if (e.isIntersecting) go(); else if (v.getAttribute('src')) v.pause(); }, { rootMargin: '25% 0px' }).observe(v);
+}
+attachVideo($('#heroVideo'), VIDEOS.hero, true);
+attachVideo($('#finalVideo'), VIDEOS.hero, false);
+$$('video[data-clip]').forEach(v => attachVideo(v, VIDEOS[v.dataset.clip], false));
+
+/* ---------- Next departure ---------- */
+function nextFlight() {
+  const n = new Date(), m = n.getHours() * 60 + n.getMinutes();
+  const t = TIMES.find(x => x > m);
+  return t === undefined ? 'tomorrow ' + hhmm(TIMES[0]) : hhmm(t);
+}
+function paintNext() { $$('.js-next').forEach(el => el.textContent = nextFlight()); }
+paintNext(); setInterval(paintNext, 20000);
+
+/* ---------- Menu ---------- */
+(() => {
+  const menu = $('#menu'), btn = $('#menuBtn');
+  const close = () => { menu.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); };
+  btn.addEventListener('click', () => { menu.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); $('#menuClose').focus(); });
+  $('#menuClose').addEventListener('click', close);
+  $$('a', menu).forEach(a => a.addEventListener('click', close));
+  addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
+
+/* ---------- FAQ ---------- */
+$$('.qa').forEach(q => {
+  const b = $('button', q);
+  b.addEventListener('click', () => { const open = !q.classList.contains('open'); q.classList.toggle('open', open); b.setAttribute('aria-expanded', open); setTimeout(() => window.ScrollTrigger && ScrollTrigger.refresh(), 750); });
+});
+
+/* ---------- Copy phone ---------- */
+$('#copyPhone').addEventListener('click', async e => {
+  const btn = e.currentTarget;
+  try { await navigator.clipboard.writeText($('#phone').textContent); btn.textContent = 'Copied'; }
+  catch { const r = document.createRange(); r.selectNodeContents($('#phone')); getSelection().removeAllRanges(); getSelection().addRange(r); btn.textContent = 'Selected'; }
+  setTimeout(() => btn.textContent = 'Copy', 1800);
+});
+
+/* ---------- Booking ---------- */
+(() => {
+  const days = $('#days'), slots = $('#slots'), tks = $('#tks'), state = { day: 0, time: null };
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const dates = Array.from({ length: 14 }, (_, i) => { const d = new Date(today); d.setDate(d.getDate() + i); return d; });
+  const nowMin = () => { const n = new Date(); return n.getHours() * 60 + n.getMinutes(); };
+  dates.forEach((d, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'day';
+    b.innerHTML = `<small>${i === 0 ? 'Today' : d.toLocaleDateString('en-GB', { weekday: 'short' })}</small><b>${d.getDate()}</b><small>${d.toLocaleDateString('en-GB', { month: 'short' })}</small>`;
+    b.setAttribute('aria-label', d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }));
+    b.addEventListener('click', () => { state.day = i; drawSlots(); render(); });
+    days.appendChild(b);
+  });
+  TICKETS.forEach(t => {
+    const row = document.createElement('div'); row.className = 'tk';
+    row.innerHTML = `<div><b>${t.name}</b><span>${t.note}</span></div><span class="pr${t.price == null ? ' tbc-p' : ''}">${t.price == null ? 'At checkout' : 'from €' + t.price}</span><div class="step-ctl"><button type="button" aria-label="Remove one ${t.name.toLowerCase()} ticket">−</button><output aria-live="polite"></output><button type="button" aria-label="Add one ${t.name.toLowerCase()} ticket">+</button></div>`;
+    const [minus, plus] = $$('button', row);
+    minus.addEventListener('click', () => { t.qty = Math.max(0, t.qty - 1); render(); });
+    plus.addEventListener('click', () => { t.qty = Math.min(20, t.qty + 1); render(); });
+    t.ui = { minus, plus, out: $('output', row) };
+    tks.appendChild(row);
+  });
+  function drawSlots() {
+    slots.innerHTML = '';
+    const cut = state.day === 0 ? nowMin() : -1;
+    if (state.time !== null && state.time <= cut) state.time = null;
+    if (state.time === null) {
+      const f = TIMES.find(m => m > cut);
+      if (f === undefined && state.day === 0) { state.day = 1; return drawSlots(); }
+      state.time = f;
+    }
+    TIMES.forEach(m => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'slot'; b.textContent = hhmm(m); b.disabled = m <= cut;
+      b.addEventListener('click', () => { state.time = m; render(); });
+      slots.appendChild(b);
+    });
+  }
+  function render() {
+    [...days.children].forEach((b, i) => b.setAttribute('aria-pressed', i === state.day));
+    [...slots.children].forEach(b => b.setAttribute('aria-pressed', b.textContent === hhmm(state.time)));
+    TICKETS.forEach(t => { t.ui.out.textContent = t.qty; t.ui.minus.disabled = t.qty <= 0; t.ui.plus.disabled = t.qty >= 20; });
+    const priced = TICKETS.reduce((s, t) => s + (t.price ?? 0) * t.qty, 0);
+    const open = TICKETS.reduce((s, t) => s + (t.price == null ? t.qty : 0), 0);
+    $('#sum').textContent = '€' + priced;
+    const note = $('#sumNote'); note.hidden = !open; note.textContent = open ? `+ ${open} ticket${open > 1 ? 's' : ''} priced at checkout` : '';
+  }
+  $('#book').addEventListener('submit', e => e.preventDefault());
+  drawSlots(); render();
+  const card = $('#book');
+  if (fine && !reduce) {
+    card.addEventListener('pointermove', e => {
+      const r = card.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      card.style.transform = `perspective(1400px) rotateY(${x * 4}deg) rotateX(${-y * 4}deg)`;
+    });
+    card.addEventListener('pointerleave', () => card.style.transform = '');
+  }
+})();
+
+/* ---------- Mobile booking bar ---------- */
+(() => {
+  const bar = $('#mbar'), t = $('#tickets'), hero = $('#top');
+  const upd = () => {
+    const a = t.getBoundingClientRect(), h = hero.getBoundingClientRect();
+    bar.classList.toggle('show', h.bottom < 0 && !(a.top < innerHeight && a.bottom > 0));
+  };
+  addEventListener('scroll', upd, { passive: true }); upd();
+})();
+
+/* ================= MOTION ================= */
+const loader = $('.loader');
+if (!hasGsap || reduce) {
+  if (loader) loader.style.display = 'none';
+}
+if (hasGsap) {
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* Smooth scroll */
+  let lenis = null;
+  if (!reduce && window.Lenis) {
+    lenis = new Lenis({ lerp: .09, wheelMultiplier: .9 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+    window.__lenis = lenis;
+  }
+  $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+    const id = a.getAttribute('href'); const el = id.length > 1 && $(id);
+    if (!el) return;
+    e.preventDefault();
+    lenis ? lenis.scrollTo(el, { offset: id === '#top' ? 0 : -70, duration: 1.6 }) : el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+  }));
+
+  /* Split headings and reveal them as they arrive */
+  const heroWords = splitWords($('.hero h1'));
+  if (!reduce) {
+    $$('[data-split]').forEach(el => {
+      const words = splitWords(el);
+      gsap.from(words, { yPercent: 115, duration: 1.3, ease: 'expo.out', stagger: .05, scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
+    });
+  }
+
+  /* Intro: loader, then the hero assembles */
+  if (!reduce) {
+    const intro = gsap.timeline({ paused: true });
+    intro.to('.loader-bar i', { scaleX: 1, duration: .65, ease: 'power3.inOut' })
+      .to('.loader-inner', { yPercent: -30, autoAlpha: 0, duration: .45, ease: 'power3.in' })
+      .to(loader, { clipPath: 'inset(0% 0% 100% 0%)', duration: .9, ease: 'expo.inOut' }, '-=.15')
+      .set(loader, { display: 'none' })
+      .addLabel('reveal', '-=.55')
+      .from('.hero-media img, .hero-media video', { scale: 1.25, duration: 2.4, ease: 'expo.out' }, 'reveal')
+      .from(heroWords, { yPercent: 115, duration: 1.4, ease: 'expo.out', stagger: .07 }, 'reveal+=.1')
+      .from('.hero-sub, .hero-ctas', { y: 30, autoAlpha: 0, duration: 1.2, ease: 'expo.out', stagger: .1 }, 'reveal+=.45')
+      .from('.nav', { yPercent: -100, duration: 1.1, ease: 'expo.out', clearProps: 'all' }, 'reveal+=.4')
+      .from('.gate', { y: 40, autoAlpha: 0, duration: 1.2, ease: 'expo.out' }, 'reveal+=.6');
+    gsap.set(loader, { clipPath: 'inset(0% 0% 0% 0%)' });
+    Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise(r => setTimeout(r, 900))]).then(() => intro.play());
+  }
+
+  /* Nav: solid after the hero, hides on the way down */
+  const nav = $('#nav');
+  ScrollTrigger.create({ start: () => innerHeight * .85, end: 'max', onToggle: s => nav.classList.toggle('solid', s.isActive) });
+  ScrollTrigger.create({ start: () => innerHeight * 1.4, end: 'max', onUpdate: s => nav.classList.toggle('hide', s.direction === 1), onLeaveBack: () => nav.classList.remove('hide') });
+  $$('.nav ul a').forEach(a => { const sec = $(a.getAttribute('href')); if (sec) ScrollTrigger.create({ trigger: sec, start: 'top 50%', end: 'bottom 50%', onToggle: s => a.classList.toggle('active', s.isActive) }); });
+
+  const mm = gsap.matchMedia();
+  mm.add({ desk: '(min-width: 900px)', phone: '(max-width: 899px)', motion: '(prefers-reduced-motion: no-preference)' }, ctx => {
+    const { desk, motion } = ctx.conditions;
+    if (!motion) return;
+
+    /* Hero: the frame lifts away like leaving the ground */
+    gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: desk ? '+=150%' : '+=110%', scrub: 1, pin: true, anticipatePin: 1 } })
+      .to('.gate', { y: 70, autoAlpha: 0, duration: .18, ease: 'power2.in' }, 0)
+      .to('.hero-sub, .hero-ctas', { y: -50, autoAlpha: 0, duration: .25, ease: 'power2.in' }, 0)
+      .to('.hl-1', { xPercent: desk ? -22 : -10, autoAlpha: 0, duration: .45, ease: 'power2.in' }, .06)
+      .to('.hl-2', { xPercent: desk ? 22 : 10, autoAlpha: 0, duration: .45, ease: 'power2.in' }, .06)
+      .to('.hero-frame', { clipPath: desk ? 'inset(11% 7% 11% 7% round 32px)' : 'inset(14% 5% 14% 5% round 24px)', duration: .75, ease: 'power2.inOut' }, 0)
+      .to('.hero-media', { scale: 1, duration: 1, ease: 'none' }, 0)
+      .to('.mist--front', { yPercent: -80, autoAlpha: 0, duration: .6, ease: 'none' }, 0)
+      .to('.mist--back', { yPercent: -30, duration: 1, ease: 'none' }, 0)
+      .fromTo('.hero-beat', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: .3, ease: 'power2.out' }, .48)
+      .to({}, { duration: .2 });
+
+    /* Discover: the sentence lights up as it is read */
+    const sEl = $('#scrubWords');
+    const sw = sEl.querySelector('.wi') ? $$('.wi', sEl) : splitWords(sEl);
+    sEl.classList.add('armed');
+    gsap.to(sw, { opacity: 1, stagger: .1, ease: 'none', scrollTrigger: { trigger: sEl, start: 'top 82%', end: 'bottom 45%', scrub: true } });
+
+    /* Landscapes: lateral travel (the peak) */
+    if (desk) {
+      const track = $('#landsTrack');
+      const dist = () => track.scrollWidth - innerWidth;
+      const pan = gsap.to(track, { x: () => -dist(), ease: 'none', scrollTrigger: { trigger: '.lands', start: 'top top', end: () => '+=' + dist() * 1.15, scrub: 1, pin: true, invalidateOnRefresh: true, anticipatePin: 1, onUpdate: s => gsap.set('#landsBar', { scaleX: s.progress }) } });
+      $$('.land').forEach(card => {
+        gsap.fromTo($('.land-media', card), { xPercent: -7 }, { xPercent: 7, ease: 'none', scrollTrigger: { trigger: card, containerAnimation: pan, start: 'left right', end: 'right left', scrub: true } });
+        gsap.from($('.land-copy', card), { y: 60, autoAlpha: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: card, containerAnimation: pan, start: 'left 70%', toggleActions: 'play none none reverse' } });
+      });
+    } else {
+      $$('.land').forEach(card => {
+        gsap.fromTo(card, { clipPath: 'inset(12% 6% 0% 6% round 22px)' }, { clipPath: 'inset(0% 0% 0% 0% round 22px)', ease: 'none', scrollTrigger: { trigger: card, start: 'top bottom', end: 'top 35%', scrub: true } });
+        gsap.fromTo($('.land-media', card), { yPercent: -6 }, { yPercent: 6, ease: 'none', scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true } });
+      });
+    }
+
+    /* 5D: one sensation at a time */
+    const featWrap = $('#features'), feats = $$('.feature');
+    featWrap.classList.add('armed');
+    const setFeat = i => feats.forEach((f, k) => f.classList.toggle('on', k <= i));
+    if (desk) {
+      ScrollTrigger.create({ trigger: '.feel', start: 'top top', end: '+=180%', pin: true, anticipatePin: 1, onUpdate: s => setFeat(Math.min(3, Math.floor(s.progress * 4.4))) , onLeaveBack: () => setFeat(-1) });
+      ScrollTrigger.create({ trigger: '.feel', start: 'top 40%', once: true, onEnter: () => setFeat(Math.max(0, feats.findLastIndex ? feats.findLastIndex(f => f.classList.contains('on')) : 0)) });
+      gsap.fromTo('.feel-visual .big img', { yPercent: -12 }, { yPercent: 0, ease: 'none', scrollTrigger: { trigger: '.feel', start: 'top bottom', end: '+=280%', scrub: true } });
+      gsap.fromTo('.feel-visual .small', { yPercent: 30 }, { yPercent: -10, ease: 'none', scrollTrigger: { trigger: '.feel', start: 'top bottom', end: '+=280%', scrub: true } });
+    } else {
+      feats.forEach(f => ScrollTrigger.create({ trigger: f, start: 'top 78%', onEnter: () => f.classList.add('on'), onLeaveBack: () => f.classList.remove('on') }));
+    }
+
+    /* How: a clock that runs with the scroll */
+    const clock = $('#clock'), steps = $$('.step'), stepsEl = $('#steps');
+    const paintClock = p => {
+      const secs = Math.round(p * 1800);
+      clock.textContent = String(Math.floor(secs / 60)).padStart(2, '0') + ':' + String(secs % 60).padStart(2, '0');
+      stepsEl.style.setProperty('--p', p.toFixed(3));
+      steps.forEach(st => st.classList.toggle('on', p >= +st.dataset.at - .04));
+    };
+    paintClock(0);
+    ScrollTrigger.create({ trigger: stepsEl, start: 'top 60%', end: 'bottom 75%', scrub: true, onUpdate: s => paintClock(s.progress) });
+
+    /* Who: names drift past in opposite directions */
+    gsap.fromTo('.row--1', { xPercent: 0 }, { xPercent: -22, ease: 'none', scrollTrigger: { trigger: '.who', start: 'top bottom', end: 'bottom top', scrub: true } });
+    gsap.fromTo('.row--2', { xPercent: -6 }, { xPercent: 16, ease: 'none', scrollTrigger: { trigger: '.who', start: 'top bottom', end: 'bottom top', scrub: true } });
+
+    /* Why: the pains get struck out, the answers tick in */
+    $$('.pain').forEach(p => gsap.fromTo(p, { '--s': 0 }, { '--s': 1, ease: 'none', scrollTrigger: { trigger: p, start: 'top 80%', end: 'top 58%', scrub: true } }));
+    const checks = $('#checks'); checks.classList.add('armed');
+    ScrollTrigger.create({ trigger: checks, start: 'top 82%', once: true, onEnter: () => $$('li', checks).forEach((li, i) => setTimeout(() => li.classList.add('on'), i * 160)) });
+
+    /* Image reveals and depth */
+    $$('[data-reveal]').forEach(f => gsap.fromTo(f, { clipPath: 'inset(16% 10% 16% 10% round 22px)' }, { clipPath: 'inset(0% 0% 0% 0% round 22px)', ease: 'none', scrollTrigger: { trigger: f, start: 'top bottom', end: 'top 45%', scrub: true } }));
+    $$('[data-speed]').forEach(img => gsap.fromTo(img, { yPercent: -10 * +img.dataset.speed }, { yPercent: 0, ease: 'none', scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } }));
+
+    /* Reviews: the score counts up */
+    const rv = { v: 0, n: 0 };
+    const paintRev = () => { $('#revNum').textContent = rv.v.toFixed(2); $('#revCount').textContent = Math.round(rv.n); $('#revStars').style.setProperty('--w', (rv.v / 5 * 100) + '%'); };
+    ScrollTrigger.create({ trigger: '.reviews', start: 'top 75%', once: true, onEnter: () => { paintRev(); gsap.to(rv, { v: 5, n: 388, duration: 2.2, ease: 'expo.out', onUpdate: paintRev }); } });
+    gsap.from('#quote blockquote', { y: 60, autoAlpha: 0, duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: '#quote', start: 'top 82%', once: true } });
+
+    /* Final: the ocean returns and fills the screen */
+    gsap.fromTo('#finalFrame', { clipPath: desk ? 'inset(16% 20% 16% 20% round 32px)' : 'inset(18% 6% 18% 6% round 24px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none', scrollTrigger: { trigger: '.final', start: 'top 85%', end: 'top top', scrub: true } });
+    gsap.fromTo('#finalFrame img, #finalFrame video', { scale: 1.3 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.final', start: 'top bottom', end: 'bottom bottom', scrub: true } });
+  });
+
+  /* ---------- Signature: the gold flight path ---------- */
+  (() => {
+    const svg = $('#flight'), base = $('#flightBase'), trail = $('#flightTrail'), head = $('#flightHead'), main = $('#main');
+    let samples = [], total = 0, offTop = 0;
+    function build() {
+      const secs = $$('[data-flight]');
+      if (!secs.length) return;
+      const mainTop = main.getBoundingClientRect().top + scrollY;
+      const W = main.clientWidth, H = main.scrollHeight;
+      const wrapLeft = Math.max(0, (W - 1320) / 2);
+      const L = Math.max(9, wrapLeft * .5 + 4), R = W - L;
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.style.height = H + 'px';
+      const pts = [];
+      secs.forEach(s => {
+        const r = s.getBoundingClientRect(), top = r.top + scrollY - mainTop, h = r.height;
+        const padT = parseFloat(getComputedStyle(s).paddingTop) || 0, padB = parseFloat(getComputedStyle(s).paddingBottom) || 0;
+        const x = s.dataset.flight === 'l' ? L : R;
+        pts.push([x, top + Math.max(24, padT * .5)], [x, top + h - Math.max(24, padB * .5)]);
+      });
+      let d = `M ${pts[0][0]} ${pts[0][1]}`;
+      for (let i = 1; i < pts.length; i++) {
+        const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], dy = y1 - y0;
+        d += x0 === x1 ? ` L ${x1} ${y1}` : ` C ${x0} ${y0 + dy * .75} ${x1} ${y1 - dy * .75} ${x1} ${y1}`;
+      }
+      base.setAttribute('d', d); trail.setAttribute('d', d);
+      total = trail.getTotalLength();
+      trail.style.strokeDasharray = total + ' ' + total;
+      samples = [];
+      for (let l = 0; l <= total; l += 6) samples.push([l, trail.getPointAtLength(l).y]);
+      samples.push([total, trail.getPointAtLength(total).y]);
+      offTop = mainTop;
+      update();
+    }
+    function update() {
+      if (!samples.length) return;
+      const target = scrollY - offTop + innerHeight * .62;
+      if (target <= samples[0][1]) { trail.style.strokeDashoffset = total; head.style.opacity = 0; return; }
+      let lo = 0, hi = samples.length - 1;
+      while (lo < hi) { const mid = (lo + hi) >> 1; if (samples[mid][1] < target) lo = mid + 1; else hi = mid; }
+      const len = samples[lo][0];
+      trail.style.strokeDashoffset = total - len;
+      const p = trail.getPointAtLength(len);
+      head.setAttribute('transform', `translate(${p.x} ${p.y})`); head.style.opacity = len >= total ? 0 : 1;
+    }
+    ScrollTrigger.addEventListener('refresh', build);
+    addEventListener('scroll', update, { passive: true });
+    addEventListener('load', () => ScrollTrigger.refresh());
+    build();
+  })();
+}
+if (reduce) $$('.feature, #checks li, .step').forEach(el => el.classList.add('on'));
+
+/* ---------- Cursor & magnetic buttons ---------- */
+if (fine && !reduce) {
+  document.documentElement.classList.add('has-cursor');
+  const c = $('.cursor'), label = $('.cursor-ring span');
+  let x = innerWidth / 2, y = innerHeight / 2, tx = x, ty = y;
+  addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; c.classList.add('live'); }, { passive: true });
+  document.addEventListener('pointerleave', () => c.classList.remove('live'));
+  (function loop() { x += (tx - x) * .2; y += (ty - y) * .2; c.style.transform = `translate(${x}px, ${y}px)`; requestAnimationFrame(loop); })();
+  document.addEventListener('pointerover', e => {
+    const lab = e.target.closest('[data-cursor]'), link = e.target.closest('a, button');
+    c.classList.toggle('is-label', !!lab && !link); label.textContent = lab ? lab.dataset.cursor : '';
+    c.classList.toggle('is-link', !!link);
+  });
+  $$('.magnetic').forEach(b => {
+    b.addEventListener('pointermove', e => { const r = b.getBoundingClientRect(); b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .25}px, ${(e.clientY - r.top - r.height / 2) * .35}px)`; });
+    b.addEventListener('pointerleave', () => { b.style.transition = 'transform .7s cubic-bezier(.16,1,.3,1), box-shadow .5s'; b.style.transform = ''; setTimeout(() => b.style.transition = '', 700); });
+  });
+}
+</script>
+</body>
+</html>
