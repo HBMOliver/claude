@@ -43,5 +43,5 @@ A gold flight path, taken from the swoosh in the FlyX logo, threads down the pag
 margins and swoops across between sections. Its head always sits just below the reader's eyeline.
 
 ## Content still owed by FlyX
-Higher-resolution guest photo, the full review feed, parking and
-accessibility details, social links, legal page URLs.
+Higher-resolution guest photo, Google review link,
+social links, legal page URLs.

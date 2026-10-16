@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>FlyX Tenerife · 5D Flying Cinema</title>
-<meta name="description" content="The Tenerife you've never seen. A 30-minute indoor 5D flying cinema at The Duke Shops, Costa Adeje. Flights every 30 minutes, 10:00–22:00. Adults €29, kids €24, residents €18.">
+<meta name="description" content="The Tenerife you've never seen. A 30-minute indoor 5D flying cinema at The Duke Shops, Costa Adeje. Flights every 30 minutes, 10:00–22:00. Adults €29, kids €24, residents €18, family of four €100.">
 <link rel="icon" href="assets/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -360,6 +360,10 @@ section { position: relative; scroll-margin-top: 80px; }
 .step-ctl button:disabled { opacity: .3; cursor: default; }
 .step-ctl button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .step-ctl output { font: 300 1.4rem/1 var(--f-display); min-width: 1.4ch; text-align: center; font-variant-numeric: tabular-nums; }
+.fam-hint { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; gap: .7rem; margin-top: .4rem; padding: .85rem 1.1rem; border-radius: 14px; background: rgba(176,125,39,.1); color: var(--gold-ink); font: 500 var(--t-sm)/1.35 var(--f-display); transition: background .3s; }
+.fam-hint:hover { background: rgba(176,125,39,.18); }
+.fam-hint:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.fam-hint[hidden] { display: none; }
 .book-foot { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; padding-top: .4rem; }
 .book-foot small { font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .22em; text-transform: uppercase; color: var(--ink-soft); display: block; margin-bottom: .4rem; }
 .book-foot .sum b { font: 300 2.4rem/1 var(--f-display); letter-spacing: -.03em; }
@@ -733,13 +737,14 @@ main { position: relative; }
       <div class="tix-info">
         <span class="kicker">Tickets</span>
         <h2 data-split>Book your ticket now</h2>
-        <div class="prices"><div><small>Adults</small><b>€29</b></div><div><small>Kids</small><b>€24</b></div><div><small>Residents</small><b>€18</b></div></div>
+        <div class="prices"><div><small>Adults</small><b>€29</b></div><div><small>Kids</small><b>€24</b></div><div><small>Residents</small><b>€18</b></div><div><small>Family · 2 + 2</small><b>€100</b></div></div>
         <dl class="specs">
           <div><dt>Duration</dt><dd>30 minutes in total</dd></div>
           <div><dt>Film</dt><dd>10-minute Tenerife history &amp; storytelling film</dd></div>
           <div><dt>Flight</dt><dd>15-minute immersive flight with moving seats</dd></div>
           <div><dt>Extras</dt><dd>Moving between rooms and signing the FlyX wall</dd></div>
           <div><dt>Open</dt><dd>10:00–22:00 daily, flights every 30 minutes</dd></div>
+          <div><dt>Family</dt><dd>€100 for 2 adults + 2 kids</dd></div>
           <div><dt>Groups</dt><dd>Group discounts available</dd></div>
         </dl>
       </div>
@@ -748,7 +753,7 @@ main { position: relative; }
           <div class="book-head"><img src="assets/logo.png" alt=""><span>Choose your flight</span></div>
           <fieldset class="fld"><legend>Day</legend><div class="days" id="days"></div></fieldset>
           <fieldset class="fld"><legend>Departure</legend><div class="slots" id="slots"></div></fieldset>
-          <fieldset class="fld"><legend>Tickets</legend><div class="tks" id="tks"></div></fieldset>
+          <fieldset class="fld"><legend>Tickets</legend><div class="tks" id="tks"></div><button type="button" class="fam-hint" id="famHint" hidden></button></fieldset>
           <div class="book-foot">
             <div class="sum"><small>Estimated total</small><b id="sum">€58</b><em id="sumNote" hidden></em></div>
             <a class="btn magnetic" id="bookLink" href="https://flyxtenerife.com/the-experience" target="_blank" rel="noopener">Book Your Experience
@@ -767,14 +772,15 @@ main { position: relative; }
         <span class="kicker">What our guests say</span>
         <div class="num" id="revNum">5.00</div>
         <span class="stars" aria-label="5 out of 5 stars">★★★★★<i id="revStars">★★★★★</i></span>
-        <p>Rated from <b id="revCount">388</b> guest reviews. Every guest experiences FlyX differently.</p>
+        <p>Rated from <b id="revCount">388</b> Google reviews. Every guest experiences FlyX differently.</p>
       </div>
       <!-- Add more real reviews from the FlyX review widget here. -->
       <figure class="quote" id="quote">
         <blockquote>This is an experience not to be missed, made to feel very welcome by the young lady and two gentlemen that…</blockquote>
         <figcaption><span class="s">★★★★★</span><span>Guest review</span><span>Oct 01, 2026</span></figcaption>
         <div class="rev-links">
-          <a class="btn btn--line magnetic" href="https://www.tripadvisor.com/Attraction_Review-g662606-d34351514-Reviews-FlyX_Tenerife-Costa_Adeje_Adeje_Tenerife_Canary_Islands.html" target="_blank" rel="noopener">Read all reviews</a>
+          <!-- Replace with your Google Business review link if you have it -->
+          <a class="btn btn--line magnetic" href="https://www.google.com/maps/search/?api=1&amp;query=FlyX+Tenerife+The+Duke+Shops+Costa+Adeje" target="_blank" rel="noopener">Read all reviews on Google</a>
         </div>
       </figure>
     </div>
@@ -791,7 +797,8 @@ main { position: relative; }
           <div><dt>Open</dt><dd>10:00–22:00 daily</dd></div>
           <div><dt>Flights</dt><dd>Every 30 minutes</dd></div>
           <div><dt>Getting here</dt><dd>On the Costa Adeje seafront, a short walk from Playa del Duque.</dd></div>
-          <div><dt>Parking</dt><dd>Parking details <span class="tbc">To confirm</span></dd></div>
+          <div><dt>Parking</dt><dd>On-site and nearby public parking, within easy walking distance</dd></div>
+          <div><dt>Access</dt><dd>Accessible, fully seated, indoor and air-conditioned</dd></div>
           <div><dt>Phone</dt><dd><span id="phone">+34 689 40 67 90</span><button class="copy" type="button" id="copyPhone">Copy</button></dd></div>
         </dl>
         <div class="visit-actions">
@@ -817,7 +824,7 @@ main { position: relative; }
         <div class="qa"><button type="button" aria-expanded="false">Is FlyX suitable for seniors?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. The motion is smooth and controlled and needs no physical effort. Guests with heart conditions or epilepsy, and pregnant guests, should not take part.</p></div></div></div>
         <div class="qa"><button type="button" aria-expanded="false">Where is FlyX located?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>At The Duke Shops on Avenida de Bruselas, Costa Adeje, in the south of Tenerife.</p></div></div></div>
         <div class="qa"><button type="button" aria-expanded="false">Is the experience scary or intense?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>No. The seats move gently and the wind and scent effects add realism without overwhelming the senses. It is designed to be enjoyable for all ages.</p></div></div></div>
-        <div class="qa"><button type="button" aria-expanded="false">Is FlyX accessible?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>Please contact us before your visit and we will help you plan access and seating. <span class="tbc">Details to confirm</span></p></div></div></div>
+        <div class="qa"><button type="button" aria-expanded="false">Is FlyX accessible?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. FlyX is accessible, fully seated, indoors and air-conditioned. If you have specific access needs, contact us before your visit and we’ll help you plan your seating.</p></div></div></div>
       </div>
     </div>
   </section>
@@ -874,7 +881,8 @@ const VIDEOS = {
 const TICKETS = [
   { name: 'Adults', note: 'Adult ticket', price: 29, qty: 2 },
   { name: 'Kids', note: 'Recommended from age 4', price: 24, qty: 0 },
-  { name: 'Residents', note: 'Canary Islands residents', price: 18, qty: 0 }
+  { name: 'Residents', note: 'Canary Islands residents', price: 18, qty: 0 },
+  { name: 'Family', note: '2 adults + 2 kids', price: 100, qty: 0 }
 ];
 /* ================================= */
 
@@ -1011,7 +1019,19 @@ $('#copyPhone').addEventListener('click', async e => {
     const open = TICKETS.reduce((s, t) => s + (t.price == null ? t.qty : 0), 0);
     $('#sum').textContent = '€' + priced;
     const note = $('#sumNote'); note.hidden = !open; note.textContent = open ? `+ ${open} ticket${open > 1 ? 's' : ''} priced at checkout` : '';
+    // Suggest the family ticket when it is cheaper
+    const ad = TICKETS.find(t => t.name === 'Adults'), kd = TICKETS.find(t => t.name === 'Kids'), fm = TICKETS.find(t => t.name === 'Family');
+    const hint = $('#famHint');
+    if (ad && kd && fm && ad.qty >= 2 && kd.qty >= 2) {
+      const save = 2 * ad.price + 2 * kd.price - fm.price;
+      hint.hidden = save <= 0;
+      hint.textContent = `Switch 2 adults + 2 kids to a Family ticket and save €${save}`;
+    } else hint.hidden = true;
   }
+  $('#famHint').addEventListener('click', () => {
+    const ad = TICKETS.find(t => t.name === 'Adults'), kd = TICKETS.find(t => t.name === 'Kids'), fm = TICKETS.find(t => t.name === 'Family');
+    ad.qty -= 2; kd.qty -= 2; fm.qty += 1; render();
+  });
   $('#book').addEventListener('submit', e => e.preventDefault());
   drawSlots(); render();
   const card = $('#book');
