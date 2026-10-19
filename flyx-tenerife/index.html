@@ -208,6 +208,12 @@ section { position: relative; scroll-margin-top: 80px; }
 .lands-intro { width: min(34vw, 460px); flex: none; align-self: stretch; display: grid; align-content: space-between; padding-right: 2rem; }
 .lands-intro h2 { font-size: var(--t-xl); margin-top: 1.2rem; }
 .lands-intro p { color: var(--ink-soft); max-width: 34ch; margin-top: 1.4rem; }
+.lands-intro .sights-title { font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .24em; text-transform: uppercase; color: var(--gold-ink); margin-top: 2rem; }
+.sights { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: .55rem; }
+.sights li { display: flex; align-items: center; gap: .8rem; font: 300 clamp(1.3rem, 1.9vw, 1.7rem)/1.2 var(--f-display); letter-spacing: -.02em; }
+.sights li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); flex: none; }
+.sights li.more { color: var(--ink-soft); font-size: var(--t-md); }
+.sights li.more::before { background: transparent; box-shadow: inset 0 0 0 1px var(--gold); }
 .lands-progress { display: grid; gap: .8rem; }
 .lands-progress .bar { height: 1px; background: var(--line); position: relative; }
 .lands-progress .bar i { position: absolute; inset: 0; background: var(--gold); transform-origin: left; transform: scaleX(0); }
@@ -238,11 +244,11 @@ section { position: relative; scroll-margin-top: 80px; }
 /* 4 · The 5D experience (dark) */
 .feel { background: var(--deep); color: var(--paper); }
 .feel-stage { min-height: 100svh; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; padding-block: 7rem 4rem; }
-.feel-visual { position: relative; height: min(74svh, 680px); }
+.feel-visual { position: relative; padding-bottom: 30%; }
 .feel-visual figure { margin: 0; }
-.feel-visual .big { position: absolute; inset: 0 18% 10% 0; border-radius: 26px; overflow: hidden; }
-.feel-visual .big img { width: 100%; height: 120%; object-fit: cover; }
-.feel-visual .small { position: absolute; right: 0; bottom: 0; width: 42%; aspect-ratio: 3 / 4; border-radius: 20px; overflow: hidden; box-shadow: 0 40px 80px -30px rgba(0,0,0,.7); border: 6px solid var(--deep); }
+.feel-visual .big { position: relative; width: 90%; aspect-ratio: 16 / 10; border-radius: 26px; overflow: hidden; }
+.feel-visual .big img { width: 100%; height: 118%; object-fit: cover; object-position: 50% 40%; }
+.feel-visual .small { position: absolute; right: 0; bottom: 0; width: 40%; aspect-ratio: 3 / 4; border-radius: 20px; overflow: hidden; box-shadow: 0 40px 80px -30px rgba(0,0,0,.7); border: 6px solid var(--deep); }
 .feel-visual .small img { width: 100%; height: 100%; object-fit: cover; }
 .feel-visual .tag { position: absolute; left: 1.2rem; top: 1.2rem; font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .24em; text-transform: uppercase; background: rgba(8,36,41,.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: .6rem .9rem; border-radius: 999px; }
 .feel h2 { font-size: var(--t-2xl); margin-bottom: 2.6rem; }
@@ -261,7 +267,6 @@ section { position: relative; scroll-margin-top: 80px; }
 .feature p { color: rgba(253,253,251,.72); font-size: var(--t-sm); max-width: 48ch; }
 @media (max-width: 899px) {
   .feel-stage { grid-template-columns: 1fr; padding-block: var(--pad); }
-  .feel-visual { height: 64svh; min-height: 420px; }
 }
 
 /* 5 · How it works */
@@ -297,8 +302,10 @@ section { position: relative; scroll-margin-top: 80px; }
 
 /* 7 · Why */
 .why { padding-block: var(--pad); background: var(--mist); }
-.why-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; }
-.why-copy { position: sticky; top: 14vh; display: grid; gap: 1.5rem; }
+.why-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2.4rem clamp(2rem, 6vw, 6rem); align-items: start; }
+.why-list { display: grid; gap: 1.5rem; }
+.why-list > p { color: var(--ink-soft); max-width: 46ch; }
+.why-copy { display: grid; gap: 1.5rem; align-content: start; }
 .why h2 { font-size: var(--t-2xl); color: var(--teal); }
 .why .subhead { font: 400 var(--t-lg)/1.3 var(--f-display); color: var(--gold-ink); letter-spacing: .01em; }
 .why-copy > p { color: var(--ink-soft); max-width: 46ch; }
@@ -310,14 +317,7 @@ section { position: relative; scroll-margin-top: 80px; }
 .checks svg { width: 22px; height: 22px; flex: none; color: var(--gold); }
 .checks svg path { stroke-dasharray: 30; stroke-dashoffset: 0; transition: stroke-dashoffset .9s var(--ease); }
 .js .checks.armed li:not(.on) svg path { stroke-dashoffset: 30; }
-.why-copy strong { color: var(--ink); font-weight: 600; }
-.collage { position: relative; display: grid; gap: 1.2rem; grid-template-columns: repeat(6, minmax(0, 1fr)); padding-top: 6vh; }
-.collage figure { margin: 0; border-radius: 22px; overflow: hidden; position: relative; }
-.collage img { width: 100%; height: 118%; object-fit: cover; }
-.collage .c1 { grid-column: 1 / -1; aspect-ratio: 16 / 11; }
-.collage .c2 { grid-column: 1 / 4; aspect-ratio: 4 / 5; margin-top: 4rem; }
-.collage .c3 { grid-column: 4 / -1; aspect-ratio: 4 / 5; }
-.collage figcaption { position: absolute; left: 1rem; bottom: 1rem; font: 500 var(--t-xs)/1 var(--f-display); letter-spacing: .2em; text-transform: uppercase; color: #fff; text-shadow: 0 1px 10px rgba(0,0,0,.5); }
+.why-copy strong, .why-list strong { color: var(--ink); font-weight: 600; }
 @media (max-width: 899px) { .why-grid { grid-template-columns: 1fr; } .why-copy { position: relative; top: 0; } .checks { grid-template-columns: 1fr; } }
 
 /* 8 · Tickets */
@@ -564,7 +564,7 @@ main { position: relative; }
     <div class="gate">
       <div class="cell"><small>Tickets</small><b>From €18</b></div>
       <div class="cell"><small>Duration</small><b>30 minutes</b></div>
-      <div class="cell"><small>Where</small><b>The Duke Shops</b></div>
+      <div class="cell"><small>Where</small><b>The Duke Shops, lower floor</b></div>
       <div class="next">Flights every 30 minutes · next at <b class="js-next">—</b></div>
       <a class="btn magnetic" href="#tickets">Book Now
         <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4"/></svg></a>
@@ -581,7 +581,7 @@ main { position: relative; }
   <section class="discover" data-flight="r">
     <div class="wrap discover-grid content-above">
       <h2 data-split>One Island. <em>A Thousand Wonders.</em> One Incredible Flight.</h2>
-      <p class="scrub-words" id="scrubWords">FlyX Tenerife is a 30-minute indoor experience in Costa Adeje. A story, a gentle flying sensation and the places no road can reach.</p>
+      <p class="scrub-words" id="scrubWords">In just 30 minutes, FlyX takes you on an immersive flight over Tenerife, from volcanic peaks to hidden valleys and the places no road can reach.</p>
     </div>
     <div class="reel-stage content-above" id="film">
       <div class="reel-frame" id="reelFrame" data-cursor="Play">
@@ -621,7 +621,7 @@ main { position: relative; }
         <div class="step on" data-at="0"><span class="time">Arrive</span><h3>Take your seat</h3><p>Find us at The Duke Shops in Costa Adeje. Flights leave every 30 minutes, from 10:00 to 22:00, every day.</p></div>
         <div class="step on" data-at=".33"><span class="time">10 min · The story</span><h3>Tenerife has its secrets</h3><p>Your experience starts with a 10-minute film exploring Tenerife’s history, geology and local stories: facts you’ll catch yourself repeating later.</p></div>
         <div class="step on" data-at=".66"><span class="time">15 min · The flight</span><h3>The excitement begins</h3><p>Then you move on to the immersive flight. Gently moving seats carry you over cliffs, coastlines, valleys, forests and volcanic landscapes.</p></div>
-        <div class="step on" data-at="1"><span class="time">About 5 min · Between the rooms</span><h3>Sign the infamous wall</h3><p>The rest of your visit you move from room to room, with little extras along the way, like signing the FlyX wall.</p></div>
+        <div class="step on" data-at="1"><span class="time">About 5 min · Between the rooms</span><h3>Sign the infamous wall</h3><p>Leave your mark on Tenerife’s most infamous mystery! Sign the legendary memo and become part of the story.</p></div>
       </div>
     </div>
   </section>
@@ -633,6 +633,8 @@ main { position: relative; }
         <h2 data-split>Why FlyX is <em class="gold">different?</em></h2>
         <p class="subhead">The smart way to see Tenerife</p>
         <p>Tenerife is stunning, but exploring it isn’t always easy.</p>
+      </div>
+      <div class="why-list">
         <div class="pains">
           <span class="pain">Long drives.</span>
           <span class="pain">Winding mountain roads.</span>
@@ -647,11 +649,6 @@ main { position: relative; }
         </ul>
         <p>In just 30 minutes, you experience Tenerife’s most iconic and hidden landscapes, comfortably, indoors, and together.</p>
       </div>
-      <div class="collage">
-        <figure class="c1" data-reveal><img src="assets/terraces.jpg" alt="Terraced valley in the north of Tenerife" loading="lazy" data-speed="1"><figcaption>Hidden valleys</figcaption></figure>
-        <figure class="c2" data-reveal><img src="assets/sunset.jpg" alt="Sunset over the Atlantic Ocean" loading="lazy" data-speed="1.6"><figcaption>Atlantic sunsets</figcaption></figure>
-        <figure class="c3" data-reveal><img src="assets/anaga.jpg" alt="Green cliffs and a coastal village in the Anaga mountains" loading="lazy" data-speed=".7"><figcaption>Anaga coast</figcaption></figure>
-      </div>
     </div>
   </section>
 
@@ -663,6 +660,8 @@ main { position: relative; }
           <span class="kicker">The experience</span>
           <h2 data-split>Three worlds. One flight.</h2>
           <p>Real aerial footage carries you across the island, from volcanic peaks to the wildest stretches of coast.</p>
+          <p class="sights-title">Some sights you’ll see</p>
+          <ul class="sights"><li>Masca</li><li>Los Gigantes</li><li>Garachico</li><li>Teide</li><li class="more">and many more</li></ul>
         </div>
         <div class="lands-progress" aria-hidden="true">
           <div class="bar"><i id="landsBar"></i></div>
@@ -694,8 +693,8 @@ main { position: relative; }
   <section class="feel solid-ground" id="feel">
     <div class="wrap feel-stage">
       <div class="feel-visual">
-        <figure class="big"><img src="assets/terraces.jpg" alt="Green terraced hills of Tenerife under a soft sky" loading="lazy"></figure>
-        <figure class="small"><img src="assets/guests.jpg" alt="Guests raising their hands in the air during the FlyX flight" loading="lazy"></figure>
+        <figure class="big"><img src="assets/inside.jpg" alt="Guests laughing and reaching out from the FlyX motion seats during the flight" loading="lazy"></figure>
+        <figure class="small"><img src="assets/lobby.jpg" alt="The FlyX Tenerife reception and lounge at The Duke Shops" loading="lazy"></figure>
         <span class="tag">Inside FlyX</span>
       </div>
       <div>
@@ -715,49 +714,15 @@ main { position: relative; }
             <div><h3>Scents of Nature</h3><p>Subtle natural scents accompany different landscapes, enhancing the feeling of forests, ocean air and volcanic environments without being overpowering.</p></div>
           </div>
           <div class="feature">
-            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13V5h8M27 5h8v8M35 27v8h-8M13 35H5v-8"/><path d="M5 5l10 10M35 5 25 15M35 35 25 25M5 35l10-10"/></svg>
-            <div><h3>Wraparound Screen</h3><p>A large wraparound screen fills your field of vision, creating depth and scale that makes you feel fully surrounded by Tenerife’s landscapes.</p></div>
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 5C14 13 10 18.5 10 24a10 10 0 0 0 20 0c0-5.5-4-11-10-19z"/><path d="M15 25a5 5 0 0 0 5 5"/></svg>
+            <div><h3>Water</h3><p>A light sprinkle of water as you fly over the ocean and waterfalls.</p></div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 8 · TICKETS -->
-  <section class="tickets" id="tickets" data-flight="l">
-    <div class="wrap tix-grid content-above">
-      <div class="tix-info">
-        <span class="kicker">Tickets</span>
-        <h2 data-split>Book your ticket now</h2>
-        <div class="prices"><div><small>Adults</small><b>€29</b></div><div><small>Kids</small><b>€24</b></div><div><small>Residents</small><b>€18</b></div><div><small>Family · 2 + 2</small><b>€100</b></div></div>
-        <dl class="specs">
-          <div><dt>Duration</dt><dd>30 minutes in total</dd></div>
-          <div><dt>Film</dt><dd>10-minute Tenerife history &amp; storytelling film</dd></div>
-          <div><dt>Flight</dt><dd>15-minute immersive flight with moving seats</dd></div>
-          <div><dt>Extras</dt><dd>Moving between rooms and signing the FlyX wall</dd></div>
-          <div><dt>Open</dt><dd>10:00–22:00 daily, flights every 30 minutes</dd></div>
-          <div><dt>Family</dt><dd>€100 for 2 adults + 2 kids</dd></div>
-          <div><dt>Groups</dt><dd>Group discounts available</dd></div>
-        </dl>
-      </div>
-      <div>
-        <form class="book" id="book" novalidate>
-          <div class="book-head"><img src="assets/logo.png" alt=""><span>Choose your flight</span></div>
-          <fieldset class="fld"><legend>Day</legend><div class="days" id="days"></div></fieldset>
-          <fieldset class="fld"><legend>Departure</legend><div class="slots" id="slots"></div></fieldset>
-          <fieldset class="fld"><legend>Tickets</legend><div class="tks" id="tks"></div><button type="button" class="fam-hint" id="famHint" hidden></button></fieldset>
-          <div class="book-foot">
-            <div class="sum"><small>Estimated total</small><b id="sum">€58</b><em id="sumNote" hidden></em></div>
-            <a class="btn magnetic" id="bookLink" href="https://flyxtenerife.com/the-experience" target="_blank" rel="noopener">Book Your Experience
-              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4"/></svg></a>
-          </div>
-        </form>
-        <p class="book-note">Group discounts available. You confirm your tickets and pay on the booking page.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 9 · REVIEWS -->
+  <!-- 8 · REVIEWS -->
   <section class="reviews solid-ground" id="reviews">
     <div class="wrap rev-grid">
       <div class="rev-score">
@@ -778,6 +743,40 @@ main { position: relative; }
     </div>
   </section>
 
+  <!-- 9 · TICKETS -->
+  <section class="tickets" id="tickets" data-flight="l">
+    <div class="wrap tix-grid content-above">
+      <div class="tix-info">
+        <span class="kicker">Tickets</span>
+        <h2 data-split>Book your ticket now</h2>
+        <div class="prices"><div><small>Adults</small><b>€29</b></div><div><small>Kids</small><b>€24</b></div><div><small>Residents</small><b>€18</b></div><div><small>Family · 2 + 2</small><b>€100</b></div></div>
+        <dl class="specs">
+          <div><dt>Duration</dt><dd>30 minutes in total</dd></div>
+          <div><dt>Film</dt><dd>10-minute Tenerife history &amp; storytelling film</dd></div>
+          <div><dt>Flight</dt><dd>15-minute immersive flight with moving seats</dd></div>
+          <div><dt>Extras</dt><dd>Moving between rooms and signing the FlyX wall</dd></div>
+          <div><dt>Open</dt><dd>10:00–22:00 daily, flights every 30 minutes</dd></div>
+          <div><dt>Family</dt><dd>€100 for 2 adults + 2 kids</dd></div>
+          <div><dt>Groups</dt><dd>Discounts for groups of 10+ people, in store</dd></div>
+        </dl>
+      </div>
+      <div>
+        <form class="book" id="book" novalidate>
+          <div class="book-head"><img src="assets/logo.png" alt=""><span>Choose your flight</span></div>
+          <fieldset class="fld"><legend>Day</legend><div class="days" id="days"></div></fieldset>
+          <fieldset class="fld"><legend>Departure</legend><div class="slots" id="slots"></div></fieldset>
+          <fieldset class="fld"><legend>Tickets</legend><div class="tks" id="tks"></div><button type="button" class="fam-hint" id="famHint" hidden></button></fieldset>
+          <div class="book-foot">
+            <div class="sum"><small>Estimated total</small><b id="sum">€58</b><em id="sumNote" hidden></em></div>
+            <a class="btn magnetic" id="bookLink" href="https://flyxtenerife.com/the-experience" target="_blank" rel="noopener">Book Your Experience
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4"/></svg></a>
+          </div>
+        </form>
+        <p class="book-note">Groups of 10 or more get a discount in store. You confirm your tickets and pay on the booking page.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- 10 · VISIT -->
   <section class="visit" id="visit" data-flight="r">
     <div class="wrap visit-grid content-above">
@@ -785,7 +784,7 @@ main { position: relative; }
         <span class="kicker">Plan your visit</span>
         <h2 data-split>Find us in <em>Costa Adeje</em></h2>
         <dl class="info">
-          <div><dt>Location</dt><dd>The Duke Shops, Avenida de Bruselas<br>Costa Adeje, Tenerife South</dd></div>
+          <div><dt>Location</dt><dd>The Duke Shops, lower floor<br>Avenida de Bruselas, Costa Adeje, Tenerife South</dd></div>
           <div><dt>Open</dt><dd>10:00–22:00 daily</dd></div>
           <div><dt>Flights</dt><dd>Every 30 minutes</dd></div>
           <div><dt>Getting here</dt><dd>On the Costa Adeje seafront, a short walk from Playa del Duque.</dd></div>
@@ -814,7 +813,7 @@ main { position: relative; }
         <div class="qa"><button type="button" aria-expanded="false">Is FlyX suitable for children?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. We recommend FlyX for children aged 4 and up. Babies under 1 year cannot take part.</p></div></div></div>
         <div class="qa"><button type="button" aria-expanded="false">Is FlyX an indoor activity?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. FlyX is fully indoors at The Duke Shops, so every flight runs in any weather.</p></div></div></div>
         <div class="qa"><button type="button" aria-expanded="false">Is FlyX suitable for seniors?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. The motion is smooth and controlled and needs no physical effort. Guests with heart conditions or epilepsy, and pregnant guests, should not take part.</p></div></div></div>
-        <div class="qa"><button type="button" aria-expanded="false">Where is FlyX located?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>At The Duke Shops on Avenida de Bruselas, Costa Adeje, in the south of Tenerife.</p></div></div></div>
+        <div class="qa"><button type="button" aria-expanded="false">Where is FlyX located?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>On the lower floor of The Duke Shops, Avenida de Bruselas, Costa Adeje, in the south of Tenerife.</p></div></div></div>
         <div class="qa"><button type="button" aria-expanded="false">Is the experience scary or intense?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>No. The seats move gently and the wind and scent effects add realism without overwhelming the senses. It is designed to be enjoyable for all ages.</p></div></div></div>
         <div class="qa"><button type="button" aria-expanded="false">Is FlyX accessible?<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. FlyX is accessible, fully seated, indoors and air-conditioned. If you have specific access needs, contact us before your visit and we’ll help you plan your seating.</p></div></div></div>
       </div>
@@ -865,9 +864,9 @@ const MEDIA = 'https://assets.cdn.filesafe.space/qbsGYQptNIFNSZG2meOD/media/';
 const VIDEOS = {
   hero: MEDIA + '6aa063ed16ed327815afe8a7.mp4',
   intro: MEDIA + '6aa063edd63e08439ccd924c.mp4', // Intro film (plays with sound on click)
-  1: MEDIA + '6aa063edd63e08439ccd9250.mp4',   // Volcanic Landscapes
-  2: MEDIA + '6aa063ed4d38c898d51947c4.mp4',   // Wild Coastlines
-  3: MEDIA + '6aa063edfcce077c443d5769.mp4'    // Hidden Valleys & Forests
+  1: MEDIA + '6aa063edfcce077c443d5769.mp4',   // Volcanic Landscapes
+  2: MEDIA + '6aa063edd63e08439ccd9250.mp4',   // Wild Coastlines
+  3: MEDIA + '6aa063ed4d38c898d51947c4.mp4'    // Hidden Valleys & Forests
 };
 // Ticket prices. A price of null shows "At checkout".
 const TICKETS = [
