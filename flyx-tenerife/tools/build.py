@@ -13,7 +13,7 @@ pv = pv.replace('<a class="skip" href="#main">Skip to content</a>', '<a class="s
 (root / 'preview.html').write_text(pv)
 
 # ghl-embed.html: one block for a GoHighLevel Custom JS/HTML element
-BASE = 'https://cdn.jsdelivr.net/gh/HBMOliver/claude@ebff330153ed5871d7e84ef66cedb95184c5fe8b/flyx-tenerife/assets/'
+BASE = 'https://cdn.jsdelivr.net/gh/HBMOliver/claude@ad20ff1b1c9ec9c73b563c68949cca56a7290069/flyx-tenerife/assets/'
 head = re.search(r'<head>(.*?)</head>', s, re.S).group(1)
 body = re.search(r'<body>(.*?)</body>', s, re.S).group(1)
 fonts = re.findall(r'<link rel="(?:preconnect|stylesheet)"[^>]*>', head)
