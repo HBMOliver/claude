@@ -43,13 +43,13 @@ The editor doesn't run the animations, so use **Preview**. Scroll the whole page
 
 ## Before going live, update these in the code
 Search the pasted code for these and change them:
-- `https://flyxtenerife.com/the-experience`: the **Book** buttons go here. Point them at your
-  GoHighLevel booking page or calendar if tickets are sold there.
+- **Booking** runs through your Bókun calendar in the Tickets section. Every **Book** button
+  scrolls to it, so there's nothing to change there.
 - `href="#"`: the **Legal** links (Terms, Privacy, Cancellation, Safety) and **Follow Us** links
   (Facebook, Instagram, TikTok) are still placeholders.
 - `Read all reviews on Google`: the link opens Google Maps. Swap in your direct Google review link
   if you have it.
-- Prices are in `const TICKETS` near the top of the script: Adults 29, Kids 24, Residents 18, Family 100.
+- The prices shown next to the calendar (Adults 29, Kids 24, Residents 18, Family 100) are plain text in the Tickets section. Change them there if they change in Bókun.
 
 ## If the scroll effects break inside the builder
 The pinned scroll sections need their parent containers to have no `overflow: hidden` or `transform`.

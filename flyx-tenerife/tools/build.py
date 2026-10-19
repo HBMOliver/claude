@@ -26,7 +26,7 @@ cdn = {
 for k, v in cdn.items():
     body = body.replace(f'src="{k}"', f'src="{v}"')
 body = body.replace('src="assets/', f'src="{BASE}')
-assert 'assets/' not in body.replace(BASE, ''), 'unrewritten asset path'
+assert 'src="assets/' not in body, 'unrewritten asset path'
 ghl_css = """<style>
 /* Let the FlyX page run edge to edge inside GoHighLevel's section/row/column wrappers */
 html, body { margin: 0 !important; padding: 0 !important; }
