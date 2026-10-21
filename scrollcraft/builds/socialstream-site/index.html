@@ -884,8 +884,14 @@
   (function () {
     var v = $('#herovid'), tg = $('#vidtoggle'), sec = $('#vhero');
     if (!v) return;
-    // Phones get the lighter 720p file.
-    if (matchMedia('(max-width: 860px)').matches) { var src = v.querySelector('source'); src.src = 'https://d2ol7oe51mr4n9.cloudfront.net/user_3Hzci0f7dFf3ca1p4x3SQpjBiuR/b8a81f85-5009-49d9-b8d9-d8c620e28a9b.mp4'; v.load(); }
+    // Portrait screens get the vertical cut (its copy sits in a safe zone clear of the bar and the buttons);
+    // other small screens get the lighter 720p landscape file.
+    var portrait = matchMedia('(max-aspect-ratio: 4/5)').matches;
+    if (portrait || matchMedia('(max-width: 860px)').matches) {
+      v.querySelector('source').src = portrait ? 'https://d2ol7oe51mr4n9.cloudfront.net/user_3Hzci0f7dFf3ca1p4x3SQpjBiuR/3ac79397-4333-4550-a037-2a6985cb8a79.mp4' : 'https://d2ol7oe51mr4n9.cloudfront.net/user_3Hzci0f7dFf3ca1p4x3SQpjBiuR/b8a81f85-5009-49d9-b8d9-d8c620e28a9b.mp4';
+      if (portrait) { v.poster = 'https://d2ol7oe51mr4n9.cloudfront.net/user_3Hzci0f7dFf3ca1p4x3SQpjBiuR/85e204e0-3ed0-47d6-a0ac-09dc2177876a.jpg'; sec.querySelector('.poster').style.backgroundImage = 'url(https://d2ol7oe51mr4n9.cloudfront.net/user_3Hzci0f7dFf3ca1p4x3SQpjBiuR/85e204e0-3ed0-47d6-a0ac-09dc2177876a.jpg)'; }
+      v.load();
+    }
     var paused = reduce;
     function apply() {
       if (paused) v.pause(); else { var p = v.play(); if (p && p.catch) p.catch(function () {}); }

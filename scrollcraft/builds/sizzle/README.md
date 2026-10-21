@@ -5,12 +5,24 @@ footage. `render.html` draws any moment of the 30 s timeline (1920x1080, 25 fps)
 `render.mjs` screenshots every frame with headless Chromium; ffmpeg encodes.
 
     node render.mjs <dir> 0 30          # frames to <dir>/out
+    PAGE=render-vertical.html node render.mjs <dir> 0 30 1080 1920   # the vertical cut
     ffmpeg -framerate 25 -i out/%05d.jpg -c:v libx264 -crf 23 -pix_fmt yuv420p -an hero.mp4
 
 Frames are extracted from the source clips into `frames/<clip>-s` (216x384 tiles)
 and `frames/<clip>-l` (608x1080), with `manifest.json` listing frame counts.
 
 ## Delivered files (Higgsfield storage, public)
+
+Vertical cut (`render-vertical.html`): the same 30 s timeline recomposed for 9:16.
+All copy sits inside x 130-930 and y 230-1500, clear of a site nav and hero
+buttons, the Reels/TikTok interface, and the side crop of a 19.5:9 phone. The
+end card runs on into frame 0, so the loop is seamless.
+
+- Vertical 1080x1920, 30 s, silent, 7.5 MB: https://d2ol7oe51mr4n9.cloudfront.net/user_3Hzci0f7dFf3ca1p4x3SQpjBiuR/8c0f25a8-15a8-43db-b8ae-bf5d8a8aed65.mp4
+- Vertical 720x1280, 3.0 MB (the site uses this on portrait screens): https://d2ol7oe51mr4n9.cloudfront.net/user_3Hzci0f7dFf3ca1p4x3SQpjBiuR/3ac79397-4333-4550-a037-2a6985cb8a79.mp4
+- Vertical poster frame: https://d2ol7oe51mr4n9.cloudfront.net/user_3Hzci0f7dFf3ca1p4x3SQpjBiuR/85e204e0-3ed0-47d6-a0ac-09dc2177876a.jpg
+
+Landscape cut (`render.html`):
 
 - 1080p, 30 s, silent, 8.0 MB: https://d2ol7oe51mr4n9.cloudfront.net/user_3Hzci0f7dFf3ca1p4x3SQpjBiuR/8a14c8e0-2e67-4255-93e6-6b3cc5a7c1d5.mp4
 - 720p, 3.3 MB (phones): https://d2ol7oe51mr4n9.cloudfront.net/user_3Hzci0f7dFf3ca1p4x3SQpjBiuR/b8a81f85-5009-49d9-b8d9-d8c620e28a9b.mp4
