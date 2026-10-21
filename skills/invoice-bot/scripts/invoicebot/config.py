@@ -120,6 +120,8 @@ def validate_option(dotted, value):
     if dotted == 'naming.pattern':
         if not isinstance(value, str) or '/' in value or '\\' in value or '{date}' not in value and '{payment_date}' not in value:
             raise ValueError('naming.pattern must contain {date} and no folder separators')
+    if dotted.startswith('folders.') and not isinstance(value, str):
+        raise ValueError(f'{dotted} must be a folder name')
     if dotted.startswith('folders.') and isinstance(value, str):
         parts = value.replace('\\', '/').split('/')
         if value.startswith(('/', '~')) or '..' in parts or ':' in value or not value.strip('/'):
@@ -128,6 +130,26 @@ def validate_option(dotted, value):
             raise ValueError('folders.layout must contain {yyyy} (and usually {mm})')
     if dotted in ('naming.max_supplier', 'naming.max_number') and not (isinstance(value, int) and 8 <= value <= 120):
         raise ValueError(f'{dotted} must be a number between 8 and 120')
+
+
+_CHECKED = ('naming.space', 'naming.pattern', 'naming.max_supplier', 'naming.max_number', 'folders.layout',
+            'folders.unpaid', 'folders.review', 'folders.duplicates', 'folders.other', 'payment.unconfirmed',
+            'date_order')
+
+
+def validate_config(cfg, path='invoicebot.json'):
+    """Refuse to start with settings that would misname files or put them outside the archive."""
+    for dotted in _CHECKED:
+        node = cfg
+        for k in dotted.split('.'):
+            node = node.get(k) if isinstance(node, dict) else None
+        try:
+            validate_option(dotted, node)
+        except ValueError as e:
+            raise ValueError(f'{path}: {e}') from None
+    names = [cfg['folders'][k].strip('/').lower() for k in ('unpaid', 'review', 'duplicates', 'other')]
+    if len(set(names)) != len(names):
+        raise ValueError(f'{path}: the unpaid, review, duplicates and other folders must all be different')
 
 
 class Bot:
@@ -146,6 +168,7 @@ class Bot:
                 user = json.load(f)
         self.user_config = user
         self.cfg = deep_merge(DEFAULTS, user)
+        validate_config(self.cfg, self.config_path)
         self.db_path = self.home / DB_NAME
         self.archive = self._dir(self.cfg['archive_dir'])
         self.inbox = self._dir(self.cfg['inbox_dir'])
@@ -177,6 +200,7 @@ class Bot:
         return dbm.connect(self.db_path)
 
     def save_config(self):
+        validate_config(deep_merge(DEFAULTS, self.user_config), self.config_path)
         tmp = self.config_path.with_suffix('.tmp')
         with open(tmp, 'w', encoding='utf-8') as f:
             json.dump(self.user_config, f, ensure_ascii=False, indent=2)

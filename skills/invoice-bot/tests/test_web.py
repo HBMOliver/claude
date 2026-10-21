@@ -1,7 +1,9 @@
 """The admin panel over real HTTP: login, roles, CSRF, edits, uploads, downloads, guards."""
+import http.client
 import http.cookiejar
 import io
 import re
+import socket
 import threading
 import unittest
 import urllib.error
@@ -12,6 +14,7 @@ import zipfile
 
 from helpers import BotTestCase
 from invoicebot import auth, collect, samples, web
+from invoicebot.web import Throttle, safe_local_path
 from test_pipeline import TRANSFER_INVOICE, drop
 
 
@@ -147,7 +150,7 @@ class TestWeb(BotTestCase):
         inv = self.find_id('brightline')
         tok = c.csrf(f'/invoices/{inv}')
         st, h, body = c.req(f'/invoices/{inv}', {'csrf': tok, 'invoice_number': 'BL-77', 'due_date': 'not a date'})
-        self.assertEqual(st, 200)
+        self.assertEqual(st, 400)
         self.assertIn(b'not a date', body)
         st, h, _ = c.req(f'/invoices/{inv}', {'csrf': tok, 'invoice_number': 'BL-77', 'supplier': 'Brightline',
                                               'payment_method': 'card'})
@@ -245,6 +248,99 @@ class TestWeb(BotTestCase):
         self.assertEqual(st, 303)
         st, h, _ = Client(self.base).login('admin', 'brand-new-pass-1')
         self.assertEqual(st, 303)
+
+    def raw(self, data):
+        """Send raw bytes on a fresh connection; return everything the server answers."""
+        s = socket.create_connection(('127.0.0.1', self.srv.server_address[1]), timeout=10)
+        try:
+            s.sendall(data)
+            chunks = []
+            while True:
+                try:
+                    b = s.recv(65536)
+                except (ConnectionResetError, socket.timeout):
+                    break
+                if not b:
+                    break
+                chunks.append(b)
+            return b''.join(chunks)
+        finally:
+            s.close()
+
+    def test_redirect_after_login_stays_local(self):
+        for nxt in ['/\\evil.example/phish', '/\t/evil.example', '//evil.example', 'https://evil.example',
+                    '/\r\nSet-Cookie: injected=1\r\nX-Injected: yes']:
+            c = Client(self.base)
+            st, h, body = c.req('/login?' + urllib.parse.urlencode({'next': nxt}))
+            tok = re.search(rb'name="login_token" value="([^"]+)"', body).group(1).decode()
+            st, h, _ = c.req('/login', {'login_token': tok, 'username': 'admin', 'password': 'correct-horse-battery',
+                                        'next': nxt})
+            self.assertEqual((st, h['Location']), (303, '/'), nxt)
+            self.assertIsNone(h.get('X-Injected'))
+        self.assertEqual(safe_local_path('/months/2026-09?m=saved'), '/months/2026-09?m=saved')
+
+    def test_bodies_are_not_read_without_a_login(self):
+        port = self.srv.server_address[1]
+        head = (f'POST /upload HTTP/1.1\r\nHost: 127.0.0.1:{port}\r\nContent-Type: multipart/form-data; '
+                f'boundary=x\r\nContent-Length: 50000000\r\n\r\n').encode()
+        out = self.raw(head + b'x' * 1000)
+        self.assertIn(b'303 See Other', out)
+        self.assertIn(b'Location: /login?m=expired', out)
+        self.assertIn(b'Connection: close', out)
+        out = self.raw(f'POST /login HTTP/1.1\r\nHost: 127.0.0.1:{port}\r\nContent-Length: -1\r\n\r\n'.encode())
+        self.assertIn(b'400 Bad Request', out)
+        out = self.raw(f'POST /login HTTP/1.1\r\nHost: 127.0.0.1:{port}\r\nTransfer-Encoding: chunked\r\n\r\n'.encode())
+        self.assertIn(b'400 Bad Request', out)
+
+    def test_unread_body_closes_the_connection(self):
+        port = self.srv.server_address[1]
+        smuggled = f'GET /static/app.js HTTP/1.1\r\nHost: 127.0.0.1:{port}\r\n\r\n'.encode()
+        out = self.raw(f'GET /login HTTP/1.1\r\nHost: 127.0.0.1:{port}\r\nContent-Length: {len(smuggled)}\r\n\r\n'
+                       .encode() + smuggled)
+        self.assertEqual(out.count(b'HTTP/1.1 '), 1)
+
+    def test_throttle_semantics(self):
+        t = Throttle(ip_limit=3, user_limit=5, window=60)
+        tokens = [t.begin('1.1.1.1', 'admin') for _ in range(3)]
+        self.assertTrue(all(tokens))
+        self.assertIsNone(t.begin('1.1.1.1', 'viewer'))  # the address is spent
+        t.succeeded(tokens[0])  # a right password frees only its own attempt
+        self.assertIsNotNone(t.begin('1.1.1.1', 'viewer'))
+        self.assertIsNone(t.begin('1.1.1.1', 'admin'))
+        for ip in ('2.2.2.2', '3.3.3.3', '4.4.4.4'):  # spreading guesses over addresses still hits the user limit
+            self.assertIsNotNone(t.begin(ip, 'admin'))
+        self.assertIsNone(t.begin('5.5.5.5', 'admin'))
+
+    def test_bad_input_is_a_4xx(self):
+        c = self.admin()
+        tok = c.csrf()
+        for path, data, want in [('/months/2026-13', None, 404), ('/months/2026-00', None, 404),
+                                 ('/download/2026-13.zip', None, 404),
+                                 (f'/invoices/{self.find_id("tr.pdf")}/paid', {'csrf': tok, 'date': '31/02/2026'}, 400),
+                                 ('/bank/link', {'csrf': tok, 'invoice': 'abc', 'txn': '1'}, 400),
+                                 ('/bank/link', {'csrf': tok, 'invoice': '999', 'txn': '999'}, 404)]:
+            st, _, _ = c.req(path, data)
+            self.assertEqual(st, want, path)
+        st, h, _ = c.req('/download/selection', {'csrf': tok, 'ids': ['\u00b2']})
+        self.assertEqual(st, 303)
+        st, h, _ = c.req(f'/invoices/{self.find_id("tr.pdf")}', {'csrf': '\u00e9\u00e9', 'supplier': 'x'})
+        self.assertIn('badcsrf', h['Location'])
+
+    def test_logins_are_counted_before_checking(self):
+        import concurrent.futures
+        c = Client(self.base)
+        st, h, body = c.req('/login')
+        tok = re.search(rb'name="login_token" value="([^"]+)"', body).group(1).decode()
+
+        def guess(_):
+            cc = Client(self.base)
+            cc.jar.set_cookie(http.cookiejar.Cookie(0, 'ib_login', tok, None, False, '127.0.0.1', False, False, '/',
+                                                    True, False, None, True, None, None, {}))
+            return cc.req('/login', {'login_token': tok, 'username': 'admin', 'password': 'wrong-guess-123'})[0]
+        with concurrent.futures.ThreadPoolExecutor(20) as ex:
+            statuses = list(ex.map(guess, range(20)))
+        self.assertLessEqual(statuses.count(401), 8)
+        self.assertGreaterEqual(statuses.count(429), 12)
 
     def test_logout(self):
         c = self.admin()

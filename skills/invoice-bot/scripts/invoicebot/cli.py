@@ -113,8 +113,10 @@ def cmd_config(a):
         return 1
     print(f'{a.key} = {json.dumps(value, ensure_ascii=False)}')
     if a.key.split('.')[0] in ('naming', 'folders', 'payment'):
-        n = P.refile_all(bot)
+        n, errors = P.refile_all(bot)
         print(f'Re-filed {n} invoices with the new setting.')
+        for e in errors:
+            print(f'  ERROR {e} (run "verify --fix" once the cause is gone)')
 
 
 def cmd_check(a):
@@ -377,30 +379,28 @@ def cmd_bank_match(a):
     _out(a, res, _bank_text(res))
 
 
-def cmd_bank_link(a):
+def _bank_change(a, fn):
     bot = _bot(a)
     with bot.files_lock:
         con = bot.db()
         try:
-            with con:
-                touched = bank.link(bot, con, a.invoice, a.txn, None, actor='cli')
+            with P.transaction(bot, con) as journal:
+                touched = fn(bot, con, journal)
             print(_fmt_row(dbm.get_invoice(con, a.invoice)))
+        except (KeyError, ValueError) as e:
+            print(f'ERROR: {e}')
+            return 1
         finally:
             con.close()
     P._write_summaries(bot, touched)
+
+
+def cmd_bank_link(a):
+    return _bank_change(a, lambda bot, con, j: bank.link(bot, con, a.invoice, a.txn, None, j, actor='cli'))
 
 
 def cmd_bank_unlink(a):
-    bot = _bot(a)
-    with bot.files_lock:
-        con = bot.db()
-        try:
-            with con:
-                touched = bank.unlink(bot, con, a.invoice, actor='cli')
-            print(_fmt_row(dbm.get_invoice(con, a.invoice)))
-        finally:
-            con.close()
-    P._write_summaries(bot, touched)
+    return _bank_change(a, lambda bot, con, j: bank.unlink(bot, con, a.invoice, j, actor='cli'))
 
 
 # ------------------------------------------------------------------ downloads
@@ -454,8 +454,10 @@ def cmd_suppliers(a):
     finally:
         con.close()
     if a.action in ('add', 'rename'):
-        n = P.refile_all(bot, "status != 'duplicate'")
+        n, errors = P.refile_all(bot, "status != 'duplicate'")
         print(f'Re-checked {n} invoices.')
+        for e in errors:
+            print(f'  ERROR {e}')
 
 
 def _read_password(a, confirm=True):
@@ -585,25 +587,19 @@ def cmd_schedule(a):
 # ------------------------------------------------------------------ maintenance
 def cmd_verify(a):
     bot = _bot(a)
-    con = bot.db()
-    problems = []
-    try:
-        rows = con.execute('SELECT id, file_path, status FROM invoices').fetchall()
-        known = set()
-        for r in rows:
-            p = bot.archive / r['file_path']
-            known.add(p.resolve())
-            if not p.is_file():
-                problems.append(f"#{r['id']}: file missing: {r['file_path']}")
-        for p in bot.archive.rglob('*'):
-            if p.is_file() and p.name != '_summary.csv' and p.resolve() not in known and not p.name.startswith('.'):
-                problems.append(f'not in the ledger: {p.relative_to(bot.archive)} (drop it into the inbox to add it)')
-    finally:
-        con.close()
     if a.fix:
-        n = P.refile_all(bot)
-        print(f'Re-filed {n} invoices.')
-    print('\n'.join(problems) if problems else 'Archive and ledger agree.')
+        adopted, n, errors = P.repair(bot)
+        print(f'Re-attached {adopted} file(s) found elsewhere in the archive; re-filed {n} invoices.')
+        for e in errors:
+            print(f'  ERROR {e}')
+    problems = P.find_problems(bot)
+    for kind, inv_id, path in problems:
+        if kind == 'missing':
+            print(f'#{inv_id}: file missing: {path}' + ('' if a.fix else '  (verify --fix looks for it)'))
+        else:
+            print(f'not in the ledger: {path} (drop it into the inbox to add it)')
+    if not problems:
+        print('Archive and ledger agree.')
     return 1 if problems else 0
 
 

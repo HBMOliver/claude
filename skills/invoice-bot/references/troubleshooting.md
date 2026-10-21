@@ -13,7 +13,9 @@
 | Bank import: "Could not find the header row" | Export the statement as CSV (not PDF/XLS) with column headers; the file needs a date and an amount (or debit) column. |
 | IMAP: login failed | Gmail/Workspace: app password + IMAP enabled; Microsoft 365: password IMAP is disabled by Microsoft (see setup.md 3); check host/port (`imap test`). |
 | IMAP: mails are skipped | Check `logs/invoicebot.log`. PDFs that do not look like invoices are skipped (`collect.min_invoice_score`, default 2); for a "link only" invoice save the PDF into the inbox. |
-| A file was moved by hand | `verify` lists the differences; `verify --fix` puts every invoice back where its data says. Add stray files back by dropping them in the inbox. |
+| A file was moved by hand, or a re-file was interrupted | `verify` lists the differences; `verify --fix` re-attaches files found elsewhere in the archive (by their content) and puts every invoice where its data says. Stray files that belong to no invoice: drop them in the inbox. |
+| Something landed in `inbox/_not_processed/` | The run report says why (no invoice in it, a spreadsheet or image next to the PDFs, an unreadable ZIP member, a ZIP inside a ZIP). Whatever was imported from it is in the archive; fix and drop the rest again. |
+| A bank payment was not applied automatically | It fits more than one invoice almost equally (e.g. monthly invoices of the same amount): confirm the right pair on the Bank statement page or with `bank-link`. |
 | Panel: "Unexpected Host header" | Add the host name you use: `config admin.allowed_hosts '["name"]'`. |
 | Panel: "Cross-site form submission refused" behind a proxy | The proxy must pass the original Host header (nginx: `proxy_set_header Host $host;`), or set `admin.trust_proxy` so `X-Forwarded-Host` is used. |
 | Forgot the admin password | `users passwd NAME` on the command line. |

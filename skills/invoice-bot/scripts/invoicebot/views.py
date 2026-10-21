@@ -456,7 +456,7 @@ def bank_page(ctx, result=None, suggestions=(), recent=()):
         for m in suggestions:
             rows.append(f'''<tr><td><a href="/invoices/{m['invoice_id']}">{e(m['supplier'])}</a><br><span class="muted">{e(m['invoice_number'])}</span></td>
 <td class="num">{e(money(m['amount'], m['currency']))}</td><td class="num">{e(m['paid_on'])}</td>
-<td>{e(m['counterparty'] or '?')}<br><span class="muted">{e(m['reference'])}</span></td><td class="num">{m['score']}</td>
+<td>{e(m['counterparty'] or '?')}<br><span class="muted">{e(m['reference'])}</span>{f'<br><span class="muted">{e(m["why"])}</span>' if m.get('why') else ''}</td><td class="num">{m['score']}</td>
 <td><form method="post" action="/bank/link" class="inline">{csrf(ctx)}<input type="hidden" name="invoice" value="{m['invoice_id']}">
 <input type="hidden" name="txn" value="{m['txn_id']}"><button type="submit">Confirm</button></form>
 <form method="post" action="/bank/reject" class="inline">{csrf(ctx)}<input type="hidden" name="invoice" value="{m['invoice_id']}">

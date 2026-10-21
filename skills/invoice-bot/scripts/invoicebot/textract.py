@@ -13,20 +13,20 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-PDF_MAGIC = b'%PDF'
 IMAGE_MAGIC = {b'\xff\xd8\xff': 'jpg', b'\x89PNG\r\n\x1a\n': 'png', b'II*\x00': 'tif', b'MM\x00*': 'tif'}
 
 
 def sniff(data, name=''):
-    """Kind of file from its bytes: pdf / image / eml / zip / None."""
-    head = data[:1024]
-    if PDF_MAGIC in head:
-        return 'pdf'
+    """Kind of file from its bytes: pdf / image / eml / zip / None. Containers are recognised first: a ZIP
+    whose first member is a stored PDF has '%PDF' near its start too."""
+    if data.startswith((b'PK\x03\x04', b'PK\x05\x06')):
+        return 'zip'
     for magic in IMAGE_MAGIC:
         if data.startswith(magic):
             return 'image'
-    if data.startswith(b'PK\x03\x04'):
-        return 'zip'
+    head = data[:1024]
+    if b'%PDF-' in head:
+        return 'pdf'
     low = name.lower()
     if low.endswith(('.eml', '.msg.eml')) or _looks_like_mime(head):
         return 'eml'

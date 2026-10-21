@@ -35,7 +35,7 @@ Instead of `--home` every time you can set `INVOICEBOT_HOME=~/InvoiceBot`.
 ## 3. Where invoices come from
 
 ### Drop folder (always on)
-Anything put in `<bot folder>/inbox/` (PDF, JPG/PNG, saved e-mails `.eml`, ZIP) is collected on the next run and removed from there. Files that contain no invoice go to `inbox/_not_processed/`, never deleted. Good sources: a scanner or phone-scanning app saving to that folder, a synced cloud folder, an e-mail rule that saves attachments.
+Anything put in `<bot folder>/inbox/` (PDF, JPG/PNG, saved e-mails `.eml`, ZIP) is collected on the next run. A file is removed from the inbox only when everything in it was imported; one that held no invoice, or not only invoices (a ZIP with a spreadsheet next to the PDFs, an unreadable member), moves to `inbox/_not_processed/` with the reason in the run report, never deleted or overwritten. A file that failed for a passing reason (the archive was not writable) stays and is tried again. ZIPs inside ZIPs are not opened; one dropped file yields at most 2,000 invoices. Good sources: a scanner or phone-scanning app saving to that folder, a synced cloud folder, an e-mail rule that saves attachments.
 
 ### Mailbox (IMAP)
 ```bash
@@ -50,7 +50,7 @@ Or put the password in the `INVOICEBOT_IMAP_PASSWORD` environment variable inste
 - **Hungarian hosting (cPanel, Rackhost, Tárhely.eu, Forpsi, ...)**: usually `mail.<domain>` or the host's IMAP server on port 993 with the mailbox password.
 - A dedicated address such as `szamla@yourcompany.hu`, to which suppliers send invoices (and colleagues forward them), works best.
 
-What is collected: new messages from the last `imap.lookback_days` (45) days in `imap.folders`. Attachments that look like invoices are kept (PDFs scored on invoice words, number, total, dates, tax numbers; `collect.min_invoice_score`). Messages are remembered and never fetched twice. Nothing is deleted in the mailbox. Narrow it with `imap.only_from` / `imap.ignore_from` (addresses or domains) or `imap.search` (raw IMAP criteria such as `FROM "billing@x.com"`).
+What is collected: new messages from the last `imap.lookback_days` (45) days in `imap.folders`. Attachments that look like invoices are kept (PDFs scored on invoice words, number, total, dates, tax numbers; `collect.min_invoice_score`); at most 100 files per e-mail, ZIPs inside ZIPs are not opened. Messages are remembered and never fetched twice; a message that could not be fetched or filed is tried again on the next runs (up to 3). Nothing is deleted in the mailbox: the bot never issues CLOSE or EXPUNGE. Narrow it with `imap.only_from` / `imap.ignore_from` (addresses or domains) or `imap.search` (raw IMAP criteria such as `FROM "billing@x.com"`).
 
 Invoices that only come as a download link in the e-mail are not fetched; save the PDF into the inbox folder (or ask Claude to).
 

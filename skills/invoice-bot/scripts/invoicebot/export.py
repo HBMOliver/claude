@@ -2,7 +2,9 @@
 _summary.csv kept in every archive folder."""
 import csv
 import io
+import os
 import re
+import tempfile
 import zipfile
 from datetime import datetime
 from decimal import Decimal
@@ -47,6 +49,18 @@ def _fmt_amount(bot, v):
     return s.replace('.', bot.cfg['csv'].get('decimal', '.'))
 
 
+_FORMULA = re.compile(r'^[=+\-@\t\r]')
+_PLAIN_NUMBER = re.compile(r'^-?\d[\d .,]*$')
+
+
+def _cell(v):
+    """Text read from invoices must never become a live spreadsheet formula ('=HYPERLINK(...)')."""
+    s = '' if v is None else str(v)
+    if _FORMULA.match(s) and not _PLAIN_NUMBER.match(s):
+        return "'" + s
+    return s
+
+
 def csv_bytes(bot, invs):
     delim = bot.cfg['csv'].get('delimiter', ',')
     buf = io.StringIO()
@@ -64,8 +78,8 @@ def csv_bytes(bot, invs):
             elif key == 'file':
                 row.append(PurePosixPath(inv.get('file_path') or '').name)
             else:
-                row.append('' if inv.get(key) is None else str(inv.get(key)))
-        w.writerow(row)
+                row.append(inv.get(key))
+        w.writerow([_cell(c) for c in row])
     totals = {}
     for inv in invs:
         if inv.get('amount') not in (None, ''):
@@ -135,26 +149,39 @@ def months(con):
 
 def write_folder_summaries(bot, folders):
     """Refresh <folder>/_summary.csv for every archive folder that changed."""
-    con = bot.db()
-    try:
-        for folder in folders:
-            if folder in ('', '.'):
-                continue
-            d = bot.archive / folder
-            invs = [i for i in dbm.find_invoices(con, 'file_path LIKE ?', (folder.rstrip('/') + '/%',))
-                    if str(PurePosixPath(i['file_path']).parent) == folder]
-            target = d / '_summary.csv'
-            if not invs:
-                if target.exists():
-                    target.unlink()
+    with bot.files_lock:
+        con = bot.db()
+        try:
+            for folder in sorted(folders):
+                if folder in ('', '.'):
+                    continue
                 try:
-                    d.rmdir()
-                except OSError:
-                    pass
-                continue
-            d.mkdir(parents=True, exist_ok=True)
-            tmp = target.with_suffix('.tmp')
-            tmp.write_bytes(csv_bytes(bot, invs))
-            tmp.replace(target)
+                    _write_summary(bot, con, folder)
+                except OSError:  # a summary is a convenience: never fail the operation for it
+                    bot.log.exception('could not write the summary of %s', folder)
+        finally:
+            con.close()
+
+
+def _write_summary(bot, con, folder):
+    d = bot.archive / folder
+    invs = [i for i in dbm.find_invoices(con, 'file_path LIKE ?', (folder.rstrip('/') + '/%',))
+            if str(PurePosixPath(i['file_path']).parent) == folder]
+    target = d / '_summary.csv'
+    if not invs:
+        if target.exists():
+            target.unlink()
+        try:
+            d.rmdir()
+        except OSError:
+            pass
+        return
+    d.mkdir(parents=True, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(prefix='.summary-', suffix='.tmp', dir=d)
+    try:
+        with os.fdopen(fd, 'wb') as f:
+            f.write(csv_bytes(bot, invs))
+        os.replace(tmp, target)
     finally:
-        con.close()
+        if os.path.exists(tmp):
+            os.unlink(tmp)

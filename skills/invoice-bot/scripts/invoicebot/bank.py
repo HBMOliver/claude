@@ -11,7 +11,9 @@ and 120 days after its due date):
     +40 the invoice number appears in the transfer's reference text
     +30 the supplier's name appears in the counterparty / reference (scaled by how much of it matches)
     +8  paid within 3 days of the due date
-Matches scoring 75 or more are applied automatically; lower ones are offered as suggestions.
+Matches scoring 75 or more are applied automatically when nothing else comes close (another invoice
+or payment within 8 points makes it a suggestion, e.g. monthly invoices of the same amount); lower ones
+are offered as suggestions. Credit notes and invoices an admin marked as not paid are never matched.
 """
 import csv
 import hashlib
@@ -27,6 +29,7 @@ from .util import fold, find_dates, jdump, now_iso, parse_number, to_date
 
 AUTO_SCORE = 75
 MIN_SCORE = 50
+MARGIN = 8  # an automatic match must beat every competing pair by this much
 
 _COLS = {
     'date': ['konyveles datuma', 'konyvelesi datum', 'konyveles napja', 'terheles datuma', 'tranzakcio datuma',
@@ -162,8 +165,8 @@ def import_statement(bot, data, name='', account=None, actor='admin'):
     try:
         with con:
             for t in txns:
-                key = '|'.join([account or '', t['date'], str(t['amount']), t['currency'], t['counterparty'],
-                                t['description']])
+                # the account name is only a label: the same statement imported with or without it is the same
+                key = '|'.join([t['date'], str(t['amount']), t['currency'], t['counterparty'], t['description']])
                 seen[key] = seen.get(key, 0) + 1
                 h = hashlib.sha256(f'{key}|{seen[key]}'.encode('utf-8')).hexdigest()
                 cur = con.execute('INSERT OR IGNORE INTO bank_txns(hash, account, date, amount, currency, counterparty, '
@@ -184,8 +187,9 @@ def import_statement(bot, data, name='', account=None, actor='admin'):
 
 # ------------------------------------------------------------------ matching
 def _candidates_sql():
-    return ("SELECT * FROM invoices WHERE status = 'filed' AND amount IS NOT NULL AND "
-            "(paid = 0 OR payment_source LIKE 'expected%')")
+    return ("SELECT * FROM invoices WHERE status = 'filed' AND amount IS NOT NULL AND CAST(amount AS REAL) > 0 "
+            "AND COALESCE(doc_type, '') != 'credit_note' AND (paid = 0 OR payment_source LIKE 'expected%') "
+            "AND (overrides IS NULL OR json_extract(overrides, '$.unpaid') IS NULL)")
 
 
 def _score(inv, txn, rejected=()):
@@ -193,7 +197,9 @@ def _score(inv, txn, rejected=()):
         return None
     if (txn['currency'] or '') != (inv['currency'] or ''):
         return None
-    inv_amt = abs(Decimal(inv['amount']))
+    inv_amt = Decimal(inv['amount'])
+    if inv_amt <= 0:
+        return None
     tol = Decimal('1') if inv['currency'] == 'HUF' else Decimal('0.01')
     if abs(inv_amt - Decimal(txn['amount'])) > tol:
         return None
@@ -223,18 +229,17 @@ def _score(inv, txn, rejected=()):
     return s
 
 
-_GENERIC_WORDS = {'magyar', 'magyarorszag', 'magyarorszagi', 'hungary', 'hungaria', 'hungarian', 'online',
-                  'services', 'service', 'szolgaltato', 'group', 'csoport', 'international', 'europe', 'emea',
-                  'ireland', 'global', 'systems', 'solutions', 'digital', 'media', 'consulting', 'trade',
-                  'holding', 'invest', 'studio', 'design', 'company', 'technologies', 'technology', 'labs'}
+_GENERIC_WORDS = S.GENERIC_TOKENS
 
 
 def _number_in(number, folded_text):
-    """The invoice number appears in the text as a whole token (separators may differ)."""
+    """The invoice number appears in the text as a whole token (separators may differ), and not as
+    part of a longer number or a date ('2026/12' is not in '2026.12.05')."""
     chunks = re.findall(r'[0-9a-z]+', fold(number or ''))
     if not chunks or len(''.join(chunks)) < 4:
         return False
-    rx = r'(?<![0-9a-z])' + r'[\s/._#-]*'.join(map(re.escape, chunks)) + r'(?![0-9a-z])'
+    rx = (r'(?<![0-9a-z])(?<!\d[./-])' + r'[\s/._#-]*'.join(map(re.escape, chunks))
+          + r'(?![0-9a-z])(?![./-]\d)')
     return re.search(rx, folded_text) is not None
 
 
@@ -243,7 +248,8 @@ def _rejected(con):
 
 
 def propose(bot, con):
-    """Best one-to-one pairs (score, invoice row, txn row), highest score first."""
+    """One-to-one pairs [(score, invoice, payment, clear)], highest score first. `clear` means no other
+    invoice or payment comes within MARGIN of the pair, so it may be applied without asking."""
     invs = [dbm._decode(r) for r in con.execute(_candidates_sql()).fetchall()]
     txns = [dict(r) for r in con.execute("SELECT * FROM bank_txns WHERE status = 'unmatched'").fetchall()]
     rejected = _rejected(con)
@@ -253,55 +259,58 @@ def propose(bot, con):
             sc = _score(inv, t, rejected)
             if sc is not None and sc >= MIN_SCORE:
                 pairs.append((sc, inv, t))
-    pairs.sort(key=lambda p: (-p[0], p[1]['id']))
+    pairs.sort(key=lambda p: (-p[0], p[1]['id'], p[2]['id']))
     used_i, used_t, out = set(), set(), []
-    for sc, inv, t in pairs:
+    for pair in pairs:
+        sc, inv, t = pair
         if inv['id'] in used_i or t['id'] in used_t:
             continue
-        # an amount-only match that fits several invoices is ambiguous: leave it for a person
-        out.append((sc, inv, t))
+        # pairs competing for the same invoice or the same payment
+        rivals = [o[0] for o in pairs if o is not pair and (o[1]['id'] == inv['id'] or o[2]['id'] == t['id'])]
+        clear = not rivals or sc - max(rivals) >= MARGIN
+        out.append((sc, inv, t, clear))
         used_i.add(inv['id'])
         used_t.add(t['id'])
     return out
 
 
 def best_match_for_invoice(bot, con, inv):
-    txns = [dict(r) for r in con.execute("SELECT * FROM bank_txns WHERE status = 'unmatched'").fetchall()]
-    rejected = _rejected(con)
-    best = None
-    for t in txns:
-        sc = _score(inv, t, rejected)
-        if sc is not None and sc >= MIN_SCORE and (best is None or sc > best['score']):
-            best = {'txn': t, 'score': sc, 'auto': sc >= AUTO_SCORE}
-    return best
+    for sc, i, t, clear in propose(bot, con):
+        if i['id'] == inv['id']:
+            return {'txn': t, 'score': sc, 'auto': sc >= AUTO_SCORE and clear}
+    return None
 
 
-def link(bot, con, inv_id, txn_id, score=None, actor='admin'):
-    """Confirm: invoice inv_id was paid by bank payment txn_id (caller commits)."""
+def link(bot, con, inv_id, txn_id, score, journal, actor='admin', touched=None):
+    """Confirm: invoice inv_id was paid by bank payment txn_id (inside the caller's transaction)."""
     t = con.execute('SELECT * FROM bank_txns WHERE id = ?', (txn_id,)).fetchone()
     if t is None:
         raise KeyError(f'no bank payment #{txn_id}')
+    inv = dbm.get_invoice(con, inv_id)
+    if inv is None:
+        raise KeyError(f'no invoice #{inv_id}')
     if t['invoice_id'] and t['invoice_id'] != inv_id and t['status'] == 'matched':
         raise ValueError(f'bank payment #{txn_id} is already matched to invoice #{t["invoice_id"]}')
-    inv = dbm.get_invoice(con, inv_id)
     if inv.get('bank_txn_id') and inv['bank_txn_id'] != txn_id:
         con.execute("UPDATE bank_txns SET invoice_id = NULL, status = 'unmatched', score = NULL WHERE id = ?",
                     (inv['bank_txn_id'],))
     con.execute("UPDATE bank_txns SET invoice_id = ?, status = 'matched', score = ? WHERE id = ?",
                 (inv_id, score, txn_id))
     ov = dict(inv.get('overrides') or {})
-    if ov.pop('unpaid', None):
+    if ov.pop('unpaid', None):  # only an admin's own confirmation reaches an invoice marked unpaid
         dbm.update_invoice(con, inv_id, {'overrides': ov})
     dbm.update_invoice(con, inv_id, {'bank_txn_id': txn_id})
-    touched = set()
-    inv = P.recompute_and_file(bot, con, inv_id, touched)
+    touched = set() if touched is None else touched
+    P.recompute_and_file(bot, con, inv_id, journal, touched)
     dbm.log_event(con, 'bank_matched', inv_id, actor, {'txn': txn_id, 'date': t['date'], 'amount': t['amount'],
                                                       'score': score})
     return touched
 
 
-def unlink(bot, con, inv_id, actor='admin', reject=True):
+def unlink(bot, con, inv_id, journal, actor='admin', reject=True):
     inv = dbm.get_invoice(con, inv_id)
+    if inv is None:
+        raise KeyError(f'no invoice #{inv_id}')
     txn = inv.get('bank_txn_id')
     if not txn:
         return set()
@@ -312,7 +321,7 @@ def unlink(bot, con, inv_id, actor='admin', reject=True):
         rej.append([inv_id, txn])
         dbm.meta_set(con, 'bank_rejected', rej)
     touched = set()
-    P.recompute_and_file(bot, con, inv_id, touched)
+    P.recompute_and_file(bot, con, inv_id, journal, touched)
     dbm.log_event(con, 'bank_unmatched', inv_id, actor, {'txn': txn})
     return touched
 
@@ -324,23 +333,30 @@ def reject(bot, con, inv_id, txn_id):
 
 
 def match_all(bot, apply=True, actor='bot'):
-    """Apply confident matches; return {'matched': [...], 'suggestions': [...]}."""
+    """Apply clear, confident matches (one transaction each); return {'matched': [...], 'suggestions': [...]}."""
     matched, suggestions = [], []
     touched = set()
     with bot.files_lock:
         con = bot.db()
         try:
-            with con:
-                for sc, inv, t in propose(bot, con):
-                    item = {'invoice_id': inv['id'], 'supplier': inv['supplier'], 'invoice_number': inv['invoice_number'],
-                            'amount': inv['amount'], 'currency': inv['currency'], 'txn_id': t['id'],
-                            'paid_on': t['date'], 'counterparty': t['counterparty'], 'reference': t['description'],
-                            'score': round(sc)}
-                    if apply and sc >= AUTO_SCORE:
-                        touched |= link(bot, con, inv['id'], t['id'], sc, actor=actor)
+            for sc, inv, t, clear in propose(bot, con):
+                item = {'invoice_id': inv['id'], 'supplier': inv['supplier'], 'invoice_number': inv['invoice_number'],
+                        'amount': inv['amount'], 'currency': inv['currency'], 'txn_id': t['id'],
+                        'paid_on': t['date'], 'counterparty': t['counterparty'], 'reference': t['description'],
+                        'score': round(sc)}
+                if apply and sc >= AUTO_SCORE and clear:
+                    try:
+                        with P.transaction(bot, con) as journal:
+                            link(bot, con, inv['id'], t['id'], sc, journal, actor=actor, touched=touched)
                         matched.append(item)
-                    else:
+                    except Exception as e:
+                        bot.log.exception('bank match for invoice #%s failed', inv['id'])
+                        item['error'] = str(e)
                         suggestions.append(item)
+                else:
+                    if not clear:
+                        item['why'] = 'another invoice or payment fits almost as well'
+                    suggestions.append(item)
         finally:
             con.close()
     P._write_summaries(bot, touched)

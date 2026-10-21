@@ -49,6 +49,9 @@ Never expose the plain HTTP port to the internet.
 
 - Passwords stored as scrypt hashes; sessions are random 256-bit tokens (only their hash is stored) in HttpOnly, SameSite=Strict cookies, ending after `admin.session_hours` (12) or at logout; changing a password logs that user out everywhere.
 - Every form carries a CSRF token; cross-site form posts are refused (Origin check); the login form has its own token.
-- 8 failed logins from one address lock it out for 15 minutes; unknown user names cost the same time as wrong passwords.
+- Password guesses are counted before they are checked: 8 per address and 20 per user name in 15 minutes, then a lockout; another account's successful login never clears them; the account page's current-password check is counted too. Unknown user names cost the same time as wrong passwords, and only two password checks run at once.
+- Request bodies are read only for logged-in users (the login form excepted) and capped per route (64 KB login, 1 MB forms, `admin.max_upload_mb` for uploads by admins); malformed lengths and chunked bodies are refused; a connection whose body was not read is closed. Connections time out after 15 seconds of silence, and at most 64 (24 per address) are served at once.
+- Redirects after login only go to a page of the panel; no header can carry a line break.
+- CSV downloads and `_summary.csv` never contain live spreadsheet formulas (a value starting with `=`, `+`, `-` or `@` that is not a number is prefixed with `'`).
 - Strict Content-Security-Policy (no inline scripts or styles, no third-party resources), `nosniff`, same-origin framing only, `no-store` caching for pages and downloads.
 - Files are served by ledger id only, from inside the archive; uploads are checked by content (PDF/image/e-mail/ZIP), ZIPs are size-limited and their paths ignored.

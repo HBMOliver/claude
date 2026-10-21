@@ -341,6 +341,28 @@ def upsert(con, name, aliases=(), tax_ids=(), domains=(), paid_on=None, set_paid
                 (jdump(sorted(al)), jdump(sorted(tx)), jdump(sorted(dm)), po, now_iso(), row['id']))
 
 
+GENERIC_TOKENS = {
+    'magyar', 'magyarorszag', 'magyarorszagi', 'hungary', 'hungaria', 'hungarian', 'budapest', 'budapesti',
+    'online', 'services', 'service', 'group', 'csoport', 'international', 'nemzetkozi', 'europe', 'european',
+    'emea', 'ireland', 'global', 'systems', 'solutions', 'digital', 'media', 'consulting', 'trade', 'trading',
+    'holding', 'invest', 'studio', 'design', 'company', 'technologies', 'technology', 'labs', 'and', 'the', 'es',
+    'und', 'of', 'ingatlan', 'kozpont', 'center', 'centre',
+} | _HU_ACTIVITY
+
+
+def related_names(a, b):
+    """Do two names plausibly name the same company? ('Kovács és Társa Kft.' / 'Kovács & Társa': yes;
+    'Gamma Ingatlan Zrt.' / 'Delta Facility': no.) Generic words like 'Magyar' or 'Services' do not count."""
+    ta = [t for t in core_key(a).split() if len(t) >= 3 and t not in GENERIC_TOKENS]
+    tb = [t for t in core_key(b).split() if len(t) >= 3 and t not in GENERIC_TOKENS]
+    for x in ta:
+        for y in tb:
+            if x == y or (min(len(x), len(y)) >= 4 and (x.startswith(y) or y.startswith(x))):
+                return True
+    flat_a, flat_b = ''.join(ta), ''.join(tb)
+    return len(flat_a) >= 4 and len(flat_b) >= 4 and (flat_a in flat_b or flat_b in flat_a)
+
+
 def learn(con, name, raw_name=None, tax_ids=(), domain=None, own_cores=()):
     """Remember what an admin's correction tells us about a supplier."""
     aliases = []

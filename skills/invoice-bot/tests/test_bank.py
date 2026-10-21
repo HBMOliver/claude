@@ -47,6 +47,8 @@ class TestStatements(unittest.TestCase):
         self.assertTrue(bank._number_in('2026/000123', 'szla 2026 000123'))
         self.assertFalse(bank._number_in('0042', 'ref 12004213'))
         self.assertFalse(bank._number_in('12', 'anything 12'))
+        self.assertFalse(bank._number_in('2026/12', 'utalas 2026.12.05 szamla'))  # part of a date
+        self.assertTrue(bank._number_in('2026/12', 'szamla 2026/12 kiegyenlitese'))
 
 
 class TestMatching(BotTestCase):
@@ -119,6 +121,49 @@ class TestMatching(BotTestCase):
         bank.import_statement(self.bot, csv, 'x.csv')
         self.assertEqual(self.inv(a)['payment_date'], '2026-09-21')
         self.assertEqual(self.inv(b)['payment_date'], '2026-10-20')
+
+    def monthly(self, no, issued, due, amount='50 000'):
+        return simple_pdf([(50, 'SZÁMLA'), (350, f'Számla sorszáma: KI-{no}'), (50, 'Eladó'), (300, 'Vevő'),
+                           (50, 'Könyvelő Iroda Kft.'), (300, 'Minta Ügynökség Kft.'),
+                           (50, f'Számla kelte: {issued}   Fizetési határidő: {due}   Fizetési mód: Átutalás'),
+                           (50, f'Fizetendő: {amount} Ft')])
+
+    def test_ambiguous_payments_are_only_suggested(self):
+        ids = [self.collect_one(self.monthly(m, f'2026.{m}.01.', d), f'{m}.pdf')
+               for m, d in (('08', '2026.08.31.'), ('09', '2026.09.30.'), ('10', '2026.10.31.'))]
+        csv = ('Könyvelés dátuma;Összeg;Devizanem;Partner neve;Közlemény\r\n'
+               '2026.09.20.;-50 000;HUF;KÖNYVELŐ IRODA KFT;konyvelesi dij\r\n'
+               '2026.10.20.;-50 000;HUF;KÖNYVELŐ IRODA KFT;konyvelesi dij\r\n').encode('cp1250')
+        res = bank.import_statement(self.bot, csv, 'x.csv')
+        self.assertEqual(res['matched'], [])  # no guessing which month a payment was for
+        self.assertTrue(res['suggestions'])
+        self.assertTrue(all(self.inv(i)['paid'] == 0 for i in ids))
+
+    def test_credit_notes_never_match_payments(self):
+        storno = simple_pdf([(50, 'SZTORNÓ SZÁMLA'), (350, 'Számla sorszáma: KI-2026-100S'), (50, 'Eladó'), (300, 'Vevő'),
+                             (50, 'Könyvelő Iroda Kft.'), (300, 'Minta Ügynökség Kft.'),
+                             (50, 'Számla kelte: 2026.09.15.   Fizetési határidő: 2026.09.15.   Fizetési mód: Átutalás'),
+                             (50, 'Fizetendő: -50 000 Ft')])
+        credit = self.collect_one(storno, 'storno.pdf')
+        self.assertEqual(self.inv(credit)['amount'], '-50000.00')
+        csv = ('Könyvelés dátuma;Összeg;Devizanem;Partner neve;Közlemény\r\n'
+               '2026.09.16.;-50 000;HUF;KÖNYVELŐ IRODA KFT;KI-2026-100S\r\n').encode('cp1250')
+        res = bank.import_statement(self.bot, csv, 'x.csv')
+        self.assertEqual((res['matched'], res['suggestions']), ([], []))
+
+    def test_marked_unpaid_stays_unpaid(self):
+        inv_id = self.collect_one(TRANSFER_INVOICE)
+        bank.import_statement(self.bot, OTP, 'otp.csv')
+        self.assertEqual(self.inv(inv_id)['payment_source'], 'bank')
+        P.mark_unpaid(self.bot, inv_id)
+        res = bank.import_statement(self.bot, OTP.replace(b'2026.10.22.', b'2026.10.23.'), 'otp2.csv')
+        self.assertEqual(res['matched'], [])
+        self.assertEqual(self.inv(inv_id)['paid'], 0)
+
+    def test_account_name_is_not_part_of_the_payment(self):
+        bank.import_statement(self.bot, OTP, 'otp.csv')
+        res = bank.import_statement(self.bot, OTP, 'otp.csv', account='OTP HUF')
+        self.assertEqual(res['new_payments'], 0)
 
 
 if __name__ == '__main__':

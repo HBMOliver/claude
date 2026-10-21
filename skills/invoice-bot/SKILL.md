@@ -61,7 +61,7 @@ Every run prints what happened; `--json` on `run`, `status`, `list`, `show`, `up
    `update ID --supplier "Kovács és Társa" --number E-2026-118 --amount 127000 --currency HUF --issue-date 2026-09-15 --due-date 2026-09-23`
    The file is renamed and moved the moment the invoice is complete. Corrections teach the supplier registry (the printed name, tax number and sender domain), so the next invoice from that supplier is named the same way. Ask the user only when the document itself does not tell you.
    Also look at filed invoices with warnings (`list --status filed --json`, issues with level `warn`): fix or leave them.
-4. **Payments**: transfer invoices wait in `_unpaid/`. Ask for the bank statement export (CSV) and run `bank statement.csv`: confident matches are applied, the rest are listed as suggestions to confirm with `bank-link INVOICE PAYMENT`. Or mark directly: `paid ID --date 2026-10-03`.
+4. **Payments**: transfer invoices wait in `_unpaid/`. Ask for the bank statement export (CSV) and run `bank statement.csv`: confident, unambiguous matches are applied; the rest (including payments that fit several invoices of the same amount) are listed as suggestions to confirm with `bank-link INVOICE PAYMENT` after checking with the user. Or mark directly: `paid ID --date 2026-10-03`.
 5. **For the accountant**: `export --month 2026-09` makes `exports/invoices_2026-09.zip` (all invoices paid that month + `summary.csv`). Send the file to the user, or point them to the panel's month page.
 6. **Admin panel**: `serve` (add `--collect-every 30` to also collect on a timer) and open `http://127.0.0.1:8765`. Remote access and roles: `references/admin-panel.md`.
 
@@ -69,7 +69,8 @@ Questions like "what did we pay Google in September?" or "which invoices are ove
 
 ## Rules
 
-- Change invoices only through the bot (`update`, `paid`, `unpaid`, the panel): never rename or move files in the archive by hand, or the ledger and the folders disagree (`verify` reports it, `verify --fix` re-files).
+- Change invoices only through the bot (`update`, `paid`, `unpaid`, the panel): never rename or move files in the archive by hand, or the ledger and the folders disagree (`verify` reports it, `verify --fix` re-attaches moved files by their content and re-files).
+- Correcting a supplier teaches the registry only when the new name is a better name for the same company; when the bot read the wrong company, the correction stays on that invoice.
 - Never invent field values. A field you cannot read from the document stays empty and the invoice stays in review.
 - The proforma / díjbekérő, quotes and duplicates are kept under `_other/` and `_duplicates/`, not in the monthly archive; `update ID --restore` / `--not-duplicate` if the bot was wrong.
 - The bot never deletes or moves e-mails; IMAP is read-only unless `imap.mark_seen` or `imap.gmail_label` is set.

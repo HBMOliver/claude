@@ -17,6 +17,7 @@ import os
 import re
 import shutil
 import tempfile
+from contextlib import contextmanager
 from datetime import timedelta
 from pathlib import Path, PurePosixPath
 
@@ -240,6 +241,9 @@ def target_path(bot, con, inv):
     else:
         name = file_name(bot, inv, ext)
     rel = f'{folder}/{name}'
+    root = bot.archive.resolve()
+    if root not in (bot.archive / rel).resolve().parents:
+        raise ValueError(f'the folder settings put invoice #{inv["id"]} outside the archive ({rel})')
     base, k = rel[:-len(ext)], 2
     current = (inv.get('file_path') or '').lower()
     while True:
@@ -263,17 +267,58 @@ def _prune_empty(bot, d):
         d = d.parent
 
 
-def move_into_place(bot, con, inv, touched=None):
+class Journal:
+    """File moves made inside a ledger transaction. If the transaction fails or does not commit, every
+    move is undone in reverse order, so the ledger and the archive never disagree."""
+
+    def __init__(self, bot):
+        self.bot = bot
+        self.moves = []
+
+    def move(self, src, dst):
+        Path(dst).parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(src), str(dst))
+        self.moves.append((Path(src), Path(dst)))
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        if exc_type is None:
+            for src, _ in self.moves:
+                _prune_empty(self.bot, src.parent)
+            return False
+        for src, dst in reversed(self.moves):
+            try:
+                src.parent.mkdir(parents=True, exist_ok=True)
+                shutil.move(str(dst), str(src))
+                _prune_empty(self.bot, dst.parent)
+            except OSError:
+                self.bot.log.exception('could not undo the move %s -> %s', src, dst)
+        return False
+
+
+@contextmanager
+def transaction(bot, con):
+    """`with transaction(bot, con) as journal:` one ledger transaction; file moves made through the
+    journal are undone if it raises or the commit fails."""
+    with Journal(bot) as journal:
+        with con:
+            yield journal
+
+
+def move_into_place(bot, con, inv, journal, touched=None):
     """Rename/move the archived file to where the invoice's current state says it belongs."""
     new_rel = target_path(bot, con, inv)
     old_rel = inv.get('file_path') or ''
     if new_rel == old_rel:
         return old_rel
-    src, dst = bot.archive / old_rel, bot.archive / new_rel
-    dst.parent.mkdir(parents=True, exist_ok=True)
-    if old_rel and src.exists():
-        shutil.move(str(src), str(dst))
-        _prune_empty(bot, src.parent)
+    src = bot.archive / old_rel
+    if not old_rel or not src.is_file():
+        # never point the ledger at a file that is not there; `verify --fix` finds it by its content
+        bot.log.warning('invoice #%s: file %r is missing, not moved', inv['id'], old_rel)
+        return old_rel
+    journal.move(src, bot.archive / new_rel)
     if touched is not None:
         touched.update({str(PurePosixPath(old_rel).parent), str(PurePosixPath(new_rel).parent)})
     dbm.update_invoice(con, inv['id'], {'file_path': new_rel})
@@ -282,14 +327,14 @@ def move_into_place(bot, con, inv, touched=None):
     return new_rel
 
 
-def recompute_and_file(bot, con, inv_id, touched=None):
+def recompute_and_file(bot, con, inv_id, journal, touched=None):
     inv = dbm.get_invoice(con, inv_id)
     eff = compute(bot, con, inv)
     changed = {k: v for k, v in eff.items() if inv.get(k) != v}
     if changed:
         dbm.update_invoice(con, inv_id, changed)
         inv.update(changed)
-    move_into_place(bot, con, inv, touched)
+    move_into_place(bot, con, inv, journal, touched)
     return inv
 
 
@@ -305,27 +350,31 @@ def ingest(bot, data, name, source, meta=None, actor='bot', require_invoice=Fals
     ext = '.pdf'
     if kind == 'image':
         ext = {b'\xff\xd8': '.jpg', b'\x89P': '.png'}.get(data[:2], '.tif')
-    with bot.files_lock:
-        con = bot.db()
+    con = bot.db()
+    try:
+        row = con.execute('SELECT id FROM invoices WHERE sha256 = ?', (sha,)).fetchone()
+        if row:
+            return {'result': 'duplicate_file', 'name': name, 'id': row['id']}
+        tmpdir = bot.home / 'tmp'
+        tmpdir.mkdir(exist_ok=True)
+        fd, tmp = tempfile.mkstemp(suffix=ext, dir=tmpdir)
         try:
-            row = con.execute('SELECT id FROM invoices WHERE sha256 = ?', (sha,)).fetchone()
-            if row:
-                return {'result': 'duplicate_file', 'name': name, 'id': row['id']}
-            tmpdir = bot.home / 'tmp'
-            tmpdir.mkdir(exist_ok=True)
-            fd, tmp = tempfile.mkstemp(suffix=ext, dir=tmpdir)
-            try:
-                with os.fdopen(fd, 'wb') as f:
-                    f.write(data)
-                text, method = textract.extract_text(tmp, kind, bot.cfg)
-                registry = S.Registry(con)
-                ex = X.extract(text, meta, bot.company, registry, bot.cfg['default_currency'], bot.cfg['date_order'])
-                if require_invoice and (ex['invoice_score'] < bot.cfg['collect'].get('min_invoice_score', 2)
-                                        or ex['doc_type'] == 'unknown' and ex['invoice_score'] < 3):
-                    return {'result': 'skipped', 'name': name, 'reason': 'does not look like an invoice',
-                            'score': ex['invoice_score']}
+            with os.fdopen(fd, 'wb') as f:
+                f.write(data)
+            # reading the file (pdftotext, OCR) can be slow: done before taking the files lock
+            text, method = textract.extract_text(tmp, kind, bot.cfg)
+            ex = X.extract(text, meta, bot.company, S.Registry(con), bot.cfg['default_currency'],
+                           bot.cfg['date_order'])
+            if require_invoice and (ex['invoice_score'] < bot.cfg['collect'].get('min_invoice_score', 2)
+                                    or ex['doc_type'] == 'unknown' and ex['invoice_score'] < 3):
+                return {'result': 'skipped', 'name': name, 'reason': 'does not look like an invoice',
+                        'score': ex['invoice_score']}
+            with bot.files_lock:
+                row = con.execute('SELECT id FROM invoices WHERE sha256 = ?', (sha,)).fetchone()
+                if row:
+                    return {'result': 'duplicate_file', 'name': name, 'id': row['id']}
                 now = now_iso()
-                with con:
+                with transaction(bot, con) as journal:
                     inv_id = dbm.insert_invoice(con, {
                         'sha256': sha, 'file_path': '', 'original_name': name, 'source': source,
                         'source_detail': meta or {}, 'received_at': now, 'status': 'review',
@@ -336,26 +385,23 @@ def ingest(bot, data, name, source, meta=None, actor='bot', require_invoice=Fals
                     dbm.update_invoice(con, inv_id, eff)
                     inv.update(eff)
                     rel = target_path(bot, con, inv)
-                    dst = bot.archive / rel
-                    dst.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.move(tmp, dst)
+                    journal.move(tmp, bot.archive / rel)
                     dbm.update_invoice(con, inv_id, {'file_path': rel})
-                    inv['file_path'] = rel
                     dbm.log_event(con, 'added', inv_id, actor, {'source': source, 'name': name, 'file': rel,
                                                                'status': inv['status']})
-                    _auto_bank_match(bot, con, inv_id)
-                    inv = dbm.get_invoice(con, inv_id)
-                if touched is not None:
-                    touched.add(str(PurePosixPath(inv['file_path']).parent))
-                return {'result': 'new', **summary(inv)}
-            finally:
-                if os.path.exists(tmp):
-                    os.unlink(tmp)
+                    _auto_bank_match(bot, con, inv_id, journal, touched)
+                inv = dbm.get_invoice(con, inv_id)
+            if touched is not None:
+                touched.add(str(PurePosixPath(inv['file_path']).parent))
+            return {'result': 'new', **summary(inv)}
         finally:
-            con.close()
+            if os.path.exists(tmp):
+                os.unlink(tmp)
+    finally:
+        con.close()
 
 
-def _auto_bank_match(bot, con, inv_id):
+def _auto_bank_match(bot, con, inv_id, journal, touched=None):
     """A payment imported earlier may already confirm this new invoice."""
     from . import bank
     inv = dbm.get_invoice(con, inv_id)
@@ -363,7 +409,7 @@ def _auto_bank_match(bot, con, inv_id):
         return
     m = bank.best_match_for_invoice(bot, con, inv)
     if m and m['auto']:
-        bank.link(bot, con, inv_id, m['txn']['id'], m['score'], actor='bot')
+        bank.link(bot, con, inv_id, m['txn']['id'], m['score'], journal, actor='bot', touched=touched)
 
 
 def summary(inv):
@@ -421,10 +467,11 @@ def clean_changes(changes):
 def update(bot, inv_id, changes, actor='admin', verify=False, learn=True):
     """Apply admin changes (see clean_changes), re-resolve payment, rename/move the file."""
     changes = clean_changes(changes)
+    touched = set()
     with bot.files_lock:
         con = bot.db()
         try:
-            with con:
+            with transaction(bot, con) as journal:
                 inv = dbm.get_invoice(con, inv_id)
                 if inv is None:
                     raise KeyError(f'no invoice #{inv_id}')
@@ -441,29 +488,43 @@ def update(bot, inv_id, changes, actor='admin', verify=False, learn=True):
                     ov.pop('payment_date', None)
                     ov['unpaid'] = True
                     if inv.get('bank_txn_id'):
+                        # the admin says this payment was not for this invoice: never match them again
                         con.execute("UPDATE bank_txns SET invoice_id = NULL, status = 'unmatched', score = NULL "
                                     'WHERE id = ?', (inv['bank_txn_id'],))
+                        rejected = dbm.meta_get(con, 'bank_rejected', [])
+                        rejected.append([inv_id, inv['bank_txn_id']])
+                        dbm.meta_set(con, 'bank_rejected', rejected)
                         dbm.update_invoice(con, inv_id, {'bank_txn_id': None})
                 fields = {'overrides': ov}
                 if verify:
                     fields['verified'] = 1
                 dbm.update_invoice(con, inv_id, fields)
-                touched = set()
-                inv = recompute_and_file(bot, con, inv_id, touched)
+                inv = recompute_and_file(bot, con, inv_id, journal, touched)
                 after = {k: inv.get(k) for k in before}
                 diff = {k: [before[k], after[k]] for k in before if before[k] != after[k]}
                 dbm.log_event(con, 'updated', inv_id, actor, {'set': changes, 'changed': diff})
                 if learn and changes.get('supplier'):
-                    ex = inv['extracted'] or {}
-                    own = X.Own(bot.company)
-                    S.learn(con, changes['supplier'], raw_name=ex.get('supplier_raw'),
-                            tax_ids=[ex['supplier_tax_id']] if ex.get('supplier_tax_id') else [],
-                            domain=ex.get('sender_domain') if ex.get('sender_domain') not in own.domains else None,
-                            own_cores=own.tax)
+                    _learn_supplier(bot, con, inv, changes['supplier'])
             _write_summaries(bot, touched)
             return dbm.get_invoice(con, inv_id)
         finally:
             con.close()
+
+
+def _learn_supplier(bot, con, inv, name):
+    """Remember what a supplier correction teaches, but only when it is a better name for the company
+    that was read: correcting a misread company must not make it an alias of another one."""
+    ex = inv.get('extracted') or {}
+    own = X.Own(bot.company)
+    raw = ex.get('supplier_raw')
+    domain = ex.get('sender_domain')
+    domain = domain if domain and domain not in own.domains and S.related_names(domain.split('.')[0], name) else None
+    if raw and S.related_names(raw, name):
+        S.learn(con, name, raw_name=raw, tax_ids=[ex['supplier_tax_id']] if ex.get('supplier_tax_id') else [],
+                domain=ex.get('sender_domain') if ex.get('sender_domain') not in own.domains else None,
+                own_cores=own.tax)
+    else:
+        S.learn(con, name, domain=domain, own_cores=own.tax)
 
 
 def mark_paid(bot, inv_id, date=None, actor='admin'):
@@ -477,40 +538,104 @@ def mark_unpaid(bot, inv_id, actor='admin'):
 
 def reextract(bot, inv_id, actor='admin'):
     """Read the file again with the current rules and suppliers (admin overrides are kept)."""
-    with bot.files_lock:
-        con = bot.db()
-        try:
-            with con:
-                inv = dbm.get_invoice(con, inv_id)
-                path = bot.archive / inv['file_path']
-                kind = textract.sniff(path.read_bytes()[:2048], path.name) or 'pdf'
-                text, method = textract.extract_text(path, kind, bot.cfg)
-                ex = X.extract(text, inv['source_detail'], bot.company, S.Registry(con),
-                               bot.cfg['default_currency'], bot.cfg['date_order'])
+    con = bot.db()
+    try:
+        inv = dbm.get_invoice(con, inv_id)
+        if inv is None:
+            raise KeyError(f'no invoice #{inv_id}')
+        path = bot.archive / inv['file_path']
+        kind = textract.sniff(path.read_bytes()[:2048], path.name) or 'pdf'
+        text, method = textract.extract_text(path, kind, bot.cfg)
+        ex = X.extract(text, inv['source_detail'], bot.company, S.Registry(con),
+                       bot.cfg['default_currency'], bot.cfg['date_order'])
+        touched = set()
+        with bot.files_lock:
+            with transaction(bot, con) as journal:
                 dbm.update_invoice(con, inv_id, {'extracted': ex, 'text': text, 'text_method': method})
-                touched = set()
-                inv = recompute_and_file(bot, con, inv_id, touched)
+                inv = recompute_and_file(bot, con, inv_id, journal, touched)
                 dbm.log_event(con, 'reextracted', inv_id, actor, {'status': inv['status']})
-            _write_summaries(bot, touched)
-            return inv
-        finally:
-            con.close()
+        _write_summaries(bot, touched)
+        return inv
+    finally:
+        con.close()
 
 
 def refile_all(bot, where='1=1', params=()):
-    """Recompute and move every matching invoice (after config or supplier-rule changes)."""
-    touched = set()
+    """Recompute and move every matching invoice (after config or supplier-rule changes), one
+    transaction per invoice so a failure leaves every other invoice consistent.
+    Returns (re-filed count, [error messages])."""
+    touched, errors, done = set(), [], 0
     with bot.files_lock:
         con = bot.db()
         try:
-            with con:
-                ids = [r['id'] for r in con.execute(f'SELECT id FROM invoices WHERE {where} ORDER BY id', params)]
-                for i in ids:
-                    recompute_and_file(bot, con, i, touched)
+            ids = [r['id'] for r in con.execute(f'SELECT id FROM invoices WHERE {where} ORDER BY id', params)]
+            for i in ids:
+                try:
+                    with transaction(bot, con) as journal:
+                        recompute_and_file(bot, con, i, journal, touched)
+                    done += 1
+                except Exception as e:  # e.g. a PDF held open by another program on Windows
+                    bot.log.exception('re-filing invoice #%s failed', i)
+                    errors.append(f'invoice #{i}: {e}')
         finally:
             con.close()
     _write_summaries(bot, touched)
-    return len(ids)
+    return done, errors
+
+
+def find_problems(bot):
+    """[(kind, invoice id, path)]: 'missing' = in the ledger but not in the archive,
+    'stray' = in the archive but not in the ledger."""
+    con = bot.db()
+    try:
+        rows = con.execute('SELECT id, file_path FROM invoices ORDER BY id').fetchall()
+    finally:
+        con.close()
+    out, known = [], set()
+    for r in rows:
+        p = bot.archive / (r['file_path'] or '')
+        if r['file_path'] and p.is_file():
+            known.add(str(p.resolve()))
+        else:
+            out.append(('missing', r['id'], r['file_path']))
+    for p in sorted(bot.archive.rglob('*')):
+        if p.is_file() and not p.name.startswith(('.', '_summary')) and str(p.resolve()) not in known:
+            out.append(('stray', None, p.relative_to(bot.archive).as_posix()))
+    return out
+
+
+def repair(bot):
+    """Make the ledger and the archive agree: re-attach files that were moved by hand or left behind
+    by a crash (recognised by their content), then re-file every invoice. Returns (adopted, re-filed,
+    errors)."""
+    adopted = 0
+    with bot.files_lock:
+        problems = find_problems(bot)
+        missing = [p[1] for p in problems if p[0] == 'missing']
+        strays = [bot.archive / p[2] for p in problems if p[0] == 'stray']
+        if missing and strays:
+            by_sha = {}
+            for f in strays:
+                try:
+                    by_sha.setdefault(sha256_bytes(f.read_bytes()), f)
+                except OSError:
+                    continue
+            con = bot.db()
+            try:
+                for inv_id in missing:
+                    sha = con.execute('SELECT sha256 FROM invoices WHERE id = ?', (inv_id,)).fetchone()['sha256']
+                    f = by_sha.pop(sha, None)
+                    if f is None:
+                        continue
+                    rel = f.relative_to(bot.archive).as_posix()
+                    with con:
+                        dbm.update_invoice(con, inv_id, {'file_path': rel})
+                        dbm.log_event(con, 'adopted', inv_id, 'bot', {'file': rel})
+                    adopted += 1
+            finally:
+                con.close()
+        done, errors = refile_all(bot)
+    return adopted, done, errors
 
 
 def _write_summaries(bot, folders):

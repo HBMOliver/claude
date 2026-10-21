@@ -38,6 +38,8 @@ Candidates are collected and the strongest wins; candidates naming the same comp
 
 The buyer's block ("Vevő", "Bill to", "Customer", "Rechnungsempfänger") and your own company are never candidates. Footer lines such as "Készült a ... számlázó programmal" are ignored, as are banks named next to bank account numbers. Item lines that mention other companies ("Google Ads kampánykezelés") do not count, because they carry no legal form and sit in no seller block.
 
+Correcting a supplier teaches the registry only when the correction is a better name for the company that was read ("Kovács és Társa Szolgáltató Kft." → "Kovács & Társa"): then the printed name, its tax number and the sender's domain become aliases. A correction to a different company ("Gamma Ingatlan" → "Delta Facility": the bot read the wrong company) changes that invoice only.
+
 The **name used in file names** is the registry name if known, else the printed name without the legal form and without trailing Hungarian activity words: "Kovács és Társa Szolgáltató és Kereskedelmi Kft." becomes "Kovács és Társa". ALL-CAPS names are converted to normal case. In file names accents are transliterated (`naming.ascii`).
 
 ### Confidence
@@ -83,7 +85,7 @@ The same file twice is skipped at collection. A different file with the same sup
 
 `bank statement.csv` (or the Bank statement page) reads a CSV export: the encoding (UTF-8, Windows-1250), delimiter and header row are detected and the columns recognised by name: date (Könyvelés dátuma, Booking date, Completed Date, Buchungstag, ...), amount or debit/credit, currency, partner/counterparty and reference (Közlemény, Description, Reference, Verwendungszweck). Only money going out is used; payments are remembered, so overlapping exports are harmless.
 
-Matching an unpaid invoice requires the same currency and amount (±1 HUF, ±0.01 otherwise) and a payment between 5 days before the invoice date and 120 days after the due date. Score: 50 for the amount, +40 if the invoice number appears in the reference, +up to 30 for the supplier's name in the counterparty or reference, +8 within three days of the due date, minus a little for every day away from the due date. 75 or more is applied at once; 50 to 75 is a suggestion to confirm (`bank-link`) or dismiss. Payments imported earlier are also checked against every new invoice as it arrives.
+Matching an unpaid invoice requires the same currency and amount (±1 HUF, ±0.01 otherwise) and a payment between 5 days before the invoice date and 120 days after the due date. Score: 50 for the amount, +40 if the invoice number appears in the reference as a whole token (not inside a date or a longer number), +up to 30 for the supplier's name in the counterparty or reference, +8 within three days of the due date, minus a little for every day away from the due date. 75 or more is applied at once **if nothing else comes close**: when another invoice or payment scores within 8 points (monthly invoices of the same amount, two equal payments), it becomes a suggestion instead. 50 to 75 is a suggestion to confirm (`bank-link`) or dismiss. Credit notes are never matched to payments, and an invoice an admin marked "not paid" is left alone (the dismissed pair is remembered). Payments imported earlier are also checked against every new invoice as it arrives; the same statement imported twice, with or without an account name, adds nothing.
 
 ## Settings (invoicebot.json)
 

@@ -17,6 +17,7 @@ import socket
 import ssl
 import time
 import zipfile
+import zlib
 from datetime import timedelta
 from email.utils import parseaddr
 from pathlib import Path, PurePosixPath
@@ -89,17 +90,45 @@ class Report:
 
 
 # ------------------------------------------------------------------ containers
-def iter_mail_attachments(msg):
-    """(filename, bytes) for every attachment, including inside attached / forwarded messages."""
+MAX_FILES_PER_ITEM = 100     # files taken out of one e-mail (anyone can send mail), all levels together
+MAX_FILES_PER_DROP = 2000    # files taken out of one file an admin dropped or uploaded
+_ZIP_ERRORS = (zipfile.BadZipFile, zipfile.LargeZipFile, RuntimeError, NotImplementedError, OSError, ValueError,
+               EOFError, zlib.error)
+
+
+class Outcome:
+    """What became of one file and everything inside it."""
+
+    def __init__(self):
+        self.handled = self.skipped = self.unreadable = self.failed = 0
+        self.notes = []
+
+    def merge(self, other):
+        self.handled += other.handled
+        self.skipped += other.skipped
+        self.unreadable += other.unreadable
+        self.failed += other.failed
+        self.notes += other.notes
+        return self
+
+    @property
+    def complete(self):
+        """Everything in it was imported (or was already in the archive)."""
+        return self.handled > 0 and not (self.skipped or self.unreadable or self.failed)
+
+
+def iter_mail_parts(msg):
+    """(filename, bytes, decoration) for every attachment, including inside attached / forwarded messages.
+    decoration is True for inline images such as logos and signatures."""
     for part in msg.walk():
         if part.is_multipart():
             continue
         ctype = part.get_content_type()
-        fname = part.get_filename() or ''
-        if ctype in ('message/rfc822',):
+        if ctype == 'message/rfc822':
             continue
+        fname = part.get_filename() or ''
         disp = (part.get_content_disposition() or '').lower()
-        if not fname and disp != 'attachment' and ctype not in ('application/pdf',):
+        if not fname and disp != 'attachment' and ctype != 'application/pdf':
             continue
         try:
             data = part.get_payload(decode=True)
@@ -107,29 +136,37 @@ def iter_mail_attachments(msg):
             data = None
         if not data:
             continue
-        if not fname:
-            fname = 'attachment.pdf' if ctype == 'application/pdf' else 'attachment'
-        yield fname, data
+        decoration = ctype.startswith('image/') and (disp == 'inline' or bool(part.get('Content-ID')))
+        yield fname or ('attachment.pdf' if ctype == 'application/pdf' else 'attachment'), data, decoration
 
 
-def iter_zip(data, max_files=50, max_total=200 * 1024 * 1024):
-    """PDF / image members of a ZIP (no paths, size-limited)."""
+def iter_zip(data, max_total=200 * 1024 * 1024):
+    """(name, bytes, problem) for every member; bytes is None and problem says why when it was not read."""
     try:
         zf = zipfile.ZipFile(io.BytesIO(data))
-    except zipfile.BadZipFile:
+        infos = zf.infolist()
+    except _ZIP_ERRORS as e:
+        yield None, None, f'unreadable ZIP ({e})'
         return
     total = 0
-    for info in zf.infolist()[:max_files * 4]:
-        if info.is_dir() or info.file_size > 50 * 1024 * 1024:
+    for info in infos:
+        if info.is_dir():
             continue
-        name = PurePosixPath(info.filename.replace('\\', '/')).name
-        if not name.lower().endswith(('.pdf', '.jpg', '.jpeg', '.png', '.tif', '.tiff', '.eml')):
+        name = PurePosixPath(info.filename.replace('\\', '/')).name or 'file'
+        if info.file_size > 50 * 1024 * 1024:
+            yield name, None, 'larger than 50 MB'
             continue
         total += info.file_size
         if total > max_total:
-            break
-        with zf.open(info) as f:
-            yield name, f.read(50 * 1024 * 1024 + 1)
+            yield name, None, 'the ZIP holds more than 200 MB'
+            continue
+        try:
+            with zf.open(info) as f:
+                blob = f.read(50 * 1024 * 1024 + 1)
+        except _ZIP_ERRORS as e:  # encrypted, unsupported compression, bad CRC
+            yield name, None, f'cannot be read ({e})'
+            continue
+        yield name, blob, None
 
 
 def mail_meta(msg):
@@ -137,47 +174,106 @@ def mail_meta(msg):
             'message_id': str(msg.get('Message-ID', '')).strip(), 'date': str(msg.get('Date', ''))}
 
 
-def process_blob(bot, data, name, source, meta, report, require_invoice, depth=0):
-    """A file of any supported kind: pdf/image -> ingest; eml/zip -> their contents.
-    Returns how many invoices it produced or matched (new or already known)."""
+def process_blob(bot, data, name, source, meta, report, require_invoice, depth=0, budget=None, in_zip=False):
+    """A file of any supported kind: pdf/image -> ingest; eml/zip -> their contents. Returns an Outcome."""
+    out = Outcome()
+    if budget is None:
+        budget = {'left': MAX_FILES_PER_ITEM if source == 'imap' else MAX_FILES_PER_DROP}
     max_bytes = bot.cfg['collect'].get('max_attachment_mb', 25) * 1024 * 1024
     if len(data) > max_bytes:
+        out.skipped += 1
+        out.notes.append(f'{name}: larger than {max_bytes // 1048576} MB')
         report.add(source, {'result': 'skipped', 'name': name, 'reason': f'larger than {max_bytes // 1048576} MB'})
-        return 0
+        return out
     kind = textract.sniff(data, name)
-    if kind == 'eml' and depth < 3:
-        msg = email.message_from_bytes(data, policy=email.policy.default)
-        m = dict(meta or {})
-        m.update({k: v for k, v in mail_meta(msg).items() if v})
-        n = 0
-        for fname, blob in iter_mail_attachments(msg):
-            n += process_blob(bot, blob, fname, source, m, report, require_invoice, depth + 1)
-        return n
-    if kind == 'zip' and depth < 3:
-        return sum(process_blob(bot, blob, fname, source, meta, report, require_invoice, depth + 1)
-                   for fname, blob in iter_zip(data))
-    if kind is None or (kind == 'image' and depth > 0 and not bot.cfg['collect'].get('include_images')):
+    try:
+        if kind == 'eml':
+            if depth >= 3:
+                out.skipped += 1
+                out.notes.append(f'{name}: e-mails nested too deep')
+                return out
+            msg = email.message_from_bytes(data, policy=email.policy.default)
+            m = dict(meta or {})
+            m.update({k: v for k, v in mail_meta(msg).items() if v})
+            for fname, blob, decoration in iter_mail_parts(msg):
+                if decoration:
+                    continue
+                out.merge(process_blob(bot, blob, fname, source, m, report, require_invoice, depth + 1, budget, in_zip))
+            return out
+        if kind == 'zip':
+            if in_zip or depth >= 3:
+                out.skipped += 1
+                out.notes.append(f'{name}: a ZIP inside a ZIP is not opened')
+                report.add(source, {'result': 'skipped', 'name': name, 'reason': 'a ZIP inside a ZIP is not opened'})
+                return out
+            for fname, blob, problem in iter_zip(data):
+                if problem:
+                    out.unreadable += 1
+                    out.notes.append(f'{fname or name}: {problem}')
+                    report.add(source, {'result': 'skipped', 'name': f'{name}/{fname}' if fname else name,
+                                        'reason': problem})
+                    continue
+                out.merge(process_blob(bot, blob, fname, source, meta, report, require_invoice, depth + 1, budget,
+                                       in_zip=True))
+            return out
+    except Exception as e:  # a broken container must not stop the run
+        bot.log.exception('cannot open %s', name)
+        out.unreadable += 1
+        out.notes.append(f'{name}: cannot be opened ({e})')
+        report.add(source, {'result': 'skipped', 'name': name, 'reason': f'cannot be opened ({e})'})
+        return out
+    if kind is None:
+        out.skipped += 1
+        out.notes.append(f'{name}: not a PDF, image, e-mail or ZIP')
         if depth == 0:
             report.add(source, {'result': 'skipped', 'name': name, 'reason': 'not a PDF, image, e-mail or ZIP'})
-        return 0  # signatures, logos, spreadsheets inside e-mails: ignored quietly
+        return out
+    if kind == 'image' and depth > 0 and not bot.cfg['collect'].get('include_images'):
+        out.skipped += 1
+        out.notes.append(f'{name}: an image (collect.include_images is off)')
+        return out
+    if budget['left'] <= 0:
+        out.skipped += 1
+        out.notes.append(f'{name}: too many files in one item')
+        return out
+    budget['left'] -= 1
     try:
         res = P.ingest(bot, data, name, source, meta, require_invoice=require_invoice, touched=report.touched)
-    except Exception as e:  # one bad file must not stop the run
+    except Exception as e:  # e.g. the archive is not writable: try again next run
         bot.log.exception('ingest failed for %s', name)
         report.error(name, e)
-        return 0
+        out.failed += 1
+        out.notes.append(f'{name}: {e}')
+        return out
     report.add(source, res)
     bot.log.info('%s %s -> %s', source, name, res.get('file_path') or res.get('reason') or res['result'])
-    return 1 if res['result'] in ('new', 'duplicate_file') else 0
+    if res['result'] in ('new', 'duplicate_file'):
+        out.handled += 1
+    else:
+        out.skipped += 1
+        out.notes.append(f"{name}: {res.get('reason')}")
+    return out
 
 
 # ------------------------------------------------------------------ inbox folder
 NOT_PROCESSED = '_not_processed'
 
 
+def free_name(path):
+    """path, or path_2 / path_3 ... when it is taken."""
+    if not path.exists():
+        return path
+    for k in range(2, 100000):
+        cand = path.with_name(f'{path.stem}_{k}{path.suffix}')
+        if not cand.exists():
+            return cand
+    raise OSError(f'no free name for {path}')
+
+
 def collect_inbox(bot, report, settle_seconds=5):
-    """Process everything in the inbox folder. Invoices are moved into the archive; files that hold no
-    invoice are moved to inbox/_not_processed/ (never deleted); files that failed stay for the next run."""
+    """Process everything in the inbox folder. A file is removed only when everything in it was imported;
+    a file that held nothing (or not only) invoices moves to inbox/_not_processed/ (never deleted, never
+    overwritten); a file that failed for a passing reason stays for the next run."""
     root = bot.inbox
     for path in sorted(p for p in root.rglob('*') if p.is_file()):
         rel_parts = path.relative_to(root).parts
@@ -190,22 +286,23 @@ def collect_inbox(bot, report, settle_seconds=5):
         except OSError as e:
             report.error(str(path), e)
             continue
-        n_err = len(report.errors)
-        got = process_blob(bot, data, path.name, 'inbox', {'path': str(path.relative_to(root))}, report,
+        out = process_blob(bot, data, path.name, 'inbox', {'path': str(path.relative_to(root))}, report,
                            require_invoice=False)
-        if len(report.errors) > n_err:
+        if out.failed:
             continue
         try:
-            if got:
+            if out.complete:
                 path.unlink()
+                continue
+            dest = free_name(root / NOT_PROCESSED / path.name)
+            dest.parent.mkdir(exist_ok=True)
+            path.replace(dest)
+            if out.handled:
+                why = f'{out.handled} invoice(s) imported, the rest not: ' + '; '.join(out.notes[:5])
             else:
-                dest = root / NOT_PROCESSED / path.name
-                dest.parent.mkdir(exist_ok=True)
-                if dest.exists():
-                    dest = dest.with_name(f'{dest.stem}_{int(time.time())}{dest.suffix}')
-                path.replace(dest)
-                report.add('inbox', {'result': 'skipped', 'name': path.name,
-                                     'reason': f'no invoice found; moved to inbox/{NOT_PROCESSED}/'})
+                why = 'no invoice found' + (': ' + '; '.join(out.notes[:3]) if out.notes else '')
+            report.add('inbox', {'result': 'skipped', 'name': path.name,
+                                 'reason': f'{why}. Moved to inbox/{NOT_PROCESSED}/{dest.name}'})
         except OSError as e:
             report.error(str(path), e)
     for d in sorted((p for p in root.rglob('*') if p.is_dir()), key=lambda p: -len(p.parts)):
@@ -299,6 +396,41 @@ def _allowed_sender(icfg, sender):
     return True
 
 
+MAX_TRIES = 3  # a message whose processing failed is tried again on this many runs
+
+
+def _tries_left(row):
+    """None when the message is done; else how many earlier attempts failed."""
+    if row is None:
+        return 0
+    m = re.match(r'retry:(\d+)', row['result'] or '')
+    return int(m.group(1)) if m else None
+
+
+def _search(M, icfg, since):
+    if icfg.get('gmail_query'):
+        q = icfg['gmail_query'] + f' after:{since:%Y/%m/%d}'
+        if q.isascii():
+            return M.uid('SEARCH', 'X-GM-RAW', _quote(q))
+        M.literal = q.encode('utf-8')  # e.g. "subject:számla": sent as a UTF-8 literal
+        return M.uid('SEARCH', 'CHARSET', 'UTF-8', 'X-GM-RAW')
+    crit = ['SINCE', f'{since.day:02d}-{_IMAP_MONTHS[since.month - 1]}-{since.year}']
+    if icfg.get('search'):
+        if not icfg['search'].isascii():
+            raise ValueError('imap.search must be plain ASCII; use imap.only_from, or gmail_query on Gmail')
+        crit = ['(' + icfg['search'] + ')'] + crit
+    return M.uid('SEARCH', None, *crit)
+
+
+def _leave_folder(M):
+    """Leave the folder without CLOSE, which would expunge messages another client flagged as deleted."""
+    try:
+        if 'UNSELECT' in getattr(M, 'capabilities', ()):
+            M.unselect()
+    except imaplib.IMAP4.error:
+        pass
+
+
 def collect_imap(bot, report, connect=imap_connect):
     icfg = bot.cfg['imap']
     if not icfg.get('enabled'):
@@ -312,75 +444,51 @@ def collect_imap(bot, report, connect=imap_connect):
     con = bot.db()
     try:
         since = today() - timedelta(days=int(icfg.get('lookback_days') or 45))
-        since_s = f'{since.day:02d}-{_IMAP_MONTHS[since.month - 1]}-{since.year}'
         writable = bool(icfg.get('mark_seen') or icfg.get('gmail_label'))
         for folder in icfg.get('folders') or ['INBOX']:
-            typ, _ = M.select(_quote(imap_utf7(folder)), readonly=not writable)
-            if typ != 'OK':
-                report.error(f'imap {folder}', 'cannot open folder')
-                continue
-            uidv = (M.response('UIDVALIDITY')[1] or [b'0'])[0]
-            uidv = uidv.decode() if isinstance(uidv, bytes) else str(uidv)
-            if icfg.get('gmail_query'):
-                typ, data = M.uid('SEARCH', 'X-GM-RAW', _quote(icfg['gmail_query'] + f' after:{since:%Y/%m/%d}'))
-            else:
-                crit = ['SINCE', since_s]
-                if icfg.get('search'):
-                    crit = ['(' + icfg['search'] + ')'] + crit
-                typ, data = M.uid('SEARCH', None, *crit)
-            if typ != 'OK':
-                report.error(f'imap {folder}', 'search failed')
-                continue
-            uids = [u for u in (data[0] or b'').split() if u]
-            prefix = f'imap:{account}/{folder}/{uidv}/'
-            new = [u for u in uids if not con.execute('SELECT 1 FROM seen_messages WHERE key = ?',
-                                                      (prefix + u.decode(),)).fetchone()]
-            for i in range(0, len(new), 100):
-                batch = new[i:i + 100]
-                typ, data = M.uid('FETCH', b','.join(batch), '(UID BODYSTRUCTURE BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID)])')
-                has_files = {}
-                for blob in _fetch_parts(data):
-                    m = re.search(rb'UID (\d+)', blob)
-                    if m:
-                        low = blob.lower()
-                        has_files[m.group(1)] = (b'pdf' in low or b'"zip"' in low or b'.zip' in low or b'rfc822' in low
-                                                 or (bot.cfg['collect'].get('include_images') and b'image' in low),
-                                                 blob)
-                for uid in batch:
-                    key = prefix + uid.decode()
-                    candidate, head = has_files.get(uid, (False, b''))
-                    msg_id = re.search(rb'message-id:\s*(<[^>]+>)', head, re.I)
-                    mid_key = 'msgid:' + msg_id.group(1).decode('utf-8', 'ignore') if msg_id else None
-                    if mid_key and con.execute('SELECT 1 FROM seen_messages WHERE key = ?', (mid_key,)).fetchone():
-                        candidate = False
-                    result = 'no attachment'
-                    if candidate:
-                        typ, data = M.uid('FETCH', uid, '(BODY.PEEK[])')
-                        raw = next((p[1] for p in data or [] if isinstance(p, tuple)), None)
-                        if raw:
-                            msg = email.message_from_bytes(raw, policy=email.policy.default)
-                            meta = mail_meta(msg)
-                            meta['mailbox'] = f'{account}/{folder}'
-                            if not _allowed_sender(icfg, meta['sender']):
-                                result = 'sender filtered'
-                            else:
-                                n0 = len(report.items)
-                                for fname, blob in iter_mail_attachments(msg):
-                                    process_blob(bot, blob, fname, 'imap', meta, report, require_invoice=True, depth=1)
-                                got = [it for it in report.items[n0:] if it['result'] == 'new']
-                                result = f'{len(got)} invoice(s)' if got else 'no invoice'
-                                if got:
-                                    _after_processed(M, uid, icfg)
-                    with con:
-                        con.execute('INSERT OR REPLACE INTO seen_messages(key, at, result) VALUES (?, ?, ?)',
-                                    (key, now_iso(), result))
-                        if mid_key:
-                            con.execute('INSERT OR IGNORE INTO seen_messages(key, at, result) VALUES (?, ?, ?)',
-                                        (mid_key, now_iso(), result))
             try:
-                M.close()
-            except imaplib.IMAP4.error:
-                pass
+                typ, _ = M.select(_quote(imap_utf7(folder)), readonly=not writable)
+                if typ != 'OK':
+                    report.error(f'imap {folder}', 'cannot open folder')
+                    continue
+                uidv = (M.response('UIDVALIDITY')[1] or [b'0'])[0]
+                uidv = uidv.decode() if isinstance(uidv, bytes) else str(uidv)
+                typ, data = _search(M, icfg, since)
+                if typ != 'OK':
+                    report.error(f'imap {folder}', 'search failed')
+                    continue
+                uids = [u for u in (data[0] or b'').split() if u]
+                prefix = f'imap:{account}/{folder}/{uidv}/'
+                todo = []
+                for u in uids:
+                    tries = _tries_left(con.execute('SELECT result FROM seen_messages WHERE key = ?',
+                                                    (prefix + u.decode(),)).fetchone())
+                    if tries is not None:
+                        todo.append((u, tries))
+                for i in range(0, len(todo), 100):
+                    batch = todo[i:i + 100]
+                    typ, data = M.uid('FETCH', b','.join(u for u, _ in batch),
+                                      '(UID BODYSTRUCTURE BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID)])')
+                    if typ != 'OK':  # nothing is recorded: the whole batch is tried again next run
+                        report.error(f'imap {folder}', f'fetching message structure failed: {data}')
+                        continue
+                    has_files = {}
+                    for blob in _fetch_parts(data):
+                        m = re.search(rb'UID (\d+)', blob)
+                        if m:
+                            low = blob.lower()
+                            has_files[m.group(1)] = (b'pdf' in low or b'"zip"' in low or b'.zip' in low
+                                                     or b'rfc822' in low or b'octet-stream' in low
+                                                     or (bot.cfg['collect'].get('include_images') and b'image' in low),
+                                                     blob)
+                    for uid, tries in batch:
+                        if uid not in has_files:  # the server did not return it this time
+                            continue
+                        _one_message(bot, con, M, icfg, report, account, folder, prefix, uid, tries, has_files[uid])
+            except ValueError as e:
+                report.error(f'imap {folder}', e)
+            finally:
+                _leave_folder(M)
     except (imaplib.IMAP4.error, OSError, socket.error, ssl.SSLError) as e:
         report.error(f'imap {account}', e)
     finally:
@@ -389,6 +497,56 @@ def collect_imap(bot, report, connect=imap_connect):
             M.logout()
         except Exception:
             pass
+
+
+def _one_message(bot, con, M, icfg, report, account, folder, prefix, uid, tries, fetched):
+    key = prefix + uid.decode()
+    candidate, head = fetched
+    msg_id = re.search(rb'message-id:\s*(<[^>]+>)', head, re.I)
+    mid_key = 'msgid:' + msg_id.group(1).decode('utf-8', 'ignore') if msg_id else None
+    if mid_key and _tries_left(con.execute('SELECT result FROM seen_messages WHERE key = ?',
+                                           (mid_key,)).fetchone()) is None:
+        candidate = False  # the same message, already handled in another folder
+    result, retry = 'no attachment', False
+    if candidate:
+        try:
+            typ, data = M.uid('FETCH', uid, '(BODY.PEEK[])')
+            raw = next((p[1] for p in data or [] if isinstance(p, tuple)), None) if typ == 'OK' else None
+            if raw is None:
+                result, retry = 'could not be fetched', True
+            else:
+                msg = email.message_from_bytes(raw, policy=email.policy.default)
+                meta = mail_meta(msg)
+                meta['mailbox'] = f'{account}/{folder}'
+                if not _allowed_sender(icfg, meta['sender']):
+                    result = 'sender filtered'
+                else:
+                    out, budget = Outcome(), {'left': MAX_FILES_PER_ITEM}
+                    n0 = len(report.items)
+                    for fname, blob, decoration in iter_mail_parts(msg):
+                        if not decoration:
+                            out.merge(process_blob(bot, blob, fname, 'imap', meta, report, require_invoice=True,
+                                                   depth=1, budget=budget))
+                    got = [it for it in report.items[n0:] if it['result'] == 'new']
+                    result = f'{len(got)} invoice(s)' if got else 'no invoice'
+                    if out.failed:
+                        result, retry = f'{len(got)} invoice(s); {out.failed} failed: ' + '; '.join(out.notes[:3]), True
+                    if got:
+                        _after_processed(M, uid, icfg)
+        except (imaplib.IMAP4.error, OSError, ssl.SSLError):
+            raise  # the connection is gone: stop this run, nothing recorded for this message
+        except Exception as e:  # anything else about this one message: record it and go on
+            bot.log.exception('imap message %s in %s failed', uid, folder)
+            report.error(f'imap {folder} message {uid.decode()}', e)
+            result, retry = f'error: {e}', True
+    if retry:
+        tries += 1
+        result = f'retry:{tries} {result}' if tries < MAX_TRIES else f'gave up after {tries} attempts: {result}'
+    with con:
+        con.execute('INSERT OR REPLACE INTO seen_messages(key, at, result) VALUES (?, ?, ?)', (key, now_iso(), result))
+        if mid_key and not result.startswith('retry:'):
+            con.execute('INSERT OR REPLACE INTO seen_messages(key, at, result) VALUES (?, ?, ?)',
+                        (mid_key, now_iso(), result))
 
 
 def _after_processed(M, uid, icfg):

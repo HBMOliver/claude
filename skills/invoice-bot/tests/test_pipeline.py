@@ -236,6 +236,133 @@ class TestCollectAndFile(BotTestCase):
         self.assertEqual(len(missing), 1)
 
 
+class TestSafety(BotTestCase):
+    """Regression tests for the review findings: files are never lost, collections never get stuck."""
+
+    def run_inbox(self):
+        rep = collect.run(self.bot, imap=False)
+        self.assertIsNotNone(rep)
+        return rep
+
+    def zip_bytes(self, members, compression=zipfile.ZIP_DEFLATED):
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, 'w', compression=compression) as z:
+            for name, data in members:
+                z.writestr(name, data)
+        return buf.getvalue()
+
+    def test_stored_zip_is_not_taken_for_a_pdf(self):
+        second = TRANSFER_INVOICE.replace(b'TR-2026-7', b'TR-2026-8')
+        drop(self.bot, 'two.zip', self.zip_bytes([('a.pdf', TRANSFER_INVOICE), ('b.pdf', second)], zipfile.ZIP_STORED))
+        rep = self.run_inbox()
+        self.assertEqual(sorted(i['invoice_number'] for i in rep.items if i['result'] == 'new'), ['TR-2026-7', 'TR-2026-8'])
+        self.assertEqual(list(self.bot.inbox.iterdir()), [])  # fully imported: removed
+
+    def test_partly_imported_container_is_kept(self):
+        drop(self.bot, 'mixed.zip', self.zip_bytes([('a.pdf', TRANSFER_INVOICE), ('notes.xlsx', b'PK-not-a-pdf')]))
+        rep = self.run_inbox()
+        self.assertEqual(rep.counts()['new'], 1)
+        self.assertTrue((self.bot.inbox / '_not_processed' / 'mixed.zip').exists())
+
+    def test_unreadable_zip_does_not_stop_the_run(self):
+        good = self.zip_bytes([('a.pdf', TRANSFER_INVOICE)], zipfile.ZIP_STORED)
+        bad = bytearray(good)
+        i = bad.index(b'%PDF') + 200
+        bad[i:i + 4] = b'XXXX'  # the CRC no longer matches
+        drop(self.bot, 'a_broken.zip', bytes(bad))
+        drop(self.bot, 'b_next.pdf', TRANSFER_INVOICE.replace(b'TR-2026-7', b'TR-2026-9'))
+        rep = self.run_inbox()
+        self.assertEqual(rep.errors, [])
+        self.assertEqual([i['invoice_number'] for i in rep.items if i['result'] == 'new'], ['TR-2026-9'])
+        self.assertTrue((self.bot.inbox / '_not_processed' / 'a_broken.zip').exists())
+
+    def test_zip_inside_zip_is_not_opened(self):
+        inner = self.zip_bytes([('a.pdf', TRANSFER_INVOICE)])
+        drop(self.bot, 'outer.zip', self.zip_bytes([('inner.zip', inner)]))
+        rep = self.run_inbox()
+        self.assertEqual(rep.counts()['new'], 0)
+        self.assertTrue((self.bot.inbox / '_not_processed' / 'outer.zip').exists())
+
+    def test_not_processed_never_overwrites(self):
+        for month in ('07', '08', '09'):
+            d = self.bot.inbox / f'2026-{month}'
+            d.mkdir()
+            drop(self.bot, f'2026-{month}/statement.xlsx', f'not an invoice {month}'.encode())
+        self.run_inbox()
+        kept = sorted(p.read_text() for p in (self.bot.inbox / '_not_processed').iterdir())
+        self.assertEqual(kept, ['not an invoice 07', 'not an invoice 08', 'not an invoice 09'])
+
+    def test_failed_move_is_undone_and_nothing_is_orphaned(self):
+        for name, data in samples.demo_files():
+            drop(self.bot, name, data)
+        self.run_inbox()
+        real, calls = P.shutil.move, [0]
+
+        def flaky(src, dst):
+            calls[0] += 1
+            if calls[0] == 3:
+                raise PermissionError(13, 'in use by another program', src)
+            return real(src, dst)
+        P.shutil.move = flaky
+        try:
+            self.bot.set_option('naming.pattern', '{date}_{supplier}_{number}_{currency}')
+            done, errors = P.refile_all(self.bot)
+        finally:
+            P.shutil.move = real
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(P.find_problems(self.bot), [])  # ledger and archive still agree
+        adopted, done, errors = P.repair(self.bot)
+        self.assertEqual(errors, [])
+        self.assertEqual(P.find_problems(self.bot), [])
+        self.assertTrue(all(f.endswith(('HUF.pdf', 'EUR.pdf', 'USD.pdf', 'GBP.pdf')) or f.startswith(('_review', '_other'))
+                            for f in self.files()))
+
+    def test_repair_finds_a_file_moved_by_hand(self):
+        drop(self.bot, 'a.pdf', TRANSFER_INVOICE)
+        inv_id = self.run_inbox().items[0]['id']
+        path = self.bot.archive / self.inv(inv_id)['file_path']
+        (self.bot.archive / 'somewhere').mkdir()
+        path.rename(self.bot.archive / 'somewhere' / 'renamed.pdf')
+        self.assertEqual([k for k, _, _ in P.find_problems(self.bot)], ['missing', 'stray'])
+        adopted, done, errors = P.repair(self.bot)
+        self.assertEqual(adopted, 1)
+        self.assertEqual(P.find_problems(self.bot), [])
+        self.assertTrue((self.bot.archive / self.inv(inv_id)['file_path']).is_file())
+
+    def test_unrelated_supplier_correction_teaches_nothing(self):
+        drop(self.bot, 'a.pdf', TRANSFER_INVOICE)
+        inv_id = self.run_inbox().items[0]['id']
+        P.update(self.bot, inv_id, {'supplier': 'Delta Facility'})
+        con = self.con()
+        try:
+            row = con.execute("SELECT aliases, tax_ids FROM suppliers WHERE name = 'Delta Facility'").fetchone()
+        finally:
+            con.close()
+        self.assertEqual((row['aliases'], row['tax_ids']), ('[]', '[]'))
+
+    def test_folder_settings_cannot_leave_the_archive(self):
+        for key, value in (('folders.unpaid', ''), ('folders.layout', '{yyyy}/../../x'), ('folders.review', '/etc'),
+                           ('naming.pattern', '{supplier}/{number}'), ('naming.space', '_')):
+            with self.assertRaises(ValueError, msg=key):
+                self.bot.set_option(key, value)
+        import json
+        cfg = json.loads(self.bot.config_path.read_text())
+        cfg.setdefault('folders', {})['other'] = '../outside'
+        self.bot.config_path.write_text(json.dumps(cfg))
+        from invoicebot.config import Bot
+        with self.assertRaises(ValueError):
+            Bot(self.bot.home)
+
+    def test_csv_cells_never_become_formulas(self):
+        from invoicebot import export
+        out = export.csv_bytes(self.bot, [{'supplier': '=HYPERLINK("//evil/x","y")', 'amount': '-100.00',
+                                           'invoice_number': '+1', 'currency': 'HUF', 'file_path': 'a/b.pdf'}])
+        text = out.decode('utf-8-sig')
+        self.assertIn('"\'=HYPERLINK', text)
+        self.assertIn("'+1", text)
+        self.assertIn('-100.00', text)  # plain negative numbers stay numbers
+
+
 class FakeIMAP:
     """Just enough of imaplib.IMAP4 for collect_imap."""
 
@@ -273,7 +400,7 @@ class FakeIMAP:
         raise AssertionError(command)
 
     def close(self):
-        pass
+        raise AssertionError('CLOSE expunges deleted messages: it must never be used')
 
     def logout(self):
         pass
@@ -309,6 +436,32 @@ class TestImap(BotTestCase):
             self.assertEqual(con.execute('SELECT count(*) FROM seen_messages').fetchone()[0], 3 + 3)
         finally:
             con.close()
+        del os.environ['INVOICEBOT_IMAP_PASSWORD']
+
+    def test_failed_fetch_is_retried_not_forgotten(self):
+        self.bot.set_option('imap', {'enabled': True, 'host': 'imap.example', 'username': 'szamla@x.hu', 'mark_seen': True})
+        os.environ['INVOICEBOT_IMAP_PASSWORD'] = 'x'
+        m = email.message.EmailMessage()
+        m['From'] = 'Supplier <billing@supplier.example>'
+        m['Message-ID'] = '<inv1@x>'
+        m.set_content('hello')
+        m.add_attachment(TRANSFER_INVOICE, maintype='application', subtype='pdf', filename='a.pdf')
+        fake = FakeIMAP({1: m.as_bytes()})
+        real_uid, fails = fake.uid, [1]
+
+        def flaky(command, *args):
+            if command.upper() == 'FETCH' and fails[0]:
+                fails[0] -= 1
+                return 'NO', [b'Some messages could not be FETCHed (Failure)']
+            return real_uid(command, *args)
+        fake.uid = flaky
+        rep = collect.Report()
+        collect.collect_imap(self.bot, rep, connect=lambda icfg, pw: fake)
+        self.assertEqual([i for i in rep.items if i['result'] == 'new'], [])
+        rep = collect.Report()
+        collect.collect_imap(self.bot, rep, connect=lambda icfg, pw: fake)
+        self.assertEqual(len([i for i in rep.items if i['result'] == 'new']), 1)
+        self.assertTrue(fake.stored)  # marked as seen, on a folder opened read-write, without CLOSE
         del os.environ['INVOICEBOT_IMAP_PASSWORD']
 
     def test_folder_names_utf7(self):
