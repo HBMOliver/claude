@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SocialStream</title>
+<meta name="description" content="A social media meghalt. Az érdeklődés vette át a helyét. Videó, social és hirdetés egy rendszerben. Tenerife és Budapest.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2308080a'/%3E%3Crect x='15' y='6' width='2' height='20' fill='%23e7c27d'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="scrollcraft.css">
+<style>
+/* The Edit: the site is an editing suite. A program monitor, an inspector, a timeline;
+   the scroll is the playhead. Matte graphite, hairlines, one brass accent. */
+:root {
+  --bg: #08080a; --panel: #111114; --panel2: #18181c; --line: rgba(255, 255, 255, 0.08); --line2: rgba(255, 255, 255, 0.16);
+  --ink: #f3f3f4; --soft: #8e8e96; --dim: #55555d; --acc: #e7c27d; --acc2: #f6dfaa; --rec: #ff5a4a;
+  --fd: "Inter Tight", -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --ft: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --fm: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --top: 54px; --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --sc-canvas: var(--bg); --sc-ink: var(--ink); --sc-ink-soft: var(--soft); --sc-accent: var(--acc); --sc-font-display: var(--fd); --sc-font-text: var(--ft);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.6 var(--ft); -webkit-font-smoothing: antialiased; }
+img, video { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; }
+a { color: inherit; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.mono { font-family: var(--fm); font-size: 0.72rem; letter-spacing: 0.04em; }
+:focus-visible { outline: 2px solid var(--acc); outline-offset: 3px; border-radius: 4px; }
+
+/* ---------- top bar ---------- */
+.top { position: fixed; z-index: 50; inset: 0 0 auto 0; height: calc(var(--top) + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px));
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; background: rgba(8, 8, 10, 0.86); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.brand b { font: 700 1.02rem/1 var(--fd); letter-spacing: -0.02em; }
+.brand .proj { font-family: var(--fm); font-size: 0.72rem; color: var(--soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rec { width: 8px; height: 8px; border-radius: 50%; background: var(--rec); box-shadow: 0 0 10px var(--rec); flex: none; }
+.transport { display: flex; align-items: center; gap: 12px; }
+.transport button { width: 34px; height: 34px; border-radius: 50%; border: 0; cursor: pointer; background: var(--panel2); box-shadow: inset 0 0 0 1px var(--line2); display: grid; place-items: center; }
+.transport svg { width: 12px; height: 12px; }
+.tc { font: 500 0.95rem/1 var(--fm); letter-spacing: 0.04em; color: var(--acc); font-variant-numeric: tabular-nums; }
+.chname { font: 500 0.72rem/1 var(--fm); color: var(--soft); text-transform: uppercase; letter-spacing: 0.08em; min-width: 9rem; }
+.end { display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
+.lang { display: flex; gap: 2px; }
+.lang button { border: 0; background: none; cursor: pointer; font: 500 0.72rem/1 var(--fm); padding: 9px 6px; color: var(--soft); }
+.lang button[aria-pressed="true"] { color: var(--ink); }
+.export-btn { font: 600 0.84rem/1 var(--ft); text-decoration: none; padding: 0.75em 1.05em; border-radius: 8px; background: var(--acc); color: #17130a; white-space: nowrap; }
+
+/* ---------- the suite: one pinned stage ---------- */
+.suite .stage { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 10px; background: var(--bg);
+  padding: calc(var(--top) + env(safe-area-inset-top, 0px) + 10px) max(12px, env(safe-area-inset-right, 0px)) 12px max(12px, env(safe-area-inset-left, 0px)); }
+.workspace { display: grid; grid-template-columns: minmax(0, 1fr) clamp(300px, 27vw, 410px); gap: 10px; min-height: 0; }
+.panel { background: var(--panel); border-radius: 12px; box-shadow: inset 0 0 0 1px var(--line); }
+.monwrap { container-type: size; display: grid; place-items: center; min-height: 0; padding: 12px; position: relative; }
+.monwrap .lbl { position: absolute; left: 14px; top: 9px; font: 500 0.64rem/1 var(--fm); letter-spacing: 0.12em; color: var(--dim); }
+.monitor { position: relative; width: min(100cqw, calc(100cqh * 16 / 9)); aspect-ratio: 16 / 9; background: #000; overflow: hidden; border-radius: 4px; container-type: inline-size; box-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.9); }
+@media (hover: hover) and (pointer: fine) { .monitor { cursor: none; } }
+.monitor video, .monitor .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 500ms var(--ease), filter 500ms var(--ease); }
+.monitor.is-playing .poster { opacity: 0; }
+.monitor.is-dim video, .monitor.is-dim .poster { opacity: 0.18; filter: blur(3px) saturate(0.6); }
+.safe { position: absolute; inset: 5%; border: 1px dashed rgba(255, 255, 255, 0.07); pointer-events: none; }
+.prog { position: absolute; inset: 0; opacity: 0; transition: opacity 420ms var(--ease); pointer-events: none; }
+.prog.is-on { opacity: 1; }
+.prog .fill { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.prog .shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 30%, rgba(0, 0, 0, 0.78)); }
+.kickm { font: 500 1.25cqw/1 var(--fm); letter-spacing: 0.14em; text-transform: uppercase; color: var(--acc); margin: 0; }
+.bigline { margin: 0; font: 700 6.2cqw/0.94 var(--fd); letter-spacing: -0.05em; text-wrap: balance; }
+.bl { position: absolute; left: 6%; right: 6%; bottom: 8%; display: grid; gap: 1.6cqw; }
+/* chapter 0: the reel's own cues */
+.cue { position: absolute; margin: 0; opacity: 0; transform: translateY(1.2cqw); transition: opacity 160ms var(--ease), transform 160ms var(--ease); }
+.cue.is-on { opacity: 1; transform: none; transition: opacity 400ms var(--ease) 120ms, transform 600ms var(--ease) 120ms; }
+.cue.line { left: 6%; right: 6%; bottom: 9%; font: 700 6.4cqw/0.94 var(--fd); letter-spacing: -0.05em; max-width: 14ch; text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4); }
+.cue.tag { left: 6%; top: 7%; font: 500 1.2cqw/1 var(--fm); letter-spacing: 0.14em; text-transform: uppercase; }
+.cue.num { left: 6%; top: 50%; translate: 0 -50%; display: grid; gap: 1.2cqw; }
+.cue.num b { font: 700 15cqw/0.82 var(--fd); letter-spacing: -0.06em; font-variant-numeric: tabular-nums; }
+.cue.num b small { font-size: 0.4em; margin-left: 0.04em; letter-spacing: 0; word-spacing: 0.12em; }
+.cue.num > span { font: 500 1.7cqw/1.35 var(--ft); color: rgba(255, 255, 255, 0.78); max-width: 34ch; }
+.cue.end { inset: 0; display: grid; place-content: center; text-align: center; gap: 1cqw; }
+.cue.end b { font: 700 9cqw/0.9 var(--fd); letter-spacing: -0.055em; }
+.cue.end span { font: 500 1.2cqw/1 var(--fm); letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.7; }
+.monitor.is-numbers video { opacity: 0.22; }
+/* chapter 1: the count */
+.p1 { display: grid; place-content: center; justify-items: center; text-align: center; gap: 1.4cqw; background: radial-gradient(80% 70% at 50% 45%, #141418, #050506); }
+.count { position: relative; margin: 0; font: 700 17cqw/0.82 var(--fd); letter-spacing: -0.065em; font-variant-numeric: tabular-nums; opacity: calc(1 - var(--gone, 0) * 0.75); }
+.count::after { content: ""; position: absolute; left: -3%; right: -3%; top: 50%; height: 0.055em; background: var(--acc); transform-origin: left; transform: scaleX(var(--k, 0)); }
+.meta1 { margin: 0; font: 500 2cqw/1 var(--ft); color: var(--soft); display: flex; gap: 2.2cqw; }
+.meta1 b { color: var(--ink); font-weight: 600; }
+.p1 .law { position: absolute; left: 6%; right: 6%; bottom: 8%; text-align: center; opacity: var(--law, 0); transform: translateY(calc((1 - var(--law, 0)) * 1.5cqw)); }
+.p1 .law .bigline { font-size: 4.6cqw; }
+/* chapter 4: services */
+.p4 { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 5cqw; padding: 0 7%; background: radial-gradient(70% 90% at 30% 50%, #17171c, #060607); }
+.phone { height: 80cqh; height: calc(100cqw * 9 / 16 * 0.82); aspect-ratio: 9 / 16; border-radius: 2.2cqw; overflow: hidden; box-shadow: 0 0 0 0.35cqw #222228, 0 40px 80px -30px rgba(0, 0, 0, 0.9); position: relative; background: #000; }
+.phone img, .phone video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.svcs { position: relative; min-height: 22cqw; }
+.svc { position: absolute; inset: 0 0 auto 0; display: grid; gap: 1.6cqw; opacity: 0; transform: translateY(1.5cqw); transition: opacity 360ms var(--ease), transform 560ms var(--ease); }
+.svc.is-on { opacity: 1; transform: none; }
+.svc .ix { font: 500 1.3cqw/1 var(--fm); color: var(--acc); letter-spacing: 0.1em; }
+.svc h3 { margin: 0; font: 700 5.2cqw/0.96 var(--fd); letter-spacing: -0.045em; }
+.svc p { margin: 0; font: 400 1.75cqw/1.45 var(--ft); color: var(--soft); max-width: 42ch; }
+/* chapter 5: results */
+.res { position: absolute; inset: 0; opacity: 0; transition: opacity 420ms var(--ease); }
+.res.is-on { opacity: 1; }
+.res img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.res .shade { background: linear-gradient(90deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.2) 55%, transparent); }
+.res .txt { position: absolute; left: 6%; top: 50%; translate: 0 -50%; display: grid; gap: 1.4cqw; max-width: 46%; }
+.res b { font: 700 13cqw/0.84 var(--fd); letter-spacing: -0.06em; font-variant-numeric: tabular-nums; }
+.res b small { font-size: 0.38em; margin-left: 0.04em; letter-spacing: 0; word-spacing: 0.12em; }
+.res p { margin: 0; font: 500 1.7cqw/1.4 var(--ft); color: rgba(255, 255, 255, 0.86); }
+.res .who { font: 500 1.15cqw/1.3 var(--fm); letter-spacing: 0.1em; text-transform: uppercase; color: var(--acc); }
+/* chapter 6: testimonials */
+.p6 { background: radial-gradient(90% 80% at 50% 40%, #16161a, #050506); }
+.q { position: absolute; inset: 0; display: grid; align-content: center; gap: 2.4cqw; padding: 0 9%; opacity: 0; transform: translateY(1.2cqw); transition: opacity 400ms var(--ease), transform 600ms var(--ease); }
+.q.is-on { opacity: 1; transform: none; }
+.q p { margin: 0; font: 500 3.1cqw/1.3 var(--fd); letter-spacing: -0.02em; text-wrap: pretty; }
+.q span { font: 500 1.2cqw/1.4 var(--fm); letter-spacing: 0.1em; text-transform: uppercase; color: var(--acc); }
+/* chapter 7: people */
+.p7 { display: grid; grid-template-columns: 42% 1fr; background: #070708; }
+.p7 .fill { position: relative; }
+.p7 .txt { display: grid; align-content: center; gap: 2cqw; padding: 0 7% 0 6%; }
+.p7 h3 { margin: 0; font: 700 4.6cqw/0.98 var(--fd); letter-spacing: -0.045em; }
+.crew { display: flex; gap: 1.6cqw; }
+.crew figure { margin: 0; display: grid; gap: 0.8cqw; }
+.crew img { width: 9cqw; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 0.8cqw; }
+.crew figcaption { font: 500 1.15cqw/1.3 var(--fm); color: var(--soft); }
+.crew b { display: block; color: var(--ink); font: 600 1.5cqw/1.2 var(--ft); }
+/* chapter 8: export */
+.p8 { display: grid; place-content: center; justify-items: center; text-align: center; gap: 2.4cqw; padding: 0 10%; background: radial-gradient(70% 70% at 50% 40%, #18171a, #050506); }
+.p8 .bigline { font-size: 5cqw; max-width: 18ch; }
+.p8 .bigline span { color: var(--soft); }
+.render { width: 46cqw; display: grid; gap: 1cqw; }
+.render i { display: block; height: 0.5cqw; border-radius: 1cqw; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
+.render i::before { content: ""; display: block; height: 100%; width: calc(var(--r, 0) * 100%); background: var(--acc); }
+.render span { display: flex; justify-content: space-between; font: 500 1.15cqw/1 var(--fm); color: var(--soft); letter-spacing: 0.06em; }
+.disc { position: fixed; z-index: 60; left: 0; top: 0; width: 84px; height: 84px; margin: -42px 0 0 -42px; border-radius: 50%; pointer-events: none; display: grid; place-items: center;
+  background: var(--acc); color: #17130a; font: 600 0.72rem/1 var(--fm); letter-spacing: 0.06em; text-transform: uppercase; transform: translate3d(var(--x, -200px), var(--y, -200px), 0) scale(var(--s, 0)); }
+
+/* ---------- inspector ---------- */
+.inspector { display: grid; grid-template-rows: auto minmax(0, 1fr); min-height: 0; overflow: hidden; }
+.ins-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--line); font: 500 0.66rem/1 var(--fm); letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); }
+.ins-wrap { position: relative; min-height: 0; overflow: auto; scrollbar-width: thin; scrollbar-color: var(--line2) transparent; }
+.ins { padding: 18px 18px 22px; display: grid; gap: 14px; align-content: start; }
+.ins:not(.is-on) { display: none; }
+.ins .k { font: 500 0.68rem/1.2 var(--fm); letter-spacing: 0.12em; text-transform: uppercase; color: var(--acc); margin: 0; }
+.ins h2 { margin: 0; font: 600 1.5rem/1.1 var(--fd); letter-spacing: -0.03em; text-wrap: balance; }
+.ins p { margin: 0; color: var(--soft); font-size: 0.92rem; line-height: 1.55; }
+.ins .row { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); font-size: 0.84rem; }
+.ins .row span:first-child { font: 500 0.68rem/1.6 var(--fm); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
+.ins .row span:last-child { text-align: right; }
+.ins .cta { justify-self: start; margin-top: 4px; }
+.ins ol, .ins ul { list-style: none; margin: 0; padding: 0; }
+.ins li { padding: 10px 0; border-top: 1px solid var(--line); font-size: 0.88rem; line-height: 1.45; color: var(--soft); transition: color 200ms; }
+.ins li b { display: block; color: var(--ink); font-weight: 600; font-size: 0.92rem; }
+.ins li.is-on { color: var(--ink); }
+.ins li.is-on b { color: var(--acc); }
+.ins li button { all: unset; cursor: pointer; display: block; width: 100%; }
+.ins li button:focus-visible { outline: 2px solid var(--acc); outline-offset: 3px; border-radius: 4px; }
+.ins .seal { color: var(--ink); font-weight: 600; }
+.btn { display: inline-flex; align-items: center; gap: 0.5em; padding: 0.85em 1.2em; border-radius: 8px; border: 0; cursor: pointer; text-decoration: none; font: 600 0.88rem/1 var(--ft); background: var(--acc); color: #17130a; }
+.btn--ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line2); }
+
+/* ---------- timeline ---------- */
+.timeline { display: grid; grid-template-columns: 64px minmax(0, 1fr); padding: 0; overflow: hidden; }
+.tl-labels { display: grid; grid-template-rows: 30px 44px 30px 30px; border-right: 1px solid var(--line); font: 500 0.66rem/1 var(--fm); color: var(--soft); letter-spacing: 0.08em; }
+.tl-labels span { display: flex; align-items: center; padding-left: 14px; border-bottom: 1px solid var(--line); }
+.tl-body { position: relative; display: grid; grid-template-rows: 30px 44px 30px 30px; cursor: pointer; touch-action: pan-y; }
+.ruler { position: relative; border-bottom: 1px solid var(--line); }
+.ruler i { position: absolute; bottom: 0; width: 1px; height: 6px; background: var(--line2); }
+.ruler i.m { height: 12px; background: var(--soft); }
+.ruler em { position: absolute; top: 6px; font: 500 0.6rem/1 var(--fm); color: var(--dim); font-style: normal; transform: translateX(4px); white-space: nowrap; }
+.track { position: relative; border-bottom: 1px solid var(--line); }
+.clip { position: absolute; top: 4px; bottom: 4px; border-radius: 4px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); }
+.v1 .clip { background-color: #1d1d22; background-size: auto 100%; background-repeat: repeat-x; filter: saturate(0.85); }
+.v1 .clip.is-on { box-shadow: inset 0 0 0 1.5px var(--acc); filter: none; }
+.t1 .clip { background: #202026; display: flex; align-items: center; padding: 0 8px; font: 500 0.62rem/1 var(--fm); color: var(--soft); letter-spacing: 0.06em; white-space: nowrap; border-left: 2px solid var(--dim); }
+.t1 .clip.is-on { background: #2b2618; color: var(--acc2); border-left-color: var(--acc); }
+.a1 { display: flex; align-items: center; }
+.a1 .wave { position: absolute; inset: 7px 0; display: flex; align-items: center; gap: 2px; opacity: 0.32; }
+.a1 .wave i { flex: 1; background: var(--soft); border-radius: 1px; }
+.a1 .note { position: relative; margin-left: 10px; font: 500 0.6rem/1 var(--fm); color: var(--soft); letter-spacing: 0.08em; background: var(--panel); padding: 3px 6px; border-radius: 3px; }
+.playhead { position: absolute; top: 0; bottom: 0; left: 0; width: 1.5px; background: var(--acc); pointer-events: none; transform: translateX(var(--ph, 0px)); box-shadow: 0 0 12px rgba(231, 194, 125, 0.6); }
+.playhead::before { content: ""; position: absolute; top: 0; left: -6px; border: 6px solid transparent; border-top: 8px solid var(--acc); }
+.hoverhead { position: absolute; top: 0; bottom: 0; left: 0; width: 1px; background: rgba(255, 255, 255, 0.6); pointer-events: none; transform: translateX(var(--hx, -10px)); opacity: 0; transition: opacity 160ms; }
+.tl-body:hover .hoverhead { opacity: 1; }
+.preview { position: fixed; z-index: 55; left: 0; top: 0; width: 176px; pointer-events: none; padding: 6px; border-radius: 8px; background: var(--panel2); box-shadow: 0 0 0 1px var(--line2), 0 20px 40px -18px rgba(0, 0, 0, 0.8);
+  transform: translate3d(calc(var(--px, -400px) - 88px), calc(var(--py, -400px) - 150px), 0); opacity: 0; transition: opacity 160ms; display: grid; gap: 5px; }
+.preview.is-on { opacity: 1; }
+.preview i { display: block; width: 164px; height: 92px; border-radius: 4px; background: #000 center / cover no-repeat; }
+.preview span { display: flex; justify-content: space-between; font: 500 0.62rem/1 var(--fm); color: var(--soft); }
+.preview span b { color: var(--acc); font-weight: 500; }
+
+/* ---------- export: the audit ---------- */
+.export { padding: clamp(5rem, 10vw, 8rem) max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px)); }
+.dialog { max-width: 1100px; margin: 0 auto; border-radius: 16px; background: var(--panel); box-shadow: inset 0 0 0 1px var(--line), 0 40px 120px -60px rgba(0, 0, 0, 0.9); overflow: hidden; }
+.dl-head { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-bottom: 1px solid var(--line); background: var(--panel2); }
+.dl-head .dots { display: flex; gap: 6px; } .dl-head .dots i { width: 10px; height: 10px; border-radius: 50%; background: #2a2a30; }
+.dl-head b { font: 600 0.9rem/1 var(--ft); }
+.dl-head .mono { margin-left: auto; color: var(--dim); }
+.dl-body { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+.dl-side { padding: clamp(24px, 3vw, 40px); display: grid; gap: 20px; align-content: start; border-right: 1px solid var(--line); }
+.dl-side h2 { margin: 0; font: 700 clamp(2rem, 1.3rem + 2.4vw, 3.4rem)/0.98 var(--fd); letter-spacing: -0.045em; }
+.dl-side h2 span { color: var(--soft); }
+.dl-side p { margin: 0; color: var(--soft); }
+.specs { margin: 0; display: grid; }
+.specs div { display: grid; grid-template-columns: 7.5rem 1fr; gap: 12px; padding: 11px 0; border-top: 1px solid var(--line); font-size: 0.9rem; }
+.specs dt { font: 500 0.68rem/1.7 var(--fm); letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); }
+.specs dd { margin: 0; }
+.app { padding: clamp(24px, 3vw, 40px); display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-content: start; }
+.field { display: grid; gap: 7px; }
+.field.full, .app fieldset, .actions, .rendering, .sent { grid-column: 1 / -1; }
+.field label, .app legend { font: 500 0.68rem/1.2 var(--fm); letter-spacing: 0.1em; text-transform: uppercase; color: var(--soft); padding: 0; }
+.field input, .field select, .field textarea { width: 100%; font: 400 0.95rem/1.4 var(--ft); color: var(--ink); background: #0b0b0d; border: 0; border-radius: 8px; padding: 12px 13px; box-shadow: inset 0 0 0 1px var(--line2); }
+.field textarea { min-height: 6.5rem; resize: vertical; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; box-shadow: inset 0 0 0 1.5px var(--acc); }
+.field input[aria-invalid="true"] { box-shadow: inset 0 0 0 1.5px #ff7a6b; }
+.err { min-height: 1em; font-size: 0.78rem; color: #ff8f80; }
+.app fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 9px; }
+.chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip { position: relative; display: inline-flex; }
+.chip input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.chip span { padding: 8px 11px; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--line2); font: 500 0.8rem/1 var(--ft); }
+.chip input:checked + span { background: var(--acc); color: #17130a; box-shadow: none; }
+.chip input:focus-visible + span { outline: 2px solid var(--acc); outline-offset: 2px; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 4px; }
+.direct { color: var(--soft); font-size: 0.86rem; }
+.copy-mini { border: 0; background: none; cursor: pointer; color: var(--ink); text-decoration: underline; text-underline-offset: 0.3em; font-size: 0.82rem; padding: 6px 0; margin-left: 6px; }
+.rendering { display: grid; gap: 7px; }
+.rendering i { display: block; height: 4px; border-radius: 3px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.rendering i::before { content: ""; display: block; height: 100%; width: var(--w, 0%); background: var(--acc); transition: width 700ms var(--ease); }
+.rendering span { font: 500 0.7rem/1 var(--fm); color: var(--soft); }
+.sent { border-radius: 10px; padding: 16px; background: #0b0b0d; box-shadow: inset 0 0 0 1px var(--line2); display: grid; gap: 8px; justify-items: start; }
+.sent b { font: 600 1rem/1.2 var(--fd); }
+.sent span { color: var(--soft); font-size: 0.9rem; }
+.foot { max-width: 1100px; margin: clamp(4rem, 8vw, 6rem) auto 0; padding: 22px 0 calc(28px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; font: 500 0.7rem/1.5 var(--fm); color: var(--dim); letter-spacing: 0.04em; }
+
+/* ---------- phones: monitor, a short inspector, a compact timeline ---------- */
+@media (max-width: 900px) {
+  :root { --top: 50px; }
+  .brand .proj, .chname, .transport button, .tc { display: none; }
+  .top { grid-template-columns: auto 1fr auto; }
+  .transport { justify-content: center; }
+  .export-btn { padding: 0.7em 0.8em; font-size: 0.78rem; }
+  .suite .stage { grid-template-rows: minmax(0, 1fr) auto; }
+  .workspace { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
+  .monwrap { container-type: inline-size; padding: 8px; }
+  .monwrap .lbl { display: none; }
+  .monitor { width: 100%; }
+  .ins { padding: 14px 16px; gap: 10px; }
+  .ins h2 { font-size: 1.25rem; }
+  .ins .more { display: none; }
+  .timeline { grid-template-columns: minmax(0, 1fr); }
+  .tl-labels { display: none; }
+  .tl-body, .tl-labels { grid-template-rows: 22px 34px 26px 0; }
+  .a1 { display: none; }
+  .t1 .clip { font-size: 0.52rem; padding: 0 5px; }
+  .ruler em { display: none; }
+  .dl-body, .app { grid-template-columns: 1fr; }
+  .dl-side { border-right: 0; border-bottom: 1px solid var(--line); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cue, .cue.is-on, .prog, .svc, .q, .res { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand"><i class="rec" aria-hidden="true"></i><b>SocialStream</b><span class="proj" data-en="Project: the age of interest">Projekt: az érdeklődés kora</span></div>
+  <div class="transport">
+    <button type="button" id="play" aria-label="Reel megállítása"></button>
+    <span class="tc" id="tc" aria-label="Időkód" data-en-aria="Timecode">00:00:00:00</span>
+    <span class="chname" id="chName">Reel</span>
+  </div>
+  <div class="end">
+    <div class="lang" role="group" aria-label="Nyelv / Language"><button type="button" data-set-lang="hu" aria-pressed="true" lang="hu">HU</button><button type="button" data-set-lang="en" aria-pressed="false" lang="en">EN</button></div>
+    <a class="export-btn" href="#audit" data-en="Free audit">Ingyenes audit</a>
+  </div>
+</header>
+
+<main>
+  <section class="suite" id="suite" data-sc-act="pin" data-sc-span="9" aria-labelledby="ins0-h">
+    <div class="stage" data-sc-stage id="stage">
+      <div class="workspace">
+
+        <div class="panel monwrap">
+          <span class="lbl" data-en="PROGRAM">PROGRAM</span>
+          <div class="monitor" id="monitor" aria-hidden="true">
+            <img class="poster" src="assets/reel-1080-poster.jpg" alt="" width="1600" height="900" fetchpriority="high">
+            <video id="reel" muted loop playsinline preload="none" data-src="assets/reel-1080.mp4" data-src-s="assets/reel-360.mp4"></video>
+
+            <div class="prog p0 is-on" data-ch="0">
+              <p class="cue tag" data-t="0 7.2" data-en="Client: FlyX Tenerife">Ügyfél: FlyX Tenerife</p>
+              <p class="cue tag" data-t="7.2 11.4" data-en="Client: Gyenis András">Ügyfél: Gyenis András</p>
+              <p class="cue tag" data-t="11.4 17.4" data-en="Our clients' feeds">Ügyfeleink feedje</p>
+              <p class="cue tag" data-t="17.4 21.3" data-en="Client: Gyenis András">Ügyfél: Gyenis András</p>
+              <p class="cue line" data-t="0 2.35" data-en="Social media is dead.">A social media meghalt.</p>
+              <p class="cue line" data-t="2.6 7.0" data-en="Interest has taken its place.">Az érdeklődés vette át a helyét.</p>
+              <p class="cue line" data-t="11.6 14.4" data-en="The feed no longer shows who you follow.">A feed már nem azt mutatja, kit követsz.</p>
+              <p class="cue line" data-t="14.5 17.3" data-en="It shows what interests you.">Hanem azt, ami érdekel.</p>
+              <p class="cue line" data-t="17.6 21.2" data-en="Video. Social. Ads. One system.">Videó. Social. Hirdetés. Egy rendszerben.</p>
+              <div class="cue num" data-t="21.4 22.95" data-dim><b><span data-to="81">81</span><small>×</small></b><span data-en="ROAS, our best result in an e-commerce campaign">ROAS, a legjobb eredményünk e-commerce kampányban</span></div>
+              <div class="cue num" data-t="22.95 24.45" data-dim><b><span data-to="79">79</span><small>M Ft</small></b><span data-en="revenue in one week, from a B2B Meta campaign">bevétel egy hét alatt, B2B Meta kampányból</span></div>
+              <div class="cue num" data-t="24.45 25.95" data-dim><b><span data-to="23">23</span><small>×</small></b><span data-en="ROAS in a holiday campaign, 8M+ Ft revenue">ROAS ünnepi kampányban, 8M+ Ft bevétel</span></div>
+              <div class="cue num" data-t="25.95 27.3" data-dim><b><span data-to="300">300</span><small>M+ Ft</small></b><span data-en="budget managed since 2022">kezelt büdzsé 2022 óta</span></div>
+              <p class="cue line" data-t="27.4 29.65" data-en="We win in this age.">Mi ebben a korban győzünk.</p>
+              <div class="cue end" data-t="29.7 32.1" data-dim><b>SocialStream</b><span data-en="Interest media · Tenerife, Budapest">Interest media · Tenerife, Budapest</span></div>
+            </div>
+
+            <div class="prog p1" data-ch="1" id="p1">
+              <p class="kickm" data-en="What the old age counted">Amit a régi kor számolt</p>
+              <p class="count" id="count">10 000</p>
+              <p class="meta1"><span data-en="followers">követő</span><span><b>40</b> <span data-en="likes">kedvelés</span></span></p>
+              <div class="law"><p class="kickm" data-en="The first law of the new age">Az új kor I. törvénye</p><p class="bigline" data-en="Follower count is a relic of the old age.">A követőszám a régi kor relikviája.</p></div>
+            </div>
+
+            <div class="prog p2" data-ch="2">
+              <img class="fill" src="assets/w03.jpg" alt="" width="480" height="600" loading="lazy">
+              <div class="shade"></div>
+              <div class="bl"><p class="kickm" data-en="The second law of the new age">Az új kor II. törvénye</p><p class="bigline" data-en="Attention cannot be bought. Only earned.">A figyelmet nem lehet megvenni. Csak kiérdemelni.</p></div>
+            </div>
+
+            <div class="prog p3" data-ch="3">
+              <img class="fill" src="assets/workshop-sq.webp" alt="" width="1100" height="1100" loading="lazy">
+              <div class="shade"></div>
+              <div class="bl"><p class="kickm" data-en="The third law of the new age">Az új kor III. törvénye</p><p class="bigline" data-en="Whoever plays by the old rules loses.">Aki a régi szabályokkal játszik, veszít.</p></div>
+            </div>
+
+            <div class="prog p4" data-ch="4">
+              <div class="phone"><img src="assets/svc-video.jpg" alt="" width="540" height="960" loading="lazy"><video id="svcVid" muted loop playsinline preload="none" data-src="assets/svc-video.mp4"></video></div>
+              <div class="svcs" id="svcs"></div>
+            </div>
+
+            <div class="prog p5" data-ch="5" id="p5"></div>
+            <div class="prog p6" data-ch="6" id="p6"></div>
+
+            <div class="prog p7" data-ch="7">
+              <div class="fill"><img class="fill" src="assets/oliver-founder.jpg" alt="" width="1000" height="1250" loading="lazy"></div>
+              <div class="txt">
+                <p class="kickm" data-en="Tenerife and Budapest, since 2022">Tenerife és Budapest, 2022 óta</p>
+                <h3 data-en="I saw the shift from the inside.">A korszakváltást belülről láttam.</h3>
+                <div class="crew">
+                  <figure><img src="assets/oliver.jpg" alt="" width="800" height="1000" loading="lazy"><figcaption><b>Olivér</b><span data-en="Strategy">Stratégia</span></figcaption></figure>
+                  <figure><img src="assets/david.jpg" alt="" width="800" height="1000" loading="lazy"><figcaption><b>David</b><span data-en="Creative">Kreatív</span></figcaption></figure>
+                  <figure><img src="assets/lidi.jpg" alt="" width="800" height="1000" loading="lazy"><figcaption><b>Lidi</b><span data-en="Production">Produkció</span></figcaption></figure>
+                </div>
+              </div>
+            </div>
+
+            <div class="prog p8" data-ch="8" id="p8">
+              <p class="kickm" data-en="Export">Exportálás</p>
+              <p class="bigline" data-en="Your market already lives in the new age. Does your marketing?">A piacod már az új korban jár. <span>A marketinged is?</span></p>
+              <div class="render"><i></i><span><span data-en="Free audit · 30 minutes">Ingyenes audit · 30 perc</span><span id="rpct">0%</span></span></div>
+            </div>
+
+            <div class="safe" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <aside class="panel inspector" aria-label="Inspector">
+          <div class="ins-bar"><span>Inspector</span><span id="insIx">01 / 09</span></div>
+          <div class="ins-wrap">
+            <div class="ins is-on" data-ch="0">
+              <p class="k" data-en="00 · Reel">00 · Reel</p>
+              <h2 id="ins0-h" data-en="Social media is dead. Interest has taken its place.">A social media meghalt. Az érdeklődés vette át a helyét.</h2>
+              <p data-en="SocialStream is an interest media agency in Tenerife and Budapest. Video content, social presence and performance ads in one growth system, built on the rules of the new age.">A SocialStream interest media ügynökség Tenerifén és Budapesten. Videó tartalom, social jelenlét és performance hirdetések egy growth rendszerben, ami az új kor szabályaira épült.</p>
+              <div class="more">
+                <div class="row"><span data-en="In the reel">A reelben</span><span>FlyX Tenerife, Gyenis András</span></div>
+                <div class="row"><span data-en="Length">Hossz</span><span>00:32</span></div>
+                <div class="row"><span data-en="Sound">Hang</span><span data-en="Olivér's voice, coming soon">Olivér hangja, hamarosan</span></div>
+              </div>
+              <a class="btn cta" href="#audit" data-en="Request my free audit">Kérem az ingyenes auditot</a>
+            </div>
+            <div class="ins" data-ch="1">
+              <p class="k" data-en="01 · Law I">01 · I. törvény</p>
+              <h2 data-en="Follower count is a relic of the old age.">A követőszám a régi kor relikviája.</h2>
+              <p data-en="10,000 followers, 40 likes. Sound familiar? In the new age every post starts with a clean slate. What matters is not how many follow you, but how many watch to the end.">10 000 követő, 40 kedvelés: ismerős? Az új korban minden poszt tiszta lappal indul. Nem az számít, hányan követnek, hanem hogy hányan nézik végig.</p>
+            </div>
+            <div class="ins" data-ch="2">
+              <p class="k" data-en="02 · Law II">02 · II. törvény</p>
+              <h2 data-en="Attention cannot be bought. Only earned.">A figyelmet nem lehet megvenni. Csak kiérdemelni.</h2>
+              <p data-en="For every impression you compete with the best creators, not with your competitors. What is interesting, the platform carries to millions for free. What is boring, no budget can save.">Minden megjelenésért a legjobb alkotókkal versenyzel, nem a konkurenciáddal. Ami érdekes, azt a platform ingyen viszi el milliókhoz. Ami unalmas, azt büdzsével sem lehet megmenteni.</p>
+            </div>
+            <div class="ins" data-ch="3">
+              <p class="k" data-en="03 · Law III">03 · III. törvény</p>
+              <h2 data-en="Whoever plays by the old rules loses.">Aki a régi szabályokkal játszik, veszít.</h2>
+              <p data-en="Most businesses still play by the old rules: post and hope. The new age's strategy: knowing from data what interests people, and building a system that turns interest into revenue.">A legtöbb vállalkozás még a régi kor szabályaival játszik: posztol és reménykedik. Az új kor stratégiája: adatból tudni, mi érdekli az embereket, és rendszert építeni, ami az érdeklődést bevétellé alakítja.</p>
+            </div>
+            <div class="ins" data-ch="4">
+              <p class="k" data-en="04 · Services">04 · Szolgáltatások</p>
+              <h2 data-en="Six services. One strategy.">Hat szolgáltatás. Egy stratégia.</h2>
+              <ol id="svcList"></ol>
+            </div>
+            <div class="ins" data-ch="5">
+              <p class="k" data-en="05 · Results">05 · Eredmények</p>
+              <h2 data-en="Not promises. Numbers.">Nem ígéretek. Számok.</h2>
+              <ol id="resList"></ol>
+              <p class="seal" data-en="300M+ Ft in budget managed since 2022.">300M+ Ft kezelt büdzsé 2022 óta.</p>
+            </div>
+            <div class="ins" data-ch="6">
+              <p class="k" data-en="06 · Testimonials">06 · Vélemények</p>
+              <h2 data-en="We don't say it. They do.">Nem mi mondjuk. Ők mondják.</h2>
+              <ol id="qList"></ol>
+            </div>
+            <div class="ins" data-ch="7">
+              <p class="k" data-en="07 · People">07 · Csapat</p>
+              <h2 data-en="I saw the shift from the inside.">A korszakváltást belülről láttam.</h2>
+              <p data-en="I landed my first client while studying in Denmark. Then, as a Meta Marketing Pro, I saw up close how the most serious brands think when there is real money in a campaign. I founded SocialStream in 2022; since then we have managed 300M+ Ft in budget.">Dániai tanulmányaim alatt szereztem meg az első ügyfelemet. Aztán Meta Marketing Pro-ként közelről láttam, hogyan gondolkodnak a legkomolyabb márkák, amikor valódi pénz van a kampányban. 2022-ben alapítottam a SocialStreamet; azóta 300M+ Ft büdzsét kezeltünk.</p>
+              <div class="more">
+                <ul>
+                  <li><b>Olivér</b><span data-en="Founder &amp; campaign strategist">Alapító &amp; kampánystratéga</span></li>
+                  <li><b>David</b><span data-en="Creative &amp; content production">Kreatív &amp; tartalomgyártás</span></li>
+                  <li><b>Lidi</b><span data-en="Production &amp; editing">Produkció &amp; szerkesztés</span></li>
+                </ul>
+                <p class="k" style="margin-top:14px" data-en="We work with brands that">Akikkel dolgozunk</p>
+                <ul>
+                  <li data-en="have reliable, stable revenue.">Megbízható és stabil bevétellel rendelkeznek.</li>
+                  <li data-en="are aiming for long-term success.">Hosszú távú sikerre törekszenek.</li>
+                  <li data-en="see marketing as an investment, and are willing to invest in it.">A marketinget befektetésnek tekintik, és hajlandóak erre áldozni.</li>
+                </ul>
+                <p class="seal" data-en="At most two new partners a month.">Havonta legfeljebb két új partner.</p>
+              </div>
+            </div>
+            <div class="ins" data-ch="8">
+              <p class="k" data-en="08 · Export">08 · Exportálás</p>
+              <h2 data-en="A free 30-minute audit.">30 perces ingyenes audit.</h2>
+              <p data-en="We look at your campaigns, your landing page and your offer, and tell you honestly where you still play by the old rules, before you pay anything.">Megnézzük a kampányaidat, a landing page-edet és az ajánlatodat, és őszintén megmondjuk, hol játszol még a régi kor szabályaival, még fizetés előtt.</p>
+              <a class="btn cta" href="#audit" data-en="Open the export settings">Exportálási beállítások</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="panel timeline" id="timeline" aria-label="Idővonal: kattints egy fejezetre" data-en-aria="Timeline: click a chapter">
+        <div class="tl-labels" aria-hidden="true"><span></span><span>V1</span><span>T1</span><span>A1</span></div>
+        <div class="tl-body" id="tlBody">
+          <div class="ruler" id="ruler" aria-hidden="true"></div>
+          <div class="track v1" id="trackV" aria-hidden="true"></div>
+          <div class="track t1" id="trackT"></div>
+          <div class="track a1" aria-hidden="true"><div class="wave" id="wave"></div><span class="note" data-en="Olivér's voice · coming soon">Olivér hangja · hamarosan</span></div>
+          <div class="playhead" id="playhead" aria-hidden="true"></div>
+          <div class="hoverhead" id="hoverhead" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="export" id="audit" data-sc-act="flow" aria-labelledby="ex-h">
+    <div class="dialog" data-sc-in>
+      <div class="dl-head"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><b data-en="Export: free audit">Exportálás: ingyenes audit</b><span class="mono">SS-AUDIT-30</span></div>
+      <div class="dl-body">
+        <div class="dl-side">
+          <h2 id="ex-h" data-en="Your market already lives in the new age. Does your marketing?">A piacod már az új korban jár. <span>A marketinged is?</span></h2>
+          <p data-en="A free 30-minute audit: we look at your campaigns, your landing page and your offer, and tell you honestly where you still play by the old rules, before you pay anything.">30 perces ingyenes audit: megnézzük a kampányaidat, a landing page-edet és az ajánlatodat, és őszintén megmondjuk, hol játszol még a régi kor szabályaival, még fizetés előtt.</p>
+          <dl class="specs">
+            <div><dt data-en="Length">Hossz</dt><dd data-en="30 minutes">30 perc</dd></div>
+            <div><dt data-en="Price">Ár</dt><dd data-en="Free, no obligation">Ingyenes, kötelezettség nélkül</dd></div>
+            <div><dt data-en="Capacity">Kapacitás</dt><dd data-en="At most two new partners a month">Havonta legfeljebb két új partner</dd></div>
+            <div><dt data-en="Not for">Nem neked, ha</dt><dd data-en="you want overnight success or cheap half-solutions">egy éjszaka alatti sikert vagy olcsó félmegoldást keresel</dd></div>
+          </dl>
+        </div>
+        <form class="app" id="appform" novalidate>
+          <div class="field"><label for="f-name" data-en="Your name">Neved</label><input id="f-name" name="name" autocomplete="name" required><span class="err" id="e-name"></span></div>
+          <div class="field"><label for="f-email" data-en="Email">E-mail</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="err" id="e-email"></span></div>
+          <div class="field"><label for="f-brand" data-en="Company or brand">Cég vagy márka</label><input id="f-brand" name="brand" autocomplete="organization" required><span class="err" id="e-brand"></span></div>
+          <div class="field"><label for="f-web" data-en="Website or Instagram">Weboldal vagy Instagram</label><input id="f-web" name="web" autocomplete="url"><span class="err"></span></div>
+          <div class="field"><label for="f-budget" data-en="Monthly marketing budget">Havi marketing büdzsé</label><select id="f-budget" name="budget"><option value="" data-en="Choose a range">Válassz sávot</option><option value="lt300" data-en="Under 300K Ft">300K Ft alatt</option><option value="300-1m">300K–1M Ft</option><option value="1-3m">1M–3M Ft</option><option value="gt3m" data-en="Over 3M Ft">3M Ft felett</option></select><span class="err"></span></div>
+          <div class="field"><label for="f-goal" data-en="Main goal">Fő cél</label><select id="f-goal" name="goal"><option value="" data-en="Choose a goal">Válassz célt</option><option value="sales" data-en="More sales (e-commerce)">Több eladás (webshop)</option><option value="leads" data-en="More leads and enquiries">Több érdeklődő és ajánlatkérés</option><option value="brand" data-en="Brand and content">Márka és tartalom</option><option value="web" data-en="Website or landing page">Weboldal vagy landing</option></select><span class="err"></span></div>
+          <fieldset><legend data-en="What interests you">Ami érdekel</legend><div class="chips" id="chips"></div></fieldset>
+          <div class="field full"><label for="f-msg" data-en="Where are you now?">Hol tartasz most?</label><textarea id="f-msg" name="msg"></textarea><span class="err"></span></div>
+          <div class="actions">
+            <button class="btn" type="submit" data-en="Export: request my audit">Exportálás: kérem az auditot</button>
+            <span class="direct"><span data-en="Or write to us:">Vagy írj nekünk:</span> <a href="mailto:hello@socialstream.hu">hello@socialstream.hu</a><button type="button" class="copy-mini" id="copyMail" data-en="Copy address">Cím másolása</button></span>
+          </div>
+          <div class="rendering" id="rendering" hidden><i id="rbar"></i><span id="rtext"></span></div>
+          <div class="sent" id="sent" hidden aria-live="polite"></div>
+        </form>
+      </div>
+    </div>
+    <footer class="foot"><span>SocialStream · <span data-en="Interest media agency, Tenerife and Budapest">Interest media ügynökség, Tenerife és Budapest</span></span><span>© 2026 · hello@socialstream.hu</span></footer>
+  </section>
+</main>
+<div class="preview" id="preview" aria-hidden="true"><i id="pvImg"></i><span><b id="pvTc">00:00</b><span id="pvCh"></span></span></div>
+<div class="disc" id="disc" aria-hidden="true"><span id="discLabel">Szünet</span></div>
+
+<script src="scrollcraft.js"></script>
+<script src="ss.js"></script>
+<script>
+(function () {
+  var $ = SS.$, $$ = SS.$$, reduce = SS.reduce, fine = SS.fine, lerp = SS.lerp, clamp = SS.clamp;
+
+  /* ---------------- the chapters and their content ---------------- */
+  var CH = [
+    { hu: 'Reel', en: 'Reel', img: null },
+    { hu: 'I. törvény', en: 'Law I', img: 'assets/reel-1080-poster.jpg' },
+    { hu: 'II. törvény', en: 'Law II', img: 'assets/w03.jpg' },
+    { hu: 'III. törvény', en: 'Law III', img: 'assets/workshop-sq.webp' },
+    { hu: 'Szolgáltatások', en: 'Services', img: 'assets/svc-video.jpg' },
+    { hu: 'Eredmények', en: 'Results', img: 'assets/case-karora.webp' },
+    { hu: 'Vélemények', en: 'Testimonials', img: 'assets/w02.jpg' },
+    { hu: 'Csapat', en: 'People', img: 'assets/oliver-founder.jpg' },
+    { hu: 'Exportálás', en: 'Export', img: 'assets/case-webinar.webp' }
+  ];
+  var N = CH.length, SEC = 8, TOTAL = N * SEC;
+  var SVC = [
+    { hu: 'Videó tartalomgyártás', en: 'Video content production', thu: 'Hookok, kreatív irány, gyártás: a kampány motorja a kreatív. Ezt mi is elkészítjük, a koncepciótól a kész videóig.', ten: 'Hooks, creative direction, production: creative is the engine of the campaign. We make it too, from concept to finished video.' },
+    { hu: 'Social média jelenlét', en: 'Social media presence', thu: 'Feed, Stories, Reels, TikTok, egységes stratégiával, egységes hanggal. Content calendar, community management, copywriting.', ten: 'Feed, Stories, Reels, TikTok, with one strategy and one voice. Content calendar, community management, copywriting.' },
+    { hu: 'Fizetett hirdetés', en: 'Paid advertising', thu: 'Meta, TikTok és Google kampányok, amik nem csak elköltik a büdzsét, hanem ROAS-t termelnek. Napi optimalizálás, A/B tesztelés, skálázás.', ten: 'Meta, TikTok and Google campaigns that don’t just spend the budget, they generate ROAS. Daily optimisation, A/B testing, scaling.' },
+    { hu: 'Weboldal & landing', en: 'Website & landing pages', thu: 'Gyors, mobilra optimalizált landingek és weboldalak, amik konvertálnak, nem csak jól néznek ki.', ten: 'Fast, mobile-optimised landing pages and websites that convert, not just look good.' },
+    { hu: 'Automatizáció & e-mail', en: 'Automation & email', thu: 'Lead-követés, e-mail szekvenciák, automatizált tölcsérek. Egyszer beállítjuk, utána dolgozik helyetted.', ten: 'Lead follow-up, email sequences, automated funnels. We set it up once, then it works for you.' },
+    { hu: 'Növekedési stratégia', en: 'Growth strategy', thu: 'Stratégiai szintű marketing tanácsadás: kampánystratégia, funnel audit, piaci pozicionálás. Partnerek vagyunk, nem kivitelezők.', ten: 'Strategy-level marketing consulting: campaign strategy, funnel audit, market positioning. We are partners, not contractors.' }
+  ];
+  var RES = [
+    { n: '81', u: '×', img: 'assets/case-ajto.webp', thu: 'ROAS, a legjobb eredményünk e-commerce kampányban', ten: 'ROAS, our best result in an e-commerce campaign', whu: 'Ajtó webshop · Google Performance Max', wen: 'Door webshop · Google Performance Max' },
+    { n: '79', u: 'M Ft', img: 'assets/case-csarnok.webp', thu: 'bevétel egy hét alatt, B2B Meta kampányból', ten: 'revenue in one week, from a B2B Meta campaign', whu: 'Csarnoképítő ügyfél · Meta', wen: 'Industrial hall builder · Meta' },
+    { n: '23', u: '×', img: 'assets/case-karora.webp', thu: 'ROAS ünnepi kampányban, 8M+ Ft bevétel', ten: 'ROAS in a holiday campaign, 8M+ Ft revenue', whu: 'Karóra webshop · Karácsony', wen: 'Watch webshop · Christmas' },
+    { n: '105', u: 'Ft', img: 'assets/case-webinar.webp', thu: 'jelentkezőnként: ~5700 jelentkező 600K Ft költésből', ten: 'per registrant: ~5,700 registrants from 600K Ft spend', whu: 'Egészségügyi webinár · lead generation', wen: 'Healthcare webinar · lead generation' }
+  ];
+  var QS = [
+    { hu: '„Egyszer már leállítottuk a Facebook hirdetéseinket, mert egyszerűen nem érte meg. Miután megismertük Olivért, adtunk egy újabb esélyt. Már az induláskor is volt vásárlás – olyan számokat produkált, amit eddig nem is láttunk.”', en: '“We had already switched off our Facebook ads once because they simply weren’t worth it. After meeting Olivér we gave it another chance. There were purchases from launch day, and he produced numbers we had never seen before.”', who: 'Péter · Hoofbútor', whoEn: 'Péter · Hoofbútor' },
+    { hu: '„Azt hittük, a Facebook a fiataloknak és a webshopoknak való – mi csarnokot építünk. Aztán egy hét alatt annyi ajánlatkérésünk lett, mint korábban fél év alatt összesen.”', en: '“We thought Facebook was for young people and webshops; we build industrial halls. Then in one week we got as many quote requests as we used to get in half a year.”', who: 'Csarnoképítő ügyfél · B2B', whoEn: 'Hall-building client · B2B' },
+    { hu: '„Minden decemberben rettegtünk a hirdetési áraktól. Idén először éreztük úgy, hogy az ünnepi szezon nekünk dolgozik – nem ellenünk.”', en: '“Every December we dreaded ad prices. This year, for the first time, the holiday season felt like it was working for us, not against us.”', who: 'Karóra webshop', whoEn: 'Watch webshop' },
+    { hu: '„Pár száz jelentkezőre számítottunk a webinárra. Amikor a számláló majdnem 5700-nál állt meg, alig hittük el, hogy ez ugyanabból a büdzséből jött ki.”', en: '“We expected a few hundred registrants for the webinar. When the counter stopped at almost 5,700, we could hardly believe it came from the same budget.”', who: 'Egészségügyi szolgáltató', whoEn: 'Healthcare provider' },
+    { hu: '„Profi csapatot szerettem volna az indulás után. Mind Facebook/Instagram, mind weboldal és hirdetés területén profi kampányokat készítenek. Rövid időn belül jöttek az eredmények – nekem semmi dolgom nem volt velük.”', en: '“I wanted a professional team after launch. They build professional campaigns across Facebook/Instagram, the website and ads. Results came quickly, and I had nothing to do.”', who: 'Rita · Rita’s Beauty Corner', whoEn: 'Rita · Rita’s Beauty Corner' },
+    { hu: '„A Social Stream profi módon készítette el a weboldalam. Mindenkinek tetszett az igényes és könnyen áttekinthető tartalom! Csak ajánlani tudom őket.”', en: '“Social Stream built my website professionally. Everyone loved the polished, easy-to-follow content! I can only recommend them.”', who: 'János · EJ Massage Therapies', whoEn: 'János · EJ Massage Therapies' }
+  ];
+  var L = function (o, k) { return SS.L === 'en' ? o[k ? k + 'en' : 'en'] || o.en : o[k ? k + 'hu' : 'hu'] || o.hu; };
+
+  // monitor and inspector content built from the lists, re-rendered on language change
+  var svcs = $('#svcs'), svcList = $('#svcList'), p5 = $('#p5'), resList = $('#resList'), p6 = $('#p6'), qList = $('#qList');
+  function render() {
+    svcs.innerHTML = SVC.map(function (s, i) { return '<div class="svc"><span class="ix">0' + (i + 1) + ' / 06</span><h3>' + SS.esc(L(s)) + '</h3><p>' + SS.esc(SS.L === 'en' ? s.ten : s.thu) + '</p></div>'; }).join('');
+    svcList.innerHTML = SVC.map(function (s, i) { return '<li><button type="button" data-jump="4" data-sub="' + i + '"><b>' + SS.esc(L(s)) + '</b>' + SS.esc(SS.L === 'en' ? s.ten : s.thu) + '</button></li>'; }).join('');
+    p5.innerHTML = RES.map(function (r) { return '<div class="res"><img src="' + r.img + '" alt="" loading="lazy"><div class="shade"></div><div class="txt"><b>' + r.n + '<small>' + r.u + '</small></b><p>' + SS.esc(SS.L === 'en' ? r.ten : r.thu) + '</p><span class="who">' + SS.esc(SS.L === 'en' ? r.wen : r.whu) + '</span></div></div>'; }).join('');
+    resList.innerHTML = RES.map(function (r, i) { return '<li><button type="button" data-jump="5" data-sub="' + i + '"><b>' + r.n + ' ' + r.u + '</b>' + SS.esc(SS.L === 'en' ? r.ten : r.thu) + '</button></li>'; }).join('');
+    p6.innerHTML = QS.map(function (q) { return '<div class="q"><p>' + SS.esc(L(q)) + '</p><span>' + SS.esc(SS.L === 'en' ? q.whoEn : q.who) + '</span></div>'; }).join('');
+    qList.innerHTML = QS.map(function (q, i) { return '<li><button type="button" data-jump="6" data-sub="' + i + '"><b>' + SS.esc(SS.L === 'en' ? q.whoEn : q.who) + '</b></button></li>'; }).join('');
+    // the timeline's title clips
+    $('#trackT').innerHTML = CH.map(function (c, i) { return '<button type="button" class="clip" data-jump="' + i + '" style="left:calc(' + (i / N * 100) + '% + 1px);width:calc(' + (100 / N) + '% - 2px)">' + SS.esc(L(c)) + '</button>'; }).join('');
+    last = { ch: -1, svc: -1, res: -1, q: -1 };
+  }
+
+  /* ---------------- the timeline: ruler, video clips, a placeholder waveform ---------------- */
+  var ruler = $('#ruler'), trackV = $('#trackV'), wave = $('#wave');
+  (function () {
+    var h = '';
+    for (var s = 0; s <= TOTAL; s++) { var x = s / TOTAL * 100; h += '<i class="' + (s % SEC === 0 ? 'm' : '') + '" style="left:' + x + '%"></i>'; if (s % SEC === 0 && s < TOTAL) h += '<em style="left:' + x + '%">00:' + (s < 10 ? '0' : '') + s + '</em>'; }
+    ruler.innerHTML = h;
+    trackV.innerHTML = CH.map(function (c, i) {
+      var bg = i === 0 ? 'url(assets/reel-strip.jpg)' : 'url(' + c.img + ')';
+      return '<div class="clip" style="left:calc(' + (i / N * 100) + '% + 1px);width:calc(' + (100 / N) + '% - 2px);background-image:' + bg + (i ? ';background-size:auto 100%;background-repeat:repeat-x' : '') + '"></div>';
+    }).join('');
+    var w = '';
+    for (var k = 0; k < 160; k++) { var a = Math.abs(Math.sin(k * 0.37) * 0.6 + Math.sin(k * 1.9) * 0.3 + Math.sin(k * 0.11) * 0.25); w += '<i style="height:' + Math.round(14 + a * 80) + '%"></i>'; }
+    wave.innerHTML = w;
+  })();
+
+  /* ---------------- the reel ---------------- */
+  var mon = $('#monitor'), reel = $('#reel'), playBtn = $('#play'), disc = $('#disc'), discLabel = $('#discLabel');
+  var paused = reduce, loaded = false, monOn = true;
+  var cues = $$('.p0 .cue').map(function (el) { var t = el.dataset.t.split(' ').map(Number); return { el: el, a: t[0], b: t[1], dim: el.hasAttribute('data-dim'), n: $('[data-to]', el) }; });
+  function load() { if (loaded) return; loaded = true; reel.src = (mon.clientWidth > 700 ? reel.dataset.src : reel.dataset.srcS); reel.load(); }
+  function apply() {
+    if (paused || !monOn) reel.pause(); else { load(); var pp = reel.play(); if (pp && pp.catch) pp.catch(function () {}); }
+    playBtn.setAttribute('aria-label', paused ? (SS.L === 'en' ? 'Play the reel' : 'Reel lejátszása') : (SS.L === 'en' ? 'Pause the reel' : 'Reel megállítása'));
+    playBtn.innerHTML = paused ? '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5l9 5.5-9 5.5z" fill="currentColor"/></svg>' : '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2h3v10H3zM8 2h3v10H8z" fill="currentColor"/></svg>';
+  }
+  playBtn.addEventListener('click', function () { paused = !paused; apply(); });
+  reel.addEventListener('playing', function () { mon.classList.add('is-playing'); });
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { monOn = es[0].isIntersecting; apply(); }, { threshold: 0.05 }).observe(mon);
+  if (document.readyState === 'complete') apply(); else addEventListener('load', function () { setTimeout(apply, 60); }, { once: true });
+  SS.onLang(apply);
+  var lastT = -1;
+  function cueTick() {
+    var t = loaded ? reel.currentTime : 0;
+    if (t === lastT) return; lastT = t; var dim = false;
+    cues.forEach(function (c) {
+      var on = t >= c.a && t < c.b;
+      if (on !== c.el.classList.contains('is-on')) c.el.classList.toggle('is-on', on);
+      if (on && c.dim) dim = true;
+      if (on && c.n) { var k = Math.min(1, (t - c.a) / 0.7); c.n.textContent = String(Math.round(+c.n.dataset.to * (1 - Math.pow(1 - k, 3)))); }
+    });
+    mon.classList.toggle('is-numbers', dim);
+  }
+  // over the monitor the cursor is the play/pause disc
+  var dx = -200, dy = -200, tx = -200, ty = -200, ds = 0, dts = 0;
+  if (fine) {
+    mon.addEventListener('pointermove', function (e) { tx = e.clientX; ty = e.clientY; dts = cur === 0 ? 1 : 0; });
+    mon.addEventListener('pointerleave', function () { dts = 0; });
+    mon.addEventListener('click', function () { if (cur === 0) { paused = !paused; apply(); } });
+  }
+  function discTick() {
+    if (!fine) return;
+    dx = lerp(dx, tx, 0.24); dy = lerp(dy, ty, 0.24); ds = lerp(ds, dts, 0.2);
+    disc.style.setProperty('--x', dx.toFixed(1) + 'px'); disc.style.setProperty('--y', dy.toFixed(1) + 'px'); disc.style.setProperty('--s', ds.toFixed(3));
+    var want = paused ? (SS.L === 'en' ? 'Play' : 'Lejátszás') : (SS.L === 'en' ? 'Pause' : 'Szünet');
+    if (discLabel.textContent !== want) discLabel.textContent = want;
+  }
+
+  /* ---------------- the playhead: scroll is time ---------------- */
+  var suite = $('#suite'), stage = $('#stage'), tl = $('#tlBody'), ph = $('#playhead'), hh = $('#hoverhead'), tc = $('#tc'), chName = $('#chName'), insIx = $('#insIx');
+  var progs = $$('.prog', mon), inss = $$('.ins'), p1 = $('#p1'), count = $('#count'), p8 = $('#p8'), rpct = $('#rpct'), svcVid = $('#svcVid');
+  var cur = 0, last = { ch: -1, svc: -1, res: -1, q: -1 }, lastCount = -1;
+  function fmtTc(sec) {
+    var f = Math.floor((sec % 1) * 25), s = Math.floor(sec) % 60, m = Math.floor(sec / 60);
+    var p2 = function (n) { return (n < 10 ? '0' : '') + n; };
+    return '00:' + p2(m) + ':' + p2(s) + ':' + p2(f);
+  }
+  function progress() { return parseFloat(getComputedStyle(suite).getPropertyValue('--sc-p')) || 0; }
+  function seek(p) { var y = suite.offsetTop + clamp(p, 0, 1) * (suite.offsetHeight - innerHeight); scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' }); }
+  function jump(ch, sub) { var n = sub == null ? 0.02 : (sub + 0.5) / (ch === 4 ? SVC.length : ch === 5 ? RES.length : QS.length); seek((ch + n) / N + 0.0005); }
+  function suiteTick() {
+    var p = progress(), w = tl.clientWidth, t = p * TOTAL;
+    ph.style.setProperty('--ph', (p * w).toFixed(1) + 'px');
+    tc.textContent = fmtTc(t);
+    var ch = Math.min(N - 1, Math.floor(p * N)), sub = clamp(p * N - ch, 0, 1);
+    if (ch !== last.ch) {
+      last.ch = cur = ch;
+      progs.forEach(function (el) { el.classList.toggle('is-on', +el.dataset.ch === ch); });
+      inss.forEach(function (el) { el.classList.toggle('is-on', +el.dataset.ch === ch); });
+      $$('#trackV .clip, #trackT .clip').forEach(function (el, i) { el.classList.toggle('is-on', i % N === ch); });
+      mon.classList.toggle('is-dim', ch !== 0);
+      chName.textContent = L(CH[ch]); insIx.textContent = '0' + (ch + 1) + ' / 0' + N;
+      if (ch === 4 && !reduce) { if (!svcVid.src) svcVid.src = svcVid.dataset.src; var pp = svcVid.play(); if (pp && pp.catch) pp.catch(function () {}); } else svcVid.pause();
+    }
+    // inside a chapter the sub-progress steps through its items
+    if (ch === 1) {
+      var n = reduce ? 10000 : Math.round(10000 * clamp(sub / 0.35, 0, 1));
+      if (n !== lastCount) { lastCount = n; count.textContent = SS.fmtN(n); }
+      p1.style.setProperty('--k', clamp((sub - 0.4) / 0.12, 0, 1).toFixed(3));
+      p1.style.setProperty('--gone', clamp((sub - 0.52) / 0.12, 0, 1).toFixed(3));
+      p1.style.setProperty('--law', clamp((sub - 0.56) / 0.12, 0, 1).toFixed(3));
+    }
+    step('svc', ch === 4 ? Math.min(SVC.length - 1, Math.floor(sub * SVC.length)) : -1, $$('.svc', svcs), $$('li', svcList));
+    step('res', ch === 5 ? Math.min(RES.length - 1, Math.floor(sub * RES.length)) : -1, $$('.res', p5), $$('li', resList));
+    step('q', ch === 6 ? Math.min(QS.length - 1, Math.floor(sub * QS.length)) : -1, $$('.q', p6), $$('li', qList));
+    if (ch === 8) { var r = clamp(sub / 0.7, 0, 1); p8.style.setProperty('--r', r.toFixed(3)); rpct.textContent = Math.round(r * 100) + '%'; }
+    stage.setAttribute('data-sc-verify-state', 'ch' + ch + '-' + Math.floor(sub * 4));
+  }
+  function step(key, ix, a, b) {
+    if (ix === last[key] || ix < 0 && last[key] < 0) return;
+    last[key] = ix;
+    a.forEach(function (el, i) { el.classList.toggle('is-on', i === ix || (ix < 0 && i === 0)); });
+    b.forEach(function (el, i) { el.classList.toggle('is-on', i === ix); });
+  }
+  // click a chapter, a clip or an inspector item to move the playhead there
+  document.addEventListener('click', function (e) { var j = e.target.closest('[data-jump]'); if (!j) return; jump(+j.dataset.jump, j.dataset.sub == null ? null : +j.dataset.sub); });
+  // hovering the timeline scrubs a preview frame at the cursor
+  var pv = $('#preview'), pvImg = $('#pvImg'), pvTc = $('#pvTc'), pvCh = $('#pvCh');
+  if (fine) {
+    tl.addEventListener('pointermove', function (e) {
+      var r = tl.getBoundingClientRect(), f = clamp((e.clientX - r.left) / r.width, 0, 0.9999), t = f * TOTAL, ci = Math.floor(f * N);
+      hh.style.setProperty('--hx', (e.clientX - r.left).toFixed(1) + 'px');
+      pv.style.setProperty('--px', e.clientX + 'px'); pv.style.setProperty('--py', r.top + 'px'); pv.classList.add('is-on');
+      if (ci === 0) { var fi = Math.min(31, Math.floor((t / SEC) * 32)); pvImg.style.backgroundImage = 'url(assets/reel-strip.jpg)'; pvImg.style.backgroundSize = '5248px 92px'; pvImg.style.backgroundPosition = (-fi * 164) + 'px 0'; }
+      else { pvImg.style.backgroundImage = 'url(' + CH[ci].img + ')'; pvImg.style.backgroundSize = 'cover'; pvImg.style.backgroundPosition = 'center'; }
+      pvTc.textContent = fmtTc(t).slice(3, 8); pvCh.textContent = L(CH[ci]);
+    });
+    tl.addEventListener('pointerleave', function () { pv.classList.remove('is-on'); });
+  }
+  tl.addEventListener('click', function (e) { if (e.target.closest('[data-jump]')) return; var r = tl.getBoundingClientRect(); seek((e.clientX - r.left) / r.width); });
+  // an editor's keys: arrows step chapters, space plays the reel
+  var suiteOn = false;
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { suiteOn = es[0].isIntersecting; }).observe(suite);
+  addEventListener('keydown', function (e) {
+    if (!suiteOn || e.target.closest('input, textarea, select, button, a')) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); jump(Math.min(N - 1, cur + 1)); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); jump(Math.max(0, cur - 1)); }
+    else if (e.key === ' ' && cur === 0) { e.preventDefault(); paused = !paused; apply(); }
+  });
+
+  /* ---------------- export: the audit ---------------- */
+  var form = $('#appform'), chips = $('#chips'), sent = $('#sent'), rendering = $('#rendering'), chosen = [], lastBody = '';
+  function renderChips() { chips.innerHTML = SS.TOPICS.map(function (t) { return '<label class="chip"><input type="checkbox" value="' + t.id + '"' + (chosen.indexOf(t.id) > -1 ? ' checked' : '') + '><span>' + SS.esc(SS.T(t)) + '</span></label>'; }).join(''); }
+  chips.addEventListener('change', function (e) { var id = e.target.value, k = chosen.indexOf(id); if (e.target.checked && k < 0) chosen.push(id); else if (!e.target.checked && k > -1) chosen.splice(k, 1); });
+  function check() {
+    var ok = true;
+    [['f-name', 'e-name'], ['f-email', 'e-email'], ['f-brand', 'e-brand']].forEach(function (pr) {
+      var el = $('#' + pr[0]), er = $('#' + pr[1]), v = el.value.trim(), m = '';
+      if (!v) m = SS.T(SS.ERR.req); else if (el.type === 'email' && !SS.isMail(v)) m = SS.T(SS.ERR.mail);
+      er.textContent = m; el.setAttribute('aria-invalid', String(!!m)); if (m && ok) { el.focus(); ok = false; }
+    });
+    return ok;
+  }
+  function showSent(body) {
+    var s = SS.sentText(); sent.hidden = false;
+    sent.innerHTML = '<b>' + s.b + '</b><span>' + SS.esc(s.s) + '</span><button type="button" class="btn btn--ghost" id="copyBody">' + s.c + '</button>';
+    var cb = $('#copyBody'); cb.addEventListener('click', function () { SS.copy(body, cb, function () { var m = $('#f-msg'); m.value = body; m.focus(); m.select(); }); });
+  }
+  var sel = function (id) { var el = $('#' + id); return el.value ? el.options[el.selectedIndex].text : ''; };
+  form.addEventListener('submit', function (e) {
+    e.preventDefault(); if (!check()) return;
+    var body = SS.compose({ name: $('#f-name').value.trim(), email: $('#f-email').value.trim(), brand: $('#f-brand').value.trim(), web: $('#f-web').value.trim(), budget: sel('f-budget'), goal: sel('f-goal'), interests: chosen, msg: $('#f-msg').value.trim() });
+    lastBody = body; rendering.hidden = false; $('#rtext').textContent = SS.L === 'en' ? 'Exporting…' : 'Exportálás…';
+    var done = function () { $('#rtext').textContent = '100%'; showSent(body); SS.send($('#f-brand').value.trim(), body); };
+    // the export bar fills once; under reduced motion the hand-off is immediate
+    requestAnimationFrame(function () { rendering.style.setProperty('--w', '100%'); });
+    if (reduce) done(); else setTimeout(done, 750);
+  });
+  var cm = $('#copyMail');
+  cm.addEventListener('click', function () { SS.copy(SS.CONTACT, cm, function () { var r = document.createRange(), s = getSelection(); r.selectNodeContents(cm.previousElementSibling); s.removeAllRanges(); s.addRange(r); }); });
+
+  /* ---------------- start ---------------- */
+  SS.onLang(function () { render(); renderChips(); if (lastBody) showSent(lastBody); });
+  SS.start();
+  (function frame() { cueTick(); discTick(); suiteTick(); requestAnimationFrame(frame); })();
+})();
+ScrollCraft.mount(document.body);
+</script>
+</body>
+</html>

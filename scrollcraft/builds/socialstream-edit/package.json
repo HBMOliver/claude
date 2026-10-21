@@ -1,0 +1,8 @@
+{
+  "name": "socialstream-edit",
+  "private": true,
+  "description": "SocialStream Edit (scroll-craft build)",
+  "dependencies": {
+    "playwright-core": "^1.64.1"
+  }
+}

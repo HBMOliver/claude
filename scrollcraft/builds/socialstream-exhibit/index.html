@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SocialStream</title>
+<meta name="description" content="A social media meghalt. Kiállítás az érdeklődés koráról. Videó, social és hirdetés egy rendszerben. Tenerife és Budapest.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23121110'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23f3d9a4' opacity='.85'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap">
+<link rel="stylesheet" href="scrollcraft.css">
+<style>
+/* The Exhibition: the site is a gallery at night and the cursor is the light.
+   Charcoal walls, ivory wall text, framed work with museum labels, brass plaques. */
+:root {
+  --wall: #131210; --wall2: #1b1916; --floor: #0b0a09; --ink: #f0eadf; --soft: #b6ad9f; --dim: #7d756a; --line: rgba(240, 234, 223, 0.12);
+  --mat: #f2eee6; --frame: #0c0b0a; --brass: #c9a86a; --brass2: #e8cf98;
+  --f: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --g: clamp(20px, 5vw, 80px); --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --sc-canvas: var(--wall); --sc-ink: var(--ink); --sc-ink-soft: var(--soft); --sc-accent: var(--brass); --sc-font-display: var(--f); --sc-font-text: var(--f);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--wall); color: var(--ink); font: 400 16px/1.6 var(--f); -webkit-font-smoothing: antialiased; }
+img, video { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; }
+a { color: inherit; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+:focus-visible { outline: 2px solid var(--brass2); outline-offset: 4px; border-radius: 3px; }
+.wrap { max-width: 1320px; margin: 0 auto; padding-inline: max(var(--g), env(safe-area-inset-left, 0px)) max(var(--g), env(safe-area-inset-right, 0px)); }
+
+/* ---------- the light: darkness everywhere but where the cursor is ---------- */
+.night { position: fixed; inset: 0; z-index: 30; pointer-events: none; transition: opacity 900ms var(--ease);
+  background: radial-gradient(circle var(--r, 440px) at var(--x, 50%) var(--y, 45%), rgba(255, 236, 200, 0.07) 0%, rgba(8, 7, 6, 0) 30%, rgba(8, 7, 6, 0.3) 64%, rgba(6, 5, 4, 0.58) 100%); }
+body.lights .night { opacity: 0; }
+.dot { position: fixed; z-index: 35; left: 0; top: 0; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--brass2); pointer-events: none; box-shadow: 0 0 18px var(--brass2); transform: translate3d(var(--x, -50px), var(--y, -50px), 0); opacity: 0; transition: opacity 300ms; }
+@media (hover: hover) and (pointer: fine) { body:not(.lights) { cursor: none; } body.moved:not(.lights) .dot { opacity: 1; } body:not(.lights) a, body:not(.lights) button, body:not(.lights) input, body:not(.lights) select, body:not(.lights) textarea, body:not(.lights) label { cursor: none; } }
+
+/* ---------- header ---------- */
+.top { position: fixed; z-index: 40; inset: 0 0 auto 0; height: calc(64px + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) max(var(--g), env(safe-area-inset-right, 0px)) 0 max(var(--g), env(safe-area-inset-left, 0px));
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; background: linear-gradient(180deg, rgba(10, 9, 8, 0.92), rgba(10, 9, 8, 0)); }
+.wm { font: 600 1.05rem/1 var(--f); font-stretch: 85%; letter-spacing: 0.02em; text-decoration: none; }
+.show { font: 500 0.72rem/1 var(--f); letter-spacing: 0.22em; text-transform: uppercase; color: var(--soft); text-align: center; }
+.end { display: flex; justify-content: flex-end; align-items: center; gap: 14px; }
+.lang { display: flex; gap: 2px; }
+.lang button { border: 0; background: none; font: 600 0.72rem/1 var(--f); letter-spacing: 0.12em; padding: 9px 6px; color: var(--dim); }
+.lang button[aria-pressed="true"] { color: var(--ink); }
+.switch { border: 0; background: none; display: inline-flex; align-items: center; gap: 8px; padding: 8px 2px; font: 500 0.72rem/1 var(--f); letter-spacing: 0.14em; text-transform: uppercase; color: var(--soft); }
+.switch i { width: 26px; height: 15px; border-radius: 99px; background: #2a2723; position: relative; transition: background-color 300ms; }
+.switch i::after { content: ""; position: absolute; top: 2px; left: 2px; width: 11px; height: 11px; border-radius: 50%; background: var(--soft); transition: transform 300ms var(--ease), background-color 300ms; }
+.switch[aria-pressed="true"] i { background: var(--brass); }
+.switch[aria-pressed="true"] i::after { transform: translateX(11px); background: #fff; }
+.ticket-btn { font: 600 0.82rem/1 var(--f); letter-spacing: 0.06em; text-decoration: none; white-space: nowrap; padding: 0.8em 1.15em; border-radius: 2px; background: var(--ink); color: var(--wall); }
+@media (max-width: 1100px) { .show { display: none; } .top { grid-template-columns: 1fr auto; } }
+
+/* ---------- rooms ---------- */
+.room { position: relative; padding-block: clamp(7rem, 14vw, 12rem); background: var(--wall); overflow: hidden; }
+.room::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 90px; background: linear-gradient(180deg, transparent, var(--floor)); pointer-events: none; }
+.room .num { position: absolute; right: max(var(--g), env(safe-area-inset-right, 0px)); top: clamp(4rem, 8vw, 7rem); font: 700 clamp(5rem, 3rem + 9vw, 13rem)/0.8 var(--f); font-stretch: 75%; color: rgba(240, 234, 223, 0.045); pointer-events: none; }
+.walltext { display: grid; gap: 18px; max-width: 46rem; }
+.walltext .k { margin: 0; font: 600 0.74rem/1 var(--f); letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass); }
+.walltext h2 { margin: 0; font: 600 clamp(2.4rem, 1.4rem + 3.6vw, 5rem)/0.98 var(--f); font-stretch: 82%; letter-spacing: -0.02em; text-wrap: balance; }
+.walltext p { margin: 0; color: var(--soft); font-size: 1.05rem; max-width: 40rem; }
+
+/* framed work */
+.work { margin: 0; display: grid; gap: 14px; align-content: start; }
+.fr { position: relative; padding: clamp(10px, 1.6vw, 22px); background: var(--mat); box-shadow: 0 0 0 clamp(6px, 0.7vw, 10px) var(--frame), 0 0 0 calc(clamp(6px, 0.7vw, 10px) + 1px) #2c2925, 0 50px 70px -40px rgba(0, 0, 0, 0.9);
+  transition: transform 500ms var(--ease), box-shadow 500ms var(--ease); }
+.work:hover .fr { transform: translateY(-4px); }
+.fr img, .fr video { width: 100%; height: auto; }
+.fr img { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.85), 0 0 0 2px rgba(0, 0, 0, 0.14); }
+.fr video { position: absolute; inset: clamp(10px, 1.6vw, 22px); width: calc(100% - 2 * clamp(10px, 1.6vw, 22px)); height: calc(100% - 2 * clamp(10px, 1.6vw, 22px)); object-fit: cover; opacity: 0; transition: opacity 500ms; }
+.fr.is-playing video { opacity: 1; }
+.label { font: 400 0.8rem/1.45 var(--f); color: var(--soft); max-width: 24rem; }
+.label b { display: block; color: var(--ink); font-weight: 600; font-size: 0.86rem; }
+.label i { font-style: italic; }
+
+/* entrance: the projection is a light source, so it sits above the dark */
+.hall { min-height: 100svh; display: grid; align-content: center; justify-items: center; gap: clamp(20px, 3.4vh, 36px); padding: calc(76px + env(safe-area-inset-top, 0px)) 0 clamp(28px, 5vh, 56px); }
+.screen { position: relative; z-index: 32; width: min(1100px, 84vw, calc((100svh - 300px) * 16 / 9)); aspect-ratio: 16 / 9; background: #000;
+  box-shadow: 0 0 160px 24px rgba(255, 236, 200, 0.07), 0 0 0 1px rgba(255, 255, 255, 0.04); }
+.screen video, .screen .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.screen .poster { transition: opacity 600ms; }
+.screen.is-playing .poster { opacity: 0; }
+.title { text-align: center; display: grid; justify-items: center; gap: 10px; }
+.title .k { margin: 0; font: 600 0.74rem/1 var(--f); letter-spacing: 0.26em; text-transform: uppercase; color: var(--brass); }
+.title h1 { margin: 0; font: 700 clamp(2.6rem, 1.2rem + 4vw, 5.4rem)/0.9 var(--f); font-stretch: 78%; letter-spacing: -0.02em; }
+.title p { margin: 0; color: var(--soft); font-size: clamp(1rem, 0.9rem + 0.4vw, 1.2rem); }
+.enter { font: 600 0.72rem/1 var(--f); letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink); text-decoration: none; padding: 8px 2px; }
+
+/* room I: relics in vitrines */
+.vitrines { margin-top: clamp(3rem, 6vw, 5rem); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 44px); align-items: end; }
+.vitrine { display: grid; gap: 16px; }
+.case { position: relative; aspect-ratio: 4 / 5; display: grid; place-items: center; padding: 14%; border: 1px solid rgba(255, 255, 255, 0.12); background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15); }
+.case { background: radial-gradient(70% 45% at 50% 0%, rgba(255, 240, 210, 0.13), transparent 75%), linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)); }
+.case::before { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.07) 38%, transparent 46%, transparent 60%, rgba(255, 255, 255, 0.04) 64%, transparent 68%); }
+.case::after { content: ""; position: absolute; left: -1px; right: -1px; bottom: -14px; height: 14px; background: #1f1d1a; }
+.relic { width: 100%; background: #ebe7df; color: #2a2a2a; border-radius: 4px; padding: 12px; display: grid; gap: 9px; font-size: 0.72rem; line-height: 1.35; transform: rotate(-2deg); box-shadow: 0 24px 34px -22px rgba(0, 0, 0, 0.8); }
+.relic .h { display: flex; gap: 8px; align-items: center; font-weight: 600; }
+.relic .h i { width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #a9b6c9, #6f7f99); }
+.relic .ph { aspect-ratio: 4 / 3; border-radius: 2px; background: linear-gradient(180deg, #f2b98a 0%, #e48a6a 45%, #6b4f6f 100%); filter: saturate(0.55) sepia(0.35); }
+.relic .f { display: flex; justify-content: space-between; color: #7a756c; border-top: 1px solid rgba(0, 0, 0, 0.1); padding-top: 7px; }
+.note { margin: 0; width: 78%; aspect-ratio: 1; display: grid; place-items: center; padding: 12%; background: linear-gradient(180deg, #f4e6a0, #ecd987); color: #3a3220; font: italic 600 1.15rem/1.25 var(--f); text-align: center; transform: rotate(3deg); box-shadow: 0 18px 24px -14px rgba(0, 0, 0, 0.8); }
+.counter { font: 700 clamp(2.4rem, 1.4rem + 3vw, 4.2rem)/0.9 var(--f); font-stretch: 75%; color: #d8d2c6; text-align: center; letter-spacing: -0.02em; }
+.counter small { display: block; margin-top: 8px; font: 500 0.7rem/1 var(--f); letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); }
+
+/* room II: the salon hang */
+.salon { margin-top: clamp(3rem, 6vw, 5rem); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(28px, 4vw, 56px) clamp(20px, 3vw, 40px); align-items: start; }
+.salon .w1 { grid-column: 1 / span 5; }
+.salon .w2 { grid-column: 7 / span 3; margin-top: 8vw; }
+.salon .w3 { grid-column: 10 / span 3; }
+.salon .w4 { grid-column: 2 / span 3; }
+.salon .w5 { grid-column: 6 / span 3; margin-top: -4vw; }
+.salon .w6 { grid-column: 9 / span 4; margin-top: 3vw; }
+
+/* room III: the floor directory */
+.directory { list-style: none; margin: clamp(3rem, 6vw, 5rem) 0 0; padding: 0; border-top: 1px solid var(--line); }
+.directory li { display: grid; grid-template-columns: 4rem minmax(0, 1.25fr) minmax(0, 1fr); gap: 10px 32px; align-items: baseline; padding: clamp(18px, 2.2vw, 30px) 0; border-bottom: 1px solid var(--line); }
+.directory .n { font: 600 0.78rem/1 var(--f); letter-spacing: 0.2em; color: var(--brass); }
+.directory h3 { margin: 0; font: 600 clamp(1.7rem, 1rem + 2.3vw, 3.3rem)/1 var(--f); font-stretch: 80%; letter-spacing: -0.015em; transition: color 300ms; }
+.directory p { margin: 0; color: var(--soft); font-size: 0.95rem; max-width: 30rem; }
+@media (hover: hover) { .directory li:hover h3 { color: var(--brass2); } }
+
+/* room IV: still lifes with brass plaques */
+.stills { margin-top: clamp(3rem, 6vw, 5rem); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(40px, 6vw, 90px) clamp(28px, 4vw, 64px); }
+.stills .work:nth-child(even) { margin-top: 7vw; }
+.plaque { justify-self: start; display: grid; gap: 6px; padding: 14px 18px 15px; background: linear-gradient(135deg, #b89257, #e3c88f 45%, #a8854d); color: #2a2010; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 10px 20px -12px rgba(0, 0, 0, 0.8); }
+.plaque b { font: 700 2.7rem/0.9 var(--f); font-stretch: 78%; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.plaque b small { font-size: 0.5em; margin-left: 0.08em; letter-spacing: 0; word-spacing: 0.14em; }
+.plaque > span { font: 500 0.8rem/1.35 var(--f); max-width: 22rem; }
+.plaque em { font: 600 0.66rem/1.3 var(--f); font-style: normal; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.75; }
+.managed { margin: clamp(3rem, 6vw, 5rem) 0 0; font: 600 clamp(1.3rem, 1rem + 1.2vw, 2rem)/1.2 var(--f); font-stretch: 85%; color: var(--soft); }
+
+/* room V: portraits */
+.portraits { margin-top: clamp(3rem, 6vw, 5rem); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 3vw, 48px); align-items: end; }
+.portraits .work:nth-child(2) { margin-bottom: 4vw; }
+.nameplate { justify-self: start; padding: 7px 12px; background: linear-gradient(135deg, #b89257, #e3c88f 45%, #a8854d); color: #2a2010; font: 600 0.82rem/1.2 var(--f); }
+.nameplate small { display: block; font: 500 0.66rem/1.3 var(--f); letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.8; }
+.founder { margin-top: clamp(4rem, 8vw, 7rem); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; align-items: center; }
+.founder .work { grid-column: 1 / span 4; }
+.founder .walltext { grid-column: 6 / span 7; }
+
+/* the guestbook */
+.book { margin-top: clamp(3rem, 6vw, 5rem); display: grid; grid-template-columns: 1fr 1fr; background: #ece6da; color: #2b2620; box-shadow: 0 60px 80px -50px rgba(0, 0, 0, 0.9); position: relative; }
+.book::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 40px; translate: -50% 0; background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.12), transparent); }
+.page { padding: clamp(28px, 4vw, 56px); display: grid; gap: 28px; align-content: start; }
+.entry { display: grid; gap: 8px; }
+.entry p { margin: 0; font: italic 400 1.02rem/1.6 var(--f); }
+.entry span { font: 600 0.76rem/1.3 var(--f); letter-spacing: 0.08em; text-transform: uppercase; color: #8a7d68; }
+
+/* the exit: the audit as an admission ticket */
+.desk { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 5vw, 72px); align-items: start; margin-top: clamp(3rem, 6vw, 5rem); }
+.ticket { position: relative; background: var(--mat); color: #1d1a16; padding: clamp(24px, 3vw, 40px); display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.ticket::before { content: ""; position: absolute; left: 0; right: 0; top: -9px; height: 18px; background: radial-gradient(circle at 9px 9px, var(--wall) 7px, transparent 7.5px) 0 0 / 22px 18px repeat-x; }
+.ticket .head { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-bottom: 14px; border-bottom: 1px dashed rgba(0, 0, 0, 0.25); }
+.ticket .head b { font: 700 1.3rem/1.1 var(--f); font-stretch: 80%; letter-spacing: 0.01em; text-transform: uppercase; }
+.ticket .head span { font: 600 0.7rem/1 var(--f); letter-spacing: 0.18em; text-transform: uppercase; color: #8a7d68; }
+.field { display: grid; gap: 6px; }
+.field.full, .ticket fieldset, .ticket .acts, .ticket .sent { grid-column: 1 / -1; }
+.field label, .ticket legend { font: 600 0.68rem/1.2 var(--f); letter-spacing: 0.14em; text-transform: uppercase; color: #6f6455; padding: 0; }
+.field input, .field select, .field textarea { width: 100%; font: 400 0.96rem/1.4 var(--f); color: #1d1a16; background: transparent; border: 0; border-bottom: 1px solid rgba(0, 0, 0, 0.3); border-radius: 0; padding: 8px 0; color-scheme: light; }
+.field textarea { min-height: 5rem; resize: vertical; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-bottom-color: #1d1a16; }
+.field input[aria-invalid="true"] { border-bottom-color: #b3261e; }
+.err { min-height: 1em; font-size: 0.76rem; color: #b3261e; }
+.ticket fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { position: relative; display: inline-flex; }
+.chip input { position: absolute; inset: 0; opacity: 0; margin: 0; }
+.chip span { padding: 7px 10px; border: 1px solid rgba(0, 0, 0, 0.25); font: 500 0.8rem/1 var(--f); }
+.chip input:checked + span { background: #1d1a16; color: var(--mat); border-color: #1d1a16; }
+.chip input:focus-visible + span { outline: 2px solid #1d1a16; outline-offset: 2px; }
+.ticket .acts { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 6px; }
+.stamp-btn { border: 0; padding: 0.95em 1.4em; background: #1d1a16; color: var(--mat); font: 600 0.86rem/1 var(--f); letter-spacing: 0.08em; text-transform: uppercase; }
+.direct { font-size: 0.84rem; color: #5f5649; }
+.copy-mini { border: 0; background: none; text-decoration: underline; text-underline-offset: 0.3em; font-size: 0.8rem; padding: 6px 0; margin-left: 6px; color: #1d1a16; }
+.ticket .sent { padding: 14px; border: 1px dashed rgba(0, 0, 0, 0.3); display: grid; gap: 8px; justify-items: start; }
+.ticket .sent b { font: 700 1rem/1.2 var(--f); }
+.ticket .sent span { font-size: 0.88rem; color: #5f5649; }
+.ticket .sent button { border: 1px solid #1d1a16; background: none; padding: 0.6em 1em; font: 600 0.8rem/1 var(--f); }
+.foot { margin-top: clamp(5rem, 10vw, 8rem); padding-block: 24px calc(28px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; font-size: 0.8rem; color: var(--dim); }
+
+/* ---------- phones: the light is a torch at the centre, the walls stack ---------- */
+@media (max-width: 860px) {
+  .end { gap: 8px; }
+  .ticket-btn { padding: 0.75em 0.9em; font-size: 0.78rem; letter-spacing: 0.03em; }
+  .switch span { display: none; }
+  .screen { width: min(72vw, calc((100svh - 330px) * 9 / 16)); aspect-ratio: 9 / 16; }
+  .vitrines, .stills, .portraits { grid-template-columns: 1fr; }
+  .case { aspect-ratio: 5 / 4; padding: 8% 24%; }
+  .directory li { grid-template-columns: 2.2rem minmax(0, 1fr); }
+  .directory p { grid-column: 2; }
+  .salon { grid-template-columns: 1fr 1fr; }
+  .salon .work { grid-column: auto !important; margin-top: 0 !important; }
+  .stills .work:nth-child(even), .portraits .work:nth-child(2) { margin: 0; }
+  .founder { grid-template-columns: 1fr; }
+  .founder .work, .founder .walltext { grid-column: 1 / -1; }
+  .book { grid-template-columns: 1fr; }
+  .book::before { display: none; }
+  .desk { grid-template-columns: 1fr; }
+  .ticket { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .night, .fr { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="night" id="night" aria-hidden="true"></div>
+<div class="dot" id="dot" aria-hidden="true"></div>
+
+<header class="top">
+  <a class="wm" href="#bejarat">SocialStream</a>
+  <span class="show" data-en="An exhibition on the age of interest">Kiállítás az érdeklődés koráról</span>
+  <div class="end">
+    <button type="button" class="switch" id="lights" aria-pressed="false"><i aria-hidden="true"></i><span data-en="Lights">Villany</span></button>
+    <div class="lang" role="group" aria-label="Nyelv / Language"><button type="button" data-set-lang="hu" aria-pressed="true" lang="hu">HU</button><button type="button" data-set-lang="en" aria-pressed="false" lang="en">EN</button></div>
+    <a class="ticket-btn" href="#penztar" data-en="Free audit">Ingyenes audit</a>
+  </div>
+</header>
+
+<main>
+  <!-- the entrance: the reel, projected on the wall -->
+  <section class="room hall" id="bejarat" data-sc-act="flow" aria-labelledby="ex-h">
+    <div class="screen" id="screen" aria-hidden="true">
+      <img class="poster" src="assets/reel-1080-poster.jpg" alt="" width="1600" height="900" fetchpriority="high">
+      <video id="reel" muted loop playsinline preload="none" data-src="assets/reel-1080.mp4" data-src-m="assets/reel-720.mp4" data-poster-m="assets/reel-720-poster.jpg"></video>
+    </div>
+    <div class="title wrap">
+      <p class="k" data-en="A temporary exhibition · Tenerife, Budapest">Időszaki kiállítás · Tenerife, Budapest</p>
+      <h1 id="ex-h">SocialStream</h1>
+      <p data-en="Social media is dead. An exhibition on the age of interest.">A social media meghalt. Kiállítás az érdeklődés koráról.</p>
+      <a class="enter" href="#terem1" data-en="Enter ↓">Belépés ↓</a>
+    </div>
+  </section>
+
+  <!-- room I: the relics of the old age -->
+  <section class="room" id="terem1" data-sc-act="flow" aria-labelledby="r1-h">
+    <span class="num" aria-hidden="true">I</span>
+    <div class="wrap">
+      <div class="walltext" data-sc-in data-sc-stagger="90">
+        <p class="k" data-en="Room I · The old age, 2004–2022">I. terem · A régi kor, 2004–2022</p>
+        <h2 id="r1-h" data-en="Follower count is a relic of the old age.">A követőszám a régi kor relikviája.</h2>
+        <p data-en="For ten years, what mattered was how many followers you had. That era is over. These objects are what it left behind.">Tíz évig az számított, hány követőd van. Ez a kor véget ért. Ezeket a tárgyakat hagyta maga után.</p>
+      </div>
+      <div class="vitrines" data-sc-in data-sc-stagger="110">
+        <figure class="vitrine work">
+          <div class="case"><div class="relic" aria-hidden="true"><div class="h"><i></i><span data-en="A business page">Egy vállalkozás oldala</span></div><span data-en="Good morning, everyone!">Jó reggelt mindenkinek!</span><div class="ph"></div><div class="f"><span data-en="40 likes">40 kedvelés</span><span data-en="2 comments">2 hozzászólás</span></div></div></div>
+          <figcaption class="label"><b data-en="Good morning, everyone!">Jó reggelt mindenkinek!</b><span data-en="Unknown business. Facebook post, the old age. 40 likes.">Ismeretlen vállalkozás. Facebook-poszt, a régi korból. 40 kedvelés.</span></figcaption>
+        </figure>
+        <figure class="vitrine work">
+          <div class="case"><p class="counter">10 000<small data-en="followers">követő</small></p></div>
+          <figcaption class="label"><b data-en="The follower count">A követőszám</b><span data-en="Once a measure of success. In the new age every post starts with a clean slate.">Egykor a siker mércéje. Az új korban minden poszt tiszta lappal indul.</span></figcaption>
+        </figure>
+        <figure class="vitrine work">
+          <div class="case"><p class="note" data-en="Post and hope.">Posztolj és reménykedj.</p></div>
+          <figcaption class="label"><b data-en="The strategy">A stratégia</b><span data-en="The old age's only method. Most businesses still use it.">A régi kor egyetlen módszere. A legtöbb vállalkozás még ma is ezt használja.</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- room II: the work of the new age, hung salon style -->
+  <section class="room" id="terem2" data-sc-act="flow" aria-labelledby="r2-h">
+    <span class="num" aria-hidden="true">II</span>
+    <div class="wrap">
+      <div class="walltext" data-sc-in data-sc-stagger="90">
+        <p class="k" data-en="Room II · The new age">II. terem · Az új kor</p>
+        <h2 id="r2-h" data-en="Attention cannot be bought. Only earned.">A figyelmet nem lehet megvenni. Csak kiérdemelni.</h2>
+        <p data-en="For every impression you compete with the best creators, not with your competitors. On these walls: the work that earned it.">Minden megjelenésért a legjobb alkotókkal versenyzel, nem a konkurenciáddal. Ezeken a falakon: a munka, ami kiérdemelte.</p>
+      </div>
+      <div class="salon">
+        <figure class="work w1" data-sc-in><div class="fr"><img src="assets/w01.jpg" alt="Tenerife sziklás partja drónról" data-en-alt="The cliffs of Tenerife from a drone" width="480" height="600" loading="lazy"></div><figcaption class="label"><b data-en="The coast">A part</b><span data-en="FlyX Tenerife. Promotional film.">FlyX Tenerife. Promóciós film.</span></figcaption></figure>
+        <figure class="work w2" data-sc-in><div class="fr" data-video><img src="assets/svc-video.jpg" alt="Részlet a FlyX Tenerife hirdetéséből" data-en-alt="A still from the FlyX Tenerife ad" width="540" height="960" loading="lazy"><video muted loop playsinline preload="none" aria-hidden="true" data-src="assets/svc-video.mp4"></video></div><figcaption class="label"><b data-en="5D flying cinema">5D repülő mozi</b><span data-en="FlyX Tenerife. Ad, moving image.">FlyX Tenerife. Hirdetés, mozgókép.</span></figcaption></figure>
+        <figure class="work w3" data-sc-in><div class="fr"><img src="assets/w10.jpg" alt="Gyenis András reels felirattal" data-en-alt="A Gyenis András reel with captions" width="480" height="600" loading="lazy"></div><figcaption class="label"><b data-en="Never promised">Soha nem ígért meg</b><span data-en="Gyenis András. Reels, captions.">Gyenis András. Reels, feliratok.</span></figcaption></figure>
+        <figure class="work w4" data-sc-in><div class="fr"><img src="assets/w03.jpg" alt="Nézők a FlyX 5D moziban" data-en-alt="Viewers in the FlyX 5D cinema" width="480" height="600" loading="lazy"></div><figcaption class="label"><b data-en="The audience">A közönség</b><span data-en="FlyX Tenerife. Promotional film.">FlyX Tenerife. Promóciós film.</span></figcaption></figure>
+        <figure class="work w5" data-sc-in><div class="fr"><img src="assets/w05.jpg" alt="Gyenis András a színpadon" data-en-alt="Gyenis András on stage" width="480" height="600" loading="lazy"></div><figcaption class="label"><b data-en="On stage">Színpadon</b><span data-en="Gyenis András. Stage intro.">Gyenis András. Színpadi intro.</span></figcaption></figure>
+        <figure class="work w6" data-sc-in><div class="fr"><img src="assets/w12.jpg" alt="Gyenis András reels kérdésekkel" data-en-alt="A Gyenis András reel with questions on screen" width="480" height="600" loading="lazy"></div><figcaption class="label"><b data-en="Husband? Father? Leader?">Férj? Apa? Vezető?</b><span data-en="Gyenis András. Series intro, reels.">Gyenis András. Sorozat-bevezető, reels.</span></figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- room III: the system, on plinths -->
+  <section class="room" id="terem3" data-sc-act="flow" aria-labelledby="r3-h">
+    <span class="num" aria-hidden="true">III</span>
+    <div class="wrap">
+      <div class="walltext" data-sc-in data-sc-stagger="90">
+        <p class="k" data-en="Room III · The system">III. terem · A rendszer</p>
+        <h2 id="r3-h" data-en="Whoever plays by the old rules loses.">Aki a régi szabályokkal játszik, veszít.</h2>
+        <p data-en="The new age's strategy: knowing from data what interests people, and building a system that turns interest into revenue. Six pieces, one strategy.">Az új kor stratégiája: adatból tudni, mi érdekli az embereket, és rendszert építeni, ami az érdeklődést bevétellé alakítja. Hat darab, egy stratégia.</p>
+      </div>
+      <ol class="directory" data-sc-in data-sc-stagger="70">
+        <li><span class="n">I</span><h3 data-en="Video content production">Videó tartalomgyártás</h3><p data-en="Hooks, creative direction, production: creative is the engine of the campaign. We make it too, from concept to finished video.">Hookok, kreatív irány, gyártás: a kampány motorja a kreatív. Ezt mi is elkészítjük, a koncepciótól a kész videóig.</p></li>
+        <li><span class="n">II</span><h3 data-en="Social media presence">Social média jelenlét</h3><p data-en="Feed, Stories, Reels, TikTok, with one strategy and one voice. Content calendar, community management, copywriting.">Feed, Stories, Reels, TikTok, egységes stratégiával, egységes hanggal. Content calendar, community management, copywriting.</p></li>
+        <li><span class="n">III</span><h3 data-en="Paid advertising">Fizetett hirdetés</h3><p data-en="Meta, TikTok and Google campaigns that don't just spend the budget, they generate ROAS. Daily optimisation, A/B testing, scaling.">Meta, TikTok és Google kampányok, amik nem csak elköltik a büdzsét, hanem ROAS-t termelnek. Napi optimalizálás, A/B tesztelés, skálázás.</p></li>
+        <li><span class="n">IV</span><h3 data-en="Website &amp; landing pages">Weboldal &amp; landing</h3><p data-en="Fast, mobile-optimised landing pages and websites that convert, not just look good.">Gyors, mobilra optimalizált landingek és weboldalak, amik konvertálnak, nem csak jól néznek ki.</p></li>
+        <li><span class="n">V</span><h3 data-en="Automation &amp; email">Automatizáció &amp; e-mail</h3><p data-en="Lead follow-up, email sequences, automated funnels. We set it up once, then it works for you.">Lead-követés, e-mail szekvenciák, automatizált tölcsérek. Egyszer beállítjuk, utána dolgozik helyetted.</p></li>
+        <li><span class="n">VI</span><h3 data-en="Growth strategy">Növekedési stratégia</h3><p data-en="Strategy-level marketing consulting: campaign strategy, funnel audit, market positioning. We are partners, not contractors.">Stratégiai szintű marketing tanácsadás: kampánystratégia, funnel audit, piaci pozicionálás. Partnerek vagyunk, nem kivitelezők.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- room IV: still lifes, and the numbers on brass -->
+  <section class="room" id="terem4" data-sc-act="flow" aria-labelledby="r4-h">
+    <span class="num" aria-hidden="true">IV</span>
+    <div class="wrap">
+      <div class="walltext" data-sc-in data-sc-stagger="90">
+        <p class="k" data-en="Room IV · Evidence">IV. terem · Bizonyítékok</p>
+        <h2 id="r4-h" data-en="Not promises. Numbers.">Nem ígéretek. Számok.</h2>
+      </div>
+      <div class="stills">
+        <figure class="work" data-sc-in><div class="fr"><img src="assets/case-ajto.webp" alt="Kilincs csendélet az Ajtó webshop esettanulmányából" data-en-alt="Door handle still life from the door webshop case study" width="900" height="471" loading="lazy"></div><figcaption class="plaque"><em data-en="Door webshop · Google Performance Max">Ajtó webshop · Google Performance Max</em><b><span data-count="81">81</span><small>×</small></b><span data-en="ROAS, our best result in an e-commerce campaign">ROAS, a legjobb eredményünk e-commerce kampányban</span></figcaption></figure>
+        <figure class="work" data-sc-in><div class="fr"><img src="assets/case-csarnok.webp" alt="Acél csomópont csendélet a csarnoképítő esettanulmányából" data-en-alt="Steel joint still life from the hall builder case study" width="900" height="471" loading="lazy"></div><figcaption class="plaque"><em data-en="Industrial hall builder · Meta">Csarnoképítő ügyfél · Meta</em><b><span data-count="79">79</span><small>M Ft</small></b><span data-en="revenue in one week, from a B2B Meta campaign">bevétel egy hét alatt, B2B Meta kampányból</span></figcaption></figure>
+        <figure class="work" data-sc-in><div class="fr"><img src="assets/case-karora.webp" alt="Karóra csendélet a karóra webshop esettanulmányából" data-en-alt="Wristwatch still life from the watch webshop case study" width="900" height="471" loading="lazy"></div><figcaption class="plaque"><em data-en="Watch webshop · Christmas">Karóra webshop · Karácsony</em><b><span data-count="23">23</span><small>×</small></b><span data-en="ROAS in a holiday campaign, 8M+ Ft revenue">ROAS ünnepi kampányban, 8M+ Ft bevétel</span></figcaption></figure>
+        <figure class="work" data-sc-in><div class="fr"><img src="assets/case-webinar.webp" alt="Töltőtoll csendélet a webinár esettanulmányából" data-en-alt="Fountain pen still life from the webinar case study" width="900" height="578" loading="lazy"></div><figcaption class="plaque"><em data-en="Healthcare webinar · lead generation">Egészségügyi webinár · lead generation</em><b><span data-count="105">105</span><small>Ft</small></b><span data-en="per registrant: ~5,700 registrants from 600K Ft spend">jelentkezőnként: ~5700 jelentkező 600K Ft költésből</span></figcaption></figure>
+      </div>
+      <p class="managed" data-sc-in data-en="300M+ Ft in budget managed since 2022.">300M+ Ft kezelt büdzsé 2022 óta.</p>
+    </div>
+  </section>
+
+  <!-- room V: portraits -->
+  <section class="room" id="terem5" data-sc-act="flow" aria-labelledby="r5-h">
+    <span class="num" aria-hidden="true">V</span>
+    <div class="wrap">
+      <div class="walltext" data-sc-in data-sc-stagger="90">
+        <p class="k" data-en="Room V · Portraits">V. terem · Portrék</p>
+        <h2 id="r5-h" data-en="The people who will work on your brand.">Az emberek, akik a márkádon dolgoznak majd.</h2>
+      </div>
+      <div class="portraits" data-sc-in data-sc-stagger="100">
+        <figure class="work"><div class="fr"><img src="assets/oliver.jpg" alt="Olivér" width="800" height="1000" loading="lazy"></div><figcaption class="nameplate">Olivér<small data-en="Founder &amp; campaign strategist">Alapító &amp; kampánystratéga</small></figcaption><p class="label" data-en="He reads the rules of the new age: he decides from data where to invest attention, and why anyone will watch it.">Ő olvassa az új kor szabályait: adatból dönti el, mibe fektessük a figyelmet, és miért fogja azt bárki megnézni.</p></figure>
+        <figure class="work"><div class="fr"><img src="assets/david.jpg" alt="David" width="800" height="1000" loading="lazy"></div><figcaption class="nameplate">David<small data-en="Creative &amp; content production">Kreatív &amp; tartalomgyártás</small></figcaption><p class="label" data-en="Whatever stops the thumb is his handiwork. Hooks, shooting, creative direction, in the language of the new age.">Ami megállítja a hüvelykujjat, az ő keze munkája. Hookok, forgatás, kreatív irány, az új kor nyelvén.</p></figure>
+        <figure class="work"><div class="fr"><img src="assets/lidi.jpg" alt="Lidi" width="800" height="1000" loading="lazy"></div><figcaption class="nameplate">Lidi<small data-en="Production &amp; editing">Produkció &amp; szerkesztés</small></figcaption><p class="label" data-en="The engine of production. Raw footage becomes finished content in her hands: editing, rhythm, precision, on deadline.">A gyártás motorja. Nála áll össze nyersanyagból kész tartalom: vágás, ritmus, precizitás, határidőre.</p></figure>
+      </div>
+      <div class="founder">
+        <figure class="work" data-sc-in><div class="fr"><img src="assets/oliver-founder.jpg" alt="Olivér, a SocialStream alapítója" data-en-alt="Olivér, founder of SocialStream" width="1000" height="1250" loading="lazy"></div></figure>
+        <div class="walltext" data-sc-in data-sc-stagger="90">
+          <p class="k" data-en="The founder">Az alapító</p>
+          <h2 data-en="I saw the shift from the inside.">A korszakváltást belülről láttam.</h2>
+          <p data-en="I landed my first client while studying in Denmark. Then, as a Meta Marketing Pro, I saw up close how the most serious brands think when there is real money in a campaign, and watched the old rules lose their force before our eyes. I founded SocialStream in 2022; since then we have managed 300M+ Ft in budget.">Dániai tanulmányaim alatt szereztem meg az első ügyfelemet. Aztán Meta Marketing Pro-ként közelről láttam, hogyan gondolkodnak a legkomolyabb márkák, amikor valódi pénz van a kampányban, és azt is, ahogy a régi szabályok a szemünk előtt érvényüket vesztik. 2022-ben alapítottam a SocialStreamet; azóta 300M+ Ft büdzsét kezeltünk.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- the guestbook -->
+  <section class="room" id="vendegkonyv" data-sc-act="flow" aria-labelledby="gb-h">
+    <span class="num" aria-hidden="true">VI</span>
+    <div class="wrap">
+      <div class="walltext" data-sc-in><p class="k" data-en="Room VI · The guestbook">VI. terem · Vendégkönyv</p><h2 id="gb-h" data-en="We don't say it. They do.">Nem mi mondjuk. Ők mondják.</h2></div>
+      <div class="book" data-sc-in>
+        <div class="page">
+          <div class="entry"><p data-en="“We had already switched off our Facebook ads once because they simply weren't worth it. After meeting Olivér we gave it another chance. There were purchases from launch day, and he produced numbers we had never seen before.”">„Egyszer már leállítottuk a Facebook hirdetéseinket, mert egyszerűen nem érte meg. Miután megismertük Olivért, adtunk egy újabb esélyt. Már az induláskor is volt vásárlás – olyan számokat produkált, amit eddig nem is láttunk.”</p><span data-en="Péter, Hoofbútor furniture webshop">Péter, Hoofbútor bútor webshop</span></div>
+          <div class="entry"><p data-en="“We thought Facebook was for young people and webshops; we build industrial halls. Then in one week we got as many quote requests as we used to get in half a year.”">„Azt hittük, a Facebook a fiataloknak és a webshopoknak való – mi csarnokot építünk. Aztán egy hét alatt annyi ajánlatkérésünk lett, mint korábban fél év alatt összesen.”</p><span data-en="Hall-building client, B2B">Csarnoképítő ügyfél, B2B</span></div>
+          <div class="entry"><p data-en="“Every December we dreaded ad prices. This year, for the first time, the holiday season felt like it was working for us, not against us.”">„Minden decemberben rettegtünk a hirdetési áraktól. Idén először éreztük úgy, hogy az ünnepi szezon nekünk dolgozik – nem ellenünk.”</p><span data-en="Watch webshop, holiday campaign">Karóra webshop, ünnepi kampány</span></div>
+        </div>
+        <div class="page">
+          <div class="entry"><p data-en="“We expected a few hundred registrants for the webinar. When the counter stopped at almost 5,700, we could hardly believe it came from the same budget.”">„Pár száz jelentkezőre számítottunk a webinárra. Amikor a számláló majdnem 5700-nál állt meg, alig hittük el, hogy ez ugyanabból a büdzséből jött ki.”</p><span data-en="Healthcare provider, lead generation">Egészségügyi szolgáltató, lead generation</span></div>
+          <div class="entry"><p data-en="“I wanted a professional team after launch. They build professional campaigns across Facebook/Instagram, the website and ads. Results came quickly, and I had nothing to do.”">„Profi csapatot szerettem volna az indulás után. Mind Facebook/Instagram, mind weboldal és hirdetés területén profi kampányokat készítenek. Rövid időn belül jöttek az eredmények – nekem semmi dolgom nem volt velük.”</p><span>Rita, Rita's Beauty Corner</span></div>
+          <div class="entry"><p data-en="“Social Stream built my website professionally. Everyone loved the polished, easy-to-follow content! I can only recommend them.”">„A Social Stream profi módon készítette el a weboldalam. Mindenkinek tetszett az igényes és könnyen áttekinthető tartalom! Csak ajánlani tudom őket.”</p><span>János, EJ Massage Therapies</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- the exit: the audit as an admission ticket -->
+  <section class="room" id="penztar" data-sc-act="flow" aria-labelledby="pt-h">
+    <span class="num" aria-hidden="true">VII</span>
+    <div class="wrap">
+      <div class="desk">
+        <div class="walltext" data-sc-in data-sc-stagger="90">
+          <p class="k" data-en="The desk · Admission">Pénztár · Belépés</p>
+          <h2 id="pt-h" data-en="Your market already lives in the new age. Does your marketing?">A piacod már az új korban jár. A marketinged is?</h2>
+          <p data-en="A free 30-minute audit: we look at your campaigns, your landing page and your offer, and tell you honestly where you still play by the old rules, before you pay anything.">30 perces ingyenes audit: megnézzük a kampányaidat, a landing page-edet és az ajánlatodat, és őszintén megmondjuk, hol játszol még a régi kor szabályaival, még fizetés előtt.</p>
+          <p data-en="We don't work with everyone: at most two new partners a month, for brands with stable revenue that see marketing as an investment.">Nem dolgozunk mindenkivel: havonta legfeljebb két új partner, stabil bevételű márkákkal, amelyek befektetésként tekintenek a marketingre.</p>
+        </div>
+        <form class="ticket" id="appform" novalidate data-sc-in>
+          <div class="head"><b data-en="Admission: free audit">Belépőjegy: ingyenes audit</b><span data-en="30 min · 0 Ft">30 perc · 0 Ft</span></div>
+          <div class="field"><label for="f-name" data-en="Your name">Neved</label><input id="f-name" autocomplete="name" required><span class="err" id="e-name"></span></div>
+          <div class="field"><label for="f-email" data-en="Email">E-mail</label><input id="f-email" type="email" autocomplete="email" required><span class="err" id="e-email"></span></div>
+          <div class="field"><label for="f-brand" data-en="Company or brand">Cég vagy márka</label><input id="f-brand" autocomplete="organization" required><span class="err" id="e-brand"></span></div>
+          <div class="field"><label for="f-web" data-en="Website or Instagram">Weboldal vagy Instagram</label><input id="f-web" autocomplete="url"><span class="err"></span></div>
+          <div class="field"><label for="f-budget" data-en="Monthly marketing budget">Havi marketing büdzsé</label><select id="f-budget"><option value="" data-en="Choose a range">Válassz sávot</option><option value="lt300" data-en="Under 300K Ft">300K Ft alatt</option><option value="300-1m">300K–1M Ft</option><option value="1-3m">1M–3M Ft</option><option value="gt3m" data-en="Over 3M Ft">3M Ft felett</option></select><span class="err"></span></div>
+          <div class="field"><label for="f-goal" data-en="Main goal">Fő cél</label><select id="f-goal"><option value="" data-en="Choose a goal">Válassz célt</option><option value="sales" data-en="More sales (e-commerce)">Több eladás (webshop)</option><option value="leads" data-en="More leads and enquiries">Több érdeklődő és ajánlatkérés</option><option value="brand" data-en="Brand and content">Márka és tartalom</option><option value="web" data-en="Website or landing page">Weboldal vagy landing</option></select><span class="err"></span></div>
+          <fieldset><legend data-en="What interests you">Ami érdekel</legend><div class="chips" id="chips"></div></fieldset>
+          <div class="field full"><label for="f-msg" data-en="Where are you now?">Hol tartasz most?</label><textarea id="f-msg"></textarea><span class="err"></span></div>
+          <div class="acts">
+            <button class="stamp-btn" type="submit" data-en="Request my audit">Kérem az auditot</button>
+            <span class="direct"><span data-en="Or write:">Vagy írj:</span> <a href="mailto:hello@socialstream.hu">hello@socialstream.hu</a><button type="button" class="copy-mini" id="copyMail" data-en="Copy address">Cím másolása</button></span>
+          </div>
+          <div class="sent" id="sent" hidden aria-live="polite"></div>
+        </form>
+      </div>
+      <footer class="foot"><span data-en="SocialStream · interest media agency · Tenerife and Budapest">SocialStream · interest media ügynökség · Tenerife és Budapest</span><span>© 2026 · hello@socialstream.hu</span></footer>
+    </div>
+  </section>
+</main>
+
+<script src="scrollcraft.js"></script>
+<script src="ss.js"></script>
+<script>
+(function () {
+  var $ = SS.$, $$ = SS.$$, reduce = SS.reduce, fine = SS.fine, lerp = SS.lerp;
+
+  /* ---------------- the light ---------------- */
+  // a mouse carries the light; on touch it is a torch fixed at the centre and the rooms scroll through it
+  // until the visitor moves, the light rests on the exhibition's title
+  var night = $('#night'), dot = $('#dot'), h1r = $('#ex-h').getBoundingClientRect();
+  var tx = h1r.left + h1r.width / 2, ty = h1r.top + h1r.height / 2, lx = tx, ly = ty;
+  if (fine) addEventListener('pointermove', function (e) { tx = e.clientX; ty = e.clientY; document.body.classList.add('moved'); });
+  var R = fine ? 440 : Math.round(Math.max(innerWidth, innerHeight) * 0.42);
+  function lightTick() {
+    if (!fine) { tx = innerWidth / 2; ty = innerHeight * 0.45; }
+    lx = lerp(lx, tx, reduce ? 1 : 0.16); ly = lerp(ly, ty, reduce ? 1 : 0.16);
+    night.style.setProperty('--x', lx.toFixed(1) + 'px'); night.style.setProperty('--y', ly.toFixed(1) + 'px'); night.style.setProperty('--r', R + 'px');
+    dot.style.setProperty('--x', tx.toFixed(1) + 'px'); dot.style.setProperty('--y', ty.toFixed(1) + 'px');
+  }
+  var lights = $('#lights');
+  lights.addEventListener('click', function () { var on = document.body.classList.toggle('lights'); lights.setAttribute('aria-pressed', String(on)); });
+
+  /* ---------------- the projection ---------------- */
+  var screen = $('#screen'), reel = $('#reel'), wide = matchMedia('(orientation: landscape)').matches;
+  if (!wide) { $('.poster', screen).src = reel.dataset.posterM; }
+  var loaded = false, on = true;
+  function apply() {
+    if (reduce || !on) { reel.pause(); return; }
+    if (!loaded) { loaded = true; reel.src = matchMedia('(orientation: landscape)').matches ? reel.dataset.src : reel.dataset.srcM; reel.load(); }
+    var pp = reel.play(); if (pp && pp.catch) pp.catch(function () {});
+  }
+  reel.addEventListener('playing', function () { screen.classList.add('is-playing'); });
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { on = es[0].isIntersecting; apply(); }, { threshold: 0.1 }).observe(screen);
+  if (document.readyState === 'complete') apply(); else addEventListener('load', function () { setTimeout(apply, 60); }, { once: true });
+
+  /* ---------------- the moving work plays while it is seen ---------------- */
+  $$('[data-video]').forEach(function (fr) {
+    var v = $('video', fr);
+    v.addEventListener('playing', function () { fr.classList.add('is-playing'); });
+    new IntersectionObserver(function (es) { if (es[0].isIntersecting && !reduce) { if (!v.src) v.src = v.dataset.src; var pp = v.play(); if (pp && pp.catch) pp.catch(function () {}); } else v.pause(); }, { threshold: 0.4 }).observe(fr);
+  });
+
+  /* ---------------- brass plaques count once ---------------- */
+  var counts = $$('[data-count]');
+  if ('IntersectionObserver' in window && !reduce) {
+    counts.forEach(function (c) { c.textContent = '0'; });
+    var cio = new IntersectionObserver(function (es) { es.forEach(function (e) { if (!e.isIntersecting) return; cio.unobserve(e.target); var el = e.target, to = +el.dataset.count, s0 = performance.now();
+      (function f(now) { var k = Math.min(1, (now - s0) / 1500); el.textContent = String(Math.round(to * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(f); })(s0); }); }, { threshold: 0.6 });
+    counts.forEach(function (c) { cio.observe(c); });
+  }
+
+  /* ---------------- the ticket ---------------- */
+  var form = $('#appform'), chips = $('#chips'), sent = $('#sent'), chosen = [], lastBody = '';
+  function renderChips() { chips.innerHTML = SS.TOPICS.map(function (t) { return '<label class="chip"><input type="checkbox" value="' + t.id + '"' + (chosen.indexOf(t.id) > -1 ? ' checked' : '') + '><span>' + SS.esc(SS.T(t)) + '</span></label>'; }).join(''); }
+  chips.addEventListener('change', function (e) { var id = e.target.value, k = chosen.indexOf(id); if (e.target.checked && k < 0) chosen.push(id); else if (!e.target.checked && k > -1) chosen.splice(k, 1); });
+  function check() {
+    var ok = true;
+    [['f-name', 'e-name'], ['f-email', 'e-email'], ['f-brand', 'e-brand']].forEach(function (pr) {
+      var el = $('#' + pr[0]), er = $('#' + pr[1]), v = el.value.trim(), m = '';
+      if (!v) m = SS.T(SS.ERR.req); else if (el.type === 'email' && !SS.isMail(v)) m = SS.T(SS.ERR.mail);
+      er.textContent = m; el.setAttribute('aria-invalid', String(!!m)); if (m && ok) { el.focus(); ok = false; }
+    });
+    return ok;
+  }
+  function showSent(body) {
+    var s = SS.sentText(); sent.hidden = false;
+    sent.innerHTML = '<b>' + s.b + '</b><span>' + SS.esc(s.s) + '</span><button type="button" id="copyBody">' + s.c + '</button>';
+    var cb = $('#copyBody'); cb.addEventListener('click', function () { SS.copy(body, cb, function () { var m = $('#f-msg'); m.value = body; m.focus(); m.select(); }); });
+  }
+  var sel = function (id) { var el = $('#' + id); return el.value ? el.options[el.selectedIndex].text : ''; };
+  form.addEventListener('submit', function (e) {
+    e.preventDefault(); if (!check()) return;
+    var body = SS.compose({ name: $('#f-name').value.trim(), email: $('#f-email').value.trim(), brand: $('#f-brand').value.trim(), web: $('#f-web').value.trim(), budget: sel('f-budget'), goal: sel('f-goal'), interests: chosen, msg: $('#f-msg').value.trim() });
+    lastBody = body; showSent(body); SS.send($('#f-brand').value.trim(), body);
+  });
+  var cm = $('#copyMail');
+  cm.addEventListener('click', function () { SS.copy(SS.CONTACT, cm, function () { var r = document.createRange(), s = getSelection(); r.selectNodeContents(cm.previousElementSibling); s.removeAllRanges(); s.addRange(r); }); });
+
+  /* ---------------- start ---------------- */
+  SS.onLang(function () { renderChips(); if (lastBody) showSent(lastBody); });
+  SS.start();
+  (function frame() { lightTick(); requestAnimationFrame(frame); })();
+})();
+ScrollCraft.mount(document.body);
+</script>
+</body>
+</html>

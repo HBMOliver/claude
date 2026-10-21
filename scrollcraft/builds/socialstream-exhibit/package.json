@@ -1,0 +1,8 @@
+{
+  "name": "socialstream-exhibit",
+  "private": true,
+  "description": "SocialStream Exhibition (scroll-craft build)",
+  "dependencies": {
+    "playwright-core": "^1.64.1"
+  }
+}
