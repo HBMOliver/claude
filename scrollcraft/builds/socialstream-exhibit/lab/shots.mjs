@@ -13,7 +13,7 @@ let i = 0; const shot = async () => p.screenshot({ path: `${out}/${String(i++).p
 const go = async (sel, wait = 1300, dy = 0) => { await p.evaluate(([s, dy]) => { document.querySelector(s).scrollIntoView({ behavior: 'instant' }); scrollBy(0, dy); }, [sel, dy]); await p.waitForTimeout(wait); };
 const light = async (fx, fy) => { if (!mob) { await p.mouse.move(W * fx, H * fy, { steps: 6 }); await p.waitForTimeout(500); } };
 await light(0.62, 0.38); await shot();
-res.reelPlaying = await p.evaluate(() => { const v = document.getElementById('reel'); return [!!v.currentSrc, v.paused, v.currentSrc.split('/').pop()]; });
+res.reelPlaying = await p.evaluate(() => { const v = document.querySelector('#top video'); return [!!v.currentSrc, v.paused, v.currentSrc.split('/').pop()]; });
 await go('#terem1', 1300); await light(0.3, 0.55); await shot();
 await go('#terem1 .vitrines', 1100, -H * 0.15); await light(0.5, 0.5); await shot();
 await go('#terem2', 1300); await light(0.7, 0.4); await shot();

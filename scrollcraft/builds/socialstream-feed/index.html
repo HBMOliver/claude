@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23000'/%3E%3Crect x='11' y='6' width='10' height='20' rx='3' fill='none' stroke='%23ffd84d' stroke-width='2'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,600;0,800;1,800&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,600;0,700;0,800;1,800&family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="scrollcraft.css">
 <style>
 /* The Feed: the site is a feed. One post per screen, captions in their own style,
@@ -72,6 +72,51 @@ a { color: inherit; }
 .toast { position: fixed; z-index: 70; left: 50%; bottom: calc(26px + env(safe-area-inset-bottom, 0px)); translate: -50% 0; padding: 10px 16px; border-radius: 999px; background: #fff; color: #000; font: 600 0.84rem/1.2 var(--ft); opacity: 0; transform: translateY(10px); transition: opacity 240ms, transform 340ms var(--ease); pointer-events: none; }
 .toast.is-on { opacity: 1; transform: none; }
 
+/* ---------- the reel, first: full screen, their work, live lines on the film's clock ---------- */
+.reel { --rg: clamp(20px, 5vw, 80px); position: relative; height: 100svh; min-height: 32rem; overflow: hidden; background: #000; color: #fff; }
+.reel video, .reel .poster, .reel .poster img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.reel .poster { transition: opacity 500ms var(--ease); }
+.reel.is-playing .poster { opacity: 0; }
+.reel .shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0) 22%, rgba(0, 0, 0, 0) 52%, rgba(0, 0, 0, 0.58) 100%); }
+.reel .dim { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.78); opacity: 0; transition: opacity 600ms var(--ease); pointer-events: none; }
+.reel.is-dim .dim { opacity: 1; }
+.rcues { position: absolute; inset: 0; pointer-events: none; }
+/* the outgoing line leaves fast and the incoming one waits a beat, so two lines never stack */
+.rcue { position: absolute; margin: 0; opacity: 0; transform: translateY(18px); transition: opacity 160ms var(--ease), transform 160ms var(--ease); }
+.rcue.is-on { opacity: 1; transform: none; transition: opacity 420ms var(--ease) 140ms, transform 620ms var(--ease) 140ms; }
+.rcue.line, .rcue.num, .rcue.tag { left: max(var(--rg), env(safe-area-inset-left, 0px)); }
+.rcue.line, .rcue.num { right: max(var(--rg), env(safe-area-inset-right, 0px)); }
+.rcue.line { bottom: calc(110px + env(safe-area-inset-bottom, 0px)); font: 600 clamp(2.6rem, 1.2rem + 6.2vw, 7.6rem)/0.95 var(--fd); letter-spacing: -0.05em; text-wrap: balance; max-width: 15ch; text-shadow: 0 2px 40px rgba(0, 0, 0, 0.35); }
+.rcue.tag { top: calc(58px + 28px + env(safe-area-inset-top, 0px)); font: 500 0.8rem/1 var(--ft); letter-spacing: 0.12em; text-transform: uppercase; }
+.rcue.tag.is-on { opacity: 0.85; }
+.rcue.num { top: 50%; transform: translateY(-40%); display: grid; gap: 14px; }
+.rcue.num.is-on { transform: translateY(-50%); }
+.rcue.num b { font: 700 clamp(5rem, 2rem + 13vw, 15rem)/0.82 var(--fd); letter-spacing: -0.06em; font-variant-numeric: tabular-nums; }
+.rcue.num b small { font-size: 0.42em; margin-left: 0.04em; letter-spacing: 0; word-spacing: 0.12em; }
+.rcue.num > span { font: 500 clamp(1rem, 0.9rem + 0.5vw, 1.35rem)/1.4 var(--ft); max-width: 30ch; color: rgba(255, 255, 255, 0.78); }
+.rcue.end { inset: 0; display: grid; place-content: center; text-align: center; gap: 14px; transform: scale(0.98); }
+.rcue.end.is-on { transform: none; }
+.rcue.end .wm { font: 700 clamp(3rem, 1.4rem + 7vw, 8.5rem)/0.9 var(--fd); letter-spacing: -0.055em; }
+.rcue.end .sub { font: 500 0.85rem/1 var(--ft); letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.7; }
+.reel .ui { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: flex-end;
+  padding: 0 max(var(--rg), env(safe-area-inset-right, 0px)) calc(28px + env(safe-area-inset-bottom, 0px)) max(var(--rg), env(safe-area-inset-left, 0px)); }
+.reel .down { position: absolute; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); translate: -50% 0; display: inline-flex; flex-direction: column; align-items: center; gap: 10px;
+  font: 500 0.74rem/1 var(--ft); letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.8); text-decoration: none; }
+.reel .down::after { content: ""; width: 1px; height: 28px; background: currentColor; transform-origin: top; animation: drip 2.4s var(--ease) infinite; }
+@keyframes drip { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+.reel .toggle { width: 46px; height: 46px; border-radius: 50%; border: 0; cursor: pointer; display: grid; place-items: center;
+  background: rgba(255, 255, 255, 0.14); color: #fff; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.reel .toggle svg { width: 14px; height: 14px; }
+@media (hover: hover) and (pointer: fine) { .reel { cursor: none; } .reel .ui a, .reel .ui button { cursor: pointer; } }
+.rdisc { position: fixed; z-index: 65; left: 0; top: 0; width: 92px; height: 92px; margin: -46px 0 0 -46px; border-radius: 50%; pointer-events: none; display: grid; place-items: center;
+  background: rgba(255, 255, 255, 0.92); color: #000; font: 600 0.78rem/1 var(--ft); letter-spacing: 0.02em; transform: translate3d(var(--x, -200px), var(--y, -200px), 0) scale(var(--s, 0)); }
+@media (max-width: 860px) { .rcue.line { bottom: calc(120px + env(safe-area-inset-bottom, 0px)); max-width: 11ch; } }
+@media (prefers-reduced-motion: reduce) { .reel .down::after { animation: none; } .rcue, .rcue.is-on, .reel .dim { transition: none; } }
+.reel { z-index: 2; scroll-snap-align: start; scroll-snap-stop: always; }
+/* the feed's chrome arrives with the first post */
+.profile, .actions { transition: opacity 300ms; }
+body[data-post="top"] .profile, body[data-post="top"] .actions { opacity: 0; pointer-events: none; }
+
 /* ---------- posts ---------- */
 .post { position: relative; z-index: 1; height: 100svh; scroll-snap-align: start; scroll-snap-stop: always; display: grid; place-items: center; }
 .frame { position: relative; width: var(--fw); height: var(--fh); border-radius: 22px; overflow: hidden; background: #0b0b0c; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 50px 120px -40px rgba(0, 0, 0, 0.9); container-type: size; }
@@ -87,8 +132,6 @@ a { color: inherit; }
 .meta b { font: 800 0.98rem/1.2 var(--fd); }
 .meta p { margin: 0; font-size: 0.86rem; color: rgba(255, 255, 255, 0.86); }
 .meta .tune { font-size: 0.78rem; color: var(--soft); display: flex; gap: 8px; align-items: center; }
-.tag[data-t] { opacity: 0; transition: opacity 300ms; }
-.tag[data-t].is-on { opacity: 1; }
 .tag { position: absolute; z-index: 4; left: 16px; top: 30px; font: 600 0.7rem/1 var(--ft); letter-spacing: 0.08em; text-transform: uppercase; padding: 7px 10px; border-radius: 999px; background: rgba(0, 0, 0, 0.42); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
 /* their caption style: heavy caps, the spoken word lit yellow */
 .caps { position: absolute; z-index: 4; left: 8%; right: 8%; top: 56%; text-align: center; pointer-events: none; }
@@ -97,11 +140,6 @@ a { color: inherit; }
 .cap.is-on { opacity: 1; transform: none; }
 .cap span { transition: color 120ms; }
 .cap span.hl { color: var(--hl); }
-.stat { position: absolute; z-index: 4; inset: 0; display: grid; place-content: center; text-align: center; gap: 2cqw; opacity: 0; transition: opacity 300ms; background: rgba(0, 0, 0, 0.55); }
-.stat.is-on { opacity: 1; }
-.stat b { font: 800 26cqw/0.85 var(--fd); letter-spacing: -0.05em; color: var(--hl); }
-.stat b small { font-size: 0.36em; color: #fff; letter-spacing: 0; word-spacing: 0.12em; }
-.stat span { font: 600 3.6cqw/1.3 var(--ft); padding: 0 10%; }
 .heart { position: fixed; z-index: 80; left: 0; top: 0; width: 110px; height: 110px; margin: -55px 0 0 -55px; pointer-events: none; animation: pop 900ms var(--ease) forwards; }
 .heart svg { width: 100%; height: 100%; fill: var(--like); filter: drop-shadow(0 10px 30px rgba(255, 59, 92, 0.5)); }
 @keyframes pop { 0% { transform: translate3d(var(--x), var(--y), 0) scale(0.2) rotate(-12deg); opacity: 0; } 20% { opacity: 1; transform: translate3d(var(--x), var(--y), 0) scale(1.1) rotate(6deg); }
@@ -259,7 +297,7 @@ a { color: inherit; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-snap-type: none; }
-  .cap, .stat, .oldpost, .ambient, .ambient i, .msg { transition: none; animation: none; }
+  .cap, .oldpost, .ambient, .ambient i, .msg { transition: none; animation: none; }
 }
 </style>
 </head>
@@ -268,7 +306,7 @@ a { color: inherit; }
 <div class="ambient" id="ambient" aria-hidden="true"></div>
 
 <header class="top">
-  <a class="logo" href="#p1">SocialStream</a>
+  <a class="logo" href="#top">SocialStream</a>
   <div class="lang" role="group" aria-label="Nyelv / Language"><button type="button" data-set-lang="hu" aria-pressed="true" lang="hu">HU</button><button type="button" data-set-lang="en" aria-pressed="false" lang="en">EN</button></div>
   <a class="pill" href="#p10" data-en="Free audit">Ingyenes audit</a>
 </header>
@@ -300,30 +338,34 @@ a { color: inherit; }
 <main>
   <h1 class="sr" data-en="SocialStream, interest media agency. Social media is dead. Interest has taken its place.">SocialStream, interest media ügynökség. A social media meghalt. Az érdeklődés vette át a helyét.</h1>
 
-  <!-- 1 · the reel, as a post -->
-  <section class="post" id="p1" data-sc-act="flow" data-topic="video" data-amb="assets/reel-720-poster.jpg" aria-label="Reel">
-    <div class="frame has-vid" data-vid>
-      <img class="still" src="assets/reel-720-poster.jpg" alt="" width="720" height="1280" fetchpriority="high">
-      <video muted loop playsinline preload="none" aria-hidden="true" data-src="assets/reel-720.mp4"></video>
-      <div class="grad"></div>
-      <div class="bars" aria-hidden="true"></div>
-      <p class="tag" data-t="0 7.2" data-en="Client: FlyX Tenerife">Ügyfél: FlyX Tenerife</p>
-      <p class="tag" data-t="7.2 11.4" data-en="Client: Gyenis András">Ügyfél: Gyenis András</p>
-      <p class="tag" data-t="11.4 17.4" data-en="Our clients' feeds">Ügyfeleink feedje</p>
-      <p class="tag" data-t="17.4 21.3" data-en="Client: Gyenis András">Ügyfél: Gyenis András</p>
-      <div class="caps" aria-hidden="true">
-        <p class="cap" data-t="0 2.35" data-en="Social media is dead.">A social media meghalt.</p>
-        <p class="cap" data-t="2.6 7.0" data-en="Interest has taken its place.">Az érdeklődés vette át a helyét.</p>
-        <p class="cap" data-t="11.6 14.4" data-en="The feed no longer shows who you follow.">A feed már nem azt mutatja, kit követsz.</p>
-        <p class="cap" data-t="14.5 17.3" data-en="It shows what interests you.">Hanem azt, ami érdekel.</p>
-        <p class="cap" data-t="17.6 21.2" data-en="Video. Social. Ads. One system.">Videó. Social. Hirdetés. Egy rendszerben.</p>
-        <p class="cap" data-t="27.4 29.65" data-en="We win in this age.">Mi ebben a korban győzünk.</p>
-      </div>
-      <div class="stat" data-t="21.4 22.95"><b>81<small>×</small></b><span data-en="ROAS, our best result in an e-commerce campaign">ROAS, a legjobb eredményünk e-commerce kampányban</span></div>
-      <div class="stat" data-t="22.95 24.45"><b>79<small>M Ft</small></b><span data-en="revenue in one week, from a B2B Meta campaign">bevétel egy hét alatt, B2B Meta kampányból</span></div>
-      <div class="stat" data-t="24.45 25.95"><b>23<small>×</small></b><span data-en="ROAS in a holiday campaign, 8M+ Ft revenue">ROAS ünnepi kampányban, 8M+ Ft bevétel</span></div>
-      <div class="stat" data-t="25.95 27.3"><b>300<small>M+ Ft</small></b><span data-en="budget managed since 2022">kezelt büdzsé 2022 óta</span></div>
-      <div class="meta"><b>@socialstream</b><p data-en="Social media is dead. This is what replaced it. #interestmedia">A social media meghalt. Ez jött helyette. #interestmedia</p><span class="tune" data-en="♫ Olivér's voice · coming soon">♫ Olivér hangja · hamarosan</span></div>
+  <!-- the reel, first: their client work, with live HU/EN lines and the real numbers on the film's clock -->
+  <section class="reel" id="top" data-sc-act="flow" aria-label="Reel">
+    <picture class="poster"><source media="(orientation: portrait)" srcset="assets/reel-720-poster.jpg"><img src="assets/reel-1080-poster.jpg" alt="" width="1600" height="900" fetchpriority="high"></picture>
+    <video muted loop playsinline preload="none" aria-hidden="true"
+      data-src="assets/reel-1080.mp4" data-poster="assets/reel-1080-poster.jpg"
+      data-src-m="assets/reel-720.mp4" data-poster-m="assets/reel-720-poster.jpg"></video>
+    <div class="shade"></div>
+    <div class="dim"></div>
+    <div class="rcues" aria-hidden="true">
+      <p class="rcue tag" data-t="0 7.2" data-en="Client: FlyX Tenerife">Ügyfél: FlyX Tenerife</p>
+      <p class="rcue tag" data-t="7.2 11.4" data-en="Client: Gyenis András">Ügyfél: Gyenis András</p>
+      <p class="rcue tag" data-t="11.4 17.4" data-en="Our clients' feeds">Ügyfeleink feedje</p>
+      <p class="rcue tag" data-t="17.4 21.3" data-en="Client: Gyenis András">Ügyfél: Gyenis András</p>
+      <p class="rcue line" data-t="0 2.35" data-en="Social media is dead.">A social media meghalt.</p>
+      <p class="rcue line" data-t="2.6 7.0" data-en="Interest has taken its place.">Az érdeklődés vette át a helyét.</p>
+      <p class="rcue line" data-t="11.6 14.4" data-en="The feed no longer shows who you follow.">A feed már nem azt mutatja, kit követsz.</p>
+      <p class="rcue line" data-t="14.5 17.3" data-en="It shows what interests you.">Hanem azt, ami érdekel.</p>
+      <p class="rcue line" data-t="17.6 21.2" data-en="Video. Social. Ads. One system.">Videó. Social. Hirdetés. Egy rendszerben.</p>
+      <div class="rcue num" data-t="21.4 22.95" data-dim><b><span data-to="81">81</span><small>×</small></b><span data-en="ROAS, our best result in an e-commerce campaign">ROAS, a legjobb eredményünk e-commerce kampányban</span></div>
+      <div class="rcue num" data-t="22.95 24.45" data-dim><b><span data-to="79">79</span><small>M Ft</small></b><span data-en="revenue in one week, from a B2B Meta campaign">bevétel egy hét alatt, B2B Meta kampányból</span></div>
+      <div class="rcue num" data-t="24.45 25.95" data-dim><b><span data-to="23">23</span><small>×</small></b><span data-en="ROAS in a holiday campaign, 8M+ Ft revenue">ROAS ünnepi kampányban, 8M+ Ft bevétel</span></div>
+      <div class="rcue num" data-t="25.95 27.3" data-dim><b><span data-to="300">300</span><small>M+ Ft</small></b><span data-en="budget managed since 2022">kezelt büdzsé 2022 óta</span></div>
+      <p class="rcue line" data-t="27.4 29.65" data-en="We win in this age.">Mi ebben a korban győzünk.</p>
+      <div class="rcue end" data-t="29.7 32.1" data-dim><span class="wm">SocialStream</span><span class="sub" data-en="Interest media · Tenerife, Budapest">Interest media · Tenerife, Budapest</span></div>
+    </div>
+    <div class="ui">
+      <a class="down" href="#p2" data-en="Scroll">Görgess</a>
+      <button class="toggle" type="button" aria-label="Reel megállítása"></button>
     </div>
   </section>
 
@@ -497,6 +539,7 @@ a { color: inherit; }
 </div>
 <div class="toast" id="toast" role="status"></div>
 <div class="cursor" id="cursor" aria-hidden="true"><span id="cursorLabel"></span></div>
+<div class="rdisc" id="rdisc" aria-hidden="true"><span>Szünet</span></div>
 
 <script src="scrollcraft.js"></script>
 <script src="ss.js"></script>
@@ -548,7 +591,17 @@ a { color: inherit; }
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) activate(posts.indexOf(e.target)); }); }, { threshold: 0.6 });
     posts.forEach(function (p) { io.observe(p); });
   }
-  // captions and stats run on each clip's own clock; the spoken word lights up
+  /* ---------------- the reel, full screen, first ---------------- */
+  // on the reel the feed's chrome steps aside and the posts are quiet
+  var heroSec = $('#top'), hero = SS.reel(heroSec, $('#rdisc'));
+  function onHero() {
+    document.body.setAttribute('data-post', 'top');
+    ambs.forEach(function (a) { a.classList.remove('is-on'); });
+    vids.forEach(function (o) { if (o.v) o.v.pause(); });
+    $$('.slide video').forEach(function (sv) { sv.pause(); });
+  }
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { if (es[0].isIntersecting) onHero(); }, { threshold: 0.6 }).observe(heroSec);
+  // captions run on each clip's own clock; the spoken word lights up
   function capTick() {
     var o = vids[cur]; if (!o || !o.caps.length) return;
     var t = o.v && o.v.src ? o.v.currentTime : 0;
@@ -729,8 +782,8 @@ a { color: inherit; }
   /* ---------------- start ---------------- */
   SS.onLang(function () { splitCaps(); renderComments(); if (sOpen) showStory(si); });
   SS.start();
-  activate(0);
-  (function frame(now) { capTick(); cursorTick(); storyTick(now); requestAnimationFrame(frame); })(performance.now());
+  onHero();
+  (function frame(now) { hero.tick(); capTick(); cursorTick(); storyTick(now); requestAnimationFrame(frame); })(performance.now());
 })();
 ScrollCraft.mount(document.body);
 </script>
