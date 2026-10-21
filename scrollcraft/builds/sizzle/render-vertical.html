@@ -28,6 +28,8 @@
   .logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); white-space: nowrap; text-align: center; }
   .logo .w { font-family: "Fraunces", serif; font-weight: 400; font-size: 236px; letter-spacing: -0.03em; line-height: 0.9; text-shadow: 0 10px 60px rgba(0,0,0,0.55); }
   .logo .w i { color: var(--blue); }
+  .logo::before { content: ""; position: absolute; left: 50%; top: 50%; width: 1240px; height: 1080px; transform: translate(-50%, -50%); z-index: -1;
+                  background: radial-gradient(closest-side, rgba(10,10,10,0.93), rgba(10,10,10,0.84) 52%, rgba(10,10,10,0.4) 80%, transparent); }
   .logo .sub { margin-top: 48px; font-size: 30px; font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(248,244,236,0.85); }
 
   /* Kinetic type */
@@ -40,7 +42,7 @@
   .glow { position: absolute; left: 50%; top: 50%; width: 1100px; height: 1300px; transform: translate(-50%, -50%); background: radial-gradient(closest-side, rgba(124,158,190,0.16), transparent); }
 
   /* Client block */
-  #client .pattern { position: absolute; inset: -200px; display: flex; flex-direction: column; justify-content: center; gap: 6px; transform: rotate(-8deg); }
+  #client .pattern { position: absolute; inset: -200px; display: flex; flex-direction: column; justify-content: center; gap: 22px; transform: rotate(-8deg); }
   #client .pattern div { font-size: 96px; font-weight: 800; letter-spacing: -0.02em; white-space: nowrap; line-height: 1; }
   #client .phones { position: absolute; inset: 0; }
   #client .phones .phone { position: absolute; left: 50%; top: 50%; margin: -370px 0 0 -180px; }
@@ -57,6 +59,7 @@
   #num .veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.08) 24%, rgba(10,10,10,0.62) 38%, rgba(10,10,10,0.96) 48%, #0a0a0a 54%, #0a0a0a 100%); }
   #num .copy { position: absolute; left: 130px; right: 150px; bottom: 470px; }
   #num .big { font-family: "Fraunces", serif; font-size: 286px; line-height: 0.82; letter-spacing: -0.05em; font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
+  #num .big small.x { font-size: 0.62em; }
   #num .big small { font-size: 0.42em; letter-spacing: -0.02em; color: var(--blue); }
   #num .lab { margin-top: 30px; font-size: 56px; font-weight: 700; letter-spacing: -0.02em; }
   #num .cap { margin-top: 18px; font-size: 28px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); }
@@ -87,6 +90,8 @@ const M = window.MANIFEST || {};           // { clip: frameCount }
 const CLIPS = Object.keys(M);
 const FR = (clip, size, n) => `frames/${clip}-${size}/${String(n).padStart(4, '0')}.jpg`;
 const frameAt = (clip, t, off = 0) => (Math.floor(t * FPS) + off) % M[clip] + 1;
+const mod = (a, n) => ((a % n) + n) % n;
+const wallFrame = (clip, w, off) => mod(Math.floor(w * FPS) + off, M[clip]) + 1;
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const ease = (x) => { x = clamp(x); return 1 - Math.pow(1 - x, 3); };
 const easeIO = (x) => { x = clamp(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
@@ -115,12 +120,12 @@ const cols = [...grid.children];
 const S = [];
 const scene = (a, b, fn) => S.push({ a, b, fn });
 
-function wall(t, lt, opts) {
+function wall(w, lt, opts) {   // w: wall time, 0 at the loop point
   show('wall');
   const z = opts.zoom(lt);
   grid.style.transform = `translate(-50%, -50%) rotateX(24deg) rotateZ(-11deg) scale(${z})`;
-  cols.forEach((col, i) => { const dir = i % 2 ? 1 : -1; col.style.transform = `translateY(${dir * ((lt * 46 + i * 70) % 434) - 300}px)`; });
-  tiles.forEach(T => setSrc(T.img, FR(T.clip, 's', frameAt(T.clip, t, T.off))));
+  cols.forEach((col, i) => { const dir = i % 2 ? 1 : -1; col.style.transform = `translateY(${dir * mod(w * 46 + i * 70, 434) - 300}px)`; });
+  tiles.forEach(T => setSrc(T.img, FR(T.clip, 's', wallFrame(T.clip, w, T.off))));
   $('walldim').style.opacity = opts.dim(lt);
   const lo = opts.logo(lt);
   $('logo').style.opacity = lo;
@@ -177,12 +182,12 @@ function client(t, lt, o) {
   const ph = [...$('phones').children];
   ph.forEach((p, i) => {
     const q = ease(seg(lt, 0.1 + i * 0.14, 0.75 + i * 0.14)), out = easeIO(seg(lt, o.d - 0.4, o.d));
-    const rot = [-9, 0, 9][i], x = [-330, 0, 330][i], y = [230, 160, 290][i];
+    const rot = [-9, 0, 9][i], x = [-395, 0, 395][i], y = [230, 160, 290][i];
     p.style.zIndex = i === 1 ? 2 : 1;
     p.style.transform = `translate(${x}px, ${y + (1 - q) * 1500 - out * 1500}px) rotate(${rot * (1 - q * 0.4)}deg) scale(${i === 1 ? 1.4 : 1.02})`;
     setSrc(p.querySelector('img'), FR(o.phones[i][0], 'l', frameAt(o.phones[i][0], t, o.phones[i][1])));
   });
-  $('clabel').style.opacity = ease(seg(lt, 0.4, 0.9)) * (1 - seg(lt, o.d - 0.4, o.d));
+  $('clabel').style.opacity = ease(seg(lt, 0.4, 0.9)) * (1 - seg(lt, o.d - 0.62, o.d - 0.38));
 }
 /* 9.0-12.0 FlyX Tenerife */
 scene(9.0, 12.0, (t, lt) => client(t, lt, { name: 'FLYX TENERIFE', bg: '#7c9ebe', pc: 'rgba(10,10,10,0.09)', fg: '#0a0a0a', label: 'FlyX Tenerife', sub: 'Élményközpont · Social & videó', phones: [['flyx-a', 40], ['flyx-b', 200], ['flyx-a', 520]], d: 3.0 }));
@@ -194,20 +199,20 @@ function number(t, lt, o) {
   if (pn.dataset.k !== o.key) { pn.dataset.k = o.key; pn.innerHTML = '<div class="panel"><img alt=""></div>'; }
   [...pn.children].forEach((p) => { setSrc(p.querySelector('img'), FR(o.panels[0][0], 'x', frameAt(o.panels[0][0], t, o.panels[0][1]))); p.style.transform = `translateY(-13%) scale(${1.14 - 0.08 * ease(lt / o.d)})`; });
   const n = Math.round(o.to * ease(seg(lt, 0.15, 0.85)));
-  $('big').innerHTML = `${o.pre || ''}${n}${o.post ? `<small>${o.post}</small>` : ''}`;
+  $('big').innerHTML = `${o.pre || ''}${n}${o.post ? `<small${o.post === '×' ? ' class="x"' : ''}>${o.post}</small>` : ''}`;
   const a = ease(seg(lt, 0.0, 0.35)), out = 1 - seg(lt, o.d - 0.3, o.d);
   $('big').style.opacity = a * out; $('big').style.transform = `translateY(${(1 - a) * 70}px)`;
   $('nlab').textContent = o.lab; $('nlab').style.opacity = ease(seg(lt, 0.45, 0.8)) * out;
   $('ncap').textContent = o.cap; $('ncap').style.opacity = ease(seg(lt, 0.65, 1.0)) * out;
 }
-scene(12.0, 14.2, (t, lt) => number(t, lt, { key: 'a', to: 81, post: '×', lab: 'ROAS — legjobb eredmény', cap: 'Ajtó webshop · Google Pmax', panels: [['clip-3995', 100], ['interview', 300], ['clip-33f9', 50]], d: 2.2 }));
+scene(12.0, 14.2, (t, lt) => number(t, lt, { key: 'a', to: 81, post: '×', lab: 'ROAS — legjobb eredmény', cap: 'Ajtó webshop · Google Pmax', panels: [['clip-3995', 299], ['interview', 300], ['clip-33f9', 50]], d: 2.2 }));
 scene(14.2, 16.4, (t, lt) => number(t, lt, { key: 'b', to: 79, post: 'M Ft', lab: 'bevétel egy hét alatt', cap: 'B2B Meta kampány', panels: [['clip-33f9', 200], ['flyx-b', 700], ['flyx-a', 300]], d: 2.2 }));
 
 /* 16.4-19.4 podcast & interview block, cream */
 scene(16.4, 19.4, (t, lt) => client(t, lt, { name: 'PODCAST · INTERJÚ', bg: '#f8f4ec', pc: 'rgba(62,95,126,0.10)', fg: '#0a0a0a', label: 'Podcast & interjú', sub: 'Gyártás · vágás · feliratozás', phones: [['clip-3995', 400], ['interview', 120], ['clip-3995', 1100]], d: 3.0 }));
 
 /* 19.4-22.4 services, a cut every half second */
-const SV = [['Videó', 'flyx-a', 150], ['Social', 'interview', 500], ['Hirdetés', 'flyx-b', 900], ['Weboldal', 'clip-33f9', 300], ['Automatizáció', 'clip-3995', 700], ['Stratégia', 'flyx-a', 640]];
+const SV = [['Videó', 'flyx-a', 150], ['Social', 'interview', 500], ['Hirdetés', 'flyx-b', 900], ['Weboldal', 'interview', 720], ['Automatizáció', 'clip-3995', 700], ['Stratégia', 'flyx-a', 640]];
 scene(19.4, 22.4, (t, lt) => {
   show('svc');
   const i = Math.min(5, Math.floor(lt / 0.5)), s = SV[i];
@@ -222,11 +227,11 @@ scene(22.4, 24.6, (t, lt) => number(t, lt, { key: 'c', to: 300, post: 'M+ Ft', l
 /* 24.6-27.0 "Mi ebben a korban győzünk." */
 scene(24.6, 27.0, (t, lt) => {
   typeLines([[{ t: 'Mi', at: 0.0 }, { t: 'ebben', at: 0.12 }], [{ t: 'a', at: 0.22 }, { t: 'korban', at: 0.32 }], [{ t: 'győzünk.', at: 0.8, c: 'ser' }]], lt);
-  $('typestage').style.opacity = 1 - seg(lt, 2.1, 2.4);
+  $('typestage').style.opacity = 1 - seg(lt, 1.95, 2.3);
 });
 /* 27.0-30.0 wall returns, end card; matches frame 0 for the loop */
-scene(27.0, 30.0, (t, lt) => wall(t, lt, {
-  zoom: l => 1.0 + 0.28 * easeIO(seg(l, 1.6, 3.0)), dim: l => 0.35 * (1 - seg(l, 2.4, 3.0)),
+scene(27.0, 30.0, (t, lt) => wall(t - 30, lt, {
+  zoom: l => 1.0 + 0.28 * easeIO(seg(l, 1.6, 3.0)), dim: l => Math.max(1 - seg(l, 0, 0.4), 0.35 * (1 - seg(l, 2.4, 3.0))),
   logo: l => ease(seg(l, 0.15, 0.8)) * (1 - seg(l, 2.4, 2.95)), sub: l => ease(seg(l, 0.5, 1.1)) * (1 - seg(l, 2.4, 2.95)) }));
 
 /* cut flashes on hard scene changes */
