@@ -1,16 +1,16 @@
 # SocialStream: Edit
 
-The site opens on the reel, full screen, then becomes an editing suite. One
-pinned act (9 viewport heights) holds a program monitor, an inspector and a
-timeline, and scrolling moves the playhead through nine chapters: the reel, the
-three laws, services, results, testimonials, the team and the export. The
-export is the audit: a dialog with a render bar that hands the application to
-email. One of three structurally different designs (with
+The site opens on the client's own brand film, full screen, then becomes an
+editing suite. One pinned act (9 viewport heights) holds a program monitor, an
+inspector and a timeline, and scrolling moves the playhead through nine
+chapters: the reel, the three laws, services, results, testimonials, the team
+and the export. The export is the audit: a dialog with a render bar that hands
+the application to email. One of three structurally different designs (with
 [socialstream-feed](../socialstream-feed/) and
 [socialstream-exhibit](../socialstream-exhibit/)) made after the client turned
 down socialstream-studio.
 
-Static: `index.html`, `ss.js` (language, helpers, the reel and the audit
+Static: `index.html`, `ss.js` (language, helpers, the film and the audit
 hand-off, shared with the other two designs), `scrollcraft.css`,
 `scrollcraft.js`, `assets/`. No build step. Hungarian by default, English
 through the HU/EN switch (remembered in `localStorage`). Matte graphite with a
@@ -22,23 +22,25 @@ node ../../../.claude/skills/scroll-craft/scripts/serve.mjs --root . --port 4540
 
 ## How the page works
 
-- **Reel.** By client request the page opens on the reel from
-  socialstream-studio, full screen: `reel-1080.mp4` (16:9) or `reel-720.mp4`
-  (9:16, on portrait screens), fetched after `load` and paused off screen, with
-  the live HU/EN lines, client tags and counted numbers (`.rcue[data-t]`) on
-  the film's clock and a cursor play/pause disc. `SS.reel` in `ss.js` drives it
-  in all three designs. Here the transport bar runs its timecode and plays or
-  pauses it (Space too), and the monitor picks the film up where the
-  full-screen reel left it.
+- **Film.** By client request the page opens on their own 30-second brand film,
+  full screen: `hero-1080.mp4` (their file, 1920×1080, 25 fps, silent) or,
+  where the frame is under about 1300 device pixels wide, `hero-540.mp4` (a
+  960×540 copy at 1.1 Mbps made with the cut tool from socialstream-split). Its
+  titles and numbers are in the film, so nothing is laid over it; they are
+  Hungarian in either language. The frame is never cropped by more than 4% a
+  side, and where that leaves bars a small canvas fed from the film fills them
+  with its colour. `SS.reel` in `ss.js` drives it in all three designs. Here
+  the transport bar runs its timecode and plays or pauses it (Space too), and
+  the monitor picks the film up where the full-screen film left it.
 - **Playhead.** The pinned `.suite` publishes `--sc-p`; `CH` lists the nine
   chapters and their share of the scroll. Inside a chapter a sub-progress steps
   through the services, the results and the quotes.
-- **Monitor.** The reel (`reel-1080.mp4`, or `reel-360.mp4` when the monitor is
+- **Monitor.** The film (`hero-1080.mp4`, or `hero-540.mp4` when the monitor is
   narrow) loads when the suite comes into view and plays muted. Each chapter
   lays a `.prog` overlay over it in container-query units, so it scales with
   the monitor. Law I counts to 10 000, strikes it, dims it, then the law
   arrives.
-- **Timeline.** V1 is a 32-frame sprite of the reel (`reel-strip.jpg`), T1
+- **Timeline.** V1 is a 32-frame sprite of the film (`hero-strip.jpg`), T1
   holds the chapters as title clips (buttons that seek), A1 is a placeholder
   for Olivér's voice and says so. Hovering the timeline shows a preview frame,
   timecode and chapter; a click seeks; the arrow keys step chapters; Space

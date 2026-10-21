@@ -72,32 +72,17 @@ a { color: inherit; }
 .toast { position: fixed; z-index: 70; left: 50%; bottom: calc(26px + env(safe-area-inset-bottom, 0px)); translate: -50% 0; padding: 10px 16px; border-radius: 999px; background: #fff; color: #000; font: 600 0.84rem/1.2 var(--ft); opacity: 0; transform: translateY(10px); transition: opacity 240ms, transform 340ms var(--ease); pointer-events: none; }
 .toast.is-on { opacity: 1; transform: none; }
 
-/* ---------- the reel, first: full screen, their work, live lines on the film's clock ---------- */
+/* ---------- the film, first: their brand film, full screen; its titles and numbers are in the film ---------- */
 .reel { --rg: clamp(20px, 5vw, 80px); position: relative; height: 100svh; min-height: 32rem; overflow: hidden; background: #000; color: #fff; }
-.reel video, .reel .poster, .reel .poster img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.reel .poster { transition: opacity 500ms var(--ease); }
+/* the frame is never cropped by more than 4% a side, so the film's own titles stay whole; where that leaves bars, they glow */
+.reel video, .reel .poster img { position: absolute; left: 50%; top: 50%; translate: -50% -50%; max-width: none; height: auto; aspect-ratio: 16 / 9; object-fit: cover;
+  width: max(100%, min(calc(100svh * 16 / 9), calc(100% / 0.92))); }
+.reel .poster { position: absolute; inset: 0; transition: opacity 500ms var(--ease); }
 .reel.is-playing .poster { opacity: 0; }
-.reel .shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0) 22%, rgba(0, 0, 0, 0) 52%, rgba(0, 0, 0, 0.58) 100%); }
-.reel .dim { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.78); opacity: 0; transition: opacity 600ms var(--ease); pointer-events: none; }
-.reel.is-dim .dim { opacity: 1; }
-.rcues { position: absolute; inset: 0; pointer-events: none; }
-/* the outgoing line leaves fast and the incoming one waits a beat, so two lines never stack */
-.rcue { position: absolute; margin: 0; opacity: 0; transform: translateY(18px); transition: opacity 160ms var(--ease), transform 160ms var(--ease); }
-.rcue.is-on { opacity: 1; transform: none; transition: opacity 420ms var(--ease) 140ms, transform 620ms var(--ease) 140ms; }
-.rcue.line, .rcue.num, .rcue.tag { left: max(var(--rg), env(safe-area-inset-left, 0px)); }
-.rcue.line, .rcue.num { right: max(var(--rg), env(safe-area-inset-right, 0px)); }
-.rcue.line { bottom: calc(110px + env(safe-area-inset-bottom, 0px)); font: 600 clamp(2.6rem, 1.2rem + 6.2vw, 7.6rem)/0.95 var(--fd); letter-spacing: -0.05em; text-wrap: balance; max-width: 15ch; text-shadow: 0 2px 40px rgba(0, 0, 0, 0.35); }
-.rcue.tag { top: calc(58px + 28px + env(safe-area-inset-top, 0px)); font: 500 0.8rem/1 var(--ft); letter-spacing: 0.12em; text-transform: uppercase; }
-.rcue.tag.is-on { opacity: 0.85; }
-.rcue.num { top: 50%; transform: translateY(-40%); display: grid; gap: 14px; }
-.rcue.num.is-on { transform: translateY(-50%); }
-.rcue.num b { font: 700 clamp(5rem, 2rem + 13vw, 15rem)/0.82 var(--fd); letter-spacing: -0.06em; font-variant-numeric: tabular-nums; }
-.rcue.num b small { font-size: 0.42em; margin-left: 0.04em; letter-spacing: 0; word-spacing: 0.12em; }
-.rcue.num > span { font: 500 clamp(1rem, 0.9rem + 0.5vw, 1.35rem)/1.4 var(--ft); max-width: 30ch; color: rgba(255, 255, 255, 0.78); }
-.rcue.end { inset: 0; display: grid; place-content: center; text-align: center; gap: 14px; transform: scale(0.98); }
-.rcue.end.is-on { transform: none; }
-.rcue.end .wm { font: 700 clamp(3rem, 1.4rem + 7vw, 8.5rem)/0.9 var(--fd); letter-spacing: -0.055em; }
-.rcue.end .sub { font: 500 0.85rem/1 var(--ft); letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.7; }
+.reel .amb { position: absolute; inset: 0; width: 100%; height: 100%; transform: scale(1.15); filter: blur(32px) saturate(1.15) brightness(0.9); }
+/* thin bars on wide screens blend into the frame's edge; the tall bars on phones glow more softly */
+@media (orientation: portrait) { .reel .amb { filter: blur(40px) saturate(1.2) brightness(0.6); } }
+.reel .shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 14%, rgba(0, 0, 0, 0) 80%, rgba(0, 0, 0, 0.5) 100%); }
 .reel .ui { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: flex-end;
   padding: 0 max(var(--rg), env(safe-area-inset-right, 0px)) calc(28px + env(safe-area-inset-bottom, 0px)) max(var(--rg), env(safe-area-inset-left, 0px)); }
 .reel .down { position: absolute; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); translate: -50% 0; display: inline-flex; flex-direction: column; align-items: center; gap: 10px;
@@ -110,9 +95,9 @@ a { color: inherit; }
 @media (hover: hover) and (pointer: fine) { .reel { cursor: none; } .reel .ui a, .reel .ui button { cursor: pointer; } }
 .rdisc { position: fixed; z-index: 65; left: 0; top: 0; width: 92px; height: 92px; margin: -46px 0 0 -46px; border-radius: 50%; pointer-events: none; display: grid; place-items: center;
   background: rgba(255, 255, 255, 0.92); color: #000; font: 600 0.78rem/1 var(--ft); letter-spacing: 0.02em; transform: translate3d(var(--x, -200px), var(--y, -200px), 0) scale(var(--s, 0)); }
-@media (max-width: 860px) { .rcue.line { bottom: calc(120px + env(safe-area-inset-bottom, 0px)); max-width: 11ch; } }
-@media (prefers-reduced-motion: reduce) { .reel .down::after { animation: none; } .rcue, .rcue.is-on, .reel .dim { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .reel .down::after { animation: none; } }
 .reel { z-index: 2; scroll-snap-align: start; scroll-snap-stop: always; }
+body[data-post="top"] .top { background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0)); }
 /* the feed's chrome arrives with the first post */
 .profile, .actions { transition: opacity 300ms; }
 body[data-post="top"] .profile, body[data-post="top"] .actions { opacity: 0; pointer-events: none; }
@@ -338,34 +323,17 @@ body[data-post="top"] .profile, body[data-post="top"] .actions { opacity: 0; poi
 <main>
   <h1 class="sr" data-en="SocialStream, interest media agency. Social media is dead. Interest has taken its place.">SocialStream, interest media ügynökség. A social media meghalt. Az érdeklődés vette át a helyét.</h1>
 
-  <!-- the reel, first: their client work, with live HU/EN lines and the real numbers on the film's clock -->
-  <section class="reel" id="top" data-sc-act="flow" aria-label="Reel">
-    <picture class="poster"><source media="(orientation: portrait)" srcset="assets/reel-720-poster.jpg"><img src="assets/reel-1080-poster.jpg" alt="" width="1600" height="900" fetchpriority="high"></picture>
+  <!-- the film, first: their brand film, full screen; its titles and numbers are in the film itself -->
+  <section class="reel" id="top" data-sc-act="flow" aria-label="Film">
+    <canvas class="amb" width="64" height="36" aria-hidden="true"></canvas>
+    <picture class="poster"><source media="(orientation: portrait)" srcset="assets/hero-poster-960.jpg"><img src="assets/hero-poster.jpg" alt="" width="1600" height="900" fetchpriority="high"></picture>
     <video muted loop playsinline preload="none" aria-hidden="true"
-      data-src="assets/reel-1080.mp4" data-poster="assets/reel-1080-poster.jpg"
-      data-src-m="assets/reel-720.mp4" data-poster-m="assets/reel-720-poster.jpg"></video>
+      data-src="assets/hero-1080.mp4" data-poster="assets/hero-poster.jpg"
+      data-src-s="assets/hero-540.mp4" data-poster-s="assets/hero-poster-960.jpg"></video>
     <div class="shade"></div>
-    <div class="dim"></div>
-    <div class="rcues" aria-hidden="true">
-      <p class="rcue tag" data-t="0 7.2" data-en="Client: FlyX Tenerife">Ügyfél: FlyX Tenerife</p>
-      <p class="rcue tag" data-t="7.2 11.4" data-en="Client: Gyenis András">Ügyfél: Gyenis András</p>
-      <p class="rcue tag" data-t="11.4 17.4" data-en="Our clients' feeds">Ügyfeleink feedje</p>
-      <p class="rcue tag" data-t="17.4 21.3" data-en="Client: Gyenis András">Ügyfél: Gyenis András</p>
-      <p class="rcue line" data-t="0 2.35" data-en="Social media is dead.">A social media meghalt.</p>
-      <p class="rcue line" data-t="2.6 7.0" data-en="Interest has taken its place.">Az érdeklődés vette át a helyét.</p>
-      <p class="rcue line" data-t="11.6 14.4" data-en="The feed no longer shows who you follow.">A feed már nem azt mutatja, kit követsz.</p>
-      <p class="rcue line" data-t="14.5 17.3" data-en="It shows what interests you.">Hanem azt, ami érdekel.</p>
-      <p class="rcue line" data-t="17.6 21.2" data-en="Video. Social. Ads. One system.">Videó. Social. Hirdetés. Egy rendszerben.</p>
-      <div class="rcue num" data-t="21.4 22.95" data-dim><b><span data-to="81">81</span><small>×</small></b><span data-en="ROAS, our best result in an e-commerce campaign">ROAS, a legjobb eredményünk e-commerce kampányban</span></div>
-      <div class="rcue num" data-t="22.95 24.45" data-dim><b><span data-to="79">79</span><small>M Ft</small></b><span data-en="revenue in one week, from a B2B Meta campaign">bevétel egy hét alatt, B2B Meta kampányból</span></div>
-      <div class="rcue num" data-t="24.45 25.95" data-dim><b><span data-to="23">23</span><small>×</small></b><span data-en="ROAS in a holiday campaign, 8M+ Ft revenue">ROAS ünnepi kampányban, 8M+ Ft bevétel</span></div>
-      <div class="rcue num" data-t="25.95 27.3" data-dim><b><span data-to="300">300</span><small>M+ Ft</small></b><span data-en="budget managed since 2022">kezelt büdzsé 2022 óta</span></div>
-      <p class="rcue line" data-t="27.4 29.65" data-en="We win in this age.">Mi ebben a korban győzünk.</p>
-      <div class="rcue end" data-t="29.7 32.1" data-dim><span class="wm">SocialStream</span><span class="sub" data-en="Interest media · Tenerife, Budapest">Interest media · Tenerife, Budapest</span></div>
-    </div>
     <div class="ui">
       <a class="down" href="#p2" data-en="Scroll">Görgess</a>
-      <button class="toggle" type="button" aria-label="Reel megállítása"></button>
+      <button class="toggle" type="button" aria-label="Film megállítása"></button>
     </div>
   </section>
 
