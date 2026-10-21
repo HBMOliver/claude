@@ -25,8 +25,11 @@ node ../../../.claude/skills/scroll-craft/scripts/serve.mjs --root . --port 4540
 - **Leaving full screen.** The suite is one pinned act (10 viewport heights).
   Over the first 5% of it, `dockTick` moves the monitor from a full-stage rect
   (never cropped by more than 4% a side) to its slot with one transform, and
-  `--chrome` fades the panels in. On phones the bars around the film glow with
-  its colour (a 64×36 canvas fed from the film).
+  `--chrome` fades the panels in. On a phone held upright it is a vertical
+  project: the preview takes the screen's own shape (`--mar`) and plays
+  `hero-v-720.mp4`, the vertical cut of the film (720×1280 from the client's
+  1080×1920 file), so the film docks whole; the cards switch to portrait
+  layouts and the inspector to a three-line caption.
 - **Title cards.** Each chapter is a `.card` in the monitor, sized in
   container-query units: Law I counts to 10 000 and strikes it, Law II fills a
   watch bar on the blue field, Law III strikes the old rules on cream, services

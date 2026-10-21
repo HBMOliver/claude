@@ -79,7 +79,7 @@ a { color: inherit; }
 .monwrap { position: relative; container-type: size; display: grid; place-items: center; min-height: 0; padding: 0 14px 14px; }
 .monitor { position: relative; z-index: 5; width: min(100cqw, calc(100cqh * 16 / 9)); aspect-ratio: 16 / 9; background: #000; overflow: hidden; border-radius: 4px; container-type: inline-size; transform-origin: 0 0; }
 @media (hover: hover) and (pointer: fine) { .monitor.on-film { cursor: none; } }
-.monitor > video, .monitor > .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.monitor > video, .monitor > .poster, .monitor > .poster img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .monitor > .poster { transition: opacity 500ms var(--ease); }
 .monitor.is-playing > .poster { opacity: 0; }
 
@@ -342,6 +342,57 @@ a { color: inherit; }
   .app { grid-template-columns: 1fr; }
   .specs div { grid-template-columns: 7.5rem 1fr; }
 }
+/* ---------- a phone held upright: a vertical project ----------
+   The preview takes the screen's own shape, so the vertical film docks into it whole; the cards set
+   their type for a portrait frame; the inspector is a short caption under the preview. */
+@media (max-width: 860px) and (orientation: portrait) {
+  :root { --tlh: 104px; }
+  .ws { grid-template-rows: minmax(0, 1fr) auto; }
+  .monpanel { grid-template-rows: minmax(0, 1fr); }
+  .monwrap { container-type: size; padding: 8px 8px 6px; }
+  .monitor { width: min(100cqw, calc(100cqh * var(--mar, 0.5))); aspect-ratio: var(--mar, 0.5); }
+  .insbody { overflow: hidden; }
+  .ins { padding: 10px 16px 12px; gap: 6px; }
+  .ins h2 { font-size: 18px; line-height: 1.22; }
+  .ins p { font-size: 14px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .ins .ilist, .ins .props, .ins[data-ch="0"] .btn { display: none; }
+  .ins .btn { min-height: 34px; font-size: 13px; }
+  .t { font-size: 9.4cqw !important; }
+  .meta { font-size: 4.6cqw; }
+  .c1 .tally { left: 8%; top: 8%; gap: 2.6cqw; }
+  .c1 .fig { font-size: 23cqw; }
+  .c1 .law { left: 8%; right: 8%; bottom: 8%; }
+  .c2 .copy, .c3 .copy, .c8 .copy { left: 8%; right: 8%; top: 9%; }
+  .c2 .t { font-size: 11cqw !important; }
+  .watch, .render { left: 8%; right: 8%; bottom: 8%; gap: 2.6cqw; }
+  .watch i, .render i { height: 1.4cqw; }
+  .watch > span, .render > span { font-size: 4.6cqw; }
+  .rules { left: 8%; right: 8%; bottom: 8%; grid-template-columns: 1fr; gap: 6cqw; }
+  .rules p { font-size: 4.4cqw; margin-bottom: 2.4cqw; }
+  .rules li { font-size: 6cqw; }
+  .rules ul { gap: 2cqw; }
+  .c4 .step { grid-template-columns: 1fr; grid-template-rows: auto auto; align-content: center; gap: 8cqw; padding: 0 10%; }
+  .c4 .t { font-size: 8.6cqw !important; }
+  .c4 .copy { gap: 3.2cqw; }
+  .c4 .copy p:last-child { font-size: 5cqw; }
+  .c5 .step { grid-template-columns: 1fr; grid-template-rows: 44% 1fr; }
+  .c5 figure { order: -1; }
+  .c5 .copy { align-content: start; gap: 3.4cqw; padding: 8cqw 8cqw 0; }
+  .c5 .fig { font-size: 25cqw; }
+  .c5 .copy p.c { font-size: 5.2cqw; }
+  .c5 .copy p.who { font-size: 4.4cqw; }
+  .c6 .step { padding: 0 9%; gap: 5cqw; }
+  .q { font-size: 5.8cqw; line-height: 1.42; }
+  .c6 .who { font-size: 4.6cqw; }
+  .c7 { grid-template-columns: 1fr; grid-template-rows: 50% 1fr; }
+  .c7 .copy { align-content: start; gap: 5cqw; padding: 7cqw 8cqw 0; }
+  .c7 .t { font-size: 8.4cqw !important; }
+  .crew { gap: 3cqw; }
+  .crew figure { width: 24cqw; gap: 1.6cqw; }
+  .crew figcaption { font-size: 3.8cqw; }
+  .crew figcaption b { font-size: 4.4cqw; }
+  .c8 .t { font-size: 9.6cqw !important; }
+}
 /* on a narrow phone the bar keeps the name and the action; the monitor itself plays and pauses */
 @media (max-width: 520px) { .transport { display: none; } .bar { grid-template-columns: 1fr auto; } }
 @media (prefers-reduced-motion: reduce) {
@@ -378,8 +429,8 @@ a { color: inherit; }
           <div class="phead chrome"><b data-en="Program">Program</b><span data-en="Fit · 100%">Illesztés · 100%</span></div>
           <div class="monwrap">
             <div class="monitor on-film" id="monitor" aria-hidden="true">
-              <img class="poster" src="assets/hero-poster.jpg" alt="" width="1600" height="900" fetchpriority="high">
-              <video id="film" muted loop playsinline preload="none" data-src="assets/hero-1080.mp4" data-src-s="assets/hero-540.mp4"></video>
+              <picture class="poster"><source media="(max-width: 860px) and (orientation: portrait)" srcset="assets/hero-v-poster.jpg"><img src="assets/hero-poster.jpg" alt="" width="1600" height="900" fetchpriority="high"></picture>
+              <video id="film" muted loop playsinline preload="none" data-src="assets/hero-1080.mp4" data-src-s="assets/hero-540.mp4" data-src-v="assets/hero-v-720.mp4"></video>
 
               <div class="card c1" data-ch="1">
                 <div class="tally"><p class="fig num" id="count">0</p><p class="meta likes"><span data-en="followers">követő</span> · <b>40</b> <span data-en="likes">kedvelés</span></p></div>
@@ -640,7 +691,7 @@ a { color: inherit; }
   function load() {
     if (loaded) return; loaded = true;
     var small = mon.offsetWidth * (window.devicePixelRatio || 1) < 1300 && innerWidth < 1100;
-    film.src = small ? film.dataset.srcS : film.dataset.src; film.load();
+    film.src = upright.matches ? film.dataset.srcV : small ? film.dataset.srcS : film.dataset.src; film.load();
   }
   function apply() { if (paused || !suiteOn || cur !== 0) film.pause(); else { load(); var pp = film.play(); if (pp && pp.catch) pp.catch(function () {}); } lastBtn = ''; }
   film.addEventListener('playing', function () { mon.classList.add('is-playing'); });
@@ -669,13 +720,16 @@ a { color: inherit; }
   }
 
   /* ---------------- leaving full screen: the film docks into the monitor ---------------- */
-  var dock = null, lastE = -1, phone = matchMedia('(max-width: 860px)');
+  var dock = null, lastE = -1, phone = matchMedia('(max-width: 860px)'), upright = matchMedia('(max-width: 860px) and (orientation: portrait)');
   function measure() {
     mon.style.transform = 'none';
-    var rs = stage.getBoundingClientRect(), rm = mon.getBoundingClientRect(), bar = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--bar')) || 52;
+    var rs = stage.getBoundingClientRect(), bar = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--bar')) || 52;
     var W = rs.width, A = rs.height - bar, fw = Math.max(W, Math.min(A * 16 / 9, W / 0.92));
+    // held upright, the preview takes the screen's shape, so full screen is the same frame, larger
+    if (upright.matches) stage.style.setProperty('--mar', (W / A).toFixed(4)); else stage.style.removeProperty('--mar');
     if (phone.matches) fw = W;
-    dock = { dx: rm.left - rs.left, dy: rm.top - rs.top, dw: rm.width, fx: (W - fw) / 2, fy: bar + (A - fw * 9 / 16) / 2, fw: fw };
+    var rm = mon.getBoundingClientRect(), ar = rm.height / rm.width;
+    dock = { dx: rm.left - rs.left, dy: rm.top - rs.top, dw: rm.width, fx: (W - fw) / 2, fy: bar + (A - fw * ar) / 2, fw: fw };
     lastE = -1;
   }
   function dockTick(e) {
@@ -687,7 +741,7 @@ a { color: inherit; }
     stage.style.setProperty('--chrome', chrome.toFixed(3));
   }
   // where full screen leaves bars (phones), they glow with the film's colour
-  var ambN = 0, poster = $('.poster', mon);
+  var ambN = 0, poster = $('.poster img', mon);
   function paintAmb(src) { try { actx.drawImage(src, 0, 0, 64, 36); } catch (err) {} }
   function ambTick() { if (chrome < 1 && cur === 0 && !film.paused && film.readyState >= 2 && ambN++ % 4 === 0) paintAmb(film); }
   if (poster.complete) paintAmb(poster); else poster.addEventListener('load', function () { paintAmb(poster); }, { once: true });

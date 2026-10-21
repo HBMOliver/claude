@@ -30,8 +30,11 @@ node ../../../.claude/skills/scroll-craft/scripts/serve.mjs --root . --port 4541
 - **Desktop.** A profile panel (stats, bio, highlights that jump) and an
   actions rail (like, the comments sheet, save to topics, audit). The phone
   leans a few degrees toward the cursor and settles.
-- **Phones.** The post is the screen; the actions sit over it and step aside
-  on the text-heavy posts and an open story.
+- **Phones.** The film is its vertical cut, edge to edge (`hero-v-720.mp4`,
+  720×1280 from the client's 1080×1920 file). The post is the screen; the
+  actions sit over it and step aside on the text-heavy posts and an open
+  story. Two quick taps like a post; a carousel shows the edge of its next
+  card the first time it arrives.
 - **DM audit.** `STEPS` asks for name, email (validated), brand, web, budget,
   goal and interests (pre-ticked from saved topics), then a message;
   `finish()` composes the email (`SS.compose`), opens the mailto and offers

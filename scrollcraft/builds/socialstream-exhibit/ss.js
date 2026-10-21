@@ -77,9 +77,10 @@
 
   /* ---------------- the film: full screen, first ---------------- */
   // The brand film all three designs open on; its titles and numbers are in the film itself.
-  // sec holds a video (data-src and data-src-s, each with its poster), an optional canvas.amb
-  // that carries the film's colour into the bars around the frame, and an optional .toggle;
-  // disc is the cursor's play/pause disc. The small cut plays where the frame is narrow.
+  // sec holds a video (data-src and data-src-s, each with its poster, and optionally data-src-v,
+  // a vertical cut for portrait screens), an optional canvas.amb that carries the film's colour
+  // into the bars around the frame, and an optional .toggle; disc is the cursor's play/pause disc.
+  // A portrait screen gets the vertical cut; elsewhere the small cut plays where the frame is narrow.
   var PLAY = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5l9 5.5-9 5.5z" fill="currentColor"/></svg>';
   var PAUSE = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2h3v10H3zM8 2h3v10H8z" fill="currentColor"/></svg>';
   SS.reel = function (sec, disc) {
@@ -88,6 +89,7 @@
     var loaded = false, on = true, paused = SS.reduce, bars = false, n = 0;
     function load() {
       if (loaded) return; loaded = true;
+      if (v.dataset.srcV && matchMedia('(orientation: portrait)').matches) { sec.classList.add('is-vertical'); v.poster = v.dataset.posterV; v.src = v.dataset.srcV; v.load(); return; }
       var small = v.offsetWidth * (window.devicePixelRatio || 1) < 1300;
       v.poster = small ? v.dataset.posterS : v.dataset.poster; v.src = small ? v.dataset.srcS : v.dataset.src; v.load();
     }
