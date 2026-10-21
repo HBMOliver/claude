@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Synthetic invoice PDF corpus for measuring an invoice field extractor:  python3 make_corpus.py --out DIR
+"""Synthetic invoice PDF corpus for measuring an invoice field extractor.  Usage: python3 make_corpus.py --out DIR
 
 Writes 28 PDFs plus DIR/truth.json (per file: doc_type, supplier_legal_name, invoice_number, amount, currency,
 issue/fulfilment/due/paid dates, payment_method, paid_stamp, notes = the builder's docstring). Independent of the
@@ -709,7 +709,7 @@ def c19(d):
     y = d.totals(115, y + 6, [("Zwischensumme (netto)", eur(net)), ("zzgl. 19 % MwSt.", eur(vat))],
                  ("Gesamtbetrag", eur(gross)))
     d.lines(15, y + 10, ["Zahlungsart: Kreditkarte (Visa •••• 4242)", f"Bezahlt am {dt(iss, 'de')}"], 10)
-    d.stamp(160, y + 16, "BEZAHLT", 22, angle=12, color=RED)
+    d.stamp(160, y + 16, "BEZAHLT", 22, angle=6, color=RED)  # from about 8 degrees pdftotext splits the word
     d.text(15, y + 26, "Betrag dankend erhalten.", 10, True, color=GREEN)
     return truth("receipt", "Bildwerk Stockfotos GmbH", num, gross, "EUR", iss, None, None, iss, "card", True)
 
@@ -923,7 +923,7 @@ def c27(d):
                                   ("Music licence, online use, 12 months", 1, "pcs", "200.00", 0)], 2)
     eur = lambda v: f"{money(v, 2, ' ', ',')} EUR"
     d.text(15, 24, "Vltava Sound Design s.r.o.", 16, True)
-    d.lines(15, 30, ["Na Florenci 15, 110 00 Praha 1, Czech Republic", "IČO: 08451234 · DIČ / VAT: CZ08451234"],
+    d.lines(15, 30, ["Na Florenci 15, 110 00 Praha 1, Czech Republic", "Company ID: 08451234 · VAT: CZ08451234"],
             color=GREY)
     d.text(195, 24, "INVOICE", 18, True, "r")
     d.blocks(46, ("Bill to:", BUYER_EN), size=9.5)
