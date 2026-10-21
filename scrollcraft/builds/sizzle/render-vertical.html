@@ -52,7 +52,7 @@
   #num .panels { position: absolute; inset: 0; display: flex; }
   #num .panel { flex: 1; overflow: hidden; }
   #num .panel img { filter: saturate(0.85); }
-  #num .veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0.12) 30%, rgba(10,10,10,0.55) 52%, rgba(10,10,10,0.9) 70%, rgba(10,10,10,0.96) 100%); }
+  #num .veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.08) 28%, rgba(10,10,10,0.62) 47%, rgba(10,10,10,0.95) 60%, rgba(10,10,10,0.97) 100%); }
   #num .copy { position: absolute; left: 92px; right: 60px; bottom: 250px; }
   #num .big { font-family: "Fraunces", serif; font-size: 330px; line-height: 0.82; letter-spacing: -0.05em; font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
   #num .big small { font-size: 0.42em; letter-spacing: -0.02em; color: var(--blue); }
@@ -190,7 +190,7 @@ function number(t, lt, o) {
   show('num');
   const pn = $('panels');
   if (pn.dataset.k !== o.key) { pn.dataset.k = o.key; pn.innerHTML = '<div class="panel"><img alt=""></div>'; }
-  [...pn.children].forEach((p) => { setSrc(p.querySelector('img'), FR(o.panels[0][0], 'x', frameAt(o.panels[0][0], t, o.panels[0][1]))); p.style.transform = `scale(${1.1 - 0.08 * ease(lt / o.d)})`; });
+  [...pn.children].forEach((p) => { setSrc(p.querySelector('img'), FR(o.panels[0][0], 'x', frameAt(o.panels[0][0], t, o.panels[0][1]))); p.style.transform = `translateY(-6%) scale(${1.14 - 0.08 * ease(lt / o.d)})`; });
   const n = Math.round(o.to * ease(seg(lt, 0.15, 0.85)));
   $('big').innerHTML = `${o.pre || ''}${n}${o.post ? `<small>${o.post}</small>` : ''}`;
   const a = ease(seg(lt, 0.0, 0.35)), out = 1 - seg(lt, o.d - 0.3, o.d);
