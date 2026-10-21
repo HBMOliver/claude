@@ -24,6 +24,8 @@ class Label:
     __slots__ = ('rx', 'weight', 'inline', 'title')
 
     def __init__(self, rx, weight, inline=False, title=False):
+        # words of a label are one or two spaces apart; a wider gap is a column boundary
+        rx = re.sub(r'(?<!\^)\\s\*', ' {0,2}', rx)
         self.rx = re.compile(rx)
         self.weight = weight
         self.inline = inline   # the value must be on the same line
@@ -128,6 +130,7 @@ LABELS = {
         _L(B + r'zahlungs\s*(?:art|weise|methode|mittel)' + E, 9),
         _L(B + r'zahlart' + E, 8),
         _L(B + r'mode\s*de\s*(?:paiement|reglement)' + E, 9),
+        _L(r'(?:^|(?<=\s\s))\s*method' + E, 5),
     ],
     'total': [
         _L(B + r'fizetendo(?:\s*(?:vegosszeg|osszeg|brutto(?:\s*osszeg)?|ertek))?' + E, 10),
@@ -213,7 +216,7 @@ _FOOTER = re.compile(
     r'szamlazoprogram\w*|szamlazo\s*rendszer\w*|online\s*szamlazo|invoicing\s*(?:software|system|platform)|'
     r'invoice\s*software|szoftver|software|nyomtatvany|program\s*neve|rendszereben|rendszerrel|alkalmazassal)')
 _NOT_NAME = re.compile(
-    r'^(?:adoszam|adoazonosito|kozossegi|eu\s*adoszam|vat|tax|cegjegyzek\w*|nyilvantartasi|bankszamla\w*|bank|iban|'
+    r'^(?:nev|name|cegnev|company\s*name|adoszam|adoazonosito|kozossegi|eu\s*adoszam|vat|tax|cegjegyzek\w*|nyilvantartasi|bankszamla\w*|bank|iban|'
     r'swift|bic|telefon|tel|phone|mobil|fax|e-?mail|web|www|http|cim|szekhely|address|irsz|iranyitoszam|reg\b|'
     r'registration|company\s*(?:no|number|reg)|ust|steuer|kontakt|contact|ugyfelszam|ugyfel\s*azonosito|'
     r'customer\s*(?:no|number|id)|account|szamlaszam|szamla\s*sorszama|datum|date|oldal|page|eredeti|masolat|'
@@ -429,8 +432,8 @@ def _find_dates(doc):
     found = {}
     # header rows: several date labels on one line, values in the same order on the next line
     for line, hs in doc.by_line.items():
-        dh = [h for h in hs if h.field in DATE_FIELDS and not h.label.inline]
-        if len(dh) >= 2 and not doc.dates(line):
+        dh = [h for h in hs if h.field in DATE_FIELDS]
+        if len(dh) >= 2 and any(not h.label.inline for h in dh) and not doc.dates(line):
             for j in doc.next_lines(line, 1):
                 ds = doc.dates(j)
                 if len(ds) == len(dh):
@@ -610,7 +613,10 @@ def _find_method(doc):
         ('direct_debit', r'csoportos\s*beszedesi\s*megbizas\w*|direct\s*debit'),
         ('card', r'paid\s*(?:with|by)\s*(?:visa|mastercard|card|amex)|card\s*ending|kartyaval\s*fizetve|'
                  r'bankkartyaval\s*fizetve|(?:visa|mastercard|maestro)\s*(?:-|\*|·|x){0,4}\s*\d{4}'),
-        ('transfer', r'atutalassal|kerjuk\s*(?:a\s*)?(?:szamla\s*)?(?:osszeget\s*)?(?:a\s*)?(?:fenti\s*)?bankszamla\w*'),
+        ('transfer', r'atutalassal|atutalas\s*utjan|kerjuk\s*(?:a\s*)?(?:szamla\s*)?(?:osszeget\s*)?(?:a\s*)?(?:fenti\s*)?'
+                     r'bankszamla\w*|(?:bank|wire)\s*transfer|remit\s*(?:payment|to)|pay(?:ment)?\s*by\s*(?:ach|bacs|bank)|'
+                     r'(?:per|durch|mittels)\s*(?:bank)?(?:ue|u)berweisung|bitte\s*(?:uberweisen|ueberweisen)|'
+                     r'par\s*virement|tramite\s*bonifico'),
         ('paypal', r'paypal'),
     ]
     for code, rx in strong:
@@ -726,6 +732,12 @@ def _clean_name(seg):
     if m:
         prefix, s = m.group(1), m.group(2)
     s = re.split(r',\s*(?=\d{4}\b)|,\s*(?=H-\d{4})|\s+-\s+(?=\d)|;\s*', s)[0]
+    parts = re.split(r',\s+', s)
+    for i in range(len(parts) - 1):  # the shortest comma-prefix that ends in a legal form
+        cand = ', '.join(parts[:i + 1])
+        if S.LEGAL_END.search(fold(cand)):
+            s = cand
+            break
     return s.strip(' :;,|-'), fold(prefix).strip()
 
 
@@ -792,6 +804,8 @@ def _region_name(doc, reg, hit):
             text = re.sub(r'^\s*(?:neve|name|adatai|details|information|info|megnevezese)?\s*:?', '', text,
                           flags=re.I)
         for off, seg in _segments(text, a):
+            if seg.rstrip().endswith(':'):
+                continue  # a label cell such as "Név:"; the name is in the next cell
             name, prefix = _clean_name(seg)
             if prefix and _BANK_CONTEXT.search(prefix):
                 continue
@@ -909,11 +923,20 @@ def _find_supplier(doc, meta, own, registry):
             continue
         g = groups.setdefault(k, {'cands': [], 'conf': 0})
         g['cands'].append(c)
+    for k in sorted(groups, key=len):
+        toks = k.split()
+        if len(toks[0]) < 4:
+            continue
+        longer = [o for o in groups if o != k and o.split()[:len(toks)] == toks]
+        if len(longer) == 1:  # "nimbus" (logo) agrees with "nimbus web services emea" (legal name)
+            groups[longer[0]]['cands'] += [dict(c, conf=min(c['conf'], 0.5)) for c in groups.pop(k)['cands']]
     for k, g in groups.items():
         best = max(g['cands'], key=lambda c: c['conf'])
         hows = {c['how'] for c in g['cands']}
         g['conf'] = min(0.99, best['conf'] + 0.05 * (len(hows) - 1))
         g['best'] = best
+    if not groups:
+        return None, notes, tax_ids
     g = max(groups.values(), key=lambda g: (g['conf'], -max(c['line'] for c in g['cands'])))
     best = g['best']
     known = next((c['known'] for c in g['cands'] if c.get('known')), None)
@@ -974,6 +997,9 @@ def extract(text, meta=None, company=None, registry=None, default_currency='HUF'
     method, method_conf = _find_method(doc)
     doc_type = _doc_type(doc)
     stamp = _paid_stamp(doc) or doc_type == 'receipt'
+    if paid is None and issue and stamp and (doc_type == 'receipt' or method in ('card', 'cash')):
+        paid = issue  # a receipt or a slip marked paid at the till is dated the day it was paid
+        date_conf['paid'] = 0.8
 
     sup, notes, tax_ids = _find_supplier(doc, meta, own, registry)
     supplier = supplier_raw = supplier_tax = None

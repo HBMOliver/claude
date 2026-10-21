@@ -242,6 +242,7 @@ class App:
                     'overdue': sum(1 for i in unpaid if i['due_date'] and i['due_date'] < t),
                     'recent': dbm.find_invoices(con, '1=1', order='id DESC', limit=12),
                     'last_run': dbm.meta_get(con, 'last_run'),
+                    'other': con.execute("SELECT count(*) FROM invoices WHERE status IN ('duplicate', 'ignored')").fetchone()[0],
                     'suggestions': len([1 for sc, _, _ in bank.propose(self.bot, con) if sc < bank.AUTO_SCORE])
                     if req.user['role'] == 'admin' else 0}
             return V.overview(ctx, data)

@@ -91,8 +91,7 @@ def layout(ctx, title, body, active=''):
     counts = ctx.get('counts', {})
     nav = [('/', 'Overview', ''), ('/review', 'To check', counts.get('review')),
            ('/unpaid', 'Waiting for payment', counts.get('unpaid')), ('/upload', 'Upload', ''),
-           ('/bank', 'Bank statement', counts.get('suggestions')), ('/suppliers', 'Suppliers', ''),
-           ('/other', 'Other documents', '')]
+           ('/bank', 'Bank statement', counts.get('suggestions')), ('/suppliers', 'Suppliers', '')]
     if u['role'] != 'admin':
         nav = [n for n in nav if n[0] not in ('/upload', '/bank')]
     links = []
@@ -114,7 +113,7 @@ def layout(ctx, title, body, active=''):
 <a class="brand" href="/">Invoice Bot<span>{e(ctx.get('company') or 'Invoices by payment month')}</span></a>
 <nav aria-label="Main">{''.join(links)}</nav>
 <form class="search" action="/search" role="search"><input type="search" name="q" aria-label="Search invoices"
- placeholder="Supplier, number or amount" value="{e(ctx.get('q', ''))}"></form>
+ placeholder="Search invoices" title="Supplier, invoice number or amount" value="{e(ctx.get('q', ''))}"></form>
 <div class="me"><span>{e(u['username'])}{' (view only)' if u['role'] != 'admin' else ''}</span>
 <a href="/account">Account</a>
 <form method="post" action="/logout" class="inline">{csrf(ctx)}<button class="link" type="submit">Log out</button></form></div>
@@ -235,6 +234,9 @@ def overview(ctx, data):
     if data['unpaid']:
         od = f', {data["overdue"]} overdue' if data['overdue'] else ''
         todo.append(f'<li><span><a href="/unpaid">{data["unpaid"]} waiting for payment</a>{e(od)}.</span></li>')
+    if data.get('other'):
+        todo.append(f'<li><span><a href="/other">{data["other"]} other document{"s" if data["other"] != 1 else ""}</a>: '
+                    f'duplicates, proformas and files that are not invoices.</span></li>')
     if data['suggestions']:
         todo.append(f'<li><span><a href="/bank">{data["suggestions"]} possible bank match'
                     f'{"es" if data["suggestions"] != 1 else ""}</a> to confirm.</span></li>')

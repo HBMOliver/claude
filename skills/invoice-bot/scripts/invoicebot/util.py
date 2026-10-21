@@ -275,6 +275,9 @@ def parse_number(raw):
         return None
 
 
+_MAX_AMOUNT = Decimal('1e13')
+
+
 class AmountHit:
     __slots__ = ('start', 'end', 'value', 'currency', 'raw')
 
@@ -304,8 +307,8 @@ def find_amounts(folded_line, date_hits=None):
     out = []
     for m in _AMOUNT_RE.finditer(line):
         val = parse_number(m.group('num'))
-        if val is None:
-            continue
+        if val is None or val >= _MAX_AMOUNT:
+            continue  # nothing real is this large: a reference number, not money
         neg = bool(m.group('neg'))
         before, after = line[max(0, m.start() - 6):m.start()], line[m.end():m.end() + 9]
         if not neg and before.rstrip().endswith('(') and after.lstrip().startswith(')'):
@@ -348,7 +351,10 @@ def dec_str(value):
     """Canonical storage form: '127000.00'."""
     if value is None or value == '':
         return None
-    return f'{Decimal(str(value)).quantize(Decimal("0.01"))}'
+    try:
+        return f'{Decimal(str(value)).quantize(Decimal("0.01"))}'
+    except InvalidOperation:
+        return None
 
 
 def parse_amount_input(s):

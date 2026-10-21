@@ -390,7 +390,7 @@ def clean_changes(changes):
             out[k] = d.isoformat()
         elif k == 'amount':
             a = parse_amount_input(str(v))
-            if a is None:
+            if a is None or dec_str(a) is None or abs(a) >= 10 ** 13:
                 raise ValueError(f'amount: not a number: {v!r}')
             out[k] = dec_str(a)
         elif k == 'currency':

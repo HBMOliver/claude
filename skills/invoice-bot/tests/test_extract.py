@@ -296,5 +296,19 @@ class TestExtract(unittest.TestCase):
         self.assertIsNone(r['supplier'])
 
 
+class TestRobustness(unittest.TestCase):
+    def test_never_crashes(self):
+        import random
+        rnd = random.Random(7)
+        words = ['Számla', 'sorszáma:', 'Fizetendő:', 'Total', 'Invoice', 'Date:', '2026.09.15.', '15/09/2026',
+                 '127 000', 'Ft', 'EUR', 'Eladó', 'Vevő', 'Kft.', 'Ltd', 'Bill to', 'Due date', 'Paid', '1.234,56',
+                 '-', ':', '\n', '   ', 'Átutalás', 'Inc.', 'GmbH', 'Adószám:', '12345678-2-41', '9' * 400]
+        cases = ['', '\x00' * 50, 'Kft.\nLtd\nGmbH Inc.', 'Fizetendő: ' + '9' * 400 + ' Ft']
+        cases += [' '.join(rnd.choice(words) for _ in range(rnd.randint(1, 200))) for _ in range(250)]
+        for c in cases:
+            r = ex(c, rnd.choice([None, 'X <a@b.c>', 'garbage']))
+            self.assertIsInstance(r, dict)
+
+
 if __name__ == '__main__':
     unittest.main()
