@@ -32,6 +32,7 @@ changes only grammar and world will fail it.
 | socialstream (rev 2 of hb-social) | Chaptered editorial (client's own I./II./III. chapters), bent for a fixed bar | Fixed paper bar: wordmark, 4 anchors, HU/EN, Ingyenes audit | Pinned photographic depth: wall plate, 22vw italic 'érdeklődés' behind a rembg cutout of the founder, claim in front, pointer + scroll rates | pin(1.35) > marquee > flow+in > flow reveal laws on dark linen > pin custom (3.0, peak) > flow index > pan rail with scrubbed counts (3.2) > flow mosaic > native snap rail > flow team > flow founder > flow close; 12 acts | Dark linen close: big question, cream pill CTA, visible address, scarcity line, footer inside | Grid takeover reused by client request, recast as the third law (old-age scatter to new-age system) | Client brand: cream, ink, dusty blue; Fraunces + Plus Jakarta Sans; real portraits | 4501 |
 | socialstream-site (full site) | Chaptered editorial with working surfaces (I.-VII.) | Fixed paper bar: serif wordmark, 5 anchors, HU/EN, audit CTA | Same layered founder hero, plus a load-time strike rewriting 'Social' to 'Interest media' | pin hero > marquee > flow > flow reveal (dark) > pin peak > live feed simulator > interactive system ring > pan results + dialogs > quiz > fit lists (dark) > founder/team > snap rail > form close; 13 acts | Dark application form that carries the test result; mailto hand-off with copy fallback | Feed simulator: same posts re-ranked by follower graph vs interest | Client brand, real portraits | 4502 |
 | socialstream-cobalt (design 2) | Chaptered poster: Swiss grid, condensed uppercase display | Fixed chapter rail 00-07 with scroll spy + bar; mobile full-screen cobalt index | Departures-board flip SOCIAL to INTEREST over a B&W founder cutout on a cobalt field | pin hero > ticker > flow > pan laws (3 colour panels) > live simulator > numbered service board > number wall + dialogs > cobalt quiz > fit (struck-through no-list) > about > single-quote carousel > form > giant-wordmark footer; 12 acts | Paper form close then wall-to-wall SOCIALSTREAM wordmark footer | Split-flap board that re-labels the category | Cobalt, paper, ink; Archivo/Geist/Geist Mono; B&W photography | 4503 |
+| socialstream-split (flagship) | Split stage: dead old age (grey paper, serif) against living interest media (petrol, sans), held for the whole page; the divider is a document-space river D(y) that bends left section by section | No bar; the river is the chrome: a marker riding the divider with both sides' labels for the current section and each side's share; fixed HU/EN switch. Mobile: stacked old/new blocks with horizontal stream bands | 50/50 split: a Hungarian gyászjelentés for social media (2004–2022) on grey paper against a 9:16 graded sizzle with the live HU/EN headline over it; wordmark split by the stream, "2022–" beat on scroll | pin hero (1.4) > flow name passage > pin laws (2.6, divider steps per law, old rules struck) > flow ledger (subgrid rows) > flow results (before/after testimonial wipes, counts) > pin peak (2.8, largest) > flow people > flow fit > pin collapse (2.4) > flow audit; 10 acts, ~15.6vh desktop | Collapse: the river swings off the left edge, the old column goes with it, "Social" docks against "Stream", the audit form fills the winning column with the stream still running at the edge | Interest reveal: local dwell time on topic-tagged sections becomes "Ezt az oldalt nem követted. Mégis tudja, mi érdekel.", three cards fly out of the stream, adjustable, carried into the form | Client palette re-cast: grey paper / petrol / amber; EB Garamond + Mona Sans; FlyX footage, studio portraits; tile conveyor whose cargo changes by era | 4510 |
 
 *(empty: your first build has nothing to clear, so build whatever the interview
 points at. From the second onwards, this table is the constraint.)*
@@ -45,7 +46,14 @@ reusing: a grammar, a nav treatment, a close pattern, a signature move, an
 act-count-and-length band. The shared columns are what the next build inherits
 as a constraint, so writing them down is the whole point.
 
-Nothing is taken yet.
+- **Split stage** with a document-space river divider whose bends are built from
+  per-section splits, and a tile conveyor along it whose cargo is chosen by era
+  (socialstream-split). Another split build needs a different divider device.
+- **Death-notice hero** set against a live feed (socialstream-split).
+- **Dwell-time interest reveal** carried into the form (socialstream-split).
+- **Collapse close with a wordmark reunion** (socialstream-split).
+- **HU/EN fixed switch as the only fixed chrome** is now shared by hb-social and
+  socialstream-split; the next build should treat it as taken for nav credit.
 
 ---
 
