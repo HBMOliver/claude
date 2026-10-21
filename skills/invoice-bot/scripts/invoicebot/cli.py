@@ -120,9 +120,15 @@ def cmd_config(a):
 def cmd_check(a):
     import importlib.util
     from . import textract
+    pypdf_state = 'missing (pip install pypdf)'
+    if importlib.util.find_spec('pypdf'):
+        import pypdf
+        ver = tuple(int(x) for x in pypdf.__version__.split('.')[:2] if x.isdigit())
+        pypdf_state = f'ok ({pypdf.__version__})' if ver >= (3, 17) else \
+            f'old ({pypdf.__version__}): pip install -U "pypdf>=3.17" so tables keep their columns'
     st = {'python': platform.python_version(), 'invoicebot': __version__,
           'pdftotext': shutil.which('pdftotext') or 'missing (install poppler-utils for the best results)',
-          'pypdf': 'ok' if importlib.util.find_spec('pypdf') else 'missing (pip install pypdf)',
+          'pypdf': pypdf_state,
           'ocr (tesseract)': shutil.which('tesseract') or 'not installed (scanned invoices go to review)'}
     if not shutil.which('pdftotext') and not importlib.util.find_spec('pypdf'):
         st['WARNING'] = 'no PDF text extractor: install poppler-utils or pypdf'

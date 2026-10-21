@@ -5,7 +5,7 @@
 - Python 3.9 or newer (macOS, Linux, Windows). No packages are required for the bot itself.
 - A PDF text reader, one of:
   - `pdftotext` from poppler (best: keeps table columns). macOS: `brew install poppler`; Debian/Ubuntu: `sudo apt install poppler-utils`; Windows: install "poppler for Windows" and add its `bin` folder to PATH.
-  - or `pip install pypdf` (pure Python fallback).
+  - or `pip install "pypdf>=3.17"` (pure Python fallback; older versions lose table columns).
 - Optional OCR for scanned invoices: `tesseract` (+ the `hun` language data) and `pdftoppm` (comes with poppler). Without it, scans go to review and you or Claude type the fields in.
 
 `python3 scripts/invoice_bot.py check` reports what is present.
