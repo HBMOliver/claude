@@ -47,6 +47,7 @@ img, video, canvas { display: block; max-width: 100%; }
 a { color: inherit; }
 button { font: inherit; color: inherit; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+[hidden] { display: none !important; }
 :focus-visible { outline: 2px solid currentColor; outline-offset: 4px; border-radius: 4px; }
 .wrap { width: 100%; max-width: 1360px; margin: 0 auto; padding-inline: max(var(--g), env(safe-area-inset-left, 0px)) max(var(--g), env(safe-area-inset-right, 0px)); }
 .disp { font-family: var(--font-d); font-weight: 600; letter-spacing: -0.045em; line-height: 0.96; text-wrap: balance; margin: 0; }
@@ -151,6 +152,7 @@ button { font: inherit; color: inherit; }
 .lens .head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; align-items: end; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
 .lens .head .disp { grid-column: 1 / span 7; font-size: clamp(2.4rem, 1.3rem + 3.6vw, 5.2rem); }
 .lens .head .lede { grid-column: 9 / span 4; font-size: 1.02rem; }
+.lens .head .ttl { grid-column: 1 / span 7; display: grid; gap: 16px; }
 .feedbox { position: relative; border-radius: 22px; overflow: hidden; touch-action: pan-y; background: var(--bg2); }
 @media (hover: hover) and (pointer: fine) { .feedbox { cursor: none; } }
 .layer { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; padding: 10px; }
@@ -211,6 +213,203 @@ button { font: inherit; color: inherit; }
 .close .mail button { border: 0; background: none; cursor: pointer; color: var(--ink); text-decoration: underline; text-underline-offset: 0.3em; font-size: 0.88rem; padding: 6px 0; }
 .foot { margin-top: clamp(6rem, 12vw, 10rem); padding-block: 26px calc(84px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; font-size: 0.82rem; color: var(--soft); }
 
+/* ---------- nav anchors (wide screens only) ---------- */
+.bar .links { display: flex; gap: 22px; margin-right: 6px; }
+.bar .links a { font: 500 0.86rem/1 var(--font-t); text-decoration: none; opacity: 0.72; padding: 10px 0; transition: opacity 160ms var(--ease); }
+.bar .links a:hover { opacity: 1; }
+@media (max-width: 1100px) { .bar .links { display: none; } }
+.sec[data-tone="dark"] { color-scheme: dark; }
+
+/* ---------- law I: the count, then the strike ---------- */
+.law1 .stage { display: grid; place-items: center; background: var(--bg); text-align: center; }
+.l1 { display: grid; justify-items: center; gap: clamp(14px, 2vh, 22px); padding-inline: var(--g);
+  transform: translateY(calc(clamp(0, (var(--sc-p, 0) - 0.42) * 3, 1) * -13vh)) scale(calc(1 - clamp(0, (var(--sc-p, 0) - 0.42) * 0.9, 0.3))); }
+.l1-count { position: relative; margin: 0; font: 700 clamp(5rem, 1.6rem + 15vw, 17rem)/0.8 var(--font-d); letter-spacing: -0.065em; font-variant-numeric: tabular-nums;
+  opacity: calc(1 - clamp(0, (var(--sc-p, 0) - 0.42) * 3.2, 0.78)); }
+.l1-count::after { content: ""; position: absolute; left: -3%; right: -3%; top: 50%; height: 0.055em; background: var(--acc); transform-origin: left;
+  transform: scaleX(clamp(0, (var(--sc-p, 0) - 0.3) * 6, 1)); }
+.l1-meta { margin: 0; display: flex; gap: 22px; align-items: baseline; font: 500 clamp(1rem, 0.9rem + 0.6vw, 1.45rem)/1 var(--font-t); color: var(--soft); }
+.l1-meta b { color: var(--ink); font-weight: 600; }
+.l1-law { position: absolute; left: 0; right: 0; bottom: clamp(44px, 9vh, 110px); display: grid; justify-items: center; gap: 16px; padding-inline: max(var(--g), env(safe-area-inset-left, 0px)) max(var(--g), env(safe-area-inset-right, 0px)); }
+.l1-law .disp { font-size: clamp(2.4rem, 1.3rem + 3.8vw, 5.6rem); max-width: 16ch; }
+.l1-law .lede { text-align: center; }
+
+/* ---------- services: a bento the cursor lights ---------- */
+.svc { padding-block: clamp(6rem, 12vw, 10rem); }
+.svc .head, .lens .head2 { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; align-items: end; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+.svc .head .disp { grid-column: 1 / span 7; font-size: clamp(2.6rem, 1.4rem + 4.2vw, 6rem); }
+.svc .head .disp span, .voices .disp span, .fit .disp span, .close .disp span { color: var(--soft); }
+.svc .head .lede { grid-column: 9 / span 4; font-size: 1.02rem; }
+.bento { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: minmax(14.5rem, auto); gap: 12px; }
+.bx { position: relative; overflow: hidden; isolation: isolate; border-radius: 22px; padding: clamp(22px, 2.3vw, 32px); background: var(--bg2);
+  box-shadow: inset 0 0 0 1px var(--line); display: grid; align-content: space-between; gap: 20px; }
+/* a glow under the cursor and a lit edge, both following the pointer across every tile */
+.bx::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: var(--o, 0); transition: opacity 300ms var(--ease);
+  background: radial-gradient(520px circle at var(--x, 50%) var(--y, 50%), color-mix(in srgb, var(--acc) 20%, transparent), transparent 62%); }
+.bx::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none; opacity: var(--o, 0); transition: opacity 300ms var(--ease);
+  background: radial-gradient(360px circle at var(--x, 50%) var(--y, 50%), color-mix(in srgb, var(--acc) 90%, transparent), transparent 60%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.bx h3 { margin: 0; font: 600 clamp(1.4rem, 1.1rem + 0.9vw, 2rem)/1.08 var(--font-d); letter-spacing: -0.03em; }
+.bx p { margin: 0; color: var(--soft); font-size: 0.96rem; line-height: 1.55; max-width: 40ch; }
+.bx .txt { display: grid; gap: 12px; }
+.bx--video { grid-column: span 2; grid-row: span 2; }
+.bx--social, .bx--ads, .bx--web, .bx--auto { grid-column: span 2; }
+.bx--strat { grid-column: span 6; grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+.vid { position: relative; width: min(100%, 15rem); aspect-ratio: 9 / 16; justify-self: center; border-radius: 16px; overflow: hidden; background: #000; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.6); }
+.vid img, .vid video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.vid video { opacity: 0; transition: opacity 400ms var(--ease); }
+.vid.is-playing video { opacity: 1; }
+.fan { position: relative; height: 9.6rem; }
+.fan img { position: absolute; bottom: 0; width: 5.6rem; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 10px; box-shadow: 0 16px 30px -16px rgba(0, 0, 0, 0.6); transition: transform 500ms var(--ease); }
+.fan img:nth-child(1) { left: 0; transform: rotate(-7deg); }
+.fan img:nth-child(2) { left: 4.2rem; transform: rotate(2deg) translateY(-10px); }
+.fan img:nth-child(3) { left: 8.4rem; transform: rotate(8deg); }
+.bx--social:hover .fan img:nth-child(1) { transform: rotate(-12deg) translateX(-8px); }
+.bx--social:hover .fan img:nth-child(3) { transform: rotate(13deg) translateX(10px); }
+.bx .big { margin: 0; color: var(--ink); max-width: none; font: 700 clamp(3.6rem, 2rem + 4vw, 6rem)/0.84 var(--font-d); letter-spacing: -0.06em; font-variant-numeric: tabular-nums; }
+.bx .big small { font-size: 0.34em; letter-spacing: -0.02em; margin-left: 0.08em; }
+.browser { border-radius: 12px; overflow: hidden; background: var(--bg); box-shadow: inset 0 0 0 1px var(--line); }
+.browser .top { height: 24px; display: flex; gap: 5px; align-items: center; padding: 0 10px; border-bottom: 1px solid var(--line); }
+.browser .top i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+.browser .sk { display: grid; gap: 8px; padding: 14px; }
+.browser .sk i { height: 9px; border-radius: 5px; background: var(--line); }
+.browser .sk i:nth-child(1) { width: 62%; height: 14px; background: color-mix(in srgb, var(--ink) 30%, transparent); }
+.browser .sk i:nth-child(2) { width: 84%; } .browser .sk i:nth-child(3) { width: 48%; }
+.browser .sk b { width: 34%; height: 22px; border-radius: 999px; background: var(--acc); margin-top: 4px; }
+.flow { display: flex; align-items: center; gap: 8px; font: 600 0.74rem/1 var(--font-t); letter-spacing: 0.04em; }
+.flow span { padding: 9px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line); white-space: nowrap; }
+.flow i { flex: 1; height: 1px; background: var(--line); position: relative; overflow: hidden; }
+.flow i::after { content: ""; position: absolute; inset: 0; width: 30%; background: var(--acc); animation: pass 2.4s var(--ease) infinite; }
+.flow i:nth-of-type(2)::after { animation-delay: 1.2s; }
+@keyframes pass { from { transform: translateX(-100%); } to { transform: translateX(340%); } }
+.bx--strat .tag { margin: 0; font: 600 clamp(1.4rem, 1rem + 1.6vw, 2.6rem)/1.05 var(--font-d); letter-spacing: -0.035em; color: var(--ink); text-align: right; max-width: 18ch; }
+
+/* ---------- results: four cases ---------- */
+.cases { margin-top: clamp(3rem, 6vw, 5rem); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.case { display: grid; grid-template-rows: auto 1fr; border-radius: 20px; overflow: hidden; background: var(--bg2); text-decoration: none; color: inherit;
+  box-shadow: inset 0 0 0 1px var(--line); transform: perspective(900px) rotateX(var(--ry, 0deg)) rotateY(var(--rx, 0deg)); transition: transform 500ms var(--ease); }
+.case.is-tilting, .person .ph.is-tilting { transition: transform 80ms linear; }
+.case .ph { aspect-ratio: 4 / 3; overflow: hidden; background: #efe9df; }
+.case img { width: 100%; height: 100%; object-fit: cover; transition: transform 700ms var(--ease); }
+.case:hover img { transform: scale(1.04); }
+.case .bd { padding: 20px 20px 22px; display: grid; gap: 10px; align-content: start; }
+.case b { font: 700 clamp(2.6rem, 1.6rem + 2.6vw, 4rem)/0.88 var(--font-d); letter-spacing: -0.055em; font-variant-numeric: tabular-nums; }
+.case b small { font-size: 0.42em; letter-spacing: -0.02em; margin-left: 0.04em; }
+.case p { margin: 0; color: var(--soft); font-size: 0.92rem; line-height: 1.5; }
+.case .lab { font: 600 0.7rem/1.3 var(--font-t); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); opacity: 0.6; }
+.case .go { margin-top: 4px; font: 600 0.86rem/1 var(--font-t); }
+
+/* ---------- testimonials: a rail you drag ---------- */
+.voices { padding-block: clamp(6rem, 12vw, 10rem); overflow: hidden; }
+.voices .head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: clamp(2rem, 4vw, 3rem); }
+.voices .disp { font-size: clamp(2.4rem, 1.3rem + 3.6vw, 5.2rem); }
+.rail-btns { display: flex; gap: 8px; flex: none; }
+.rail-btns button { width: 48px; height: 48px; border-radius: 50%; border: 0; cursor: pointer; background: var(--bg2); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); font-size: 1.05rem; }
+.rail-btns button:active { transform: scale(0.95); }
+.qrail { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain;
+  padding: 4px max(var(--g), env(safe-area-inset-right, 0px)) 8px max(var(--g), env(safe-area-inset-left, 0px)); scroll-padding-inline: max(var(--g), env(safe-area-inset-left, 0px)); }
+.qrail::-webkit-scrollbar { display: none; }
+.qrail.is-drag { scroll-snap-type: none; }
+@media (hover: hover) and (pointer: fine) { .qrail { cursor: none; } }
+.q { flex: none; width: min(30rem, 84vw); scroll-snap-align: start; margin: 0; padding: clamp(24px, 2.6vw, 36px); border-radius: 22px; background: var(--bg2);
+  box-shadow: inset 0 0 0 1px var(--line); display: grid; align-content: space-between; gap: 28px; user-select: none; -webkit-user-select: none; }
+.q p { margin: 0; font: 500 clamp(1.12rem, 1rem + 0.45vw, 1.4rem)/1.42 var(--font-d); letter-spacing: -0.015em; text-wrap: pretty; }
+.q footer { font-size: 0.9rem; line-height: 1.4; }
+.q footer b { display: block; font-weight: 600; }
+.q footer span { color: var(--soft); }
+
+/* ---------- people ---------- */
+.team { padding-block: clamp(6rem, 12vw, 10rem); }
+.founder { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; align-items: center; }
+.founder figure { grid-column: 1 / span 5; margin: 0; border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 5; }
+.founder figure img { width: 100%; height: 100%; object-fit: cover; }
+.founder .story { grid-column: 7 / span 6; display: grid; gap: 22px; }
+.founder .disp { font-size: clamp(2.4rem, 1.3rem + 3.4vw, 4.8rem); }
+.founder .story p { margin: 0; color: var(--soft); max-width: 46ch; }
+.founder .story .sig { color: var(--ink); font: 600 1.05rem/1 var(--font-d); letter-spacing: -0.02em; }
+.people-h { margin-top: clamp(5rem, 10vw, 8rem) !important; font-size: clamp(2rem, 1.2rem + 2.6vw, 3.8rem); max-width: 18ch; }
+.people { margin-top: clamp(2rem, 4vw, 3rem); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.person { margin: 0; display: grid; gap: 12px; align-content: start; }
+.person .ph { border-radius: 20px; overflow: hidden; aspect-ratio: 4 / 5; transform: perspective(900px) rotateX(var(--ry, 0deg)) rotateY(var(--rx, 0deg)); transition: transform 500ms var(--ease); }
+.person .ph img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
+.person h3 { margin: 6px 0 0; font: 600 1.4rem/1 var(--font-d); letter-spacing: -0.03em; }
+.person .role { margin: 0; font: 600 0.72rem/1.3 var(--font-t); letter-spacing: 0.12em; text-transform: uppercase; color: var(--soft); }
+.person p { margin: 0; color: var(--soft); font-size: 0.94rem; max-width: 36ch; }
+
+/* ---------- fit ---------- */
+.fit { padding-block: clamp(6rem, 12vw, 10rem); }
+.fit .disp { font-size: clamp(2.4rem, 1.3rem + 3.6vw, 5.2rem); max-width: 16ch; }
+.fit .cols { margin-top: clamp(3rem, 6vw, 5rem); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.fit .col { border-radius: 22px; padding: clamp(24px, 2.6vw, 36px); background: var(--bg2); box-shadow: inset 0 0 0 1px var(--line); }
+.fit h3 { margin: 0 0 12px; font: 600 1.25rem/1.2 var(--font-d); letter-spacing: -0.02em; }
+.fit ul { list-style: none; margin: 0; padding: 0; }
+.fit li { position: relative; padding: 14px 0 14px 28px; border-top: 1px solid var(--line); line-height: 1.5; }
+.fit li::before { content: ""; position: absolute; left: 2px; }
+.fit .yes li::before { top: 22px; width: 9px; height: 9px; border-radius: 50%; background: var(--acc); }
+.fit .no li { color: var(--soft); }
+.fit .no li::before { top: 25px; width: 11px; height: 1.5px; background: var(--soft); }
+.seal { margin: 28px 0 0; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline; font: 600 clamp(1.2rem, 1rem + 0.8vw, 1.7rem)/1.2 var(--font-d); letter-spacing: -0.02em; }
+.seal span { font: 500 0.95rem/1.4 var(--font-t); color: var(--soft); letter-spacing: 0; }
+
+/* ---------- the audit form ---------- */
+.close .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
+.close .head { grid-column: 1 / span 5; display: grid; gap: 24px; align-content: start; }
+.close .head .disp { font-size: clamp(2.6rem, 1.4rem + 4vw, 5.6rem); max-width: 12ch; }
+.close .head .lede { margin: 0; }
+.close .scar { margin: 0; display: grid; gap: 4px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--soft); font-size: 0.95rem; }
+.close .scar b { color: var(--ink); font-weight: 600; }
+.app { grid-column: 7 / span 6; display: grid; grid-template-columns: 1fr 1fr; gap: 16px 14px; }
+.field { display: grid; gap: 8px; align-content: start; }
+.field.full, .app fieldset, .form-act, .sent { grid-column: 1 / -1; }
+.field label, .app legend { font: 600 0.72rem/1.2 var(--font-t); letter-spacing: 0.1em; text-transform: uppercase; color: var(--soft); padding: 0; }
+.field input, .field select, .field textarea { width: 100%; font: 400 1rem/1.4 var(--font-t); color: var(--ink); background: var(--bg2); border: 0; border-radius: 14px; padding: 14px 16px;
+  box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow 160ms var(--ease); }
+.field textarea { min-height: 7.5rem; resize: vertical; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; box-shadow: inset 0 0 0 1.5px var(--ink); }
+.field input[aria-invalid="true"] { box-shadow: inset 0 0 0 1.5px #e5484d; }
+.err { min-height: 1em; font-size: 0.8rem; color: #e5484d; }
+.sec[data-tone="dark"] .err { color: #ff8a8a; }
+.sec[data-tone="dark"] .field input[aria-invalid="true"] { box-shadow: inset 0 0 0 1.5px #ff8a8a; }
+.app fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { position: relative; display: inline-flex; }
+.chip input { position: absolute; inset: 0; opacity: 0; cursor: pointer; margin: 0; }
+.chip span { display: inline-flex; padding: 10px 14px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line); font: 500 0.88rem/1 var(--font-t); transition: background-color 160ms var(--ease), color 160ms var(--ease); }
+.chip input:checked + span { background: var(--ink); color: var(--bg); box-shadow: none; }
+.chip input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 2px; }
+.form-act { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin-top: 4px; }
+.direct { color: var(--soft); font-size: 0.92rem; }
+.direct a { color: var(--ink); }
+.copy-mini { border: 0; background: none; cursor: pointer; color: var(--ink); text-decoration: underline; text-underline-offset: 0.3em; font-size: 0.86rem; padding: 6px 0; margin-left: 8px; }
+.sent { border-radius: 18px; padding: 20px; background: var(--bg2); box-shadow: inset 0 0 0 1px var(--line); display: grid; gap: 10px; justify-items: start; }
+.sent b { font: 600 1.1rem/1.2 var(--font-d); letter-spacing: -0.02em; }
+.sent span { color: var(--soft); font-size: 0.95rem; }
+.foot .wm { font: 700 1rem/1 var(--font-d); letter-spacing: -0.03em; color: var(--ink); }
+
+@media (max-width: 860px) {
+  .svc .head, .lens .head2, .founder, .close .grid { grid-template-columns: 1fr; }
+  .svc .head .disp, .svc .head .lede, .founder figure, .founder .story, .close .head, .app { grid-column: 1 / -1; }
+  .bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
+  .bx--video, .bx--social, .bx--ads, .bx--web, .bx--auto, .bx--strat { grid-column: auto; grid-row: auto; }
+  .bx--strat { grid-template-columns: 1fr; }
+  .bx--strat .tag { text-align: left; }
+  .cases { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .case .bd { padding: 14px 14px 16px; }
+  .people { grid-template-columns: 1fr 1fr; }
+  .person:nth-child(3) { grid-column: 1 / -1; }
+  .person:nth-child(3) .ph { aspect-ratio: 16 / 11; }
+  .fit .cols { grid-template-columns: 1fr; }
+  .app { grid-template-columns: 1fr; }
+  .voices .head { flex-direction: column; align-items: flex-start; }
+  .l1-meta { gap: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .l1 { transform: none; }
+  .flow i::after { animation: none; }
+  .case, .person .ph { transform: none !important; }
+}
+
 /* ---------- phones ---------- */
 @media (max-width: 860px) {
   .bar .cta { display: none; }
@@ -224,7 +423,7 @@ button { font: inherit; color: inherit; }
   .hero .copy .acts { flex-direction: column; align-items: flex-start; }
   .hero .scrim { background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 86%, transparent) 0%, color-mix(in srgb, var(--bg) 66%, transparent) 46%, transparent 72%); }
   .lens .head { grid-template-columns: 1fr; }
-  .lens .head .disp, .lens .head .lede { grid-column: 1 / -1; }
+  .lens .head .disp, .lens .head .lede, .lens .head .ttl { grid-column: 1 / -1; }
   .layer { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 6px; }
   .feedbox { border-radius: 16px; }
   .takeover .stage { grid-template-columns: 1fr; align-content: center; row-gap: 26px; }
@@ -238,6 +437,7 @@ button { font: inherit; color: inherit; }
   .ver button { padding: 7px; }
   .ver button[aria-pressed="true"] span { display: inline; }
 }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 @media (prefers-reduced-motion: reduce) {
   .plane { transform: none !important; }
   .reel .down::after { animation: none; }
@@ -249,6 +449,12 @@ button { font: inherit; color: inherit; }
 
 <header class="bar" id="bar">
   <a class="wm" href="#top" aria-label="SocialStream">SocialStream</a>
+  <nav class="links" aria-label="Fő navigáció" data-en-aria="Main navigation">
+    <a href="#torveny" data-en="The laws">Törvények</a>
+    <a href="#szolgaltatasok" data-en="Services">Szolgáltatások</a>
+    <a href="#szamok" data-en="Results">Eredmények</a>
+    <a href="#csapat" data-en="Team">Csapat</a>
+  </nav>
   <div class="lang" role="group" aria-label="Nyelv / Language">
     <button type="button" data-set-lang="hu" aria-pressed="true" lang="hu">HU</button>
     <button type="button" data-set-lang="en" aria-pressed="false" lang="en">EN</button>
@@ -306,7 +512,7 @@ button { font: inherit; color: inherit; }
       <div class="plane scrim" aria-hidden="true"></div>
       <div class="plane word" aria-hidden="true"><span id="word" data-en="interest">érdeklődés</span></div>
       <figure class="plane man"><img src="assets/oliver-cut.webp" alt="Olivér, a SocialStream alapítója" data-en-alt="Olivér, founder of SocialStream" width="670" height="1823" fetchpriority="high"><figcaption data-en="Olivér, founder">Olivér, alapító</figcaption></figure>
-      <div class="copy" data-sc-cue="0 0.86 0">
+      <div class="copy">
         <p class="kick" data-en="Marketing in the age of interest">Marketing az érdeklődés korában</p>
         <h2 class="disp" id="hero-h" data-en="We win in this age.">Mi ebben a korban győzünk.</h2>
         <p class="lede" data-en="An era has ended: the feed no longer shows who you follow, but what genuinely interests you. Video content, social presence and performance ads in one growth system.">Egy korszak véget ért: a feed már nem azt mutatja, kit követsz, hanem azt, ami valóban érdekel. Videó tartalom, social jelenlét és performance hirdetések egy growth rendszerben.</p>
@@ -318,12 +524,29 @@ button { font: inherit; color: inherit; }
     </div>
   </section>
 
+  <!-- Law I: the follower count counts up, then the new age strikes it out. -->
+  <section class="sec law1" id="torveny" data-sc-act="pin" data-sc-span="2" data-tone="dark" aria-labelledby="l1-h">
+    <div class="stage" data-sc-stage id="l1Stage">
+      <div class="l1">
+        <p class="kick" data-sc-cue="0" data-en="What the old age counted">Amit a régi kor számolt</p>
+        <p class="l1-count" aria-hidden="true"><span id="l1n">10 000</span></p>
+        <p class="l1-meta" data-sc-cue="0.14"><span data-en="followers">követő</span><span><b>40</b> <span data-en="likes">kedvelés</span></span></p>
+      </div>
+      <div class="l1-law" data-sc-cue="0.52">
+        <p class="kick" data-en="The first law of the new age">Az új kor I. törvénye</p>
+        <h2 class="disp" id="l1-h" data-en="Follower count is a relic of the old age.">A követőszám a régi kor relikviája.</h2>
+        <p class="lede" data-en="In the new age every post starts with a clean slate. What matters is not how many follow you, but how many watch to the end.">Az új korban minden poszt tiszta lappal indul. Nem az számít, hányan követnek, hanem hogy hányan nézik végig.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- 3 · The lens: the old feed on top, what interest looks like underneath, under your cursor. -->
   <section class="sec lens" id="lencse" data-sc-act="flow" data-tone="light" aria-labelledby="lens-h">
     <div class="wrap">
       <div class="head" data-sc-in data-sc-stagger="90">
-        <h2 class="disp" id="lens-h" data-en="The old age posts and hopes.">A régi kor posztol és reménykedik.</h2>
-        <p class="lede" data-en="Most businesses still play by the old rules. Move the lens over the feed: underneath is what we make, the content the new age rewards.">A legtöbb vállalkozás még a régi kor szabályaival játszik. Vidd a lencsét a feed fölé: alatta az látszik, amit mi készítünk, a tartalom, amit az új kor jutalmaz.</p>
+        <div class="ttl"><p class="kick" data-en="The second law of the new age">Az új kor II. törvénye</p>
+        <h2 class="disp" id="lens-h" data-en="Attention cannot be bought. Only earned.">A figyelmet nem lehet megvenni. Csak kiérdemelni.</h2></div>
+        <p class="lede" data-en="For every impression you compete with the best creators, not with your competitors. Move the lens over the feed: underneath is what we make, the content the new age rewards.">Minden megjelenésért a legjobb alkotókkal versenyzel, nem a konkurenciáddal. Vidd a lencsét a feed fölé: alatta az látszik, amit mi készítünk, a tartalom, amit az új kor jutalmaz.</p>
       </div>
       <div class="feedbox" id="feedbox">
         <div class="layer old" aria-hidden="true">
@@ -388,32 +611,157 @@ button { font: inherit; color: inherit; }
     </div>
   </section>
 
+  <!-- Services: six tiles, lit by the cursor. -->
+  <section class="sec svc" id="szolgaltatasok" data-sc-act="flow" data-tone="dark" aria-labelledby="svc-h">
+    <div class="wrap">
+      <div class="head" data-sc-in data-sc-stagger="90">
+        <h2 class="disp" id="svc-h" data-en="Six services. One strategy.">Hat szolgáltatás. <span>Egy stratégia.</span></h2>
+        <p class="lede" data-en="Not just ads: we cover your entire online presence, with a single team, in a system built on the rules of the new age.">Nem csak hirdetések: a teljes online jelenlétedet lefedjük, egyetlen csapattal, az új kor szabályaira épített rendszerben.</p>
+      </div>
+      <div class="bento" id="bento" data-sc-in data-sc-stagger="70">
+        <article class="bx bx--video">
+          <div class="txt"><h3 data-en="Video content production">Videó tartalomgyártás</h3><p data-en="Hooks, creative direction, production: creative is the engine of the campaign. We make it too, from concept to finished video.">Hookok, kreatív irány, gyártás: a kampány motorja a kreatív. Ezt mi is elkészítjük, a koncepciótól a kész videóig.</p></div>
+          <div class="vid"><img src="assets/svc-video.jpg" alt="Részlet a FlyX Tenerife hirdetéséből, amit mi készítettünk" data-en-alt="A still from the FlyX Tenerife ad we made" width="540" height="960" loading="lazy"><video muted loop playsinline preload="none" aria-hidden="true" data-src="assets/svc-video.mp4"></video></div>
+        </article>
+        <article class="bx bx--social">
+          <div class="txt"><h3 data-en="Social media presence">Social média jelenlét</h3><p data-en="Feed, Stories, Reels, TikTok, with one strategy and one voice. Content calendar, community management, copywriting.">Feed, Stories, Reels, TikTok, egységes stratégiával, egységes hanggal. Content calendar, community management, copywriting.</p></div>
+          <div class="fan" aria-hidden="true"><img src="assets/w10.jpg" alt="" width="480" height="600" loading="lazy"><img src="assets/w12.jpg" alt="" width="480" height="600" loading="lazy"><img src="assets/w09.jpg" alt="" width="480" height="600" loading="lazy"></div>
+        </article>
+        <article class="bx bx--ads">
+          <div class="txt"><h3 data-en="Paid advertising">Fizetett hirdetés</h3><p data-en="Meta, TikTok and Google campaigns that don't just spend the budget, they generate ROAS. Daily optimisation, A/B testing, scaling.">Meta, TikTok és Google kampányok, amik nem csak elköltik a büdzsét, hanem ROAS-t termelnek. Napi optimalizálás, A/B tesztelés, skálázás.</p></div>
+          <p class="big">81<small data-en="× best ROAS">× legjobb ROAS</small></p>
+        </article>
+        <article class="bx bx--web">
+          <div class="txt"><h3 data-en="Website &amp; landing pages">Weboldal &amp; landing</h3><p data-en="Fast, mobile-optimised landing pages and websites that convert, not just look good.">Gyors, mobilra optimalizált landingek és weboldalak, amik konvertálnak, nem csak jól néznek ki.</p></div>
+          <div class="browser" aria-hidden="true"><div class="top"><i></i><i></i><i></i></div><div class="sk"><i></i><i></i><i></i><b></b></div></div>
+        </article>
+        <article class="bx bx--auto">
+          <div class="txt"><h3 data-en="Automation &amp; email">Automatizáció &amp; e-mail</h3><p data-en="Lead follow-up, email sequences, automated funnels. We set it up once, then it works for you.">Lead-követés, e-mail szekvenciák, automatizált tölcsérek. Egyszer beállítjuk, utána dolgozik helyetted.</p></div>
+          <div class="flow" aria-hidden="true"><span>Lead</span><i></i><span>E-mail</span><i></i><span data-en="Offer">Ajánlat</span></div>
+        </article>
+        <article class="bx bx--strat">
+          <div class="txt"><h3 data-en="Growth strategy">Növekedési stratégia</h3><p data-en="Strategy-level marketing consulting: campaign strategy, funnel audit, market positioning.">Stratégiai szintű marketing tanácsadás: kampánystratégia, funnel audit, piaci pozicionálás.</p></div>
+          <p class="tag" data-en="We are partners, not contractors.">Partnerek vagyunk, nem kivitelezők.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <!-- 5 · Numbers: only the real ones. -->
   <section class="sec nums" id="szamok" data-sc-act="flow" data-tone="light" aria-labelledby="nums-h">
     <div class="wrap">
       <h2 class="disp" id="nums-h" data-sc-in data-en="Not promises. Numbers.">Nem ígéretek. <span>Számok.</span></h2>
-      <div class="figs" data-sc-in data-sc-stagger="90">
-        <div class="fig"><b><span data-count="81">81</span><small>×</small></b><p data-en="ROAS, our best result in an e-commerce campaign">ROAS, a legjobb eredményünk e-commerce kampányban</p><p class="lab" data-en="Door webshop, Google Performance Max">Ajtó webshop, Google Performance Max</p></div>
-        <div class="fig"><b><span data-count="79">79</span><small>M Ft</small></b><p data-en="revenue in one week, from a B2B Meta campaign">bevétel egy hét alatt, B2B Meta kampányból</p><p class="lab" data-en="Industrial hall builder">Csarnoképítő ügyfél</p></div>
-        <div class="fig"><b><span data-count="23">23</span><small>×</small></b><p data-en="ROAS in a holiday campaign, 8M+ Ft revenue">ROAS ünnepi kampányban, 8M+ Ft bevétel</p><p class="lab" data-en="Watch webshop">Karóra webshop</p></div>
-        <div class="fig"><b><span data-count="105">105</span><small>Ft</small></b><p data-en="per registrant: ~5,700 registrants from 600K Ft spend">jelentkezőnként: ~5700 jelentkező 600K Ft költésből</p><p class="lab" data-en="Healthcare webinar">Egészségügyi webinár</p></div>
+      <div class="cases" data-sc-in data-sc-stagger="90">
+        <a class="case" data-tilt href="https://socialstream.hu/case-ajto-webshop.html" target="_blank" rel="noopener">
+          <div class="ph"><img src="assets/case-ajto.webp" alt="Kilincs termékfotó az Ajtó webshop esettanulmányából" data-en-alt="Door handle product shot from the door webshop case study" width="900" height="471" loading="lazy"></div>
+          <div class="bd"><b><span data-count="81">81</span><small>×</small></b><p data-en="ROAS, our best result in an e-commerce campaign">ROAS, a legjobb eredményünk e-commerce kampányban</p><p class="lab" data-en="Door webshop · Google Performance Max">Ajtó webshop · Google Performance Max</p><span class="go" data-en="Read the case study">Esettanulmány</span></div>
+        </a>
+        <a class="case" data-tilt href="https://socialstream.hu/case-csarnokok.html" target="_blank" rel="noopener">
+          <div class="ph"><img src="assets/case-csarnok.webp" alt="Acél csomópont az ipari csarnokok esettanulmányából" data-en-alt="Steel joint from the industrial halls case study" width="900" height="471" loading="lazy"></div>
+          <div class="bd"><b><span data-count="79">79</span><small>M Ft</small></b><p data-en="revenue in one week, from a B2B Meta campaign">bevétel egy hét alatt, B2B Meta kampányból</p><p class="lab" data-en="Industrial hall builder · Meta">Csarnoképítő ügyfél · Meta</p><span class="go" data-en="Read the case study">Esettanulmány</span></div>
+        </a>
+        <a class="case" data-tilt href="https://socialstream.hu/case-karora-webshop.html" target="_blank" rel="noopener">
+          <div class="ph"><img src="assets/case-karora.webp" alt="Karóra vászon kendőn a karóra webshop esettanulmányából" data-en-alt="A wristwatch on linen from the watch webshop case study" width="900" height="471" loading="lazy"></div>
+          <div class="bd"><b><span data-count="23">23</span><small>×</small></b><p data-en="ROAS in a holiday campaign, 8M+ Ft revenue">ROAS ünnepi kampányban, 8M+ Ft bevétel</p><p class="lab" data-en="Watch webshop · Christmas">Karóra webshop · Karácsony</p><span class="go" data-en="Read the case study">Esettanulmány</span></div>
+        </a>
+        <a class="case" data-tilt href="https://socialstream.hu/case-egeszsegugyi-webinar.html" target="_blank" rel="noopener">
+          <div class="ph"><img src="assets/case-webinar.webp" alt="Töltőtoll a webinár esettanulmányából" data-en-alt="A fountain pen from the webinar case study" width="900" height="578" loading="lazy"></div>
+          <div class="bd"><b><span data-count="105">105</span><small>Ft</small></b><p data-en="per registrant: ~5,700 registrants from 600K Ft spend">jelentkezőnként: ~5700 jelentkező 600K Ft költésből</p><p class="lab" data-en="Healthcare webinar · lead generation">Egészségügyi webinár · lead generation</p><span class="go" data-en="Read the case study">Esettanulmány</span></div>
+        </a>
       </div>
       <p class="managed" data-sc-in data-en="300M+ Ft in budget managed since 2022.">300M+ Ft kezelt büdzsé 2022 óta.</p>
     </div>
   </section>
 
-  <!-- 6 · Close -->
+  <!-- Testimonials, word for word: a rail you drag. -->
+  <section class="sec voices" id="velemenyek" data-sc-act="flow" data-tone="dark" aria-labelledby="vo-h">
+    <div class="wrap head" data-sc-in>
+      <h2 class="disp" id="vo-h" data-en="We don't say it. They do.">Nem mi mondjuk. <span>Ők mondják.</span></h2>
+      <div class="rail-btns"><button type="button" data-q="-1" aria-label="Előző vélemény" data-en-aria="Previous testimonial">←</button><button type="button" data-q="1" aria-label="Következő vélemény" data-en-aria="Next testimonial">→</button></div>
+    </div>
+    <div class="qrail" id="qrail" tabindex="0" aria-label="Ügyfélvélemények" data-en-aria="Client testimonials">
+      <blockquote class="q"><p data-en="“We had already switched off our Facebook ads once because they simply weren't worth it. After meeting Olivér we gave it another chance. There were purchases from launch day, and he produced numbers we had never seen before.”">„Egyszer már leállítottuk a Facebook hirdetéseinket, mert egyszerűen nem érte meg. Miután megismertük Olivért, adtunk egy újabb esélyt. Már az induláskor is volt vásárlás – olyan számokat produkált, amit eddig nem is láttunk.”</p><footer><b>Péter</b><span data-en="Hoofbútor · furniture webshop">Hoofbútor · bútor webshop</span></footer></blockquote>
+      <blockquote class="q"><p data-en="“We thought Facebook was for young people and webshops; we build industrial halls. Then in one week we got as many quote requests as we used to get in half a year.”">„Azt hittük, a Facebook a fiataloknak és a webshopoknak való – mi csarnokot építünk. Aztán egy hét alatt annyi ajánlatkérésünk lett, mint korábban fél év alatt összesen.”</p><footer><b data-en="Hall-building client">Csarnoképítő ügyfél</b><span data-en="B2B · industrial sector">B2B · ipari szektor</span></footer></blockquote>
+      <blockquote class="q"><p data-en="“Every December we dreaded ad prices. This year, for the first time, the holiday season felt like it was working for us, not against us.”">„Minden decemberben rettegtünk a hirdetési áraktól. Idén először éreztük úgy, hogy az ünnepi szezon nekünk dolgozik – nem ellenünk.”</p><footer><b data-en="Watch webshop">Karóra webshop</b><span data-en="E-commerce · holiday campaign">E-commerce · ünnepi kampány</span></footer></blockquote>
+      <blockquote class="q"><p data-en="“We expected a few hundred registrants for the webinar. When the counter stopped at almost 5,700, we could hardly believe it came from the same budget.”">„Pár száz jelentkezőre számítottunk a webinárra. Amikor a számláló majdnem 5700-nál állt meg, alig hittük el, hogy ez ugyanabból a büdzséből jött ki.”</p><footer><b data-en="Healthcare provider">Egészségügyi szolgáltató</b><span data-en="Lead generation · webinar">Lead generation · webinár</span></footer></blockquote>
+      <blockquote class="q"><p data-en="“I wanted a professional team after launch. They build professional campaigns across Facebook/Instagram, the website and ads. Results came quickly, and I had nothing to do.”">„Profi csapatot szerettem volna az indulás után. Mind Facebook/Instagram, mind weboldal és hirdetés területén profi kampányokat készítenek. Rövid időn belül jöttek az eredmények – nekem semmi dolgom nem volt velük.”</p><footer><b>Rita</b><span>Rita's Beauty Corner</span></footer></blockquote>
+      <blockquote class="q"><p data-en="“Social Stream built my website professionally. Everyone loved the polished, easy-to-follow content! I can only recommend them.”">„A Social Stream profi módon készítette el a weboldalam. Mindenkinek tetszett az igényes és könnyen áttekinthető tartalom! Csak ajánlani tudom őket.”</p><footer><b>János</b><span>EJ Massage Therapies</span></footer></blockquote>
+    </div>
+  </section>
+
+  <!-- People: the founder's story, then the three people. -->
+  <section class="sec team" id="csapat" data-sc-act="flow" data-tone="light" aria-labelledby="fo-h">
+    <div class="wrap">
+      <div class="founder">
+        <figure data-sc-in><img src="assets/oliver-founder.jpg" alt="Olivér, a SocialStream alapítója" data-en-alt="Olivér, founder of SocialStream" width="1000" height="1250" loading="lazy"></figure>
+        <div class="story" data-sc-in data-sc-stagger="90">
+          <p class="kick" data-en="Tenerife and Budapest, since 2022">Tenerife és Budapest, 2022 óta</p>
+          <h2 class="disp" id="fo-h" data-en="I saw the shift from the inside.">A korszakváltást belülről láttam.</h2>
+          <p data-en="I landed my first client while studying in Denmark. Then, as a Meta Marketing Pro, I saw up close how the most serious brands think when there is real money in a campaign, and watched the old rules lose their force before our eyes.">Dániai tanulmányaim alatt szereztem meg az első ügyfelemet. Aztán Meta Marketing Pro-ként közelről láttam, hogyan gondolkodnak a legkomolyabb márkák, amikor valódi pénz van a kampányban, és azt is, ahogy a régi szabályok a szemünk előtt érvényüket vesztik.</p>
+          <p data-en="I founded SocialStream in 2022 because very few businesses here had been given this way of thinking. Since then we have managed 300M+ Ft in budget, with a team of specialists and fanatics.">2022-ben azért alapítottam a SocialStreamet, mert ezt a gondolkodásmódot itthon nagyon kevés vállalkozás kapta meg eddig. Azóta 300M+ Ft büdzsét kezeltünk, specialistákból és fanatikusokból álló csapattal.</p>
+          <p class="sig" data-en="Olivér, founder">Olivér, alapító</p>
+        </div>
+      </div>
+      <h2 class="disp people-h" data-sc-in data-en="The people who will work on your brand">Az emberek, akik a márkádon dolgoznak majd</h2>
+      <div class="people" data-sc-in data-sc-stagger="90">
+        <article class="person"><div class="ph" data-tilt><img src="assets/oliver.jpg" alt="Olivér" width="800" height="1000" loading="lazy"></div><h3>Olivér</h3><p class="role" data-en="Founder &amp; campaign strategist">Alapító &amp; kampánystratéga</p><p data-en="He reads the rules of the new age: he decides from data where to invest attention, and why anyone will watch it.">Ő olvassa az új kor szabályait: adatból dönti el, mibe fektessük a figyelmet, és miért fogja azt bárki megnézni.</p></article>
+        <article class="person"><div class="ph" data-tilt><img src="assets/david.jpg" alt="David" width="800" height="1000" loading="lazy"></div><h3>David</h3><p class="role" data-en="Creative &amp; content production">Kreatív &amp; tartalomgyártás</p><p data-en="Whatever stops the thumb is his handiwork. Hooks, shooting, creative direction, in the language of the new age.">Ami megállítja a hüvelykujjat, az ő keze munkája. Hookok, forgatás, kreatív irány, az új kor nyelvén.</p></article>
+        <article class="person"><div class="ph" data-tilt><img src="assets/lidi.jpg" alt="Lidi" width="800" height="1000" loading="lazy"></div><h3>Lidi</h3><p class="role" data-en="Production &amp; editing">Produkció &amp; szerkesztés</p><p data-en="The engine of production. Raw footage becomes finished content in her hands: editing, rhythm, precision, on deadline.">A gyártás motorja. Nála áll össze nyersanyagból kész tartalom: vágás, ritmus, precizitás, határidőre.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fit: who we work with, and who we don't. -->
+  <section class="sec fit" id="kivel" data-sc-act="flow" data-tone="light" aria-labelledby="fit-h">
+    <div class="wrap">
+      <h2 class="disp" id="fit-h" data-sc-in data-en="We don't work with everyone. That is the point.">Nem dolgozunk mindenkivel. <span>Pont ez a lényeg.</span></h2>
+      <div class="cols" data-sc-in data-sc-stagger="100">
+        <div class="col yes"><h3 data-en="We work with brands that">Akikkel dolgozunk</h3><ul>
+          <li data-en="have reliable, stable revenue.">Megbízható és stabil bevétellel rendelkeznek.</li>
+          <li data-en="are aiming for long-term success.">Hosszú távú sikerre törekszenek.</li>
+          <li data-en="are willing to commit fully to the collaboration.">Hajlandóak teljes mértékben elköteleződni az együttműködés során.</li>
+          <li data-en="see marketing as an investment, and are willing to invest in it.">A marketinget befektetésnek tekintik, és hajlandóak erre áldozni.</li>
+          <li data-en="know their market and are sure their product or service deserves to exist.">Ismerik a piac igényeit, és biztosak termékeik vagy szolgáltatásaik létjogosultságában.</li></ul></div>
+        <div class="col no"><h3 data-en="We are not right for brands that">Akiknek nem vagyunk jó választás</h3><ul>
+          <li data-en="only want a subcontractor to execute tasks without a word, like a machine.">Csak egy alvállalkozót keresnek, aki szó nélkül, gépként megcsinálja a kiadott feladatokat.</li>
+          <li data-en="are not looking to grow and are content where they are.">Nem törekednek a fejlődésre, és megelégednek a jelenlegi helyzetükkel.</li>
+          <li data-en="are not yet stable and are constantly in an uncertain position.">Vállalkozásuk még nem stabil, és folyamatosan bizonytalan helyzetben vannak.</li>
+          <li data-en="believe online marketing can conjure overnight success.">Úgy gondolják, hogy az online marketinggel egy éjszaka alatti sikert lehet varázsolni.</li>
+          <li data-en="are looking for cheap half-solutions with mediocre results.">Olcsó félmegoldásokat keresnek, középszerű eredményekkel.</li></ul></div>
+      </div>
+      <p class="seal" data-sc-in><b data-en="At most two new partners a month.">Havonta legfeljebb két új partner.</b><span data-en="Partners, not contractors.">Partnerek vagyunk, nem kivitelezők.</span></p>
+    </div>
+  </section>
+
+  <!-- The audit: the application, with the address always visible. -->
   <section class="sec close" id="audit" data-sc-act="flow" data-tone="dark" aria-labelledby="close-h">
     <div class="wrap">
-      <h2 class="disp" id="close-h" data-sc-in data-en="Your market already lives in the new age. Does your marketing?">A piacod már az új korban jár. <span>A marketinged is?</span></h2>
-      <p class="lede" data-sc-in data-en="A free 30-minute audit: we look at your campaigns, your landing page and your offer, and tell you honestly where you still play by the old rules, before you pay anything. At most two new partners a month.">30 perces ingyenes audit: megnézzük a kampányaidat, a landing page-edet és az ajánlatodat, és őszintén megmondjuk, hol játszol még a régi kor szabályaival, még fizetés előtt. Havonta legfeljebb két új partner.</p>
-      <div class="acts" data-sc-in>
-        <a class="btn" href="mailto:hello@socialstream.hu?subject=Ingyenes%20audit" data-en="Request my free audit">Kérem az ingyenes auditot</a>
-        <span class="mail">hello@socialstream.hu <button type="button" id="copyMail" data-en="Copy address">Cím másolása</button></span>
+      <div class="grid">
+        <div class="head" data-sc-in data-sc-stagger="90">
+          <h2 class="disp" id="close-h" data-en="Your market already lives in the new age. Does your marketing?">A piacod már az új korban jár. <span>A marketinged is?</span></h2>
+          <p class="lede" data-en="A free 30-minute audit: we look at your campaigns, your landing page and your offer, and tell you honestly where you still play by the old rules, before you pay anything.">30 perces ingyenes audit: megnézzük a kampányaidat, a landing page-edet és az ajánlatodat, és őszintén megmondjuk, hol játszol még a régi kor szabályaival, még fizetés előtt.</p>
+          <p class="scar"><b data-en="At most two new partners a month.">Havonta legfeljebb két új partner.</b><span data-en="No template proposals. No obligation.">Nincs sablonajánlat. Nincs kötelezettség.</span></p>
+        </div>
+        <form class="app" id="appform" method="post" novalidate data-sc-in>
+          <div class="field"><label for="f-name" data-en="Your name">Neved</label><input id="f-name" name="name" autocomplete="name" required><span class="err" id="e-name"></span></div>
+          <div class="field"><label for="f-email" data-en="Email">E-mail</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="err" id="e-email"></span></div>
+          <div class="field"><label for="f-brand" data-en="Company or brand">Cég vagy márka</label><input id="f-brand" name="brand" autocomplete="organization" required><span class="err" id="e-brand"></span></div>
+          <div class="field"><label for="f-web" data-en="Website or Instagram">Weboldal vagy Instagram</label><input id="f-web" name="web" autocomplete="url"><span class="err"></span></div>
+          <div class="field"><label for="f-budget" data-en="Monthly marketing budget">Havi marketing büdzsé</label><select id="f-budget" name="budget"><option value="" data-en="Choose a range">Válassz sávot</option><option value="lt300" data-en="Under 300K Ft">300K Ft alatt</option><option value="300-1m">300K–1M Ft</option><option value="1-3m">1M–3M Ft</option><option value="gt3m" data-en="Over 3M Ft">3M Ft felett</option></select><span class="err"></span></div>
+          <div class="field"><label for="f-goal" data-en="Main goal">Fő cél</label><select id="f-goal" name="goal"><option value="" data-en="Choose a goal">Válassz célt</option><option value="sales" data-en="More sales (e-commerce)">Több eladás (webshop)</option><option value="leads" data-en="More leads and enquiries">Több érdeklődő és ajánlatkérés</option><option value="brand" data-en="Brand and content">Márka és tartalom</option><option value="web" data-en="Website or landing page">Weboldal vagy landing</option></select><span class="err"></span></div>
+          <fieldset><legend data-en="What interests you">Ami érdekel</legend><div class="chips" id="formChips"></div></fieldset>
+          <div class="field full"><label for="f-msg" data-en="Where are you now?">Hol tartasz most?</label><textarea id="f-msg" name="msg"></textarea><span class="err"></span></div>
+          <div class="form-act">
+            <button class="btn" type="submit" data-en="Request my free audit">Kérem az ingyenes auditot</button>
+            <span class="direct"><span data-en="Or write to us directly:">Vagy írj közvetlenül:</span> <a href="mailto:hello@socialstream.hu">hello@socialstream.hu</a><button type="button" class="copy-mini" id="copyMail" data-en="Copy address">Cím másolása</button></span>
+          </div>
+          <div class="sent" id="sent" hidden aria-live="polite"></div>
+        </form>
       </div>
       <footer class="foot">
+        <span class="wm">SocialStream</span>
         <span data-en="© 2026 SocialStream. Interest media agency, Tenerife and Budapest.">© 2026 SocialStream. Interest media ügynökség, Tenerife és Budapest.</span>
-        <span data-en="Preview: the reel, the hero, the lens and the takeover in four palettes.">Előnézet: a reel, a hero, a lencse és a takeover négy palettán.</span>
+        <span>hello@socialstream.hu</span>
       </footer>
     </div>
   </section>
@@ -434,10 +782,10 @@ button { font: inherit; color: inherit; }
 
   /* ---------------- versions: palette, section tones, material ---------------- */
   var TONES = {
-    oxblood: { hero: 'dark', lencse: 'light', rendszer: 'dark', szamok: 'light', audit: 'dark' },
-    cream:   { hero: 'light', lencse: 'light', rendszer: 'light', szamok: 'light', audit: 'dark' },
-    black:   { hero: 'dark', lencse: 'dark', rendszer: 'dark', szamok: 'dark', audit: 'dark' },
-    dusk:    { hero: 'dark', lencse: 'light', rendszer: 'light', szamok: 'light', audit: 'light' }
+    oxblood: { hero: 'dark', torveny: 'dark', lencse: 'light', rendszer: 'dark', szolgaltatasok: 'dark', szamok: 'light', velemenyek: 'dark', csapat: 'light', kivel: 'light', audit: 'dark' },
+    cream:   { hero: 'light', torveny: 'dark', lencse: 'light', rendszer: 'light', szolgaltatasok: 'dark', szamok: 'light', velemenyek: 'light', csapat: 'light', kivel: 'light', audit: 'dark' },
+    black:   { hero: 'dark', torveny: 'dark', lencse: 'dark', rendszer: 'dark', szolgaltatasok: 'dark', szamok: 'light', velemenyek: 'dark', csapat: 'light', kivel: 'dark', audit: 'dark' },
+    dusk:    { hero: 'dark', torveny: 'light', lencse: 'light', rendszer: 'light', szolgaltatasok: 'light', szamok: 'light', velemenyek: 'light', csapat: 'light', kivel: 'light', audit: 'light' }
   };
   // kind 0 = satin, 1 = plaster, 2 = brushed metal
   var MAT = {
@@ -483,15 +831,25 @@ button { font: inherit; color: inherit; }
 
   /* ---------------- 1 · reel ---------------- */
   var reelSec = $('.reel'), reel = $('#reel'), toggle = $('#reelToggle'), disc = $('#disc'), discLabel = $('#discLabel');
-  // the cut follows the screen's shape, not its width: a small landscape window still wants 16:9
-  var wide = matchMedia('(orientation: landscape)').matches;
-  var poster = wide ? reel.dataset.poster : reel.dataset.posterM;
-  // re-assigning the same src restarts the fetch at normal priority, behind everything else
+  // The cut follows the screen's shape, not its width: a small landscape window still wants 16:9.
+  // It is decided again at load time, because a host can size the frame after the script runs.
+  var isWide = function () { return matchMedia('(orientation: landscape)').matches; };
+  var wide = isWide(), poster = '';
   var posterImg = $('.poster', reelSec);
-  if (posterImg.getAttribute('src') !== poster) posterImg.src = poster;
+  function setPoster() {
+    poster = wide ? reel.dataset.poster : reel.dataset.posterM;
+    // re-assigning the same src restarts the fetch at normal priority, behind everything else
+    if (posterImg.getAttribute('src') !== poster) posterImg.src = poster;
+  }
+  setPoster();
   var paused = reduce, loaded = false, reelOn = true;
+  addEventListener('resize', function () { if (!loaded && isWide() !== wide) { wide = !wide; setPoster(); } });
   var cues = $$('.cue', reelSec).map(function (el) { var t = el.dataset.t.split(' ').map(Number); return { el: el, a: t[0], b: t[1], dim: el.hasAttribute('data-dim'), n: $('[data-to]', el) }; });
-  function load() { if (loaded) return; loaded = true; reel.poster = poster; reel.src = wide ? reel.dataset.src : reel.dataset.srcM; reel.load(); }
+  function load() {
+    if (loaded) return; loaded = true;
+    if (isWide() !== wide) { wide = !wide; setPoster(); }
+    reel.poster = poster; reel.src = wide ? reel.dataset.src : reel.dataset.srcM; reel.load();
+  }
   function label() { return paused ? (L === 'en' ? 'Play' : 'Lejátszás') : (L === 'en' ? 'Pause' : 'Szünet'); }
   function apply() {
     if (paused || !reelOn) reel.pause(); else { load(); var p = reel.play(); if (p && p.catch) p.catch(function () {}); }
@@ -521,9 +879,9 @@ button { font: inherit; color: inherit; }
     }
   }
   // the cursor becomes the play/pause disc over the film
-  var dx = -200, dy = -200, tx = -200, ty = -200, ds = 0, dts = 0;
+  var dx = -200, dy = -200, tx = -200, ty = -200, ds = 0, dts = 0, discMode = 'reel';
   if (fine) {
-    reelSec.addEventListener('pointermove', function (e) { tx = e.clientX; ty = e.clientY; dts = e.target.closest('.ui') ? 0 : 1; });
+    reelSec.addEventListener('pointermove', function (e) { tx = e.clientX; ty = e.clientY; dts = e.target.closest('.ui') ? 0 : 1; discMode = 'reel'; });
     reelSec.addEventListener('pointerleave', function () { dts = 0; });
     reelSec.addEventListener('click', function (e) { if (e.target.closest('.ui, a, button')) return; paused = !paused; apply(); });
   }
@@ -531,6 +889,9 @@ button { font: inherit; color: inherit; }
     if (!fine) return;
     dx = lerp(dx, tx, 0.22); dy = lerp(dy, ty, 0.22); ds = lerp(ds, dts, 0.18);
     disc.style.setProperty('--x', dx.toFixed(1) + 'px'); disc.style.setProperty('--y', dy.toFixed(1) + 'px'); disc.style.setProperty('--s', ds.toFixed(3));
+    // the same disc says what the cursor does: play or pause over the film, drag over the testimonials
+    var want = discMode === 'drag' ? (L === 'en' ? 'Drag' : 'Húzd') : label();
+    if (discLabel.textContent !== want) discLabel.textContent = want;
   }
 
   /* ---------------- 2 · depth hero: pointer, light, material ---------------- */
@@ -701,6 +1062,124 @@ button { font: inherit; color: inherit; }
     grid.setAttribute('data-sc-verify-state', 'home' + home);
   }
 
+  /* ---------------- law I: the count, then the strike ---------------- */
+  var l1 = $('#torveny'), l1n = $('#l1n'), l1Stage = $('#l1Stage'), l1On = false, l1Last = -1;
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { l1On = es[0].isIntersecting; }).observe(l1);
+  function fmtN(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, L === 'en' ? ',' : ' '); }
+  onLang.push(function () { l1Last = -1; });
+  function l1Tick() {
+    if (!l1On) return;
+    var p = parseFloat(getComputedStyle(l1).getPropertyValue('--sc-p')) || 0;
+    var n = reduce ? 10000 : Math.round(10000 * Math.min(1, Math.max(0, (p - 0.02) / 0.26)));
+    if (n !== l1Last) { l1Last = n; l1n.textContent = fmtN(n); }
+    l1Stage.setAttribute('data-sc-verify-state', 'law' + Math.round(p * 8));
+  }
+
+  /* ---------------- services: the cursor lights the tiles ---------------- */
+  var bento = $('#bento'), bxs = $$('.bx', bento);
+  if (fine) {
+    bento.addEventListener('pointermove', function (e) {
+      // measure every tile first, then write, so a move lays out once
+      var rs = bxs.map(function (b) { return b.getBoundingClientRect(); });
+      bxs.forEach(function (b, i) { b.style.setProperty('--x', Math.round(e.clientX - rs[i].left) + 'px'); b.style.setProperty('--y', Math.round(e.clientY - rs[i].top) + 'px'); });
+    });
+    bento.addEventListener('pointerenter', function () { bxs.forEach(function (b) { b.style.setProperty('--o', '1'); }); });
+    bento.addEventListener('pointerleave', function () { bxs.forEach(function (b) { b.style.setProperty('--o', '0'); }); });
+  }
+  // the video tile is fetched on first sight and plays only while it is on screen
+  var sv = $('.bx--video video');
+  sv.addEventListener('playing', function () { sv.parentNode.classList.add('is-playing'); });
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) {
+    if (es[0].isIntersecting && !reduce) { if (!sv.src) sv.src = sv.dataset.src; var pp = sv.play(); if (pp && pp.catch) pp.catch(function () {}); } else sv.pause();
+  }, { threshold: 0.3 }).observe(sv);
+
+  /* ---------------- cases and portraits lean toward the cursor ---------------- */
+  if (fine && !reduce) $$('[data-tilt]').forEach(function (el) {
+    el.addEventListener('pointermove', function (e) {
+      var r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      el.classList.add('is-tilting'); el.style.setProperty('--rx', (x * 9).toFixed(2) + 'deg'); el.style.setProperty('--ry', (-y * 9).toFixed(2) + 'deg');
+    });
+    el.addEventListener('pointerleave', function () { el.classList.remove('is-tilting'); el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); });
+  });
+
+  /* ---------------- testimonials: a rail you drag ---------------- */
+  var rail = $('#qrail'), dragging = false, sx0 = 0, sl0 = 0;
+  rail.addEventListener('pointerdown', function (e) {
+    if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    dragging = true; sx0 = e.clientX; sl0 = rail.scrollLeft; rail.classList.add('is-drag'); rail.setPointerCapture(e.pointerId);
+  });
+  rail.addEventListener('pointermove', function (e) {
+    if (fine) { tx = e.clientX; ty = e.clientY; dts = 1; discMode = 'drag'; }
+    if (dragging) rail.scrollLeft = sl0 - (e.clientX - sx0);
+  });
+  function endDrag() { if (!dragging) return; dragging = false; rail.classList.remove('is-drag'); }
+  rail.addEventListener('pointerup', endDrag);
+  rail.addEventListener('pointercancel', endDrag);
+  rail.addEventListener('pointerleave', function () { if (!dragging) dts = 0; });
+  $$('[data-q]').forEach(function (b) {
+    b.addEventListener('click', function () { var q = $('.q', rail); rail.scrollBy({ left: +b.dataset.q * (q.offsetWidth + 14), behavior: reduce ? 'auto' : 'smooth' }); });
+  });
+
+  /* ---------------- the audit form ---------------- */
+  var TOPICS = [
+    { id: 'video', hu: 'Videó tartalomgyártás', en: 'Video content production' },
+    { id: 'social', hu: 'Social média jelenlét', en: 'Social media presence' },
+    { id: 'ads', hu: 'Fizetett hirdetés', en: 'Paid advertising' },
+    { id: 'web', hu: 'Weboldal & landing', en: 'Website & landing pages' },
+    { id: 'auto', hu: 'Automatizáció & e-mail', en: 'Automation & email' },
+    { id: 'strategy', hu: 'Növekedési stratégia', en: 'Growth strategy' }
+  ];
+  var CONTACT = 'hello@socialstream.hu', form = $('#appform'), chips = $('#formChips'), sent = $('#sent'), chosen = [], lastBody = '';
+  var T = function (o) { return L === 'en' ? o.en : o.hu; };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  function renderChips() {
+    chips.innerHTML = TOPICS.map(function (t) {
+      return '<label class="chip"><input type="checkbox" name="int" value="' + t.id + '"' + (chosen.indexOf(t.id) > -1 ? ' checked' : '') + '><span>' + esc(T(t)) + '</span></label>';
+    }).join('');
+  }
+  chips.addEventListener('change', function (e) {
+    var id = e.target.value, k = chosen.indexOf(id);
+    if (e.target.checked && k < 0) chosen.push(id); else if (!e.target.checked && k > -1) chosen.splice(k, 1);
+  });
+  var ERR = { req: { hu: 'Ezt kérjük kitölteni.', en: 'Please fill this in.' }, mail: { hu: 'Ez nem tűnik e-mail címnek.', en: 'That doesn’t look like an email address.' } };
+  function check() {
+    var ok = true;
+    [['f-name', 'e-name'], ['f-email', 'e-email'], ['f-brand', 'e-brand']].forEach(function (pr) {
+      var el = $('#' + pr[0]), er = $('#' + pr[1]), v = el.value.trim(), m = '';
+      if (!v) m = T(ERR.req); else if (el.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) m = T(ERR.mail);
+      er.textContent = m; el.setAttribute('aria-invalid', String(!!m));
+      if (m && ok) { el.focus(); ok = false; }
+    });
+    return ok;
+  }
+  // copy inside the click; if the clipboard is refused, select the text instead
+  function copyText(text, btn, fallback) {
+    var done = function () { btn.textContent = L === 'en' ? 'Copied' : 'Kimásolva'; };
+    try { if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, fallback); else fallback(); } catch (e) { fallback(); }
+  }
+  function showSent(body) {
+    sent.hidden = false;
+    sent.innerHTML = '<b>' + (L === 'en' ? 'Your email is ready.' : 'Az e-mailed elkészült.') + '</b><span>' +
+      (L === 'en' ? 'If your mail app opened, just press send there. If it didn’t, copy the text and send it to ' : 'Ha megnyílt a leveleződ, ott már csak küldened kell. Ha nem, másold ki a szöveget, és küldd el ide: ') +
+      CONTACT + '.</span><button type="button" class="btn btn--ghost" id="copyBody">' + (L === 'en' ? 'Copy the text' : 'Szöveg másolása') + '</button>';
+    var cb = $('#copyBody');
+    cb.addEventListener('click', function () { copyText(body, cb, function () { var m = $('#f-msg'); m.value = body; m.focus(); m.select(); }); });
+  }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!check()) return;
+    var v = function (id) { var el = $('#' + id); return el.tagName === 'SELECT' ? (el.value ? el.options[el.selectedIndex].text : '') : el.value.trim(); };
+    var ints = chosen.map(function (id) { return T(TOPICS.filter(function (t) { return t.id === id; })[0]); }).join(', ');
+    var lines = L === 'en'
+      ? ['Name: ' + v('f-name'), 'Email: ' + v('f-email'), 'Company: ' + v('f-brand'), 'Web / Instagram: ' + v('f-web'), 'Monthly budget: ' + v('f-budget'), 'Main goal: ' + v('f-goal'), 'Interested in: ' + ints]
+      : ['Név: ' + v('f-name'), 'E-mail: ' + v('f-email'), 'Cég: ' + v('f-brand'), 'Web / Instagram: ' + v('f-web'), 'Havi büdzsé: ' + v('f-budget'), 'Fő cél: ' + v('f-goal'), 'Ami érdekel: ' + ints];
+    lines.push('', v('f-msg'));
+    var body = lines.join('\n'); lastBody = body; showSent(body);
+    location.href = 'mailto:' + CONTACT + '?subject=' + encodeURIComponent((L === 'en' ? 'Audit request: ' : 'Audit kérés: ') + v('f-brand')) + '&body=' + encodeURIComponent(body);
+  });
+  renderChips();
+  onLang.push(function () { renderChips(); if (lastBody) showSent(lastBody); });
+
   /* ---------------- counters, once on entry ---------------- */
   var counts = $$('[data-count]');
   if ('IntersectionObserver' in window && !reduce) {
@@ -718,9 +1197,7 @@ button { font: inherit; color: inherit; }
   /* ---------------- copy the address ---------------- */
   var cm = $('#copyMail');
   cm.addEventListener('click', function () {
-    var done = function () { cm.textContent = L === 'en' ? 'Copied' : 'Kimásolva'; };
-    var fallback = function () { var s = getSelection(), r = document.createRange(); r.selectNodeContents(cm.parentNode.firstChild); s.removeAllRanges(); s.addRange(r); };
-    try { if (navigator.clipboard) navigator.clipboard.writeText('hello@socialstream.hu').then(done, fallback); else fallback(); } catch (e) { fallback(); }
+    copyText(CONTACT, cm, function () { var sl = getSelection(), r = document.createRange(); r.selectNodeContents(cm.previousElementSibling); sl.removeAllRanges(); sl.addRange(r); });
   });
 
   /* ---------------- the bar follows the section under it ---------------- */
@@ -732,7 +1209,7 @@ button { font: inherit; color: inherit; }
   }
 
   /* ---------------- one loop ---------------- */
-  function frame(now) { barTick(); cueTick(); discTick(); heroTick(now); lensTick(now); tkTick(); requestAnimationFrame(frame); }
+  function frame(now) { barTick(); cueTick(); discTick(); heroTick(now); l1Tick(); lensTick(now); tkTick(); requestAnimationFrame(frame); }
 
   setVersion(TONES[location.hash.slice(1)] ? location.hash.slice(1) : 'oxblood', false);
   var initial = store.get('ss-lang'); setLang(initial === 'en' ? 'en' : 'hu', false);

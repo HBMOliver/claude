@@ -1,4 +1,4 @@
-# BRIEF: SocialStream Studio (preview)
+# BRIEF: SocialStream Studio
 
 **Where this comes from.** The client turned down the split stage and then all
 three luxury options (Maison, Journal, Noir). Asked what had worked so far,
@@ -14,51 +14,58 @@ takeover). Their answers, in order:
 - **Reel first**, like Social Chain's showreel: client campaigns, the team behind the scenes, results as motion, Olivér on camera.
 - Sound: **Olivér's voice**.
 - Footage: **everything on this Mac**.
-- Palette: **show all four** (oxblood and cream, cream and ink, black Apple-style, dark hero with a cream body).
-- Added mid-build: **interactive parts, especially one that follows the cursor**.
+- Palette: **show all four** (oxblood and cream, cream and ink, black Apple-style, dark hero with a cream body); they pick one later.
+- **Interactive parts, especially one that follows the cursor.**
 
-This is the preview they asked to steer: the reel, the depth hero, a cursor
-lens, the takeover, the numbers and a close, in all four palettes. The rest of
-the site (services, laws, testimonials, team, fit, the form) follows once the
-direction is approved.
+They approved the preview (reel, hero, lens, takeover) as the direction and
+asked for the full site in it.
 
-## What it does
+## The page, in order
 
-1. **Reel, full screen, first.** 32 s, silent for now. Their FlyX Tenerife
-   promo (coast, cockpit, the 5D cinema and its audience), Gyenis András on
-   stage and in the studio, and a wall of their vertical client reels flowing
-   like a feed. The words are live HU/EN text on the film's clock, the four real
-   numbers count up over a dimmed stretch, and the cursor becomes the
-   play/pause disc. Phones get a 9:16 cut with the same timings.
-2. **Depth hero.** A material rendered live in WebGL and lit from wherever the
-   cursor is: oxblood satin, plaster, brushed graphite or black satin per
-   palette. The giant word "érdeklődés" catches the same light, Olivér's cutout
-   casts his shadow away from it, and every plane moves at its own rate with
-   the pointer and the scroll.
-3. **The lens.** The old-age feed (grey, blurred photos under generic captions
-   and like counts) with a lens that follows the cursor and shows their real
-   work underneath, labelled by client and format. On phones it follows the
-   finger and wanders on its own when idle.
-4. **The takeover.** Nine posts fly home in Instagram's publishing order and
-   lock into one picture of the team on a shoot; while scattered they lean
-   toward the cursor. Law III lands as the picture locks.
-5. **Numbers and the close.** The real figures, then the audit ask with the
-   address visible and copyable.
+1. **Reel, full screen, first.** 32 s of their own client work (the FlyX
+   Tenerife promo, Gyenis András on stage and in the studio, a wall of their
+   vertical reels). The words are live HU/EN text on the film's clock, the four
+   real numbers count up over a dimmed stretch, and the cursor is the
+   play/pause disc. Phones (portrait) get a 9:16 cut with the same timings.
+2. **Depth hero.** A material rendered live in WebGL and lit from the cursor
+   (oxblood satin, plaster, brushed graphite or black satin per palette), the
+   giant word catching the same light, Olivér's cutout casting his shadow away
+   from it, every plane on its own rate.
+3. **Law I, pinned.** "10 000" followers count up, "40 kedvelés" sits beside
+   them, then the new age strikes the number through and the law arrives.
+4. **Law II, the lens.** The old-age feed (grey, blurred, generic captions and
+   like counts) with a lens at the cursor that shows their real work.
+5. **Law III, the takeover.** Nine posts fly home in publishing order and lock
+   into one picture of the team on a shoot, leaning toward the cursor on the way.
+6. **Services, a bento.** Six tiles lit by a glow and an edge that follow the
+   cursor across all of them; the video tile plays their FlyX ad, the ads tile
+   carries the real 81×.
+7. **Results.** Four case cards (their still-life product photography, the real
+   figure, the client) that tilt toward the cursor and link to the live case
+   studies on socialstream.hu, then 300M+ Ft managed.
+8. **Testimonials.** All six, word for word, on a rail you drag (the cursor
+   disc says "Húzd"), with arrow buttons for keyboards.
+9. **People.** Olivér's story beside his portrait, then Olivér, David and Lidi,
+   portraits tilting toward the cursor.
+10. **Fit.** Who they work with and who they don't; two partners a month.
+11. **The audit.** The full application (name, email, company, web, budget,
+    goal, interests, message) handing off to the visitor's mail app, with the
+    address visible and copyable and a copy fallback for the whole text.
 
 ## Sound, still to come
 
 No recording of Olivér speaking exists on this Mac: every talking head in the
 footage is a client (Gyenis András, the FlyX presenter). The reel ships silent;
-the play/pause disc becomes "Hang be" once his voice track is added. A short
-script for him to record is in the README.
+the play/pause disc becomes "Hang be" once his voice track is added. The script
+for him to record is in the README.
 
 ## Fingerprint gate, honestly
 
 Against `socialstream` (rev 2) this shares the hero device (founder cutout,
-giant word, material plane), the signature (the grid takeover) and a dark
-close with the question and a visible address, all three kept by client
-request; it differs on grammar (reel-first filmic, not chaptered editorial),
-nav (a three-item bar that takes its colours from the section under it) and
-act sequence. That is 3 of 6, below the gate, by the client's own choice, the
-same way rev 2 reused hb-social's takeover. The registry row waits for the
-approved full build.
+giant word, material plane) and the grid takeover, both kept by client
+request, and a dark form close with a visible address. It differs on grammar
+(reel-first filmic with pinned set pieces, not chaptered editorial), nav (a
+bar that takes its colours from the section beneath) and act sequence. 3 of 6:
+below the gate by the client's own choice, logged as such in
+`scrollcraft/FINGERPRINTS.md`, the way rev 2 logged reusing hb-social's
+takeover.
