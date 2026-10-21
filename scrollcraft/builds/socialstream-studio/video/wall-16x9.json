@@ -1,0 +1,99 @@
+{
+ "fps": 30,
+ "duration": 6.0,
+ "cols": 5,
+ "speed": 0.34,
+ "beats": [],
+ "cards": [
+  {
+   "file": "~/Movies/CapCut/Flyx AD 2.mp4",
+   "start": 7.8,
+   "fx": 0.5,
+   "fy": 0.5
+  },
+  {
+   "file": "~/Movies/CapCut/5. rész intro.mp4",
+   "start": 38.8,
+   "fx": 0.5,
+   "fy": 0.5
+  },
+  {
+   "file": "~/Movies/CapCut/Flyx AD 1.mp4",
+   "start": 21.6,
+   "fx": 0.5,
+   "fy": 0.5
+  },
+  {
+   "file": "~/Movies/CapCut/BEVEZETO KESZ.mp4",
+   "start": 9.8,
+   "fx": 0.5,
+   "fy": 0.5
+  },
+  {
+   "file": "~/Movies/CapCut/Buddies.mp4",
+   "start": 45.3,
+   "fx": 0.5,
+   "fy": 0.5
+  },
+  {
+   "file": "~/Movies/CapCut/elso reel.mp4",
+   "start": 5.2,
+   "fx": 0.5,
+   "fy": 0.5
+  },
+  {
+   "file": "~/Movies/CapCut/Flyx AD 2.mp4",
+   "start": 13.6,
+   "fx": 0.5,
+   "fy": 0.5
+  },
+  {
+   "file": "~/Movies/CapCut/Szolgálat.mp4",
+   "start": 5.0,
+   "fx": 0.5,
+   "fy": 0.5
+  },
+  {
+   "file": "~/Movies/CapCut/Flyx AD 1.mp4",
+   "start": 9.0,
+   "fx": 0.5,
+   "fy": 0.5
+  },
+  {
+   "file": "~/Movies/CapCut/5. rész intro.mp4",
+   "start": 12.6,
+   "fx": 0.5,
+   "fy": 0.5
+  },
+  {
+   "file": "~/Movies/CapCut/Buddies.mp4",
+   "start": 19.0,
+   "fx": 0.5,
+   "fy": 0.5
+  },
+  {
+   "file": "~/Movies/CapCut/Flyx AD 2.mp4",
+   "start": 19.3,
+   "fx": 0.5,
+   "fy": 0.5
+  },
+  {
+   "file": "~/Movies/CapCut/masolas.mp4",
+   "start": 16.0,
+   "fx": 0.5,
+   "fy": 0.5
+  },
+  {
+   "file": "~/Movies/CapCut/BEVEZETO KESZ.mp4",
+   "start": 1.6,
+   "fx": 0.5,
+   "fy": 0.5
+  },
+  {
+   "file": "~/Movies/CapCut/Flyx AD 1.mp4",
+   "start": 27.9,
+   "fx": 0.5,
+   "fy": 0.5
+  }
+ ]
+}

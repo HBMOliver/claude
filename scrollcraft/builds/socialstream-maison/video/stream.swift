@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 
 struct ClipRef: Codable { let file: String; let start: Double; var fx: Double? = nil; var fy: Double? = nil; var ev: Double? = nil }
 struct Beat: Codable { let stop: Double; let hold: Double; let clip: ClipRef }
-struct Film: Codable { let fps: Int; let duration: Double; let cards: [ClipRef]; let beats: [Beat]; var cols: Int? = nil }
+struct Film: Codable { let fps: Int; let duration: Double; let cards: [ClipRef]; let beats: [Beat]; var cols: Int? = nil; var speed: Double? = nil }
 
 setvbuf(stdout, nil, _IONBF, 0)
 let a = CommandLine.arguments
@@ -33,7 +33,7 @@ let colX = (0..<cols).map { gapX + Double($0) * (cardW + gapX) }
 let colSpeed: [Double] = portrait ? [1.0, 0.82] : [0.86, 1.0, 0.92, 1.06, 0.8]
 let colPhase: [Double] = portrait ? [0.0, 0.5] : [0.15, 0.62, 0.33, 0.8, 0.05]
 let mid = cols / 2
-let vmax = H * 1.05   // px per second at full scroll
+let vmax = H * (film.speed ?? 1.05)   // px per second at full scroll
 
 // ---------- the grade: warm, soft, filmic ----------
 func makeLUT(_ n: Int) -> Data {

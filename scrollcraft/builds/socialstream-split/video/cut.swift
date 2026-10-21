@@ -12,6 +12,7 @@ struct Shot: Codable {
   var z0: Double? = nil; var z1: Double? = nil; var punch: Bool? = nil
   var ev: Double? = nil; var speed: Double? = nil; var sat: Double? = nil
   var still: Bool? = nil
+  var raw: Bool? = nil   // already graded (e.g. a stream.swift segment): skip the LUT
 }
 struct EDL: Codable { let fps: Int; let shots: [Shot] }
 
@@ -80,8 +81,28 @@ func makeWarmLUT(_ n: Int) -> Data {
   } } }
   return cube.withUnsafeBufferPointer { Data(buffer: $0) }
 }
+// Clean and neutral: a firmer filmic curve, 10% less saturation, a hint of cool in
+// the shadows and nothing in the highlights. The premium reel's grade.
+func makeNeutralLUT(_ n: Int) -> Data {
+  var cube = [Float](repeating: 0, count: n * n * n * 4)
+  func sig(_ x: Double, _ k: Double) -> Double { 1 / (1 + exp(-k * (x - 0.5))) }
+  let s0 = sig(0, 5.0), s1 = sig(1, 5.0)
+  for bi in 0..<n { for gi in 0..<n { for ri in 0..<n {
+    var r = Double(ri) / Double(n - 1), g = Double(gi) / Double(n - 1), b = Double(bi) / Double(n - 1)
+    func tone(_ x: Double) -> Double { 0.018 + 0.965 * (sig(pow(max(0, x), 1.02), 5.0) - s0) / (s1 - s0) }
+    r = tone(r); g = tone(g); b = tone(b)
+    let y = 0.2126 * r + 0.7152 * g + 0.0722 * b
+    r = y + (r - y) * 0.9; g = y + (g - y) * 0.9; b = y + (b - y) * 0.9
+    let ws = pow(1 - y, 2.2)
+    r -= 0.008 * ws; b += 0.014 * ws
+    let i = ((bi * n + gi) * n + ri) * 4
+    cube[i] = Float(min(1, max(0, r))); cube[i + 1] = Float(min(1, max(0, g))); cube[i + 2] = Float(min(1, max(0, b))); cube[i + 3] = 1
+  } } }
+  return cube.withUnsafeBufferPointer { Data(buffer: $0) }
+}
 let LUTN = 33
-let lutData = ProcessInfo.processInfo.environment["GRADE"] == "warm" ? makeWarmLUT(LUTN) : makeLUT(LUTN)
+let GRADE = ProcessInfo.processInfo.environment["GRADE"] ?? ""
+let lutData = GRADE == "warm" ? makeWarmLUT(LUTN) : GRADE == "neutral" ? makeNeutralLUT(LUTN) : makeLUT(LUTN)
 let srgb = CGColorSpace(name: CGColorSpace.sRGB)!
 let ctx = CIContext(options: [.workingColorSpace: CGColorSpace(name: CGColorSpace.extendedLinearSRGB)!, .outputColorSpace: CGColorSpace(name: CGColorSpace.itur_709)!])
 
@@ -89,7 +110,7 @@ func grade(_ img: CIImage, sat: Double) -> CIImage {
   var im = img
   if sat != 1 { im = im.applyingFilter("CIColorControls", parameters: ["inputSaturation": sat, "inputContrast": 1.0, "inputBrightness": 0]) }
   im = im.applyingFilter("CIColorCubeWithColorSpace", parameters: ["inputCubeDimension": LUTN, "inputCubeData": lutData, "inputColorSpace": srgb])
-  if ProcessInfo.processInfo.environment["GRADE"] != "warm" { im = im.applyingFilter("CIVignette", parameters: ["inputIntensity": 0.55, "inputRadius": 1.6]) }
+  if GRADE != "warm" && GRADE != "neutral" { im = im.applyingFilter("CIVignette", parameters: ["inputIntensity": 0.55, "inputRadius": 1.6]) }
   return im
 }
 
@@ -128,8 +149,10 @@ for (si, shot) in edl.shots.enumerated() {
   comp.colorYCbCrMatrix = AVVideoYCbCrMatrix_ITU_R_709_2
   let speed = shot.speed ?? 1
   let reader = try! AVAssetReader(asset: asset)
+  // a window past the end of the clip makes the reader refuse the composition (-11841)
+  let assetDur = try! await asset.load(.duration).seconds
   reader.timeRange = CMTimeRange(start: CMTime(seconds: shot.start, preferredTimescale: 6000),
-                                 duration: CMTime(seconds: Double(shot.frames) / fps * speed + 0.25, preferredTimescale: 6000))
+                                 duration: CMTime(seconds: min(Double(shot.frames) / fps * speed + 0.25, assetDur - shot.start), preferredTimescale: 6000))
   let out = AVAssetReaderVideoCompositionOutput(videoTracks: [vt], videoSettings: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA])
   out.videoComposition = comp
   out.alwaysCopiesSampleData = false
@@ -163,7 +186,7 @@ for (si, shot) in edl.shots.enumerated() {
       .transformed(by: CGAffineTransform(translationX: -(cx - cw / 2), y: -(cy - ch / 2)))
       .applyingFilter("CILanczosScaleTransform", parameters: ["inputScale": s, "inputAspectRatio": 1.0])
       .cropped(to: CGRect(x: 0, y: 0, width: OW, height: OH))
-    img = grade(img, sat: shot.sat ?? 1)
+    if shot.raw != true { img = grade(img, sat: shot.sat ?? 1) }
     while !input.isReadyForMoreMediaData { usleep(1000) }
     var opb: CVPixelBuffer? = nil
     CVPixelBufferPoolCreatePixelBuffer(nil, adaptor.pixelBufferPool!, &opb)

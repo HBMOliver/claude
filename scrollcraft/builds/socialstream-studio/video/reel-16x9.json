@@ -1,0 +1,90 @@
+{
+ "fps": 30,
+ "shots": [
+  {
+   "file": "~/Downloads/DMC Promo video.mp4",
+   "start": 4.95,
+   "frames": 72,
+   "speed": 0.66,
+   "z0": 1.0,
+   "z1": 1.07
+  },
+  {
+   "file": "~/Downloads/DMC Promo video.mp4",
+   "start": 16.6,
+   "frames": 36,
+   "punch": true
+  },
+  {
+   "file": "~/Downloads/DMC Promo video.mp4",
+   "start": 27.6,
+   "frames": 54,
+   "z0": 1.0,
+   "z1": 1.05
+  },
+  {
+   "file": "~/Downloads/DMC Promo video.mp4",
+   "start": 49.8,
+   "frames": 54,
+   "speed": 0.8
+  },
+  {
+   "file": "~/Movies/CapCut/INTRO-FINAL.mp4",
+   "start": 0.2,
+   "frames": 36,
+   "speed": 0.8
+  },
+  {
+   "file": "~/Movies/CapCut/INTRO-FINAL.mp4",
+   "start": 2.6,
+   "frames": 36,
+   "speed": 0.85
+  },
+  {
+   "file": "~/Movies/CapCut/INTRO-FINAL.mp4",
+   "start": 6.3,
+   "frames": 54,
+   "speed": 0.7,
+   "z0": 1.0,
+   "z1": 1.05
+  },
+  {
+   "file": "wall-16x9.mp4",
+   "start": 0,
+   "frames": 180,
+   "raw": true
+  },
+  {
+   "file": "~/Downloads/Ecamm Recording on 2026-07-09 at 13.12.41.mov",
+   "start": 120.0,
+   "frames": 72,
+   "z0": 1.0,
+   "z1": 1.08
+  },
+  {
+   "file": "~/Movies/CapCut/0. rész.mp4",
+   "start": 78.6,
+   "frames": 45
+  },
+  {
+   "file": "~/Downloads/DMC Promo video.mp4",
+   "start": 39.0,
+   "frames": 180,
+   "speed": 0.5
+  },
+  {
+   "file": "~/Movies/CapCut/Flyx AD 2.mp4",
+   "start": 19.7,
+   "frames": 72,
+   "speed": 0.6,
+   "fy": 0.42
+  },
+  {
+   "file": "~/Downloads/DMC Promo video.mp4",
+   "start": 17.12,
+   "frames": 69,
+   "still": true,
+   "ev": -3.0
+  }
+ ]
+}

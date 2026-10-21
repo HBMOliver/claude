@@ -15,5 +15,8 @@ shadows, amber highlights, violet screens pulled to teal, greens toward teal).
 `GRADE=warm ./cut ...` swaps in `makeWarmLUT` (soft filmic contrast, 20% less
 saturation, warm shadows and highlights, no vignette), the grade used for the
 Maison, Journal and Noir loops and stills; see `../../socialstream-maison/video/`.
+`GRADE=neutral` is the Studio reel's grade (firmer filmic curve, 10% less
+saturation, a hint of cool in the shadows, no vignette), and a shot marked
+`"raw": true` skips the LUT, for segments that arrive already graded.
 `sheet.swift` makes timestamped contact sheets for picking shots; `img.swift`
 cuts the stream tiles and portraits.
