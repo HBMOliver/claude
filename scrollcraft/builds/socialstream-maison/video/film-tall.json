@@ -1,0 +1,148 @@
+{
+ "fps": 30,
+ "duration": 24.0,
+ "cards": [
+  {
+   "file": "~/Movies/CapCut/funny assets/drive2/b146_IMG_0472.MOV",
+   "start": 0.8
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive2/b223_IMG_6895.mov",
+   "start": 0.5,
+   "ev": 0.2
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive2/b105_IMG_0071.MOV",
+   "start": 1.0,
+   "ev": 0.3
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive2/b241_IMG_6986.MOV",
+   "start": 1.2
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive2/b270_IMG_8177.MOV",
+   "start": 0.3,
+   "ev": 0.6
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive2/b277_IMG_8209.MOV",
+   "start": 2.8
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive2/b278_IMG_8210.MOV",
+   "start": 0.6
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive2/b265_IMG_8167.MOV",
+   "start": 0.4
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive2/b253_IMG_7002.MOV",
+   "start": 1.6
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive2/b145_IMG_0471.MOV",
+   "start": 0.5
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive/09_IMG_0475.MOV",
+   "start": 0.4
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive/13_IMG_0638.MOV",
+   "start": 2.9
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive/14_IMG_0782.MOV",
+   "start": 4.6
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive/21_IMG_0842.MOV",
+   "start": 2.8
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive/23_IMG_0871.MOV",
+   "start": 2.2
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive/25_IMG_0944.MOV",
+   "start": 0.2
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive/37_IMG_1193.MOV",
+   "start": 2.0
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive/39_IMG_1198.MOV",
+   "start": 4.9
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive/42_IMG_6168.MOV",
+   "start": 4.3
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive/46_IMG_7245.MOV",
+   "start": 2.4
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive/06_IMG_0263.MOV",
+   "start": 8.0
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive/41_IMG_5954.MOV",
+   "start": 1.5
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive/22_IMG_0843.MOV",
+   "start": 4.0
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive/19_IMG_0840.MOV",
+   "start": 15.0
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive/44_IMG_6321.MOV",
+   "start": 1.0
+  },
+  {
+   "file": "~/Movies/CapCut/funny assets/drive2/b218_IMG_6216.MOV",
+   "start": 0.3
+  }
+ ],
+ "beats": [
+  {
+   "stop": 1.8,
+   "hold": 2.7,
+   "clip": {
+    "file": "~/Movies/CapCut/funny assets/drive/23_IMG_0871.MOV",
+    "start": 1.6
+   }
+  },
+  {
+   "stop": 7.4,
+   "hold": 2.7,
+   "clip": {
+    "file": "~/Movies/CapCut/funny assets/drive2/b242_IMG_6987.MOV",
+    "start": 3.0,
+    "ev": 0.2
+   }
+  },
+  {
+   "stop": 13.0,
+   "hold": 2.9,
+   "clip": {
+    "file": "~/Movies/CapCut/funny assets/drive2/b216_IMG_6214.MOV",
+    "start": 1.8
+   }
+  },
+  {
+   "stop": 18.8,
+   "hold": 3.6,
+   "clip": {
+    "file": "~/Movies/CapCut/funny assets/drive/21_IMG_0842.MOV",
+    "start": 2.6
+   }
+  }
+ ]
+}

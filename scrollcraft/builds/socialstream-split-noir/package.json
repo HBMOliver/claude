@@ -1,0 +1,8 @@
+{
+  "name": "socialstream-split-noir",
+  "private": true,
+  "description": "SocialStream Noir: the split stage in a quiet register (scroll-craft build)",
+  "dependencies": {
+    "playwright-core": "^1.64.1"
+  }
+}

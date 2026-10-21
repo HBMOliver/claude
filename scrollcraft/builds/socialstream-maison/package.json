@@ -1,0 +1,8 @@
+{
+  "name": "socialstream-maison",
+  "private": true,
+  "description": "SocialStream Maison: cream luxury site with the stream film (scroll-craft build)",
+  "dependencies": {
+    "playwright-core": "^1.64.1"
+  }
+}

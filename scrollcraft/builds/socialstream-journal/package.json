@@ -1,0 +1,8 @@
+{
+  "name": "socialstream-journal",
+  "private": true,
+  "description": "SocialStream Journal: the site as a printed journal issue (scroll-craft build)",
+  "dependencies": {
+    "playwright-core": "^1.64.1"
+  }
+}

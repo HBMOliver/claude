@@ -62,8 +62,26 @@ func makeLUT(_ n: Int) -> Data {
   } } }
   return cube.withUnsafeBufferPointer { Data(buffer: $0) }
 }
+
+func makeWarmLUT(_ n: Int) -> Data {
+  var cube = [Float](repeating: 0, count: n * n * n * 4)
+  func sig(_ x: Double, _ k: Double) -> Double { 1 / (1 + exp(-k * (x - 0.5))) }
+  let s0 = sig(0, 4.2), s1 = sig(1, 4.2)
+  for bi in 0..<n { for gi in 0..<n { for ri in 0..<n {
+    var r = Double(ri) / Double(n - 1), g = Double(gi) / Double(n - 1), b = Double(bi) / Double(n - 1)
+    func tone(_ x: Double) -> Double { 0.045 + 0.925 * (sig(pow(max(0, x), 1.04), 4.2) - s0) / (s1 - s0) }
+    r = tone(r); g = tone(g); b = tone(b)
+    let y = 0.2126 * r + 0.7152 * g + 0.0722 * b
+    r = y + (r - y) * 0.8; g = y + (g - y) * 0.8; b = y + (b - y) * 0.8
+    let ws = pow(1 - y, 1.8), wh = pow(y, 1.6)
+    r += 0.022 * ws + 0.030 * wh; g += 0.012 * ws + 0.016 * wh; b += -0.004 * ws - 0.026 * wh
+    let i = ((bi * n + gi) * n + ri) * 4
+    cube[i] = Float(min(1, max(0, r))); cube[i + 1] = Float(min(1, max(0, g))); cube[i + 2] = Float(min(1, max(0, b))); cube[i + 3] = 1
+  } } }
+  return cube.withUnsafeBufferPointer { Data(buffer: $0) }
+}
 let LUTN = 33
-let lutData = makeLUT(LUTN)
+let lutData = ProcessInfo.processInfo.environment["GRADE"] == "warm" ? makeWarmLUT(LUTN) : makeLUT(LUTN)
 let srgb = CGColorSpace(name: CGColorSpace.sRGB)!
 let ctx = CIContext(options: [.workingColorSpace: CGColorSpace(name: CGColorSpace.extendedLinearSRGB)!, .outputColorSpace: CGColorSpace(name: CGColorSpace.itur_709)!])
 
@@ -71,7 +89,7 @@ func grade(_ img: CIImage, sat: Double) -> CIImage {
   var im = img
   if sat != 1 { im = im.applyingFilter("CIColorControls", parameters: ["inputSaturation": sat, "inputContrast": 1.0, "inputBrightness": 0]) }
   im = im.applyingFilter("CIColorCubeWithColorSpace", parameters: ["inputCubeDimension": LUTN, "inputCubeData": lutData, "inputColorSpace": srgb])
-  im = im.applyingFilter("CIVignette", parameters: ["inputIntensity": 0.55, "inputRadius": 1.6])
+  if ProcessInfo.processInfo.environment["GRADE"] != "warm" { im = im.applyingFilter("CIVignette", parameters: ["inputIntensity": 0.55, "inputRadius": 1.6]) }
   return im
 }
 

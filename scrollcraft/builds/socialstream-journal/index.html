@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SocialStream</title>
+<meta name="description" content="SocialStream, interest media ügynökség. A social media meghalt. Az érdeklődés vette át a helyét. Tenerife és Budapest.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%23121110'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Georgia' font-style='italic' font-size='20' fill='%23EFE9DF'%3ES%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="scrollcraft.css">
+<style>
+/* Journal: the brand's cream and ink set as a printed issue. A contents rail
+   instead of a bar, a cover with the vertical film as its photograph and the
+   manifesto as cover lines, then spreads with real photography. Saving, not
+   liking, is how the reader marks what interests them. */
+:root {
+  --cream: #EFE9DF;
+  --paper: #F6F1E9;
+  --ink: #121110;
+  --soft: #625B51;
+  --line: rgba(18, 17, 16, 0.15);
+  --blue: #3E5F7E;
+  --serif: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --sans: "Plus Jakarta Sans", "Helvetica Neue", Arial, sans-serif;
+  --sc-canvas: var(--cream); --sc-surface: var(--paper); --sc-ink: var(--ink); --sc-ink-soft: var(--soft);
+  --sc-accent: var(--blue); --sc-accent-ink: var(--cream); --sc-font-display: var(--serif); --sc-font-text: var(--sans);
+  --rail: 0px;
+  --g: clamp(20px, 4.4vw, 76px);
+}
+@media (min-width: 1100px) { :root { --rail: 220px; } }
+html { background: var(--cream); }
+body { background: var(--cream); color: var(--ink); font-family: var(--sans); font-size: 1rem; line-height: 1.7; }
+p, h1, h2, h3, ul, figure, blockquote { margin: 0; }
+ul { list-style: none; padding: 0; }
+.sr { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+[hidden] { display: none !important; }
+a { color: inherit; text-underline-offset: 0.22em; text-decoration-thickness: 1px; }
+:focus-visible { outline: 1.5px solid var(--ink); outline-offset: 4px; border-radius: 2px; }
+.disp { font-family: var(--serif); font-weight: 300; letter-spacing: -0.024em; line-height: 1.0; text-wrap: balance; }
+.disp i, .mast i { font-style: italic; }
+.label { font: 500 0.8rem/1.4 var(--sans); letter-spacing: 0.05em; color: var(--soft); }
+.body { color: var(--soft); font-size: 1.04rem; line-height: 1.75; max-width: 56ch; text-wrap: pretty; }
+.page { margin-left: var(--rail); }
+.wrap { padding-inline: max(var(--g), env(safe-area-inset-left, 0px)) max(var(--g), env(safe-area-inset-right, 0px)); max-width: 1320px; }
+.sec { padding-block: clamp(5.5rem, 12vw, 11rem); border-top: 1px solid var(--line); }
+.btn { display: inline-flex; align-items: center; gap: 0.7em; padding: 1.05em 1.7em; border: 0; border-radius: 999px; cursor: pointer; background: var(--ink); color: var(--cream);
+  font: 500 0.92rem/1 var(--sans); letter-spacing: 0.02em; text-decoration: none; white-space: nowrap; transition: background-color 180ms var(--sc-ease-out), transform 140ms var(--sc-ease-out); }
+.btn:hover { background: var(--blue); }
+.btn:active { transform: scale(0.98); }
+.btn--ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.btn--ghost:hover { background: rgba(18, 17, 16, 0.06); }
+
+/* ---------- the contents rail ---------- */
+.rail { position: fixed; z-index: 70; inset: 0 auto 0 0; width: var(--rail); padding: 34px 26px calc(26px + env(safe-area-inset-bottom, 0px)) max(26px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: 26px; border-right: 1px solid var(--line); background: var(--cream); }
+.rail .wm { font: 400 1.45rem/1 var(--serif); letter-spacing: -0.02em; text-decoration: none; }
+.rail .wm i { color: var(--blue); }
+.rail nav ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
+.rail nav a { display: grid; grid-template-columns: 26px 1fr; align-items: baseline; padding: 6px 0; text-decoration: none; color: var(--soft); font: 400 0.95rem/1.3 var(--serif); transition: color 160ms var(--sc-ease-out); }
+.rail nav a span:first-child { font: italic 400 0.85rem/1 var(--serif); color: var(--line); color: rgba(18,17,16,.35); }
+.rail nav a[aria-current="true"] { color: var(--ink); }
+.rail nav a[aria-current="true"] span:first-child { color: var(--blue); }
+.rail .bottom { margin-top: auto; display: grid; gap: 14px; }
+.lang { display: flex; gap: 4px; }
+.lang button { border: 0; background: none; cursor: pointer; font: 500 0.78rem/1 var(--sans); letter-spacing: 0.08em; color: var(--soft); padding: 10px 6px; min-width: 36px; min-height: 36px; }
+.lang button[aria-pressed="true"] { color: var(--ink); text-decoration: underline; text-underline-offset: 0.45em; }
+.topbar { display: none; }
+@media (max-width: 1099.98px) {
+  .rail { display: none; }
+  .topbar { display: flex; position: sticky; top: 0; z-index: 70; align-items: center; justify-content: space-between; gap: 12px; padding: calc(10px + env(safe-area-inset-top, 0px)) max(18px, env(safe-area-inset-right, 0px)) 10px max(18px, env(safe-area-inset-left, 0px)); background: rgba(239, 233, 223, 0.94); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .topbar .wm { font: 400 1.25rem/1 var(--serif); text-decoration: none; }
+  .topbar .wm i { color: var(--blue); }
+}
+
+/* ---------- 1 · the cover ---------- */
+.cover { min-height: 100svh; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: center; padding-block: clamp(48px, 7vh, 80px); }
+.cover .left { display: grid; gap: clamp(22px, 3.4vh, 38px); align-content: center; }
+.issue { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid var(--ink); }
+.mast { font: 300 clamp(4.6rem, 1rem + 9.6vw, 13rem)/0.84 var(--serif); letter-spacing: -0.045em; }
+.mast span { display: block; }
+.mast i { color: var(--blue); margin-left: 0.32em; }
+.coverlines { position: relative; min-height: 3.2em; font: italic 300 clamp(1.6rem, 1rem + 1.6vw, 2.7rem)/1.12 var(--serif); }
+.beat { position: absolute; inset: 0 auto auto 0; max-width: 18ch; opacity: 0; transform: translate3d(0, 0.2em, 0); transition: opacity 560ms var(--sc-ease-out), transform 760ms var(--sc-ease-out); }
+.beat.is-on { opacity: 1; transform: none; }
+.cover .act { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+.photo { position: relative; justify-self: end; height: min(84svh, 880px); aspect-ratio: 9 / 16; max-width: 100%; }
+.photo .film-box { position: absolute; inset: 0; overflow: hidden; -webkit-mask-image: radial-gradient(130% 110% at 50% 50%, #000 70%, transparent 100%); mask-image: radial-gradient(130% 110% at 50% 50%, #000 70%, transparent 100%); }
+.photo video, .photo .film-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.photo .film-poster { transition: opacity 400ms var(--sc-ease-out); }
+.film-box.is-playing .film-poster { opacity: 0; }
+.photo .cap { position: absolute; right: 0; bottom: -28px; }
+.film-toggle { position: absolute; right: 12px; top: 12px; z-index: 3; width: 42px; height: 42px; border-radius: 50%; border: 0; cursor: pointer; background: rgba(239, 233, 223, 0.88); color: var(--ink); display: grid; place-items: center; }
+.film-toggle svg { width: 12px; height: 12px; }
+
+/* ---------- saving ---------- */
+.save { display: inline-flex; align-items: center; gap: 8px; border: 0; background: none; cursor: pointer; padding: 8px 0; color: var(--soft); font: 500 0.82rem/1 var(--sans); letter-spacing: 0.03em; transition: color 160ms var(--sc-ease-out); }
+.save svg { width: 13px; height: 16px; }
+.save svg path { fill: none; stroke: currentColor; stroke-width: 1.4; transition: fill 160ms var(--sc-ease-out); }
+.save:hover { color: var(--ink); }
+.save[aria-pressed="true"] { color: var(--blue); }
+.save[aria-pressed="true"] svg path { fill: currentColor; }
+.tray { position: fixed; z-index: 75; right: max(18px, env(safe-area-inset-right, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); display: grid; justify-items: end; gap: 10px; }
+.tray > button { display: inline-flex; align-items: center; gap: 10px; border: 0; border-radius: 999px; padding: 12px 18px; background: var(--ink); color: var(--cream); font: 500 0.88rem/1 var(--sans); cursor: pointer; box-shadow: 0 16px 34px -18px rgba(18, 17, 16, 0.7); }
+.tray > button b { font: italic 400 1.1rem/1 var(--serif); }
+.tray .panel { width: min(340px, calc(100vw - 36px)); background: var(--paper); border-radius: 4px; padding: 20px; box-shadow: 0 24px 60px -24px rgba(18, 17, 16, 0.45); display: grid; gap: 14px; }
+.tray .panel h3 { font: 400 1.3rem/1.2 var(--serif); }
+.tray .panel li { display: flex; justify-content: space-between; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); font-size: 0.92rem; }
+.tray .panel li button { border: 0; background: none; color: var(--soft); cursor: pointer; font-size: 0.82rem; text-decoration: underline; }
+.tray .empty { font-size: 0.92rem; color: var(--soft); }
+
+/* ---------- 2 · manifesto spread ---------- */
+.spread { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
+.manifest .disp { grid-column: 1 / span 7; font-size: clamp(2.6rem, 1.4rem + 3.8vw, 5.6rem); font-style: italic; }
+.manifest .text { grid-column: 9 / span 4; display: grid; gap: 20px; align-content: end; }
+.manifest figure { grid-column: 1 / -1; margin-top: clamp(3rem, 6vw, 5rem); }
+.manifest figure img { width: 100%; height: auto; aspect-ratio: 2400 / 1030; object-fit: cover; }
+figcaption.cap, .cap { font-size: 0.84rem; color: var(--soft); margin-top: 10px; }
+.kicker { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 12px; padding-bottom: 14px; margin-bottom: clamp(2rem, 4vw, 3.4rem); border-bottom: 1px solid var(--ink); }
+
+/* ---------- 3 · laws as essays ---------- */
+.laws .intro { grid-column: 1 / span 6; font: italic 300 clamp(1.3rem, 1rem + 0.8vw, 1.8rem)/1.3 var(--serif); }
+.essay { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 5fr) minmax(0, 5fr); gap: 24px; padding: clamp(28px, 4vw, 44px) 0; border-top: 1px solid var(--line); align-items: start; }
+.essay:first-of-type { margin-top: clamp(2.5rem, 5vw, 4rem); }
+.essay .num { font: italic 300 clamp(3.4rem, 2rem + 3vw, 6rem)/0.8 var(--serif); color: var(--blue); }
+.essay h3 { font: 300 clamp(1.7rem, 1.1rem + 1.4vw, 2.6rem)/1.08 var(--serif); letter-spacing: -0.015em; text-wrap: balance; }
+.essay .r { display: grid; gap: 10px; }
+
+/* ---------- 4 · photo essay ---------- */
+.work .head { grid-column: 1 / span 8; }
+.work .head .disp { font-size: clamp(2.4rem, 1.3rem + 3.2vw, 4.8rem); }
+.plates { grid-column: 1 / -1; margin-top: clamp(3rem, 6vw, 5rem); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(12px, 1.8vw, 26px); }
+.plate img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+.plate:nth-child(1) { grid-column: 1 / span 5; }
+.plate:nth-child(2) { grid-column: 7 / span 3; margin-top: 18%; }
+.plate:nth-child(3) { grid-column: 10 / span 3; }
+.plate:nth-child(4) { grid-column: 2 / span 3; margin-top: -8%; }
+.plate:nth-child(5) { grid-column: 6 / span 4; margin-top: 6%; }
+.plate:nth-child(6) { grid-column: 10 / span 3; margin-top: 14%; }
+
+/* ---------- 5 · services ---------- */
+.svc .head { grid-column: 1 / span 5; display: grid; gap: 18px; align-content: start; }
+.svc .head .disp { font-size: clamp(2.2rem, 1.3rem + 2.6vw, 4rem); }
+.svc ul { grid-column: 7 / span 6; }
+.svc li { padding: 26px 0; border-top: 1px solid var(--line); display: grid; gap: 8px; }
+.svc li .row { display: flex; justify-content: space-between; align-items: baseline; gap: 18px; }
+.svc li h3 { font: 300 clamp(1.4rem, 1rem + 0.9vw, 1.9rem)/1.15 var(--serif); }
+.svc li p { color: var(--soft); font-size: 0.98rem; line-height: 1.7; max-width: 52ch; }
+
+/* ---------- 6 · numbers and letters ---------- */
+.nums .head { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; }
+.nums .head .disp { font-size: clamp(2.6rem, 1.4rem + 4vw, 6rem); }
+.figs { grid-column: 1 / -1; margin-top: clamp(3rem, 6vw, 5rem); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(18px, 3vw, 44px); }
+.fig { display: grid; gap: 12px; align-content: start; padding-top: 20px; border-top: 1px solid var(--ink); }
+.fig b { font: 300 clamp(3rem, 1.8rem + 3.6vw, 5.4rem)/0.92 var(--serif); letter-spacing: -0.03em; }
+.fig b small { font-size: 0.42em; margin-left: 0.1em; }
+.fig p { font-size: 0.95rem; line-height: 1.5; }
+.letters { grid-column: 1 / -1; margin-top: clamp(4rem, 8vw, 7rem); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 5vw, 80px); }
+.letter { display: grid; gap: 16px; align-content: start; padding-top: 22px; border-top: 1px solid var(--line); }
+.letter p { font: italic 300 clamp(1.25rem, 1rem + 0.6vw, 1.6rem)/1.42 var(--serif); }
+.letter footer { font-size: 0.88rem; color: var(--soft); }
+.letter footer b { color: var(--ink); font-weight: 600; }
+
+/* ---------- 7 · people ---------- */
+.people figure.f { grid-column: 1 / span 5; }
+.people figure.f img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+.people .story { grid-column: 7 / span 6; display: grid; gap: 20px; align-content: center; }
+.people .story .disp { font-size: clamp(2.2rem, 1.3rem + 2.6vw, 4rem); }
+.team { grid-column: 1 / -1; margin-top: clamp(4rem, 8vw, 7rem); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 3vw, 44px); }
+.person { display: grid; gap: 8px; }
+.person img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; margin-bottom: 10px; }
+.person h3 { font: 400 1.6rem/1.1 var(--serif); }
+.person .role { font: 500 0.84rem/1.4 var(--sans); color: var(--blue); letter-spacing: 0.03em; }
+.person p:last-child { color: var(--soft); font-size: 0.96rem; line-height: 1.65; max-width: 36ch; }
+
+/* ---------- 8 · fit ---------- */
+.fit .head { grid-column: 1 / span 8; }
+.fit .head .disp { font-size: clamp(2.2rem, 1.3rem + 2.6vw, 4rem); }
+.fit .yes, .fit .no { margin-top: clamp(2.5rem, 5vw, 4rem); }
+.fit .yes { grid-column: 1 / span 6; } .fit .no { grid-column: 7 / span 6; }
+.fit h3 { font: italic 300 1.6rem/1.2 var(--serif); margin-bottom: 16px; }
+.fit li { padding: 15px 0; border-top: 1px solid var(--line); line-height: 1.55; }
+.fit .no li { color: var(--soft); }
+.fit .seal { grid-column: 1 / -1; margin-top: clamp(3rem, 6vw, 5rem); font: 300 clamp(1.5rem, 1rem + 1.2vw, 2.2rem)/1.2 var(--serif); }
+
+/* ---------- 9 · the reply card ---------- */
+.reply .head { grid-column: 1 / span 5; display: grid; gap: 20px; align-content: start; }
+.reply .head .disp { font-size: clamp(2.2rem, 1.3rem + 2.6vw, 4rem); }
+form.app { grid-column: 7 / span 6; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 22px; background: var(--paper); padding: clamp(22px, 3vw, 40px); box-shadow: 0 1px 0 var(--line), 0 30px 60px -40px rgba(18, 17, 16, 0.5); }
+.field { display: grid; gap: 8px; align-content: start; }
+.field.full, fieldset, .form-act, .sent { grid-column: 1 / -1; }
+.field label, legend { font: 500 0.84rem/1.3 var(--sans); letter-spacing: 0.03em; color: var(--soft); }
+.field input, .field select, .field textarea { width: 100%; background: transparent; color: var(--ink); border: 0; border-bottom: 1px solid rgba(18, 17, 16, 0.3); border-radius: 0; padding: 10px 0 12px; font: 400 1.02rem/1.4 var(--sans); }
+.field textarea { min-height: 6rem; resize: vertical; }
+.field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible { outline: none; border-bottom-color: var(--ink); }
+.field input[aria-invalid="true"] { border-bottom-color: #A2462E; }
+.err { min-height: 1em; font-size: 0.82rem; color: #9A3F28; }
+fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 12px; min-width: 0; }
+legend { float: left; width: 100%; margin-bottom: 4px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { position: relative; display: inline-flex; padding: 9px 14px; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(18, 17, 16, 0.25); color: var(--soft); font-size: 0.88rem; cursor: pointer; }
+.chip input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.chip:has(input:checked) { background: var(--ink); color: var(--cream); box-shadow: none; }
+.chip:has(input:focus-visible) { outline: 1.5px solid var(--ink); outline-offset: 3px; }
+.carry-note { font-size: 0.86rem; color: var(--blue); }
+.form-act { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; margin-top: 6px; }
+.direct { font-size: 0.92rem; color: var(--soft); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.direct a { user-select: all; }
+.copy-mini { border: 0; background: none; color: var(--blue); font: 500 0.86rem/1 var(--sans); cursor: pointer; padding: 6px 2px; text-decoration: underline; text-underline-offset: 3px; }
+.sent { display: grid; gap: 10px; padding: 16px 18px; background: rgba(18, 17, 16, 0.05); color: var(--soft); line-height: 1.55; }
+.sent b { color: var(--ink); }
+.sent .btn { justify-self: start; }
+.foot { margin-top: clamp(5rem, 10vw, 8rem); padding-block: 26px calc(26px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--ink); display: flex; justify-content: space-between; gap: 10px 24px; flex-wrap: wrap; font-size: 0.86rem; color: var(--soft); }
+
+@media (max-width: 900px) {
+  .cover { grid-template-columns: 1fr; min-height: 0; padding-top: 28px; }
+  .photo { justify-self: stretch; height: auto; width: 100%; }
+  .spread > * { grid-column: 1 / -1 !important; }
+  .manifest .text { margin-top: 28px; }
+  .essay { grid-template-columns: 1fr; gap: 12px; }
+  .plates { grid-template-columns: 1fr 1fr; }
+  .plates .plate { grid-column: auto !important; margin-top: 0 !important; }
+  .plates .plate:nth-child(even) { margin-top: 32px !important; }
+  .svc ul, .reply form.app { margin-top: 28px; }
+  .figs, .team { grid-template-columns: 1fr 1fr; }
+  .team .person:last-child { grid-column: span 2; max-width: 50%; }
+  .letters { grid-template-columns: 1fr; }
+  form.app { grid-template-columns: 1fr; }
+  .tray { left: max(18px, env(safe-area-inset-left, 0px)); justify-items: stretch; }
+  .tray > button { justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) { .beat { transition: none; } }
+</style>
+</head>
+<body>
+
+<aside class="rail" aria-label="Tartalom" data-en-aria="Contents">
+  <a class="wm" href="#top" aria-label="SocialStream">Social<i>Stream</i></a>
+  <nav><ol id="toc">
+    <li><a href="#top"><span>i</span><span data-en="Cover">Borító</span></a></li>
+    <li><a href="#kialtvany"><span>ii</span><span data-en="Manifesto">Kiáltvány</span></a></li>
+    <li><a href="#torvenyek"><span>iii</span><span data-en="Three laws">Három törvény</span></a></li>
+    <li><a href="#munkak"><span>iv</span><span data-en="The work">A munka</span></a></li>
+    <li><a href="#szolgaltatasok"><span>v</span><span data-en="Services">Szolgáltatások</span></a></li>
+    <li><a href="#eredmenyek"><span>vi</span><span data-en="Numbers">Számok</span></a></li>
+    <li><a href="#rolunk"><span>vii</span><span data-en="People">Emberek</span></a></li>
+    <li><a href="#audit"><span>viii</span><span data-en="The audit">Az audit</span></a></li>
+  </ol></nav>
+  <div class="bottom">
+    <p class="label" data-en="Tenerife and Budapest, since 2022">Tenerife és Budapest, 2022 óta</p>
+    <div class="lang" role="group" aria-label="Nyelv / Language"><button type="button" data-set-lang="hu" aria-pressed="true" lang="hu">HU</button><button type="button" data-set-lang="en" aria-pressed="false" lang="en">EN</button></div>
+  </div>
+</aside>
+
+<div class="topbar">
+  <a class="wm" href="#top" aria-label="SocialStream">Social<i>Stream</i></a>
+  <div class="lang" role="group" aria-label="Nyelv / Language"><button type="button" data-set-lang="hu" aria-pressed="true" lang="hu">HU</button><button type="button" data-set-lang="en" aria-pressed="false" lang="en">EN</button></div>
+</div>
+
+<main class="page" id="top">
+
+  <section class="wrap cover" data-film-scope data-sc-act="flow" aria-labelledby="cover-h">
+    <div class="left">
+      <p class="issue label"><span data-en="Interest media agency">Interest media ügynökség</span><span data-en="The age of interest, 2026">Az érdeklődés kora, 2026</span></p>
+      <h1 class="mast" id="cover-h"><span>Social</span><span><i>Stream</i></span><span class="sr" data-en="Interest media agency. Social media is dead. Interest has taken its place.">Interest media ügynökség. A social media meghalt. Az érdeklődés vette át a helyét.</span></h1>
+      <div class="coverlines" aria-hidden="true">
+        <p class="beat" data-beat="0" data-en="Social media is dead.">A social media meghalt.</p>
+        <p class="beat" data-beat="1" data-en="Interest has taken its place.">Az érdeklődés vette át a helyét.</p>
+        <p class="beat" data-beat="2" data-en="The stream stayed. What flows in it changed.">A stream maradt. Ami benne folyik, az változott.</p>
+        <p class="beat" data-beat="3" data-en="We win in this age.">Mi ebben a korban győzünk.</p>
+      </div>
+      <div class="act">
+        <a class="btn" href="#audit" data-en="Request my free audit">Kérem az ingyenes auditot</a>
+        <a class="btn btn--ghost" href="#kialtvany" data-en="Read the manifesto">Elolvasom a kiáltványt</a>
+      </div>
+    </div>
+    <div class="photo">
+      <div class="film-box" data-film-box>
+        <img class="film-poster" src="assets/film-tall-poster.jpg" alt="" width="1080" height="1920" fetchpriority="high">
+        <video data-film muted loop playsinline preload="none" aria-hidden="true" data-breakpoint="900"
+          data-src="assets/film-tall-1080.mp4" data-src-m="assets/film-tall-720.mp4" data-poster="assets/film-tall-poster.jpg"
+          data-beats="[[23.25,2.2],[4.85,7.8],[10.45,13.6],[16.25,20.1]]"></video>
+      </div>
+      <button class="film-toggle" type="button" data-film-toggle aria-label="Film megállítása"></button>
+      <p class="cap" data-en="Cover: FlyX Tenerife, our client">Borító: FlyX Tenerife, ügyfelünk</p>
+    </div>
+  </section>
+
+  <section class="sec" id="kialtvany" data-sc-act="flow" aria-labelledby="man-h">
+    <div class="wrap spread manifest">
+      <p class="kicker label"><span data-en="ii. Manifesto">ii. Kiáltvány</span><span data-en="Yes, our name still says social.">Igen, a nevünkben még ott a social.</span></p>
+      <h2 class="disp" id="man-h" data-sc-in data-en="The stream stayed. What flows in it changed.">A stream maradt. Ami benne folyik, az változott.</h2>
+      <div class="text" data-sc-in data-sc-stagger="90">
+        <p class="body" data-en="For ten years, what mattered was how many followers you had. That era is over. The feed no longer shows who you follow, but what genuinely interests you.">Tíz évig az számított, hány követőd van. Ez a kor véget ért. A feed már nem azt mutatja, kit követsz, hanem azt, ami valóban érdekel.</p>
+        <p class="body" data-en="Most businesses still play by the old rules: post and hope. We don't build visibility, we build a system that turns interest into revenue. And it shows in every number.">A legtöbb vállalkozás még a régi kor szabályaival játszik: posztol és reménykedik. Mi nem láthatóságot építünk, hanem rendszert, ami az érdeklődést bevétellé alakítja. És ez minden számon látszik.</p>
+      </div>
+      <figure data-sc-in><img src="assets/band-screen.jpg" alt="Nézők sziluettje a FlyX Tenerife vásznán futó hegyek előtt" data-en-alt="Silhouettes of viewers in front of the mountains on the FlyX Tenerife screen" width="2400" height="1030" loading="lazy"><figcaption class="cap" data-en="FlyX Tenerife, the auditorium">FlyX Tenerife, a nézőtér</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="sec laws" id="torvenyek" data-sc-act="flow" aria-labelledby="laws-h">
+    <div class="wrap spread">
+      <p class="kicker label"><span data-en="iii. Three laws">iii. Három törvény</span><span data-en="In the old age you liked. In the new age you save.">A régi korban lájkoltál. Az új korban mentesz.</span></p>
+      <h2 class="sr" id="laws-h" data-en="Three laws of the new age">Az új kor három törvénye</h2>
+      <p class="intro" data-sc-in data-en="Save whatever interests you on these pages. We bring it to your audit.">Mentsd el, ami érdekel ezeken az oldalakon. Az auditra visszük.</p>
+      <article class="essay" data-sc-in><span class="num" aria-hidden="true">I.</span><h3 data-en="Follower count is a relic of the old age.">A követőszám a régi kor relikviája.</h3><div class="r"><p class="body" data-en="10,000 followers, 40 likes. Sound familiar? In the new age every post starts with a clean slate. What matters is not how many follow you, but how many watch to the end.">10 000 követő, 40 kedvelés: ismerős? Az új korban minden poszt tiszta lappal indul. Nem az számít, hányan követnek, hanem hogy hányan nézik végig.</p><button class="save" type="button" data-save="law1" data-topic="social" aria-pressed="false"><svg viewBox="0 0 13 16" aria-hidden="true"><path d="M1 1h11v14l-5.5-4L1 15z"/></svg><span data-en="Save">Mentés</span></button></div></article>
+      <article class="essay" data-sc-in><span class="num" aria-hidden="true">II.</span><h3 data-en="Attention cannot be bought. Only earned.">A figyelmet nem lehet megvenni. Csak kiérdemelni.</h3><div class="r"><p class="body" data-en="For every impression you compete with the best creators, not with your competitors. What is interesting, the platform carries to millions for free. What is boring, no budget can save.">Minden megjelenésért a legjobb alkotókkal versenyzel, nem a konkurenciáddal. Ami érdekes, azt a platform ingyen viszi el milliókhoz. Ami unalmas, azt büdzsével sem lehet megmenteni.</p><button class="save" type="button" data-save="law2" data-topic="video" aria-pressed="false"><svg viewBox="0 0 13 16" aria-hidden="true"><path d="M1 1h11v14l-5.5-4L1 15z"/></svg><span data-en="Save">Mentés</span></button></div></article>
+      <article class="essay" data-sc-in><span class="num" aria-hidden="true">III.</span><h3 data-en="Whoever plays by the old rules loses.">Aki a régi szabályokkal játszik, veszít.</h3><div class="r"><p class="body" data-en="The new age's strategy: knowing from data what interests people, and building a system that turns interest into revenue.">Az új kor stratégiája: adatból tudni, mi érdekli az embereket, és rendszert építeni, ami az érdeklődést bevétellé alakítja.</p><button class="save" type="button" data-save="law3" data-topic="strategy" aria-pressed="false"><svg viewBox="0 0 13 16" aria-hidden="true"><path d="M1 1h11v14l-5.5-4L1 15z"/></svg><span data-en="Save">Mentés</span></button></div></article>
+    </div>
+  </section>
+
+  <section class="sec work" id="munkak" data-sc-act="flow" aria-labelledby="work-h">
+    <div class="wrap spread">
+      <p class="kicker label"><span data-en="iv. The work">iv. A munka</span><span data-en="Client: FlyX Tenerife">Ügyfél: FlyX Tenerife</span></p>
+      <div class="head" data-sc-in><h2 class="disp" id="work-h" data-en="This is what interest looks like.">Így néz ki <i>az érdeklődés.</i></h2></div>
+      <div class="plates" data-sc-in data-sc-stagger="80">
+        <figure class="plate"><img src="assets/ed-reach.jpg" alt="Néző a vászon felé nyúl vetítés közben" data-en-alt="A viewer reaching toward the screen during the show" width="1200" height="1500" loading="lazy"><figcaption class="cap" data-en="During the show">Vetítés közben</figcaption></figure>
+        <figure class="plate"><img src="assets/ed-pirate.jpg" alt="Kalóz jelmezes vendég a lobbiban" data-en-alt="A guest in a pirate costume in the lobby" width="1200" height="1500" loading="lazy"><figcaption class="cap" data-en="The lobby">A lobbi</figcaption></figure>
+        <figure class="plate"><img src="assets/ed-wall.jpg" alt="Gyerek apja vállán ír az aláírásfalra" data-en-alt="A child on her father's shoulders writing on the signature wall" width="1200" height="1500" loading="lazy"><figcaption class="cap" data-en="The signature wall">Az aláírásfal</figcaption></figure>
+        <figure class="plate"><img src="assets/ed-screen.jpg" alt="Kilátás a vászonra a székből" data-en-alt="The view of the screen from a seat" width="1200" height="1500" loading="lazy"><figcaption class="cap" data-en="Seat view">A székből</figcaption></figure>
+        <figure class="plate"><img src="assets/ed-dance.jpg" alt="Anya és fia táncol a bejáratnál" data-en-alt="A mother and son dancing at the entrance" width="1200" height="1500" loading="lazy"><figcaption class="cap" data-en="At the entrance">A bejáratnál</figcaption></figure>
+        <figure class="plate"><img src="assets/ed-cinema.jpg" alt="Közönség a nézőtéren" data-en-alt="The audience in the auditorium" width="1200" height="1500" loading="lazy"><figcaption class="cap" data-en="The auditorium">A nézőtér</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec svc" id="szolgaltatasok" data-sc-act="flow" aria-labelledby="svc-h">
+    <div class="wrap spread">
+      <p class="kicker label"><span data-en="v. Services">v. Szolgáltatások</span><span data-en="One team">Egy csapat</span></p>
+      <div class="head" data-sc-in data-sc-stagger="90">
+        <h2 class="disp" id="svc-h" data-en="Six services. One strategy.">Hat szolgáltatás. <i>Egy stratégia.</i></h2>
+        <p class="body" data-en="Not just ads: we cover your entire online presence, with a single team, in a system built on the rules of the new age.">Nem csak hirdetések: a teljes online jelenlétedet lefedjük, egyetlen csapattal, az új kor szabályaira épített rendszerben.</p>
+      </div>
+      <ul data-sc-in data-sc-stagger="60">
+        <li><div class="row"><h3 data-en="Video content production">Videó tartalomgyártás</h3><button class="save" type="button" data-save="svc-video" data-topic="video" aria-pressed="false"><svg viewBox="0 0 13 16" aria-hidden="true"><path d="M1 1h11v14l-5.5-4L1 15z"/></svg><span data-en="Save">Mentés</span></button></div><p data-en="Hooks, creative direction, production: creative is the engine of the campaign. We make it too, from concept to finished video.">Hookok, kreatív irány, gyártás: a kampány motorja a kreatív. Ezt mi is elkészítjük, a koncepciótól a kész videóig.</p></li>
+        <li><div class="row"><h3 data-en="Social media presence">Social média jelenlét</h3><button class="save" type="button" data-save="svc-social" data-topic="social" aria-pressed="false"><svg viewBox="0 0 13 16" aria-hidden="true"><path d="M1 1h11v14l-5.5-4L1 15z"/></svg><span data-en="Save">Mentés</span></button></div><p data-en="Feed, Stories, Reels, TikTok, with one strategy and one voice. Content calendar, community management, copywriting.">Feed, Stories, Reels, TikTok, egységes stratégiával, egységes hanggal. Content calendar, community management, copywriting.</p></li>
+        <li><div class="row"><h3 data-en="Paid advertising">Fizetett hirdetés</h3><button class="save" type="button" data-save="svc-ads" data-topic="ads" aria-pressed="false"><svg viewBox="0 0 13 16" aria-hidden="true"><path d="M1 1h11v14l-5.5-4L1 15z"/></svg><span data-en="Save">Mentés</span></button></div><p data-en="Meta, TikTok and Google campaigns that don't just spend the budget, they generate ROAS. Daily optimisation, A/B testing, scaling.">Meta, TikTok és Google kampányok, amik nem csak elköltik a büdzsét, hanem ROAS-t termelnek. Napi optimalizálás, A/B tesztelés, skálázás.</p></li>
+        <li><div class="row"><h3 data-en="Website &amp; landing pages">Weboldal &amp; landing</h3><button class="save" type="button" data-save="svc-web" data-topic="web" aria-pressed="false"><svg viewBox="0 0 13 16" aria-hidden="true"><path d="M1 1h11v14l-5.5-4L1 15z"/></svg><span data-en="Save">Mentés</span></button></div><p data-en="Fast, mobile-optimised landing pages and websites that convert, not just look good.">Gyors, mobilra optimalizált landingek és weboldalak, amik konvertálnak, nem csak jól néznek ki.</p></li>
+        <li><div class="row"><h3 data-en="Automation &amp; email">Automatizáció &amp; e-mail</h3><button class="save" type="button" data-save="svc-auto" data-topic="auto" aria-pressed="false"><svg viewBox="0 0 13 16" aria-hidden="true"><path d="M1 1h11v14l-5.5-4L1 15z"/></svg><span data-en="Save">Mentés</span></button></div><p data-en="Lead follow-up, email sequences, automated funnels. We set it up once, then it works for you.">Lead-követés, e-mail szekvenciák, automatizált tölcsérek. Egyszer beállítjuk, utána dolgozik helyetted.</p></li>
+        <li><div class="row"><h3 data-en="Growth strategy">Növekedési stratégia</h3><button class="save" type="button" data-save="svc-strategy" data-topic="strategy" aria-pressed="false"><svg viewBox="0 0 13 16" aria-hidden="true"><path d="M1 1h11v14l-5.5-4L1 15z"/></svg><span data-en="Save">Mentés</span></button></div><p data-en="Strategy-level marketing consulting: campaign strategy, funnel audit, market positioning. We are partners, not contractors.">Stratégiai szintű marketing tanácsadás: kampánystratégia, funnel audit, piaci pozicionálás. Partnerek vagyunk, nem kivitelezők.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec nums" id="eredmenyek" data-sc-act="flow" aria-labelledby="res-h">
+    <div class="wrap spread">
+      <p class="kicker label"><span data-en="vi. Numbers">vi. Számok</span><span data-en="300M+ Ft in budget managed since 2022">300M+ Ft kezelt büdzsé 2022 óta</span></p>
+      <div class="head" data-sc-in><h2 class="disp" id="res-h" data-en="Not promises. Numbers.">Nem ígéretek. <i>Számok.</i></h2></div>
+      <div class="figs" data-sc-in data-sc-stagger="80">
+        <div class="fig"><b><span data-count="81">81</span><small>×</small></b><p data-en="ROAS, our best result in an e-commerce campaign">ROAS, a legjobb eredményünk e-commerce kampányban</p><p class="label" data-en="Door webshop, Google Performance Max">Ajtó webshop, Google Performance Max</p><button class="save" type="button" data-save="r-81" data-topic="ads" aria-pressed="false"><svg viewBox="0 0 13 16" aria-hidden="true"><path d="M1 1h11v14l-5.5-4L1 15z"/></svg><span data-en="Save">Mentés</span></button></div>
+        <div class="fig"><b><span data-count="79">79</span><small>M Ft</small></b><p data-en="revenue in one week, from a B2B Meta campaign">bevétel egy hét alatt, B2B Meta kampányból</p><p class="label" data-en="Industrial hall builder">Csarnoképítő ügyfél</p><button class="save" type="button" data-save="r-79" data-topic="ads" aria-pressed="false"><svg viewBox="0 0 13 16" aria-hidden="true"><path d="M1 1h11v14l-5.5-4L1 15z"/></svg><span data-en="Save">Mentés</span></button></div>
+        <div class="fig"><b><span data-count="23">23</span><small>×</small></b><p data-en="ROAS in a holiday campaign, 8M+ Ft revenue">ROAS ünnepi kampányban, 8M+ Ft bevétel</p><p class="label" data-en="Watch webshop">Karóra webshop</p><button class="save" type="button" data-save="r-23" data-topic="ads" aria-pressed="false"><svg viewBox="0 0 13 16" aria-hidden="true"><path d="M1 1h11v14l-5.5-4L1 15z"/></svg><span data-en="Save">Mentés</span></button></div>
+        <div class="fig"><b><span data-count="105">105</span><small>Ft</small></b><p data-en="per registrant: ~5,700 registrants from 600K Ft spend">jelentkezőnként: ~5700 jelentkező 600K Ft költésből</p><p class="label" data-en="Healthcare webinar">Egészségügyi webinár</p><button class="save" type="button" data-save="r-105" data-topic="auto" aria-pressed="false"><svg viewBox="0 0 13 16" aria-hidden="true"><path d="M1 1h11v14l-5.5-4L1 15z"/></svg><span data-en="Save">Mentés</span></button></div>
+      </div>
+      <div class="letters" data-sc-in data-sc-stagger="90">
+        <blockquote class="letter"><p data-en="“We had already switched off our Facebook ads once because they simply weren't worth it. After meeting Olivér we gave it another chance. There were purchases from launch day, and he produced numbers we had never seen before.”">„Egyszer már leállítottuk a Facebook hirdetéseinket, mert egyszerűen nem érte meg. Miután megismertük Olivért, adtunk egy újabb esélyt. Már az induláskor is volt vásárlás – olyan számokat produkált, amit eddig nem is láttunk.”</p><footer><b>Péter</b>, <span data-en="Hoofbútor furniture webshop">Hoofbútor bútor webshop</span></footer></blockquote>
+        <blockquote class="letter"><p data-en="“I wanted a professional team after launch. They build professional campaigns across Facebook/Instagram, the website and ads. Results came quickly, and I had nothing to do.”">„Profi csapatot szerettem volna az indulás után. Mind Facebook/Instagram, mind weboldal és hirdetés területén profi kampányokat készítenek. Rövid időn belül jöttek az eredmények – nekem semmi dolgom nem volt velük.”</p><footer><b>Rita</b>, Rita's Beauty Corner</footer></blockquote>
+        <blockquote class="letter"><p data-en="“Every December we dreaded ad prices. This year, for the first time, the holiday season felt like it was working for us, not against us.”">„Minden decemberben rettegtünk a hirdetési áraktól. Idén először éreztük úgy, hogy az ünnepi szezon nekünk dolgozik – nem ellenünk.”</p><footer><b data-en="Watch webshop">Karóra webshop</b>, <span data-en="holiday campaign">ünnepi kampány</span></footer></blockquote>
+        <blockquote class="letter"><p data-en="“SocialStream built my website professionally. Everyone loved the polished, easy-to-follow content! I can only recommend them.”">„A SocialStream profi módon készítette el a weboldalam. Mindenkinek tetszett az igényes és könnyen áttekinthető tartalom! Csak ajánlani tudom őket.”</p><footer><b>János</b>, EJ Massage Therapies</footer></blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec people" id="rolunk" data-sc-act="flow" aria-labelledby="ppl-h">
+    <div class="wrap spread">
+      <p class="kicker label"><span data-en="vii. People">vii. Emberek</span><span data-en="Tenerife and Budapest">Tenerife és Budapest</span></p>
+      <figure class="f" data-sc-in><img src="assets/oliver-founder.jpg" alt="Olivér, a SocialStream alapítója" data-en-alt="Olivér, founder of SocialStream" width="1000" height="1250" loading="lazy"></figure>
+      <div class="story" data-sc-in data-sc-stagger="90">
+        <h2 class="disp" id="ppl-h" data-en="I saw the shift from the inside.">A korszakváltást <i>belülről</i> láttam.</h2>
+        <p class="body" data-en="I landed my first client while studying in Denmark. Then, as a Meta Marketing Pro, I saw up close how the most serious brands think when there is real money in a campaign, and watched the old rules lose their force before our eyes.">Dániai tanulmányaim alatt szereztem meg az első ügyfelemet. Aztán Meta Marketing Pro-ként közelről láttam, hogyan gondolkodnak a legkomolyabb márkák, amikor valódi pénz van a kampányban, és azt is, ahogy a régi szabályok a szemünk előtt érvényüket vesztik.</p>
+        <p class="body" data-en="I founded SocialStream in 2022 because very few businesses here had been given this way of thinking. Since then we have managed 300M+ Ft in budget, with a team of specialists and fanatics.">2022-ben azért alapítottam a SocialStreamet, mert ezt a gondolkodásmódot itthon nagyon kevés vállalkozás kapta meg eddig. Azóta 300M+ Ft büdzsét kezeltünk, specialistákból és fanatikusokból álló csapattal.</p>
+        <p class="label" data-en="Olivér, founder">Olivér, alapító</p>
+      </div>
+      <div class="team" data-sc-in data-sc-stagger="90">
+        <article class="person"><img src="assets/oliver.jpg" alt="Olivér" width="800" height="1000" loading="lazy"><h3>Olivér</h3><p class="role" data-en="Founder &amp; campaign strategist">Alapító &amp; kampánystratéga</p><p data-en="He reads the rules of the new age: he decides from data where to invest attention, and why anyone will watch it.">Ő olvassa az új kor szabályait: adatból dönti el, mibe fektessük a figyelmet, és miért fogja azt bárki megnézni.</p></article>
+        <article class="person"><img src="assets/david.jpg" alt="David" width="800" height="1000" loading="lazy"><h3>David</h3><p class="role" data-en="Creative &amp; content production">Kreatív &amp; tartalomgyártás</p><p data-en="Whatever stops the thumb is his handiwork. Hooks, shooting, creative direction, in the language of the new age.">Ami megállítja a hüvelykujjat, az ő keze munkája. Hookok, forgatás, kreatív irány, az új kor nyelvén.</p></article>
+        <article class="person"><img src="assets/lidi.jpg" alt="Lidi" width="800" height="1000" loading="lazy"><h3>Lidi</h3><p class="role" data-en="Production &amp; editing">Produkció &amp; szerkesztés</p><p data-en="The engine of production. Raw footage becomes finished content in her hands: editing, rhythm, precision, on deadline.">A gyártás motorja. Nála áll össze nyersanyagból kész tartalom: vágás, ritmus, precizitás, határidőre.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec fit" id="kivel" data-sc-act="flow" aria-labelledby="fit-h">
+    <div class="wrap spread">
+      <div class="head" data-sc-in><h2 class="disp" id="fit-h" data-en="We don't work with everyone. That is the point.">Nem dolgozunk mindenkivel. <i>Pont ez a lényeg.</i></h2></div>
+      <div class="yes" data-sc-in><h3 data-en="We work with brands that">Akikkel dolgozunk</h3><ul>
+        <li data-en="have reliable, stable revenue.">Megbízható és stabil bevétellel rendelkeznek.</li>
+        <li data-en="are aiming for long-term success.">Hosszú távú sikerre törekszenek.</li>
+        <li data-en="are willing to commit fully to the collaboration.">Hajlandóak teljes mértékben elköteleződni az együttműködés során.</li>
+        <li data-en="see marketing as an investment, and are willing to invest in it.">A marketinget befektetésnek tekintik, és hajlandóak erre áldozni.</li>
+        <li data-en="know their market and are sure their product or service deserves to exist.">Ismerik a piac igényeit, és biztosak termékeik vagy szolgáltatásaik létjogosultságában.</li></ul></div>
+      <div class="no" data-sc-in><h3 data-en="We are not right for brands that">Akiknek nem vagyunk jó választás</h3><ul>
+        <li data-en="only want a subcontractor to execute tasks without a word, like a machine.">Csak egy alvállalkozót keresnek, aki szó nélkül, gépként megcsinálja a kiadott feladatokat.</li>
+        <li data-en="are not looking to grow and are content where they are.">Nem törekednek a fejlődésre, és megelégednek a jelenlegi helyzetükkel.</li>
+        <li data-en="are not yet stable and are constantly in an uncertain position.">Vállalkozásuk még nem stabil, és folyamatosan bizonytalan helyzetben vannak.</li>
+        <li data-en="believe online marketing can conjure overnight success.">Úgy gondolják, hogy az online marketinggel egy éjszaka alatti sikert lehet varázsolni.</li>
+        <li data-en="are looking for cheap half-solutions with mediocre results.">Olcsó félmegoldásokat keresnek, középszerű eredményekkel.</li></ul></div>
+      <p class="seal" data-sc-in data-en="At most two new partners a month. Partners, not contractors.">Havonta legfeljebb két új partner. Partnerek vagyunk, nem kivitelezők.</p>
+    </div>
+  </section>
+
+  <section class="sec reply" id="audit" data-sc-act="flow" aria-labelledby="au-h">
+    <div class="wrap spread">
+      <p class="kicker label"><span data-en="viii. The audit">viii. Az audit</span><span data-en="No template proposals. No obligation.">Nincs sablonajánlat. Nincs kötelezettség.</span></p>
+      <div class="head" data-sc-in data-sc-stagger="90">
+        <h2 class="disp" id="au-h" data-en="Your market already lives in the new age. Does your marketing?">A piacod már az új korban jár. <i>A marketinged is?</i></h2>
+        <p class="body" data-en="A free 30-minute audit: we look at your campaigns, your landing page and your offer. We tell you honestly where you are still playing by the old rules, before you pay anything.">30 perces ingyenes audit: megnézzük a kampányaidat, a landing page-edet, az ajánlatodat. Megmondjuk őszintén, hol játszol még a régi kor szabályaival, még fizetés előtt.</p>
+        <p class="label" data-en="At most two new partners a month.">Havonta legfeljebb két új partner.</p>
+      </div>
+      <form class="app" id="appform" method="post" novalidate>
+        <div class="field"><label for="f-name" data-en="Your name">Neved</label><input id="f-name" name="name" autocomplete="name" required><span class="err" id="e-name"></span></div>
+        <div class="field"><label for="f-email" data-en="Email">E-mail</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="err" id="e-email"></span></div>
+        <div class="field"><label for="f-brand" data-en="Company or brand">Cég vagy márka</label><input id="f-brand" name="brand" autocomplete="organization" required><span class="err" id="e-brand"></span></div>
+        <div class="field"><label for="f-web" data-en="Website or Instagram">Weboldal vagy Instagram</label><input id="f-web" name="web" autocomplete="url"><span class="err"></span></div>
+        <div class="field"><label for="f-budget" data-en="Monthly marketing budget">Havi marketing büdzsé</label><select id="f-budget" name="budget"><option value="" data-en="Choose a range">Válassz sávot</option><option value="lt300" data-en="Under 300K Ft">300K Ft alatt</option><option value="300-1m">300K–1M Ft</option><option value="1-3m">1M–3M Ft</option><option value="gt3m" data-en="Over 3M Ft">3M Ft felett</option></select><span class="err"></span></div>
+        <div class="field"><label for="f-goal" data-en="Main goal">Fő cél</label><select id="f-goal" name="goal"><option value="" data-en="Choose a goal">Válassz célt</option><option value="sales" data-en="More sales (e-commerce)">Több eladás (webshop)</option><option value="leads" data-en="More leads and enquiries">Több érdeklődő és ajánlatkérés</option><option value="brand" data-en="Brand and content">Márka és tartalom</option><option value="web" data-en="Website or landing page">Weboldal vagy landing</option></select><span class="err"></span></div>
+        <fieldset><legend data-en="What interests you">Ami érdekel</legend><div class="chips" id="formChips"></div><p class="carry-note" id="carryNote" hidden></p></fieldset>
+        <div class="field full"><label for="f-msg" data-en="Where are you now?">Hol tartasz most?</label><textarea id="f-msg" name="msg"></textarea><span class="err"></span></div>
+        <div class="form-act">
+          <button class="btn" type="submit" data-en="Request my free audit">Kérem az ingyenes auditot</button>
+          <span class="direct"><span data-en="Or write to us directly:">Vagy írj közvetlenül:</span> <a class="js-mail" href="mailto:hello@socialstream.hu">hello@socialstream.hu</a><button type="button" class="copy-mini" id="copyAddr" data-en="Copy address">Cím másolása</button></span>
+        </div>
+        <div class="sent" id="sent" hidden aria-live="polite"></div>
+      </form>
+      <footer class="foot" style="grid-column:1/-1">
+        <span data-en="© 2026 SocialStream. Interest media agency, Tenerife and Budapest.">© 2026 SocialStream. Interest media ügynökség, Tenerife és Budapest.</span>
+        <span>hello@socialstream.hu</span>
+      </footer>
+    </div>
+  </section>
+
+</main>
+
+<div class="tray" id="tray" hidden>
+  <div class="panel" id="trayPanel" hidden>
+    <h3 data-en="Saved">Mentett</h3>
+    <ul id="trayList"></ul>
+    <p class="empty" id="trayEmpty" data-en="Nothing saved yet. Use Save next to anything that interests you.">Még semmit nem mentettél. Használd a Mentés gombot bárminél, ami érdekel.</p>
+    <a class="btn" href="#audit" id="trayCarry" data-en="Take it to my audit">Viszem az auditba</a>
+  </div>
+  <button type="button" id="trayBtn" aria-expanded="false" aria-controls="trayPanel"><b id="trayN">0</b><span data-en="saved">mentett</span></button>
+</div>
+
+<script src="scrollcraft.js"></script>
+<script src="site.js"></script>
+<script>
+/* Saving, not liking. Every save carries its topic into the audit form and its
+   title into the email, so the reader arrives at the form with their own
+   shortlist. Stored only in this browser. */
+(function () {
+  var SS = window.SS, $ = SS.$, $$ = SS.$$, saved = [];
+  try { saved = JSON.parse(sessionStorage.getItem('ss-saved') || '[]'); } catch (e) {}
+  var btns = $$('.save'), list = $('#trayList'), n = $('#trayN'), panel = $('#trayPanel'), tbtn = $('#trayBtn');
+  function titleOf(b) {
+    var h = b.closest('li, .essay, .fig'); if (!h) return b.dataset.save;
+    if (h.classList.contains('fig')) {
+      // the final figure, not whatever the counter shows mid-count, plus its client
+      var u = h.querySelector('b small').textContent.trim(), l = h.querySelector('.label');
+      return h.querySelector('[data-count]').dataset.count + (/^[×M]/.test(u) ? '' : ' ') + u + (l ? ', ' + l.textContent.trim() : '');
+    }
+    var t = h.querySelector('h3'); return t ? t.textContent.trim() : b.dataset.save;
+  }
+  function topics() { var t = []; saved.forEach(function (s) { if (t.indexOf(s.topic) < 0) t.push(s.topic); }); return t; }
+  function render() {
+    btns.forEach(function (b) { var on = saved.some(function (s) { return s.id === b.dataset.save; }); b.setAttribute('aria-pressed', String(on)); b.querySelector('span').textContent = on ? (SS.L === 'en' ? 'Saved' : 'Mentve') : (SS.L === 'en' ? 'Save' : 'Mentés'); });
+    n.textContent = String(saved.length);
+    document.getElementById('tray').hidden = saved.length === 0 && panel.hidden;
+    list.innerHTML = saved.map(function (s) { var b = btns.filter(function (x) { return x.dataset.save === s.id; })[0]; return '<li><span>' + SS.esc(b ? titleOf(b) : s.id) + '</span><button type="button" data-rm="' + s.id + '">' + (SS.L === 'en' ? 'Remove' : 'Törlés') + '</button></li>'; }).join('');
+    $('#trayEmpty').hidden = saved.length > 0;
+    try { sessionStorage.setItem('ss-saved', JSON.stringify(saved)); } catch (e) {}
+  }
+  /* A save adds its topic to the form; removing one takes away only the topics
+     no remaining save holds, so whatever the reader ticked in the form stays. */
+  function carry(before) {
+    if (!SS.setInterests) return;
+    var now = topics();
+    var ids = SS.chosen.filter(function (id) { return before.indexOf(id) < 0 || now.indexOf(id) > -1; });
+    now.forEach(function (id) { if (ids.indexOf(id) < 0) ids.push(id); });
+    SS.setInterests(ids, saved.length ? { hu: 'A mentéseidből hoztuk át, nyugodtan módosítsd.', en: 'Carried over from your saves: change anything you like.' } : null);
+  }
+  function change(fn) { var before = topics(); fn(); render(); carry(before); }
+  btns.forEach(function (b) { b.addEventListener('click', function () { change(function () {
+    var i = saved.findIndex(function (s) { return s.id === b.dataset.save; });
+    if (i > -1) saved.splice(i, 1); else saved.push({ id: b.dataset.save, topic: b.dataset.topic });
+  }); }); });
+  list.addEventListener('click', function (e) { var r = e.target.closest('[data-rm]'); if (!r) return; change(function () { saved = saved.filter(function (s) { return s.id !== r.dataset.rm; }); }); });
+  tbtn.addEventListener('click', function () { var open = panel.hidden; panel.hidden = !open; tbtn.setAttribute('aria-expanded', String(open)); });
+  $('#trayCarry').addEventListener('click', function () { panel.hidden = true; tbtn.setAttribute('aria-expanded', 'false'); });
+  SS.formExtra = function () { return saved.length ? (SS.L === 'en' ? 'Saved on the site: ' : 'Az oldalon mentettem: ') + saved.map(function (s) { var b = btns.filter(function (x) { return x.dataset.save === s.id; })[0]; return b ? titleOf(b) : s.id; }).join('; ') : ''; };
+  SS.onLang(render);
+  // contents rail: the chapter in view
+  var links = $$('#toc a'), secs = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+  function spy() { var cur = 0; secs.forEach(function (s, i) { if (s && s.getBoundingClientRect().top < innerHeight * 0.4) cur = i; }); links.forEach(function (a, i) { a.setAttribute('aria-current', String(i === cur)); }); }
+  addEventListener('scroll', spy, { passive: true }); spy();
+  SS.start();
+  render(); carry([]);
+})();
+ScrollCraft.mount(document.body);
+</script>
+</body>
+</html>

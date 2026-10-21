@@ -12,5 +12,8 @@ clips under `~/Movies/CapCut/funny assets/drive*`, "interveiw 6.0 j.mp4",
 
 The grade is one 33-point LUT built in `makeLUT` (filmic contrast, petrol
 shadows, amber highlights, violet screens pulled to teal, greens toward teal).
+`GRADE=warm ./cut ...` swaps in `makeWarmLUT` (soft filmic contrast, 20% less
+saturation, warm shadows and highlights, no vignette), the grade used for the
+Maison, Journal and Noir loops and stills; see `../../socialstream-maison/video/`.
 `sheet.swift` makes timestamped contact sheets for picking shots; `img.swift`
 cuts the stream tiles and portraits.

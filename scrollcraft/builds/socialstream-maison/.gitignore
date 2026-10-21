@@ -1,0 +1,6 @@
+node_modules
+node_modules/
+package-lock.json
+lab/*
+!lab/func.mjs
+dist/
