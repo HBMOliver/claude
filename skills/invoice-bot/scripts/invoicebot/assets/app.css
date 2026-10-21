@@ -1,0 +1,197 @@
+/* Invoice Bot admin panel. Ledger paper, ink and rubber stamps. */
+@font-face { font-family: 'Young Serif'; src: url(/static/fonts/YoungSerif-Regular.ttf) format('truetype'); font-display: swap; }
+@font-face { font-family: 'Instrument Sans'; src: url(/static/fonts/InstrumentSans-Regular.ttf) format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Instrument Sans'; src: url(/static/fonts/InstrumentSans-Bold.ttf) format('truetype'); font-weight: 600 700; font-display: swap; }
+
+:root {
+  --paper: #F3F6F1;
+  --sheet: #FFFFFF;
+  --ink: #1F2A44;
+  --ink-soft: #586379;
+  --rule: #D5E1D8;
+  --rule-strong: #9DB8A6;
+  --green: #2F6B4F;
+  --green-wash: #E2EEE6;
+  --ochre: #8C6210;
+  --ochre-wash: #F5ECD8;
+  --red: #B3261E;
+  --red-wash: #F8E4E2;
+  --blue: #2B4C9B;
+  --serif: 'Young Serif', Georgia, 'Times New Roman', serif;
+  --sans: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #131916; --sheet: #1A221E; --ink: #E3E9E1; --ink-soft: #A2AEA6; --rule: #2B3832; --rule-strong: #4A6355;
+    --green: #7FC49E; --green-wash: #1E3328; --ochre: #E2B661; --ochre-wash: #372C15; --red: #F2877D; --red-wash: #3C1F1C;
+    --blue: #A2B9F2; color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 var(--sans); }
+a { color: var(--blue); text-underline-offset: 2px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--serif); font-weight: 400; line-height: 1.2; margin: 0 0 .4em; }
+h1 { font-size: 30px; }
+h2 { font-size: 20px; margin-top: 1.6em; }
+p { margin: 0 0 1em; max-width: 70ch; }
+small, .muted { color: var(--ink-soft); }
+.num, .fig { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* top bar */
+.top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 22px; padding: 12px 24px; background: var(--sheet);
+  border-bottom: 1px solid var(--rule-strong); }
+.brand { font-family: var(--serif); font-size: 21px; color: var(--ink); text-decoration: none; margin-right: 6px; }
+.brand span { display: block; font-family: var(--sans); font-size: 12px; color: var(--ink-soft); margin-top: -2px; }
+.top nav { display: flex; flex-wrap: wrap; gap: 4px 18px; flex: 1; }
+.top nav a { color: var(--ink); text-decoration: none; padding: 4px 0; border-bottom: 2px solid transparent; }
+.top nav a:hover, .top nav a[aria-current=page] { border-bottom-color: var(--green); }
+.top nav .count { display: inline-block; min-width: 20px; padding: 0 6px; margin-left: 4px; border-radius: 10px; font-size: 12px;
+  font-weight: 700; text-align: center; background: var(--red-wash); color: var(--red); }
+.top nav .count.waiting { background: var(--ochre-wash); color: var(--ochre); }
+.top .search input { width: 230px; }
+.me { display: flex; align-items: center; gap: 10px; color: var(--ink-soft); font-size: 14px; }
+
+main { max-width: 1200px; margin: 0 auto; padding: 28px 24px 64px; }
+.flash { padding: 10px 14px; margin: 0 0 22px; border-left: 4px solid var(--green); background: var(--green-wash); max-width: 80ch; }
+.flash.error { border-color: var(--red); background: var(--red-wash); }
+
+/* forms */
+input, select, button, textarea { font: inherit; color: inherit; }
+input[type=text], input[type=search], input[type=password], input[type=date], input[type=file], select {
+  padding: 6px 9px; border: 1px solid var(--rule-strong); border-radius: 4px; background: var(--sheet); min-height: 36px; }
+button, .button { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; min-height: 36px; border-radius: 4px; cursor: pointer;
+  border: 1px solid var(--green); background: var(--green); color: #fff; text-decoration: none; font-weight: 600; }
+@media (prefers-color-scheme: dark) { button, .button { color: #0E1A13; } }
+button.quiet, .button.quiet { background: transparent; color: var(--green); }
+button.danger { background: transparent; border-color: var(--red); color: var(--red); }
+button.link { background: none; border: 0; padding: 0; min-height: 0; color: var(--blue); font-weight: 400; text-decoration: underline; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 14px 0 20px; }
+.inline { display: inline; }
+.actions.tight { margin: 0; flex-wrap: nowrap; }
+.narrow { max-width: 420px; }
+input.full { width: 100%; margin-bottom: 12px; }
+label { display: block; font-size: 13px; color: var(--ink-soft); margin-bottom: 3px; }
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; max-width: 640px; }
+.fields .wide { grid-column: 1 / -1; }
+.fields input, .fields select { width: 100%; }
+.hint { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+
+/* the ledger */
+.sheet { background: var(--sheet); border: 1px solid var(--rule); border-radius: 3px; overflow-x: auto; }
+table.ledger { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.ledger th { text-align: left; font-weight: 600; font-size: 13px; color: var(--ink-soft); padding: 9px 12px;
+  border-bottom: 1px solid var(--rule-strong); white-space: nowrap; }
+.ledger td { padding: 9px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.ledger tbody tr:hover { background: color-mix(in srgb, var(--green-wash) 55%, transparent); }
+.ledger .num { text-align: right; }
+.ledger td.c-file, .ledger td.c-original { font-size: 13px; color: var(--ink-soft); min-width: 190px; overflow-wrap: anywhere; }
+.ledger .c-number, .ledger .c-paid_on, .ledger .c-due, .ledger .c-added, .ledger .c-amount { white-space: nowrap; }
+.ledger tfoot td { font-weight: 700; border-bottom: 0; }
+.ledger tfoot tr:last-child td.num { border-bottom: 3px double var(--ink); }
+.ledger tfoot td.label { text-align: right; color: var(--ink-soft); font-weight: 400; }
+.overdue { color: var(--red); font-weight: 600; }
+.empty { padding: 26px 16px; color: var(--ink-soft); text-align: center; }
+
+/* rubber stamps: the one loud thing */
+.stamp { display: inline-block; font-family: var(--serif); font-size: 12px; letter-spacing: .09em; text-transform: uppercase; line-height: 1.3;
+  padding: 1px 7px; border: 2px solid currentColor; border-radius: 4px; transform: rotate(-3deg); color: var(--green); white-space: nowrap; }
+.stamp.unpaid { color: var(--ochre); }
+.stamp.check { color: var(--red); }
+.stamp.other { color: var(--ink-soft); }
+.stamp.big { font-size: 26px; padding: 4px 16px 3px; border-width: 3px; transform: rotate(-6deg); }
+.stamp.big small { display: block; font-family: var(--sans); font-size: 12px; letter-spacing: 0; text-transform: none; color: inherit; text-align: center; }
+.stamp.fresh { animation: stamp .22s ease-out; }
+@keyframes stamp { from { transform: rotate(-6deg) scale(1.6); opacity: 0; } to { transform: rotate(-6deg) scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .stamp.fresh { animation: none; } }
+
+/* overview */
+.lede { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 28px; align-items: start; margin-bottom: 10px; }
+.month-total { list-style: none; margin: 4px 0 0; padding: 0 0 4px; display: inline-block; text-align: right;
+  font-family: var(--serif); font-size: 34px; line-height: 1.2; border-bottom: 3px double var(--ink); }
+.month-total + .muted { margin-top: 12px; }
+.todo { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule-strong); }
+.todo li { padding: 11px 0; border-bottom: 1px solid var(--rule); display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+
+/* the filing cabinet: years x months */
+.cabinet { display: grid; gap: 0; background: var(--sheet); border: 1px solid var(--rule); border-radius: 3px; }
+.year { display: grid; grid-template-columns: 76px repeat(12, minmax(0, 1fr)) 104px; border-bottom: 1px solid var(--rule); }
+.year:last-child { border-bottom: 0; }
+.year > .y { font-family: var(--serif); font-size: 19px; padding: 12px 12px; align-self: center; }
+.year > .zip { align-self: center; padding: 0 12px; font-size: 13px; text-align: right; white-space: nowrap; }
+.m { padding: 9px 8px; border-left: 1px solid var(--rule); min-height: 64px; text-decoration: none; color: var(--ink); display: block; }
+.m b { display: block; font-weight: 600; font-size: 13px; }
+.m span { display: block; font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+a.m:hover { background: var(--green-wash); }
+.m.none { color: var(--ink-soft); opacity: .55; }
+.m.now { box-shadow: inset 0 -3px 0 var(--green); }
+
+/* invoice page */
+.invoice { display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, 480px); gap: 28px; align-items: start; }
+.preview { background: var(--sheet); border: 1px solid var(--rule); border-radius: 3px; height: calc(100vh - 140px); min-height: 520px; position: sticky; top: 16px; }
+.preview iframe, .preview img { width: 100%; height: 100%; border: 0; object-fit: contain; }
+.title-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.title-row h1 { margin-bottom: 4px; }
+.path { font-size: 13px; color: var(--ink-soft); word-break: break-all; margin-bottom: 16px; }
+.issues { list-style: none; padding: 0; margin: 0 0 18px; }
+.issues li { padding: 7px 10px; margin-bottom: 6px; border-left: 3px solid var(--ochre); background: var(--ochre-wash); }
+.issues li.error { border-color: var(--red); background: var(--red-wash); }
+.issues li.info { border-color: var(--rule-strong); background: var(--paper); }
+.panel { background: var(--sheet); border: 1px solid var(--rule); border-radius: 3px; padding: 16px 18px; margin-bottom: 18px; }
+.panel h2 { margin-top: 0; font-size: 17px; }
+.history { list-style: none; padding: 0; margin: 0; font-size: 13px; }
+.history li { padding: 6px 0; border-bottom: 1px solid var(--rule); }
+pre.text { white-space: pre; overflow: auto; max-height: 420px; font-size: 11px; background: var(--paper); padding: 10px; border: 1px solid var(--rule); }
+.manual { color: var(--green); font-size: 12px; }
+
+/* login */
+.login { max-width: 360px; margin: 9vh auto; background: var(--sheet); border: 1px solid var(--rule); border-radius: 3px; padding: 28px; }
+.login h1 { font-size: 26px; }
+.login input { width: 100%; margin-bottom: 12px; }
+
+@media (max-width: 980px) {
+  .invoice, .lede { grid-template-columns: 1fr; }
+  .preview { position: static; height: 70vh; }
+  .year { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .year > .y, .year > .zip { grid-column: 1 / -1; text-align: left; padding: 10px 12px 4px; }
+  .m { border-top: 1px solid var(--rule); }
+}
+@media (max-width: 640px) {
+  .top { padding: 10px 16px; }
+  .top nav { order: 3; flex-wrap: nowrap; overflow-x: auto; width: 100%; padding-bottom: 2px; }
+  .top nav a { white-space: nowrap; }
+  .top .search { order: 4; width: 100%; }
+  .me { order: 2; margin-left: auto; }
+  .top nav { flex: 1 1 100%; }
+  /* ledger rows become two-line entries: supplier and amount, then date and number */
+  .sheet { overflow: visible; }
+  table.ledger, .ledger tbody, .ledger tfoot { display: block; }
+  .ledger thead { display: none; }
+  .ledger tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 11px 14px;
+    border-bottom: 1px solid var(--rule); grid-template-areas: "sup amt" "when num" "x1 x1" "x2 x2"; }
+  .ledger.selectable tr { grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "sel sup amt" "sel when num" "sel x1 x1" "sel x2 x2"; }
+  .ledger td { display: block; padding: 0; border: 0; }
+  .ledger td:empty { display: none; }
+  .ledger .c-select { grid-area: sel; padding-top: 2px; }
+  .ledger .c-supplier { grid-area: sup; font-weight: 600; }
+  .ledger .c-amount { grid-area: amt; text-align: right; }
+  .ledger .c-paid_on, .ledger .c-due, .ledger .c-added { grid-area: when; font-size: 14px; color: var(--ink-soft); }
+  .ledger .c-number { grid-area: num; text-align: right; font-size: 14px; color: var(--ink-soft); }
+  .ledger .c-status, .ledger .c-overdue { grid-area: x1; text-align: left; }
+  .ledger .c-issues, .ledger .c-markpaid { grid-area: x2; font-size: 14px; margin-top: 4px; }
+  .ledger .c-file, .ledger .c-how, .ledger .c-original { display: none; }
+  .ledger tfoot tr, .ledger.selectable tfoot tr { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "lab amt";
+    border-bottom: 0; padding-top: 6px; padding-bottom: 6px; }
+  .ledger tfoot td.label { grid-area: lab; text-align: right; color: var(--ink-soft); }
+  .ledger tfoot .c-select { display: none; }
+  main { padding: 20px 16px 48px; }
+  .top .search input { width: 100%; }
+  .fields { grid-template-columns: 1fr; }
+  h1 { font-size: 25px; }
+  .month-total { font-size: 27px; }
+}

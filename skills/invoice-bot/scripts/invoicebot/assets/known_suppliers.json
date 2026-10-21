@@ -1,0 +1,653 @@
+[
+ {
+  "name": "Google",
+  "aliases": [
+   "Google Ireland Limited",
+   "Google Ireland Ltd",
+   "Google Cloud EMEA Limited",
+   "Google Payment Ireland Limited",
+   "Google Commerce Limited",
+   "Google LLC"
+  ],
+  "domains": [
+   "google.com"
+  ]
+ },
+ {
+  "name": "Meta",
+  "aliases": [
+   "Meta Platforms Ireland Limited",
+   "Meta Platforms Ireland Ltd",
+   "Facebook Ireland Limited",
+   "Facebook Ireland Ltd",
+   "Meta Platforms, Inc."
+  ],
+  "domains": [
+   "facebook.com",
+   "facebookmail.com",
+   "meta.com"
+  ]
+ },
+ {
+  "name": "Microsoft",
+  "aliases": [
+   "Microsoft Ireland Operations Limited",
+   "Microsoft Ireland Operations Ltd",
+   "Microsoft Corporation"
+  ],
+  "domains": [
+   "microsoft.com"
+  ]
+ },
+ {
+  "name": "LinkedIn",
+  "aliases": [
+   "LinkedIn Ireland Unlimited Company",
+   "LinkedIn Ireland",
+   "LinkedIn Corporation"
+  ],
+  "domains": [
+   "linkedin.com"
+  ]
+ },
+ {
+  "name": "Apple",
+  "aliases": [
+   "Apple Distribution International Ltd",
+   "Apple Distribution International Limited",
+   "Apple Distribution International"
+  ],
+  "domains": [
+   "apple.com"
+  ]
+ },
+ {
+  "name": "AWS",
+  "aliases": [
+   "Amazon Web Services EMEA SARL",
+   "Amazon Web Services EMEA S.a.r.l.",
+   "Amazon Web Services, Inc."
+  ],
+  "domains": []
+ },
+ {
+  "name": "Amazon",
+  "aliases": [
+   "Amazon EU S.a r.l.",
+   "Amazon EU S.à r.l.",
+   "Amazon EU SARL",
+   "Amazon Services Europe S.a r.l."
+  ],
+  "domains": []
+ },
+ {
+  "name": "Adobe",
+  "aliases": [
+   "Adobe Systems Software Ireland Limited",
+   "Adobe Systems Software Ireland Ltd",
+   "Adobe Inc."
+  ],
+  "domains": [
+   "adobe.com"
+  ]
+ },
+ {
+  "name": "Canva",
+  "aliases": [
+   "Canva Pty Ltd",
+   "Canva Pty Limited"
+  ],
+  "domains": [
+   "canva.com"
+  ]
+ },
+ {
+  "name": "Figma",
+  "aliases": [
+   "Figma, Inc.",
+   "Figma Inc"
+  ],
+  "domains": [
+   "figma.com"
+  ]
+ },
+ {
+  "name": "Notion",
+  "aliases": [
+   "Notion Labs, Inc.",
+   "Notion Labs Inc"
+  ],
+  "domains": [
+   "makenotion.com",
+   "notion.so"
+  ]
+ },
+ {
+  "name": "Slack",
+  "aliases": [
+   "Slack Technologies Limited",
+   "Slack Technologies Ltd",
+   "Slack Technologies, LLC"
+  ],
+  "domains": [
+   "slack.com"
+  ]
+ },
+ {
+  "name": "Zoom",
+  "aliases": [
+   "Zoom Video Communications, Inc.",
+   "Zoom Video Communications Inc"
+  ],
+  "domains": [
+   "zoom.us"
+  ]
+ },
+ {
+  "name": "Dropbox",
+  "aliases": [
+   "Dropbox International Unlimited Company",
+   "Dropbox, Inc."
+  ],
+  "domains": [
+   "dropbox.com"
+  ]
+ },
+ {
+  "name": "OpenAI",
+  "aliases": [
+   "OpenAI, L.L.C.",
+   "OpenAI, LLC",
+   "OpenAI OpCo, LLC",
+   "OpenAI Ireland Limited",
+   "OpenAI Ireland Ltd"
+  ],
+  "domains": [
+   "openai.com"
+  ]
+ },
+ {
+  "name": "Anthropic",
+  "aliases": [
+   "Anthropic, PBC",
+   "Anthropic PBC",
+   "Anthropic Ireland, Limited",
+   "Anthropic Ireland Limited"
+  ],
+  "domains": [
+   "anthropic.com"
+  ]
+ },
+ {
+  "name": "GitHub",
+  "aliases": [
+   "GitHub, Inc.",
+   "GitHub B.V."
+  ],
+  "domains": [
+   "github.com"
+  ]
+ },
+ {
+  "name": "Atlassian",
+  "aliases": [
+   "Atlassian Pty Ltd",
+   "Atlassian Pty Limited",
+   "Atlassian US, Inc."
+  ],
+  "domains": [
+   "atlassian.com"
+  ]
+ },
+ {
+  "name": "Hetzner",
+  "aliases": [
+   "Hetzner Online GmbH"
+  ],
+  "domains": [
+   "hetzner.com",
+   "hetzner.de"
+  ]
+ },
+ {
+  "name": "Shopify",
+  "aliases": [
+   "Shopify International Limited",
+   "Shopify Inc."
+  ],
+  "domains": [
+   "shopify.com"
+  ]
+ },
+ {
+  "name": "Mailchimp",
+  "aliases": [
+   "The Rocket Science Group LLC",
+   "The Rocket Science Group, LLC"
+  ],
+  "domains": [
+   "mailchimp.com"
+  ]
+ },
+ {
+  "name": "HubSpot",
+  "aliases": [
+   "HubSpot Ireland Limited",
+   "HubSpot, Inc."
+  ],
+  "domains": [
+   "hubspot.com"
+  ]
+ },
+ {
+  "name": "Wix",
+  "aliases": [
+   "Wix.com Ltd.",
+   "Wix.com Ltd"
+  ],
+  "domains": [
+   "wix.com"
+  ]
+ },
+ {
+  "name": "Webflow",
+  "aliases": [
+   "Webflow, Inc."
+  ],
+  "domains": [
+   "webflow.com"
+  ]
+ },
+ {
+  "name": "Squarespace",
+  "aliases": [
+   "Squarespace Ireland Limited",
+   "Squarespace, Inc."
+  ],
+  "domains": [
+   "squarespace.com"
+  ]
+ },
+ {
+  "name": "Hostinger",
+  "aliases": [
+   "Hostinger International Ltd",
+   "Hostinger International Limited",
+   "Hostinger operations, UAB"
+  ],
+  "domains": [
+   "hostinger.com"
+  ]
+ },
+ {
+  "name": "Envato",
+  "aliases": [
+   "Envato Pty Ltd",
+   "Envato Elements Pty Ltd"
+  ],
+  "domains": [
+   "envato.com"
+  ]
+ },
+ {
+  "name": "Freepik",
+  "aliases": [
+   "Freepik Company S.L.",
+   "Freepik Company, S.L."
+  ],
+  "domains": [
+   "freepik.com"
+  ]
+ },
+ {
+  "name": "Semrush",
+  "aliases": [
+   "Semrush Inc.",
+   "SEMrush CY Ltd"
+  ],
+  "domains": [
+   "semrush.com"
+  ]
+ },
+ {
+  "name": "Ahrefs",
+  "aliases": [
+   "Ahrefs Pte. Ltd.",
+   "Ahrefs Pte Ltd"
+  ],
+  "domains": [
+   "ahrefs.com"
+  ]
+ },
+ {
+  "name": "Spotify",
+  "aliases": [
+   "Spotify AB"
+  ],
+  "domains": [
+   "spotify.com"
+  ]
+ },
+ {
+  "name": "Netflix",
+  "aliases": [
+   "Netflix International B.V."
+  ],
+  "domains": [
+   "netflix.com"
+  ]
+ },
+ {
+  "name": "Booking.com",
+  "aliases": [
+   "Booking.com B.V."
+  ],
+  "domains": [
+   "booking.com"
+  ]
+ },
+ {
+  "name": "Airbnb",
+  "aliases": [
+   "Airbnb Ireland UC",
+   "Airbnb Ireland Unlimited Company"
+  ],
+  "domains": [
+   "airbnb.com"
+  ]
+ },
+ {
+  "name": "Uber",
+  "aliases": [
+   "Uber B.V.",
+   "Uber Technologies, Inc."
+  ],
+  "domains": [
+   "uber.com"
+  ]
+ },
+ {
+  "name": "Bolt",
+  "aliases": [
+   "Bolt Operations OÜ",
+   "Bolt Operations OU"
+  ],
+  "domains": [
+   "bolt.eu"
+  ]
+ },
+ {
+  "name": "Wolt",
+  "aliases": [
+   "Wolt Enterprises Oy"
+  ],
+  "domains": [
+   "wolt.com"
+  ]
+ },
+ {
+  "name": "Calendly",
+  "aliases": [
+   "Calendly LLC",
+   "Calendly, LLC"
+  ],
+  "domains": [
+   "calendly.com"
+  ]
+ },
+ {
+  "name": "Miro",
+  "aliases": [
+   "RealtimeBoard, Inc.",
+   "RealtimeBoard Inc"
+  ],
+  "domains": [
+   "miro.com"
+  ]
+ },
+ {
+  "name": "Loom",
+  "aliases": [
+   "Loom, Inc."
+  ],
+  "domains": [
+   "loom.com"
+  ]
+ },
+ {
+  "name": "Vimeo",
+  "aliases": [
+   "Vimeo.com, Inc.",
+   "Vimeo, Inc."
+  ],
+  "domains": [
+   "vimeo.com"
+  ]
+ },
+ {
+  "name": "Elementor",
+  "aliases": [
+   "Elementor Ltd.",
+   "Elementor Ltd"
+  ],
+  "domains": [
+   "elementor.com"
+  ]
+ },
+ {
+  "name": "Cloudflare",
+  "aliases": [
+   "Cloudflare, Inc."
+  ],
+  "domains": [
+   "cloudflare.com"
+  ]
+ },
+ {
+  "name": "DigitalOcean",
+  "aliases": [
+   "DigitalOcean, LLC"
+  ],
+  "domains": [
+   "digitalocean.com"
+  ]
+ },
+ {
+  "name": "Stripe",
+  "aliases": [
+   "Stripe Payments Europe, Limited",
+   "Stripe Payments Europe Ltd",
+   "Stripe Technology Europe Limited"
+  ],
+  "domains": []
+ },
+ {
+  "name": "PayPal",
+  "aliases": [
+   "PayPal (Europe) S.à r.l. et Cie, S.C.A.",
+   "PayPal (Europe) S.a r.l. et Cie, S.C.A."
+  ],
+  "domains": []
+ },
+ {
+  "name": "Wise",
+  "aliases": [
+   "Wise Europe SA",
+   "Wise Europe S.A.",
+   "Wise Payments Limited"
+  ],
+  "domains": [
+   "wise.com"
+  ]
+ },
+ {
+  "name": "Revolut",
+  "aliases": [
+   "Revolut Bank UAB",
+   "Revolut Ltd"
+  ],
+  "domains": [
+   "revolut.com"
+  ]
+ },
+ {
+  "name": "Telekom",
+  "aliases": [
+   "Magyar Telekom Nyrt.",
+   "Magyar Telekom Távközlési Nyrt.",
+   "Magyar Telekom Távközlési Nyilvánosan Működő Részvénytársaság"
+  ],
+  "domains": [
+   "telekom.hu"
+  ]
+ },
+ {
+  "name": "Yettel",
+  "aliases": [
+   "Yettel Magyarország Zrt.",
+   "Telenor Magyarország Zrt."
+  ],
+  "domains": [
+   "yettel.hu"
+  ]
+ },
+ {
+  "name": "One",
+  "aliases": [
+   "One Magyarország Zrt.",
+   "Vodafone Magyarország Zrt.",
+   "Vodafone Magyarország Zártkörűen Működő Részvénytársaság"
+  ],
+  "domains": [
+   "vodafone.hu",
+   "one.hu"
+  ]
+ },
+ {
+  "name": "DIGI",
+  "aliases": [
+   "DIGI Távközlési és Szolgáltató Kft."
+  ],
+  "domains": [
+   "digi.hu"
+  ]
+ },
+ {
+  "name": "MVM Next",
+  "aliases": [
+   "MVM Next Energiakereskedelmi Zrt."
+  ],
+  "domains": [
+   "mvmnext.hu"
+  ]
+ },
+ {
+  "name": "Szamlazz.hu",
+  "aliases": [
+   "KBOSS.hu Kft."
+  ],
+  "domains": []
+ },
+ {
+  "name": "Billingo",
+  "aliases": [
+   "Billingo Technologies Zrt."
+  ],
+  "domains": []
+ },
+ {
+  "name": "Rackhost",
+  "aliases": [
+   "Rackhost Zrt."
+  ],
+  "domains": [
+   "rackhost.hu"
+  ]
+ },
+ {
+  "name": "Tárhely.eu",
+  "aliases": [
+   "Tárhely.Eu Szolgáltató Kft."
+  ],
+  "domains": [
+   "tarhely.eu"
+  ]
+ },
+ {
+  "name": "UNAS",
+  "aliases": [
+   "UNAS Online Kft."
+  ],
+  "domains": [
+   "unas.hu"
+  ]
+ },
+ {
+  "name": "Shoprenter",
+  "aliases": [
+   "Shoprenter.hu Kft."
+  ],
+  "domains": [
+   "shoprenter.hu"
+  ]
+ },
+ {
+  "name": "MOL",
+  "aliases": [
+   "MOL Nyrt.",
+   "MOL Magyar Olaj- és Gázipari Nyrt."
+  ],
+  "domains": [
+   "mol.hu"
+  ]
+ },
+ {
+  "name": "Wizz Air",
+  "aliases": [
+   "Wizz Air Hungary Zrt.",
+   "Wizz Air Hungary Ltd."
+  ],
+  "domains": [
+   "wizzair.com"
+  ]
+ },
+ {
+  "name": "Ryanair",
+  "aliases": [
+   "Ryanair DAC",
+   "Ryanair Designated Activity Company"
+  ],
+  "domains": [
+   "ryanair.com"
+  ]
+ },
+ {
+  "name": "Alza",
+  "aliases": [
+   "Alza.hu Kft."
+  ],
+  "domains": [
+   "alza.hu"
+  ]
+ },
+ {
+  "name": "BKK",
+  "aliases": [
+   "Budapesti Közlekedési Központ Zrt.",
+   "BKK Budapesti Közlekedési Központ Zrt."
+  ],
+  "domains": [
+   "bkk.hu"
+  ]
+ },
+ {
+  "name": "MAV",
+  "aliases": [
+   "MÁV-START Zrt.",
+   "MÁV Személyszállítási Zrt."
+  ],
+  "domains": [
+   "mavcsoport.hu"
+  ]
+ }
+]
