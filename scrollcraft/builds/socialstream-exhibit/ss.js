@@ -6,6 +6,12 @@
   var SS = window.SS = {};
   SS.reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   SS.fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  // a reader on a data saver gets the poster and a play button, not a film that starts by itself
+  SS.saveData = !!(navigator.connection && navigator.connection.saveData);
+  SS.onMQ = function (mq, f) { if (mq.addEventListener) mq.addEventListener('change', f); else if (mq.addListener) mq.addListener(f); };
+  // the browser's own bar takes the colour of what is on screen
+  var themeMeta = document.querySelector('meta[name="theme-color"]');
+  SS.themeColor = function (c) { if (themeMeta && themeMeta.content !== c) themeMeta.content = c; };
   SS.$ = function (s, r) { return (r || document).querySelector(s); };
   SS.$$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   SS.lerp = function (a, b, k) { return a + (b - a) * k; };
@@ -86,24 +92,42 @@
   SS.reel = function (sec, disc) {
     var v = SS.$('video', sec), toggle = SS.$('.toggle', sec), label = disc && SS.$('span', disc);
     var amb = SS.$('canvas.amb', sec), actx = amb && amb.getContext('2d'), img = SS.$('.poster img', sec);
-    var loaded = false, on = true, paused = SS.reduce, bars = false, n = 0;
-    function load() {
-      if (loaded) return; loaded = true;
-      if (v.dataset.srcV && matchMedia('(orientation: portrait)').matches) { sec.classList.add('is-vertical'); v.poster = v.dataset.posterV; v.src = v.dataset.srcV; v.load(); return; }
+    var loaded = false, on = true, paused = SS.reduce || SS.saveData, bars = false, n = 0;
+    var portrait = matchMedia('(orientation: portrait)');
+    function pick() {
+      if (v.dataset.srcV && portrait.matches) return { src: v.dataset.srcV, poster: v.dataset.posterV, vertical: true };
       var small = v.offsetWidth * (window.devicePixelRatio || 1) < 1300;
-      v.poster = small ? v.dataset.posterS : v.dataset.poster; v.src = small ? v.dataset.srcS : v.dataset.src; v.load();
+      return { src: small ? v.dataset.srcS : v.dataset.src, poster: small ? v.dataset.posterS : v.dataset.poster, vertical: false };
     }
+    function use(c) { sec.classList.toggle('is-vertical', c.vertical); v.poster = c.poster; v.src = c.src; v.load(); }
+    function load() { if (loaded) return; loaded = true; use(pick()); }
+    // turning the phone swaps the cut and keeps the place in the film
+    SS.onMQ(portrait, function () {
+      if (!loaded || !v.dataset.srcV) return;
+      var c = pick(), t = v.currentTime; if (v.currentSrc.indexOf(c.src) > -1) return;
+      sec.classList.remove('is-playing'); use(c);
+      v.addEventListener('loadedmetadata', function () { try { v.currentTime = t; } catch (e) {} }, { once: true });
+      apply();
+    });
     function word() { return paused ? (SS.L === 'en' ? 'Play' : 'Lejátszás') : (SS.L === 'en' ? 'Pause' : 'Szünet'); }
-    function apply() {
-      if (paused || !on) v.pause(); else { load(); var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+    function state() {
+      sec.classList.toggle('is-paused', paused);
       if (toggle) {
         toggle.setAttribute('aria-label', paused ? (SS.L === 'en' ? 'Play the film' : 'Film lejátszása') : (SS.L === 'en' ? 'Pause the film' : 'Film megállítása'));
         toggle.innerHTML = paused ? PLAY : PAUSE;
       }
     }
+    // a phone in Low Power Mode refuses a film that starts by itself: the poster stays and the button offers play
+    function refused(e) { if (e && e.name === 'NotAllowedError') { paused = true; state(); } }
+    function apply() {
+      if (paused || !on) v.pause(); else { load(); var p = v.play(); if (p && p.catch) p.catch(refused); }
+      state();
+    }
     function flip() { paused = !paused; apply(); }
     if (toggle) toggle.addEventListener('click', flip);
     v.addEventListener('playing', function () { sec.classList.add('is-playing'); });
+    // on a touch screen a tap on the film plays and pauses it, as in any reel
+    if (!SS.fine) sec.addEventListener('click', function (e) { if (!e.target.closest('.ui, a, button')) flip(); });
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { on = es[0].isIntersecting; apply(); }, { threshold: 0.05 }).observe(sec);
     // a media fetch holds the load event, so the film is fetched only once the page has loaded
     if (document.readyState === 'complete') apply(); else addEventListener('load', function () { setTimeout(apply, 60); }, { once: true });

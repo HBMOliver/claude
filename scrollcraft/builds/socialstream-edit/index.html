@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SocialStream</title>
 <meta name="description" content="A social media meghalt. Az érdeklődés vette át a helyét. Videó, social és hirdetés egy rendszerben. Tenerife és Budapest.">
+<meta name="theme-color" content="#0b0b0c">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0b0c'/%3E%3Crect x='15' y='6' width='2' height='20' fill='%237fa1c4'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,7 +31,9 @@
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html[lang="en"] [data-l="hu"], html:not([lang="en"]) [data-l="en"] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: calc(var(--bar) + env(safe-area-inset-top, 0px) + 16px); }
 body { margin: 0; background: var(--ground); color: var(--ink); font: 400 16px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+a, button, label, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 img, video { display: block; max-width: 100%; }
 button { font: inherit; color: inherit; }
 a { color: inherit; }
@@ -48,7 +51,7 @@ a { color: inherit; }
 .brand .proj { font-size: 13px; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .transport { display: flex; align-items: center; gap: 8px; }
 .tbtn { width: 34px; height: 34px; border-radius: 50%; border: 0; cursor: pointer; background: var(--raised); display: grid; place-items: center; color: var(--ink); transition: background-color 160ms, transform 160ms var(--ease); }
-.tbtn:hover { background: var(--active); }
+@media (hover: hover) { .tbtn:hover { background: var(--active); } }
 .tbtn:active { transform: scale(0.92); }
 .tbtn svg { width: 12px; height: 12px; }
 .tbtn.play { width: 38px; height: 38px; background: var(--ink); color: var(--ground); }
@@ -58,11 +61,11 @@ a { color: inherit; }
 .end { display: flex; justify-content: flex-end; align-items: center; gap: 12px; }
 .lang { display: flex; gap: 2px; }
 .lang button { border: 0; background: none; cursor: pointer; font: 600 13px/1 var(--sans); padding: 9px 7px; color: var(--faint); border-radius: 6px; }
-.lang button:hover { color: var(--ink); }
+@media (hover: hover) { .lang button:hover { color: var(--ink); } }
 .lang button[aria-pressed="true"] { color: var(--ink); background: var(--raised); }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 38px; padding: 0 16px; border: 0; border-radius: 6px; cursor: pointer; text-decoration: none; white-space: nowrap;
   font: 600 14px/1 var(--sans); background: var(--ink); color: var(--ground); transition: background-color 160ms, transform 160ms var(--ease); }
-.btn:hover { background: #fff; }
+@media (hover: hover) { .btn:hover { background: #fff; } }
 .btn:active { transform: scale(0.97); }
 
 /* ---------- the suite: one pinned stage, opened in full-screen preview ---------- */
@@ -82,6 +85,13 @@ a { color: inherit; }
 .monitor > video, .monitor > .poster, .monitor > .poster img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .monitor > .poster { transition: opacity 500ms var(--ease); }
 .monitor.is-playing > .poster { opacity: 0; }
+/* on a touch screen the film itself is the play button: a paused film shows it */
+.monitor::after { content: ""; position: absolute; z-index: 6; left: 50%; top: 50%; width: 15cqw; height: 15cqw; margin: -7.5cqw 0 0 -7.5cqw; border-radius: 50%; pointer-events: none; opacity: 0; transform: scale(0.8); transition: opacity 220ms var(--ease), transform 320ms var(--out);
+  background: rgba(11, 11, 12, 0.62) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3.5 1.8l8.5 5.2-8.5 5.2z' fill='%23fdfbf7'/%3E%3C/svg%3E") 56% 50% / 36% no-repeat; }
+@media (hover: none) { .monitor.on-film.is-paused::after { opacity: 1; transform: none; } }
+/* small type in a card never drops below what a phone can read; the hover preview's tiny copies are exempt */
+.monitor { --min: 1; }
+.pvmon { --min: 0; }
 
 /* title cards, set like the film's: a clean sans, an italic serif accent, serif figures */
 .card { position: absolute; inset: 0; background: #0d0d0e; color: var(--ink); opacity: 0; visibility: hidden; transition: opacity 320ms var(--ease), visibility 0s linear 320ms; }
@@ -96,7 +106,7 @@ a { color: inherit; }
 .card.is-on .ln > span, .step.is-on .ln > span { transform: none; transition: transform 820ms var(--out) calc(var(--i, 0) * 90ms + 140ms); }
 .fig { margin: 0; font: 300 15cqw/0.86 var(--serif); letter-spacing: -0.03em; font-variant-numeric: lining-nums tabular-nums; }
 .fig small { font: 500 0.26em/1 var(--sans); letter-spacing: 0; margin-left: 0.14em; vertical-align: 0.24em; }
-.meta { margin: 0; font: 500 1.55cqw/1.4 var(--sans); color: var(--muted); }
+.meta { margin: 0; font: 500 max(calc(10.5px * var(--min, 1)), 1.55cqw)/1.4 var(--sans); color: var(--muted); }
 .step { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 300ms var(--ease), visibility 0s linear 300ms; }
 .step.is-on { opacity: 1; visibility: visible; transition: opacity 300ms var(--ease), visibility 0s; }
 
@@ -115,13 +125,13 @@ a { color: inherit; }
 .watch i, .render i { display: block; height: max(3px, 0.7cqw); border-radius: 1cqw; background: rgba(18, 18, 18, 0.2); overflow: hidden; }
 .watch i::before, .render i::before { content: ""; display: block; height: 100%; width: calc(var(--w, 0) * 100%); background: var(--dark); border-radius: inherit; }
 .render i::before { width: calc(var(--r, 0) * 100%); }
-.watch > span, .render > span { display: flex; justify-content: space-between; font: 600 1.5cqw/1 var(--sans); }
+.watch > span, .render > span { display: flex; justify-content: space-between; font: 600 max(calc(10.5px * var(--min, 1)), 1.5cqw)/1 var(--sans); }
 /* law III: the old rules struck, the new ones set */
 .c3 .copy { position: absolute; left: 7%; right: 7%; top: 11%; }
 .rules { position: absolute; left: 7%; right: 7%; bottom: 11%; display: grid; grid-template-columns: 1fr 1fr; gap: 5cqw; }
-.rules p { margin: 0 0 1.5cqw; font: 600 1.5cqw/1 var(--sans); color: var(--dark-muted); }
+.rules p { margin: 0 0 1.5cqw; font: 600 max(calc(10px * var(--min, 1)), 1.5cqw)/1 var(--sans); color: var(--dark-muted); }
 .rules ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1cqw; justify-items: start; }
-.rules li { position: relative; font: 500 2.3cqw/1.2 var(--sans); transition: color 300ms, opacity 400ms var(--ease), transform 600ms var(--out); }
+.rules li { position: relative; font: 500 max(calc(11.5px * var(--min, 1)), 2.3cqw)/1.2 var(--sans); transition: color 300ms, opacity 400ms var(--ease), transform 600ms var(--out); }
 .rules .old li::after { content: ""; position: absolute; left: -2%; right: -2%; top: 55%; height: 0.09em; background: var(--dark); transform-origin: left; transform: scaleX(0); transition: transform 500ms var(--out); }
 .rules .old li.is-x { color: var(--dark-muted); }
 .rules .old li.is-x::after { transform: scaleX(1); }
@@ -131,7 +141,7 @@ a { color: inherit; }
 .c4 .step { display: grid; grid-template-columns: 40% 1fr; align-items: center; gap: 6cqw; padding: 0 8%; }
 .c4 .copy { display: grid; gap: 2cqw; }
 .c4 .t { font-size: 4.6cqw; }
-.c4 .copy p:last-child { margin: 0; font: 400 1.75cqw/1.5 var(--sans); color: var(--muted); max-width: 40ch; }
+.c4 .copy p:last-child { margin: 0; font: 400 max(calc(11.5px * var(--min, 1)), 1.75cqw)/1.5 var(--sans); color: var(--muted); max-width: 40ch; }
 .draw { width: 100%; height: auto; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
 .draw .b { stroke: var(--blue); }
 .draw .fill { fill: currentColor; stroke: none; }
@@ -157,16 +167,16 @@ a { color: inherit; }
 /* results: a figure, its case and its picture */
 .c5 .step { display: grid; grid-template-columns: 1fr 44%; }
 .c5 .copy { display: grid; align-content: center; gap: 1.8cqw; padding: 0 4cqw 0 8cqw; }
-.c5 .copy p.c { margin: 0; font: 500 1.9cqw/1.45 var(--sans); max-width: 30ch; }
-.c5 .copy p.who { margin: 0; font: 600 1.45cqw/1.3 var(--sans); color: var(--blue); }
+.c5 .copy p.c { margin: 0; font: 500 max(calc(11.5px * var(--min, 1)), 1.9cqw)/1.45 var(--sans); max-width: 30ch; }
+.c5 .copy p.who { margin: 0; font: 600 max(calc(10.5px * var(--min, 1)), 1.45cqw)/1.3 var(--sans); color: var(--blue); }
 .c5 figure { margin: 0; position: relative; overflow: hidden; }
 .c5 figure img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.08); transition: transform 1600ms var(--out); }
 .c5 .step.is-on figure img { transform: none; }
 /* testimonials, as subtitles */
 .c6 .step { display: grid; align-content: center; justify-items: center; gap: 2.6cqw; padding: 0 12%; text-align: center; }
-.q { margin: 0; font: 500 2.8cqw/1.36 var(--sans); letter-spacing: -0.01em; text-wrap: pretty; opacity: 0; transform: translateY(1.2cqw); transition: opacity 500ms var(--ease) 120ms, transform 800ms var(--out) 120ms; }
+.q { margin: 0; font: 500 max(calc(12.5px * var(--min, 1)), 2.8cqw)/1.36 var(--sans); letter-spacing: -0.01em; text-wrap: pretty; opacity: 0; transform: translateY(1.2cqw); transition: opacity 500ms var(--ease) 120ms, transform 800ms var(--out) 120ms; }
 .c6 .step.is-on .q { opacity: 1; transform: none; }
-.c6 .who { font: 600 1.5cqw/1.3 var(--sans); color: var(--blue); }
+.c6 .who { font: 600 max(calc(10.5px * var(--min, 1)), 1.5cqw)/1.3 var(--sans); color: var(--blue); }
 /* team: the founder, then the three */
 .c7 { display: grid; grid-template-columns: 38% 1fr; }
 .c7 > figure { margin: 0; position: relative; overflow: hidden; }
@@ -177,8 +187,8 @@ a { color: inherit; }
 .crew img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 0.6cqw; opacity: 0; transform: translateY(1.5cqw); transition: opacity 500ms var(--ease), transform 800ms var(--out); }
 .c7.is-on .crew figure:nth-child(1) img { transition-delay: 300ms; } .c7.is-on .crew figure:nth-child(2) img { transition-delay: 380ms; } .c7.is-on .crew figure:nth-child(3) img { transition-delay: 460ms; }
 .c7.is-on .crew img { opacity: 1; transform: none; }
-.crew figcaption { font: 500 1.3cqw/1.3 var(--sans); color: var(--muted); }
-.crew figcaption b { display: block; color: var(--ink); font-weight: 600; font-size: 1.5cqw; }
+.crew figcaption { font: 500 max(calc(10.5px * var(--min, 1)), 1.3cqw)/1.3 var(--sans); color: var(--muted); }
+.crew figcaption b { display: block; color: var(--ink); font-weight: 600; font-size: max(calc(11px * var(--min, 1)), 1.5cqw); }
 /* export: the render bar */
 .c8 .copy { position: absolute; left: 7%; right: 7%; top: 17%; }
 .disc { position: fixed; z-index: 60; left: 0; top: 0; width: 84px; height: 84px; margin: -42px 0 0 -42px; border-radius: 50%; pointer-events: none; display: grid; place-items: center;
@@ -203,7 +213,7 @@ a { color: inherit; }
 .ilist { list-style: none; margin: 0; padding: 0; display: grid; }
 .ilist li { border-top: 1px solid var(--line); }
 .ilist button { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; width: 100%; padding: 10px 2px; font-size: 14px; color: var(--muted); transition: color 160ms; }
-.ilist button:hover { color: var(--ink); }
+@media (hover: hover) { .ilist button:hover { color: var(--ink); } }
 .ilist button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 4px; }
 .ilist b { color: var(--ink); font-weight: 600; }
 .ilist .v { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; }
@@ -214,6 +224,7 @@ a { color: inherit; }
 .ilist li.is-on .tog { background: var(--blue); }
 .ilist li.is-on .tog::after { transform: translateX(12px); background: var(--ground); }
 .ins .seal { color: var(--ink); font-weight: 600; }
+.morebtn { display: none; position: absolute; top: 0; right: 2px; border: 0; background: none; cursor: pointer; padding: 14px 12px; font: 600 12px/1 var(--sans); color: var(--blue); }
 
 /* ---------- the timeline ---------- */
 .tl { display: grid; grid-template-rows: 34px minmax(0, 1fr); overflow: hidden; transform: translateY(calc((1 - var(--chrome, 1)) * 28px)); opacity: var(--chrome, 1); }
@@ -228,8 +239,10 @@ a { color: inherit; }
 .ruler em { position: absolute; top: 4px; font: 500 11px/1 var(--sans); font-style: normal; color: var(--faint); transform: translateX(5px); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .track { position: relative; }
 .clip { position: absolute; top: 3px; bottom: 3px; border: 0; border-radius: 4px; overflow: hidden; display: flex; align-items: center; padding: 0 9px; cursor: pointer; font: 600 12px/1 var(--sans); white-space: nowrap; color: var(--muted); background: var(--raised); outline: 1px solid var(--line); outline-offset: -1px; transition: color 200ms, outline-color 200ms, background-color 200ms; }
-.clip:hover { color: var(--ink); background-color: var(--active); }
-.clip.film { background-color: #000; background-image: url(assets/hero-strip.jpg); background-size: auto 100%; background-repeat: repeat-x; color: var(--ink); }
+@media (hover: hover) { .clip:hover { color: var(--ink); background-color: var(--active); } }
+.clip:active { background-color: var(--active); }
+.clip.film { background-color: #000; background-size: auto 100%; background-repeat: repeat-x; color: var(--ink); }
+.imgs-on .clip.film { background-image: url(assets/hero-strip.jpg); }
 .clip.film span { padding: 3px 6px; border-radius: 3px; background: rgba(11, 11, 12, 0.72); }
 .clip.blue { background-color: #26313d; } .clip.cream { background-color: #36342f; }
 .clip.is-on { color: var(--ink); outline: 2px solid var(--blue); outline-offset: -2px; }
@@ -287,7 +300,7 @@ a { color: inherit; }
 .chip input:focus-visible + span { outline: 2px solid var(--blue-field); outline-offset: 2px; }
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 4px; }
 .app .btn { background: var(--dark); color: var(--cream); min-height: 46px; padding: 0 20px; font-size: 15px; }
-.app .btn:hover { background: #000; }
+@media (hover: hover) { .app .btn:hover { background: #000; } }
 .direct { font-size: 15px; color: var(--dark-muted); }
 .direct a { color: var(--dark); font-weight: 600; }
 .copy-mini { border: 0; background: none; cursor: pointer; color: var(--dark); text-decoration: underline; text-underline-offset: 0.25em; font-size: 14px; padding: 6px 0; margin-left: 8px; }
@@ -336,8 +349,8 @@ a { color: inherit; }
   .tlbody { grid-template-rows: 22px repeat(3, minmax(0, 1fr)); margin: 0; width: calc(9 * 116px); transform: translateX(var(--tx, 0px)); }
   .tlbody .playhead, .tlbody .hoverhead { display: none; }
   .fixhead { display: block; }
-  .ruler em { font-size: 10px; }
-  .clip { font-size: 11px; padding: 0 7px; }
+  .ruler em { font-size: 11px; }
+  .clip { font-size: 12px; padding: 0 8px; }
   .exwrap { grid-template-columns: 1fr; }
   .app { grid-template-columns: 1fr; }
   .specs div { grid-template-columns: 7.5rem 1fr; }
@@ -346,19 +359,34 @@ a { color: inherit; }
    The preview takes the screen's own shape, so the vertical film docks into it whole; the cards set
    their type for a portrait frame; the inspector is a short caption under the preview. */
 @media (max-width: 860px) and (orientation: portrait) {
-  :root { --tlh: 104px; }
+  /* the caption and the timeline keep a fixed height, so the preview never changes size between chapters,
+     and both are as compact as a thumb allows, so the preview gets the room */
+  :root { --tlh: 80px; --insh: 126px; }
   .ws { grid-template-rows: minmax(0, 1fr) auto; }
+  .insp { height: var(--insh); }
   .monpanel { grid-template-rows: minmax(0, 1fr); }
   .monwrap { container-type: size; padding: 8px 8px 6px; }
   .monitor { width: min(100cqw, calc(100cqh * var(--mar, 0.5))); aspect-ratio: var(--mar, 0.5); }
   .insbody { overflow: hidden; }
-  .ins { padding: 10px 16px 12px; gap: 6px; }
-  .ins h2 { font-size: 18px; line-height: 1.22; }
-  .ins p { font-size: 14px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .ins { position: relative; padding: 9px 14px 10px; gap: 4px; }
+  .ins .k { font-size: 12px; }
+  .ins h2 { font-size: 17px; line-height: 1.22; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .ins p { font-size: 14px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .ins[data-ch="8"] p:not(.k) { -webkit-line-clamp: 1; }
+  /* a caption that does not fit opens over the preview, like a post's "more" */
+  .ins.is-clamped .morebtn, .ins.is-open .morebtn { display: block; }
+  .insp.is-open .insbody { overflow: visible; }
+  .ins.is-open { position: absolute; z-index: 8; left: 0; right: 0; bottom: 0; max-height: calc(100svh - var(--bar) - var(--tlh) - 56px); overflow-y: auto; overscroll-behavior: contain;
+    padding-bottom: 16px; background: var(--raised); border-radius: 8px; box-shadow: 0 -18px 44px rgba(0, 0, 0, 0.55); animation: capup 360ms var(--out); }
+  .ins.is-open h2, .ins.is-open p { -webkit-line-clamp: unset; display: block; overflow: visible; }
+  @keyframes capup { from { opacity: 0; transform: translateY(14px); } }
+  .tlbody { grid-template-rows: 18px minmax(0, 1fr) 16px; }
+  .track.titles { display: none; }
+  .track.audio .note { font-size: 11px; }
   .ins .ilist, .ins .props, .ins[data-ch="0"] .btn { display: none; }
-  .ins .btn { min-height: 34px; font-size: 13px; }
+  .ins .btn { min-height: 38px; font-size: 13px; margin-top: 2px; }
   .t { font-size: 9.4cqw !important; }
-  .meta { font-size: 4.6cqw; }
+  .meta { font-size: max(calc(11px * var(--min, 1)), 4.6cqw); }
   .c1 .tally { left: 8%; top: 8%; gap: 2.6cqw; }
   .c1 .fig { font-size: 23cqw; }
   .c1 .law { left: 8%; right: 8%; bottom: 8%; }
@@ -366,35 +394,67 @@ a { color: inherit; }
   .c2 .t { font-size: 11cqw !important; }
   .watch, .render { left: 8%; right: 8%; bottom: 8%; gap: 2.6cqw; }
   .watch i, .render i { height: 1.4cqw; }
-  .watch > span, .render > span { font-size: 4.6cqw; }
+  .watch > span, .render > span { font-size: max(calc(11px * var(--min, 1)), 4.6cqw); }
   .rules { left: 8%; right: 8%; bottom: 8%; grid-template-columns: 1fr; gap: 6cqw; }
-  .rules p { font-size: 4.4cqw; margin-bottom: 2.4cqw; }
-  .rules li { font-size: 6cqw; }
+  .rules p { font-size: max(calc(10.5px * var(--min, 1)), 4.4cqw); margin-bottom: 2.4cqw; }
+  .rules li { font-size: max(calc(12px * var(--min, 1)), 6cqw); }
   .rules ul { gap: 2cqw; }
   .c4 .step { grid-template-columns: 1fr; grid-template-rows: auto auto; align-content: center; gap: 8cqw; padding: 0 10%; }
   .c4 .t { font-size: 8.6cqw !important; }
   .c4 .copy { gap: 3.2cqw; }
-  .c4 .copy p:last-child { font-size: 5cqw; }
+  .c4 .copy p:last-child { font-size: max(calc(12px * var(--min, 1)), 5cqw); }
   .c5 .step { grid-template-columns: 1fr; grid-template-rows: 44% 1fr; }
   .c5 figure { order: -1; }
   .c5 .copy { align-content: start; gap: 3.4cqw; padding: 8cqw 8cqw 0; }
   .c5 .fig { font-size: 25cqw; }
-  .c5 .copy p.c { font-size: 5.2cqw; }
-  .c5 .copy p.who { font-size: 4.4cqw; }
+  .c5 .copy p.c { font-size: max(calc(12px * var(--min, 1)), 5.2cqw); }
+  .c5 .copy p.who { font-size: max(calc(11px * var(--min, 1)), 4.4cqw); }
   .c6 .step { padding: 0 9%; gap: 5cqw; }
-  .q { font-size: 5.8cqw; line-height: 1.42; }
-  .c6 .who { font-size: 4.6cqw; }
+  .q { font-size: max(calc(13px * var(--min, 1)), 5.8cqw); line-height: 1.42; }
+  .c6 .who { font-size: max(calc(11px * var(--min, 1)), 4.6cqw); }
   .c7 { grid-template-columns: 1fr; grid-template-rows: 50% 1fr; }
   .c7 .copy { align-content: start; gap: 5cqw; padding: 7cqw 8cqw 0; }
   .c7 .t { font-size: 8.4cqw !important; }
   .crew { gap: 3cqw; }
   .crew figure { width: 24cqw; gap: 1.6cqw; }
-  .crew figcaption { font-size: 3.8cqw; }
-  .crew figcaption b { font-size: 4.4cqw; }
+  .crew figcaption { font-size: max(calc(10.5px * var(--min, 1)), 3.8cqw); }
+  .crew figcaption b { font-size: max(calc(11px * var(--min, 1)), 4.4cqw); }
   .c8 .t { font-size: 9.6cqw !important; }
+  /* on the smallest previews the team keeps their names; the roles are in the caption's "more" */
+  @container (max-width: 220px) { .crew figcaption span { display: none; } }
+}
+/* ---------- a phone on its side: the suite as on a desk, made compact ---------- */
+@media (max-width: 860px) and (orientation: landscape) and (max-height: 500px) {
+  :root { --bar: 44px; --tlh: 64px; }
+  .suite .stage { gap: 6px; padding-top: calc(var(--bar) + env(safe-area-inset-top, 0px) + 6px); padding-bottom: max(6px, env(safe-area-inset-bottom, 0px)); }
+  .ws { grid-template-columns: minmax(0, 1fr) minmax(210px, 36%); grid-template-rows: minmax(0, 1fr); gap: 6px; }
+  .monpanel { grid-template-rows: minmax(0, 1fr); }
+  .monwrap { container-type: size; padding: 6px; }
+  .monitor { width: min(100cqw, calc(100cqh * 16 / 9)); }
+  .insp { transform: translateX(calc((1 - var(--chrome, 1)) * 20px)); }
+  .insbody { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+  .ins { padding: 10px 14px 12px; gap: 6px; }
+  .ins h2 { font-size: 16px; }
+  .ins p { font-size: 13px; line-height: 1.5; }
+  .ins .ilist, .ins .props, .ins .more, .ins[data-ch="0"] .btn { display: none; }
+  .tlbody { grid-template-rows: 16px minmax(0, 1fr) 14px; }
+  .track.titles { display: none; }
+  .ruler em, .track.audio .note { font-size: 10px; }
+}
+/* fingers: every control at least 40px tall, most of them 44px */
+@media (pointer: coarse) {
+  .lang button { min-width: 40px; min-height: 40px; }
+  .end .btn { min-height: 40px; }
+  .wm a { display: inline-block; padding: 10px 0; }
+  .ins .btn, .sent .btn { min-height: 44px; }
+  .chip span { padding: 14px 15px; }
+  .copy-mini, .frow button { padding: 13px 6px; margin-left: 2px; }
+  .direct a, .frow a { padding: 12px 0; }
 }
 /* on a narrow phone the bar keeps the name and the action; the monitor itself plays and pauses */
 @media (max-width: 520px) { .transport { display: none; } .bar { grid-template-columns: 1fr auto; } }
+/* the narrowest phones keep the name, one language switch and the audit */
+@media (max-width: 360px) { .lang button[aria-pressed="true"] { display: none; } .end { gap: 4px; } .end .btn { padding: 0 11px; } }
 @media (prefers-reduced-motion: reduce) {
   .card, .step, .q, .ln > span, .rules li, .rules .old li::after, .crew img, .c5 figure img, .c1 .likes, .preview, .ilist .tog, .ilist .tog::after { transition: none !important; }
   .ins.is-on > *, .draw * { animation: none !important; }
@@ -455,13 +515,13 @@ a { color: inherit; }
               <div class="card c6" data-ch="6" id="c6"></div>
 
               <div class="card c7" data-ch="7">
-                <figure><img src="assets/oliver-founder.jpg" alt="" width="1000" height="1250" loading="lazy"></figure>
+                <figure><img data-src="assets/oliver-founder.jpg" alt="" width="1000" height="1250"></figure>
                 <div class="copy">
                   <p class="t" style="font-size:4.4cqw"><span data-l="hu"><span class="ln" style="--i:0"><span>A korszakváltást</span></span><span class="ln" style="--i:1"><span><em>belülről</em> láttam.</span></span></span><span data-l="en"><span class="ln" style="--i:0"><span>I saw the shift</span></span><span class="ln" style="--i:1"><span>from the <em>inside</em>.</span></span></span></p>
                   <div class="crew">
-                    <figure><img src="assets/oliver.jpg" alt="" width="800" height="1000" loading="lazy"><figcaption><b>Olivér</b><span data-en="Strategy">Stratégia</span></figcaption></figure>
-                    <figure><img src="assets/david.jpg" alt="" width="800" height="1000" loading="lazy"><figcaption><b>David</b><span data-en="Creative">Kreatív</span></figcaption></figure>
-                    <figure><img src="assets/lidi.jpg" alt="" width="800" height="1000" loading="lazy"><figcaption><b>Lidi</b><span data-en="Production">Produkció</span></figcaption></figure>
+                    <figure><img data-src="assets/oliver-sm.jpg" alt="" width="400" height="500"><figcaption><b>Olivér</b><span data-en="Strategy">Stratégia</span></figcaption></figure>
+                    <figure><img data-src="assets/david-sm.jpg" alt="" width="400" height="500"><figcaption><b>David</b><span data-en="Creative">Kreatív</span></figcaption></figure>
+                    <figure><img data-src="assets/lidi-sm.jpg" alt="" width="400" height="500"><figcaption><b>Lidi</b><span data-en="Production">Produkció</span></figcaption></figure>
                   </div>
                 </div>
               </div>
@@ -655,21 +715,26 @@ a { color: inherit; }
 
   /* ---------------- built from the lists, again on a language change ---------------- */
   var mon = $('#monitor'), c4 = $('#c4'), c5 = $('#c5'), c6 = $('#c6'), svcList = $('#svcList'), resList = $('#resList'), qList = $('#qList');
-  var cards = $$('.card', mon), pvmon = $('#pvmon'), pvItems = [];
+  var cards = $$('.card', mon), pvmon = $('#pvmon'), pvItems = [], pvBuilt = false, imgsOn = false;
   var last = { ch: -1, svc: -1, res: -1, q: -1 };
   function clipStyle(i) { return 'left:calc(' + (i / N * 100) + '% + 1px);width:calc(' + (100 / N) + '% - 2px)'; }
   function render() {
     var en = SS.L === 'en';
     c4.innerHTML = SVC.map(function (s) { return '<div class="step">' + DRAW[s.d] + '<div class="copy"><p class="t"><span class="ln"><span>' + SS.esc(T(s)) + '</span></span></p><p>' + SS.esc(en ? s.ten : s.thu) + '</p></div></div>'; }).join('');
     if (en) $$('text[data-en]', c4).forEach(function (t) { t.textContent = t.dataset.en; });
-    c5.innerHTML = RES.map(function (r) { return '<div class="step"><div class="copy"><p class="fig num" data-to="' + r.n + '">' + r.n + '<small>' + r.u + '</small></p><p class="c">' + SS.esc(en ? r.ten : r.thu) + '</p><p class="who">' + SS.esc(en ? r.wen : r.whu) + '</p></div><figure><img src="' + r.img + '" alt="" loading="lazy"></figure></div>'; }).join('');
+    c5.innerHTML = RES.map(function (r) { return '<div class="step"><div class="copy"><p class="fig num" data-to="' + r.n + '">' + r.n + '<small>' + r.u + '</small></p><p class="c">' + SS.esc(en ? r.ten : r.thu) + '</p><p class="who">' + SS.esc(en ? r.wen : r.whu) + '</p></div><figure><img ' + (imgsOn ? 'src' : 'data-src') + '="' + r.img + '" alt=""></figure></div>'; }).join('');
     c6.innerHTML = QS.map(function (q) { return '<div class="step"><p class="q">' + SS.esc(T(q)) + '</p><span class="who">' + SS.esc(en ? q.whoEn : q.who) + '</span></div>'; }).join('');
     svcList.innerHTML = SVC.map(function (s, i) { return '<li><button type="button" data-jump="4" data-sub="' + i + '"><b>' + SS.esc(T(s)) + '</b><span class="tog" aria-hidden="true"></span></button></li>'; }).join('');
     resList.innerHTML = RES.map(function (r, i) { return '<li><button type="button" data-jump="5" data-sub="' + i + '"><b>' + SS.esc(en ? r.wen : r.whu) + '</b><span class="v">' + r.n + ' ' + r.u + '</span></button></li>'; }).join('');
     qList.innerHTML = QS.map(function (q, i) { return '<li><button type="button" data-jump="6" data-sub="' + i + '"><b>' + SS.esc(en ? q.whoEn : q.who) + '</b></button></li>'; }).join('');
     $('#trackT').innerHTML = CH.map(function (c, i) { return i === 0 ? '' : '<button type="button" class="clip" tabindex="-1" data-jump="' + i + '" style="' + clipStyle(i) + '">' + SS.esc(T(c)) + '</button>'; }).join('');
     $('#trackV').innerHTML = CH.map(function (c, i) { return '<button type="button" class="clip ' + (c.tone || '') + '" data-jump="' + i + '" style="' + clipStyle(i) + '"><span>' + SS.esc(T(c)) + '</span></button>'; }).join('');
-    // the preview under the cursor holds a still of every card
+    pvBuilt = false; pvItems = []; pvmon.innerHTML = '';
+    last = { ch: -1, svc: -1, res: -1, q: -1 }; lastP = -1;
+  }
+  // the preview under the cursor holds a still of every card; built on the first hover, so a phone never loads it
+  function buildPreview() {
+    pvBuilt = true; wakeImgs();
     pvmon.innerHTML = '<img src="assets/hero-poster.jpg" alt="">';
     cards.forEach(function (c) {
       var k = c.cloneNode(true); $$('[id]', k).forEach(function (n) { n.removeAttribute('id'); }); k.removeAttribute('id');
@@ -679,27 +744,33 @@ a { color: inherit; }
       k.style.setProperty('--w', '1'); k.style.setProperty('--r', '1'); pvmon.appendChild(k);
     });
     pvItems = $$(':scope > *', pvmon);
-    last = { ch: -1, svc: -1, res: -1, q: -1 };
   }
+  // the pictures of later chapters wait until the film has started, so on a slow line the film comes first
+  function wakeImgs() { if (imgsOn) return; imgsOn = true; document.documentElement.classList.add('imgs-on'); $$('img[data-src]').forEach(function (im) { im.src = im.dataset.src; im.removeAttribute('data-src'); }); }
   function fmt(sec) { var f = Math.floor((sec % 1) * 25), s = Math.floor(sec) % 60, m = Math.floor(sec / 60), p = function (n) { return (n < 10 ? '0' : '') + n; }; return p(m) + ':' + p(s) + ':' + p(f); }
   (function () { var h = ''; for (var s = 0; s <= TOTAL; s++) { var x = s / TOTAL * 100; h += '<i class="' + (s % SEC === 0 ? 'm' : '') + '" style="left:' + x + '%"></i>'; if (s % SEC === 0 && s < TOTAL) h += '<em style="left:' + x + '%">' + fmt(s).slice(0, 5) + '</em>'; } $('#ruler').innerHTML = h; })();
 
   /* ---------------- the film in the monitor ---------------- */
   var suite = $('#suite'), stage = $('#stage'), film = $('#film'), amb = $('#amb'), actx = amb.getContext('2d');
   var playBtn = $('#play'), disc = $('#disc'), discLabel = $('#discLabel');
-  var paused = reduce, loaded = false, suiteOn = true, cur = 0, chrome = 1, lastBtn = '';
-  function load() {
-    if (loaded) return; loaded = true;
+  var paused = reduce || SS.saveData, loaded = false, suiteOn = true, cur = 0, chrome = 1, lastBtn = '';
+  function pickSrc() {
     var small = mon.offsetWidth * (window.devicePixelRatio || 1) < 1300 && innerWidth < 1100;
-    film.src = upright.matches ? film.dataset.srcV : small ? film.dataset.srcS : film.dataset.src; film.load();
+    return upright.matches ? film.dataset.srcV : small ? film.dataset.srcS : film.dataset.src;
   }
-  function apply() { if (paused || !suiteOn || cur !== 0) film.pause(); else { load(); var pp = film.play(); if (pp && pp.catch) pp.catch(function () {}); } lastBtn = ''; }
+  function load() { if (loaded) return; loaded = true; film.src = pickSrc(); film.load(); }
+  // a phone in Low Power Mode refuses a film that starts by itself: it stays paused and the monitor offers play
+  function refused(err) { if (err && err.name === 'NotAllowedError') { paused = true; lastBtn = ''; } }
+  function apply() { if (paused || !suiteOn || cur !== 0) film.pause(); else { load(); var pp = film.play(); if (pp && pp.catch) pp.catch(refused); } lastBtn = ''; }
   film.addEventListener('playing', function () { mon.classList.add('is-playing'); });
+  film.addEventListener('playing', function () { setTimeout(wakeImgs, 400); }, { once: true });
+  if (document.readyState === 'complete') setTimeout(wakeImgs, 2500); else addEventListener('load', function () { setTimeout(wakeImgs, 2500); }, { once: true });
   if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { suiteOn = es[0].isIntersecting; apply(); }, { threshold: 0.02 }).observe(suite);
   if (document.readyState === 'complete') apply(); else addEventListener('load', function () { setTimeout(apply, 60); }, { once: true });
   function flip() { paused = !paused; apply(); }
   function btnTick() {
     var p = paused || cur !== 0, k = p + SS.L + cur; if (k === lastBtn) return; lastBtn = k;
+    mon.classList.toggle('is-paused', paused);
     playBtn.innerHTML = p ? PLAY : PAUSE;
     playBtn.setAttribute('aria-label', p ? (SS.L === 'en' ? 'Play the film' : 'Film lejátszása') : (SS.L === 'en' ? 'Pause the film' : 'Film megállítása'));
   }
@@ -709,6 +780,9 @@ a { color: inherit; }
   if (fine) {
     mon.addEventListener('pointermove', function (e) { tx = e.clientX; ty = e.clientY; dts = cur === 0 ? 1 : 0; });
     mon.addEventListener('pointerleave', function () { dts = 0; });
+    mon.addEventListener('click', function () { if (cur === 0) flip(); });
+  } else {
+    // on a touch screen a tap on the film plays and pauses it, as in any reel
     mon.addEventListener('click', function () { if (cur === 0) flip(); });
   }
   function discTick() {
@@ -730,8 +804,18 @@ a { color: inherit; }
     if (phone.matches) fw = W;
     var rm = mon.getBoundingClientRect(), ar = rm.height / rm.width;
     dock = { dx: rm.left - rs.left, dy: rm.top - rs.top, dw: rm.width, fx: (W - fw) / 2, fy: bar + (A - fw * ar) / 2, fw: fw };
-    lastE = -1;
+    lastE = -1; lastP = -1; lastTx = '';
+    tlW = tl.clientWidth; tlMid = tl.parentNode.clientWidth / 2;
+    checkClamp();
   }
+  // turning the phone swaps the cut and keeps the place in the film
+  SS.onMQ(upright, function () {
+    if (!loaded) return;
+    var want = pickSrc(), t = film.currentTime; if (film.currentSrc.indexOf(want) > -1) return;
+    mon.classList.remove('is-playing'); film.src = want; film.load();
+    film.addEventListener('loadedmetadata', function () { try { film.currentTime = t; } catch (err) {} }, { once: true });
+    apply();
+  });
   function dockTick(e) {
     if (!dock || e === lastE) return; lastE = e;
     var k = 1 - Math.pow(1 - e, 3), w = lerp(dock.fw, dock.dw, k), x = lerp(dock.fx, dock.dx, k), y = lerp(dock.fy, dock.dy, k);
@@ -752,8 +836,9 @@ a { color: inherit; }
   var tl = $('#tlBody'), ph = $('#playhead'), hh = $('#hoverhead'), tc = $('#tc'), chName = $('#chName'), insIx = $('#insIx');
   var inss = $$('.ins'), c1 = $('.c1', mon), count = $('#count'), c2 = $('.c2', mon), c8 = $('#c8'), wpct = $('#wpct'), rpct = $('#rpct');
   var olds = $$('.rules .old li', mon), news = $$('.rules .new li', mon);
-  var lastCount = -1, phx = 0;
-  function progress() { return parseFloat(getComputedStyle(suite).getPropertyValue('--sc-p')) || 0; }
+  var lastCount = -1, phx = 0, lastP = -1, lastTx = '', lastTc = '', lastVs = '', tlW = 0, tlMid = 0;
+  // the engine writes the act's progress on the act itself, so reading it costs no style recalculation
+  function progress() { return parseFloat(suite.style.getPropertyValue('--sc-p')) || 0; }
   function toP(q) { return D + (1 - D) * q; }
   function seek(p, instant) { var y = suite.offsetTop + clamp(p, 0, 1) * (suite.offsetHeight - innerHeight); scrollTo({ top: y, behavior: reduce || instant ? 'instant' : 'smooth' }); }
   function jump(ch, sub) { var n = sub == null ? 0.04 : (sub + 0.5) / (ch === 4 ? SVC.length : ch === 5 ? RES.length : QS.length); seek(toP((ch + n) / N + 0.0004)); }
@@ -769,13 +854,17 @@ a { color: inherit; }
     if (key === 'res' && ix > -1) rollFig($('.fig', a[ix]));
   }
   function suiteTick() {
-    var p = progress(), e = D ? clamp(p / D, 0, 1) : 1, q = clamp((p - D) / (1 - D), 0, 1);
+    var p = progress(), q = clamp((p - D) / (1 - D), 0, 1), to = q * tlW;
+    // nothing has scrolled and the playhead has arrived: nothing to write this frame
+    if (p === lastP && Math.abs(phx - to) < 0.05) return;
+    lastP = p;
+    var e = D ? clamp(p / D, 0, 1) : 1;
     dockTick(e);
     var ch = Math.min(N - 1, Math.floor(q * N)), sub = clamp(q * N - ch, 0, 1);
-    phx = lerp(phx, q * tl.clientWidth, reduce ? 1 : 0.35);
-    if (phone.matches) tl.style.setProperty('--tx', (tl.parentNode.clientWidth / 2 - phx).toFixed(1) + 'px');
-    else ph.style.setProperty('--ph', phx.toFixed(1) + 'px');
-    tc.textContent = fmt(q * TOTAL);
+    phx = lerp(phx, to, reduce ? 1 : 0.35);
+    var x = (phone.matches ? tlMid - phx : phx).toFixed(1);
+    if (x !== lastTx) { lastTx = x; if (phone.matches) tl.style.setProperty('--tx', x + 'px'); else ph.style.setProperty('--ph', x + 'px'); }
+    var t = fmt(q * TOTAL); if (t !== lastTc) { lastTc = t; tc.textContent = t; }
     if (ch !== last.ch) {
       last.ch = cur = ch;
       cards.forEach(function (el) { el.classList.toggle('is-on', +el.dataset.ch === ch); });
@@ -784,6 +873,8 @@ a { color: inherit; }
       $$('#trackT .clip').forEach(function (el) { el.classList.toggle('is-on', +el.dataset.jump === ch); });
       mon.classList.toggle('on-film', ch === 0);
       chName.textContent = T(CH[ch]); insIx.textContent = (ch + 1) + ' / ' + N;
+      closeCaption(); checkClamp();
+      if (ch > 2) wakeImgs();
       apply();
     }
     if (ch === 1) {
@@ -802,8 +893,33 @@ a { color: inherit; }
     step('res', ch === 5 ? Math.min(RES.length - 1, Math.floor(sub * RES.length)) : -1, $$('.step', c5), $$('li', resList));
     step('q', ch === 6 ? Math.min(QS.length - 1, Math.floor(sub * QS.length)) : -1, $$('.step', c6), $$('li', qList));
     if (ch === 8) { var r = clamp(sub / 0.7, 0, 1); c8.style.setProperty('--r', r.toFixed(3)); rpct.textContent = Math.round(r * 100) + '%'; }
-    stage.setAttribute('data-sc-verify-state', 'e' + Math.round(e * 4) + '-ch' + ch + '-' + Math.floor(sub * 4));
+    var vs = 'e' + Math.round(e * 4) + '-ch' + ch + '-' + Math.floor(sub * 4);
+    if (vs !== lastVs) { lastVs = vs; stage.setAttribute('data-sc-verify-state', vs); }
   }
+
+  /* ---------------- a phone's caption: "more" opens it over the preview ---------------- */
+  var insp = $('.insp'), insBody = $('.insbody');
+  function moreWord(o) { return o ? T({ hu: 'Bezár', en: 'Close' }) : T({ hu: 'Tovább', en: 'More' }); }
+  function setOpen(ins, o) {
+    ins.classList.toggle('is-open', o); insp.classList.toggle('is-open', o);
+    var b = $('.morebtn', ins); b.setAttribute('aria-expanded', String(o)); b.textContent = moreWord(o);
+  }
+  function closeCaption() { inss.forEach(function (ins) { if (ins.classList.contains('is-open')) setOpen(ins, false); }); }
+  function checkClamp() {
+    inss.forEach(function (ins) {
+      if (!ins.classList.contains('is-open')) $('.morebtn', ins).textContent = moreWord(false);
+      if (!ins.classList.contains('is-on')) return;
+      var over = upright.matches && (ins.scrollHeight > insBody.clientHeight + 2 || $$('h2, p', ins).some(function (el) { return el.scrollHeight > el.clientHeight + 2; }));
+      ins.classList.toggle('is-clamped', over);
+    });
+  }
+  inss.forEach(function (ins) {
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'morebtn'; b.setAttribute('aria-expanded', 'false'); b.textContent = moreWord(false);
+    ins.appendChild(b);
+    b.addEventListener('click', function () { setOpen(ins, !ins.classList.contains('is-open')); });
+    ins.addEventListener('click', function (ev) { if (ins.classList.contains('is-clamped') && !ins.classList.contains('is-open') && !ev.target.closest('a, button')) setOpen(ins, true); });
+  });
+  document.addEventListener('click', function (ev) { if (!ev.target.closest('.insp')) closeCaption(); });
 
   /* ---------------- the timeline: click, drag the playhead, a preview under the cursor ---------------- */
   var pv = $('#preview'), pvTc = $('#pvTc'), pvCh = $('#pvCh');
@@ -817,6 +933,7 @@ a { color: inherit; }
       seek(toP(phone.matches ? clamp(startQ - (e.clientX - startX) / tl.clientWidth, 0, 1) : qAt(e.clientX)), true);
     }
     if (!fine || phone.matches) return;
+    if (!pvBuilt) buildPreview();
     var f = qAt(e.clientX), ci = Math.min(N - 1, Math.floor(f * N));
     hh.style.setProperty('--hx', (f * tl.clientWidth).toFixed(1) + 'px');
     pv.style.setProperty('--px', e.clientX + 'px'); pv.style.setProperty('--py', tl.getBoundingClientRect().top + 'px'); pv.classList.add('is-on');
@@ -878,7 +995,9 @@ a { color: inherit; }
   var big = $('.foot .big');
   function fitBig() { big.style.fontSize = '100px'; var w = big.getBoundingClientRect().width; if (w) big.style.fontSize = (100 * big.parentNode.clientWidth / w).toFixed(2) + 'px'; }
   fitBig(); addEventListener('resize', fitBig); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitBig);
-  SS.onLang(function () { render(); renderChips(); if (lastBody) showSent(lastBody); });
+  SS.onLang(function () { render(); renderChips(); if (lastBody) showSent(lastBody); checkClamp(); });
+  // the browser's own bar follows the page: cream while the export form holds the middle of the screen
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { SS.themeColor(es[0].isIntersecting ? '#f1eee6' : '#0b0b0c'); }, { rootMargin: '-48% 0px -48% 0px' }).observe($('#audit'));
   SS.start();
   measure();
   (function frame() { suiteTick(); discTick(); btnTick(); ambTick(); requestAnimationFrame(frame); })();
