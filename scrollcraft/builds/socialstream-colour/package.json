@@ -1,0 +1,8 @@
+{
+  "name": "socialstream-colour",
+  "private": true,
+  "description": "SocialStream Stream in colour: three looks (scroll-craft build)",
+  "dependencies": {
+    "playwright-core": "^1.64.1"
+  }
+}
