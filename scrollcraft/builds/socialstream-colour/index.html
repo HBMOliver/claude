@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..500;1,9..144,300..500&family=Plus+Jakarta+Sans:wght@400..800&display=swap">
-<script>/* which colour world: fixed when published, ?look= when served here */ (function () { var m = /[?&]look=([a-z]+)/.exec(location.search), l = window.__LOOK || (m && m[1]) || "riviera"; document.documentElement.setAttribute("data-look", /^(riviera|dusk|paper)$/.test(l) ? l : "riviera"); })();</script>
+<script>/* which colour world: fixed when published, ?look= when served here */ (function () { var m = /[?&]look=([a-z]+)/.exec(location.search), l = window.__LOOK || (m && m[1]) || "riviera"; document.documentElement.setAttribute("data-look", /^(riviera|dusk|paper|ember|lagoon|velvet)$/.test(l) ? l : "riviera"); })();</script>
 <link rel="stylesheet" href="scrollcraft.css">
 <style>
 /* Stream, in colour: the same ordinary one-page site with one living figure, a stream of 10 000
@@ -54,7 +54,7 @@ a, button, label, input, select, textarea { -webkit-tap-highlight-color: transpa
 .k { position: absolute; left: 0; top: calc(var(--t) * 1%); height: calc(var(--h) * 1%); width: 1px; visibility: hidden; pointer-events: none; }
 
 /* ================= colour worlds =================
-   One page, three looks (data-look on the root: riviera, dusk, paper). A look names its colours
+   One page, six looks (data-look on the root: riviera, dusk, paper, then ember, lagoon, velvet). A look names its colours
    once, says which field each section stands on, and makes a few decisions about shape. A field
    restates everything that sits on it:
      --bg --fg --fg2 --fg3    the ground and three inks       --em --hl    the accent word, the block behind it
@@ -132,6 +132,91 @@ html[data-look="paper"] :is(.tick, .work, .foot) { --bg: var(--pen); --fg: var(-
 html[data-look="paper"] .results { --bg: var(--cobalt); --fg: #fffdf5; --fg2: #e2e8ff; --fg3: #cad3ff; --em: var(--butter); --ul: var(--pink); --tag: var(--butter); --line: var(--butter); --wm: var(--butter);
   --rule: rgba(255, 253, 245, 0.26); --btn: var(--butter); --btn-ink: var(--pen); --soft: rgba(255, 253, 245, 0.13); --card: #fff; --card-ink: var(--pen); --s0: #fffdf5; --s1: #b5daf7; --s2: #f8bcd0; --s3: #ffdc5e; --bar-a: 0.84; }
 html[data-look="paper"] :is(.h-xl, .h-l, .lead, .m2) em { color: var(--em); text-decoration: underline wavy var(--ul, currentColor); text-decoration-thickness: 0.055em; text-underline-offset: 0.13em; }
+
+/* ---- ember: Dusk's warm sibling. A dark ground with firelight in it ---- */
+html[data-look="ember"] {
+  --coal: #120d0b; --umber: #20140f; --cream: #f7e8d5; --copper: #e8834a; --amber: #f5b85c; --clay: #d9766f; --ink2: #1e1410; --warm: #fff3e6;
+  --w1: var(--amber); --w1i: var(--ink2); --w2: var(--copper); --w2i: var(--ink2); --w3: var(--clay); --w3i: var(--ink2); --w4: var(--cream); --w4i: var(--ink2);
+  --r: 24px; --r-s: 16px; --hw: 700; --far-f: brightness(0.55); --back-f: brightness(0.8);
+  --frame: 0 0 0 1px rgba(255, 243, 230, 0.2); --lift: 0 30px 70px -22px rgba(0, 0, 0, 0.75), 0 0 70px -18px rgba(232, 131, 74, 0.38); --focus: var(--amber); --ph: #1a1210; --heart: var(--copper);
+  --ph-sh: 0 0 0 1px rgba(255, 243, 230, 0.16), 0 40px 90px -30px rgba(0, 0, 0, 0.8), 0 0 120px -20px rgba(232, 131, 74, 0.42);
+  --blk: 0 30px 80px -24px rgba(232, 131, 74, 0.55); --glow: rgba(255, 160, 92, 0.15);
+}
+html[data-look="ember"] :is(.manifesto, .law1, .work, .results, .foot) { --bg: var(--coal); --fg: var(--warm); --fg2: #d4c4b5; --fg3: #a8978a; --g1: #ff9a5c; --g2: #ffd27a; --tag: var(--amber); --line: var(--copper); --wm: var(--amber);
+  --rule: rgba(255, 243, 230, 0.14); --btn: var(--amber); --btn-ink: var(--ink2); --btn-bg: linear-gradient(100deg, #ff9460, #ffc76b); --soft: rgba(255, 243, 230, 0.08); --card: #1f1612; --card-ink: var(--warm);
+  --s0: #fff3e6; --s1: #e8834a; --s2: #d9766f; --s3: #f5b85c; --bar-a: 0.74;
+  --bgi: radial-gradient(52vw 46vh at 8% 32%, rgba(232, 131, 74, 0.24), transparent 72%), radial-gradient(48vw 46vh at 96% 68%, rgba(217, 118, 111, 0.2), transparent 72%), radial-gradient(40vw 34vh at 62% 26%, rgba(245, 184, 92, 0.12), transparent 72%); }
+html[data-look="ember"] :is(.about, .services, .people) { --bg: var(--umber); --fg: var(--warm); --fg2: #d9c9ba; --fg3: #b3a092; --g1: #ffd27a; --g2: #ff9a5c; --tag: var(--amber); --line: var(--amber); --wm: var(--amber);
+  --rule: rgba(255, 243, 230, 0.15); --btn: var(--amber); --btn-ink: var(--ink2); --btn-bg: linear-gradient(100deg, #ff9460, #ffc76b); --soft: rgba(255, 243, 230, 0.09); --card: #2b1b14; --card-ink: var(--warm);
+  --s0: #f7e8d5; --s1: #f5b85c; --s2: #e8834a; --s3: #d9766f; --bar-a: 0.76; --orb: radial-gradient(closest-side, rgba(245, 184, 92, 0.62), rgba(232, 131, 74, 0.3) 52%, rgba(217, 118, 111, 0) 100%);
+  --bgi: radial-gradient(50vw 46vh at 92% 32%, rgba(245, 184, 92, 0.2), transparent 72%), radial-gradient(52vw 46vh at 4% 68%, rgba(217, 118, 111, 0.22), transparent 72%); }
+html[data-look="ember"] .law2 { --bg: #6d2a14; --tail: #a34a1c; --fg: var(--warm); --fg2: #fbe6d4; --fg3: #f1d2bb; --g1: #fff0c9; --g2: #ffd27a; --tag: #ffe2a8; --line: #ffe2a8; --wm: #ffe2a8;
+  --rule: rgba(255, 243, 230, 0.22); --btn: var(--warm); --btn-ink: var(--ink2); --soft: rgba(255, 243, 230, 0.12); --card: #26100b; --card-ink: var(--warm);
+  --s0: #fff3e6; --s1: #ffd27a; --s2: #26100b; --s3: #fff0c9; --bar-a: 0.8; --bgi: linear-gradient(180deg, #26100b 0%, #6d2a14 56%, #a34a1c 100%); --bgs: 100% 100%; }
+html[data-look="ember"] :is(.law3, .voices, .audit, .tick) { --bg: var(--cream); --fg: var(--ink2); --fg2: #5c463a; --fg3: #75594a; --g1: #c2501a; --g2: #b8641a; --tag: #a8431a; --line: #c2501a; --wm: #b84a1a;
+  --rule: rgba(30, 20, 16, 0.15); --btn: var(--ink2); --btn-ink: var(--cream); --soft: rgba(30, 20, 16, 0.07); --card: #fff6ea; --card-ink: var(--ink2);
+  --s0: #1e1410; --s1: #c2501a; --s2: #d9766f; --s3: #e09a1f; --bar-a: 0.86;
+  --bgi: radial-gradient(46vw 42vh at 94% 30%, rgba(232, 131, 74, 0.3), transparent 72%), radial-gradient(48vw 44vh at 2% 68%, rgba(245, 184, 92, 0.45), transparent 72%); }
+html[data-look="ember"] :is(.h-xl, .h-l, .lead, .m2) em { padding: 0 0.07em 0.12em 0; background: linear-gradient(100deg, var(--g1), var(--g2)); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+
+/* ---- lagoon: the sea after dark. Riviera's blocks, deep and muted, with the picture on the left ---- */
+html[data-look="lagoon"] {
+  --abyss: #06131b; --petrol: #0d3142; --deep: #135e63; --inkblue: #0f2748; --sand: #efe4cf; --coral: #e9836a; --foam: #7fd4c9; --sky: #5b93e0; --clay: #c66a55;
+  --w1: var(--sand); --w1i: var(--abyss); --w2: var(--coral); --w2i: var(--abyss); --w3: var(--foam); --w3i: var(--abyss); --w4: var(--sky); --w4i: var(--abyss);
+  --r: 30px; --r-s: 18px; --hw: 800; --sheet: clamp(28px, 4.4vw, 68px); --far-f: brightness(0.58); --back-f: brightness(0.82);
+  --frame: 0 0 0 3px var(--sand); --lift: 0 26px 50px -22px rgba(0, 6, 12, 0.7); --focus: var(--foam); --ph: #020a0f; --heart: var(--coral); --glow: rgba(127, 212, 201, 0.1);
+}
+html[data-look="lagoon"] :is(.manifesto, .law1, .work, .foot) { --bg: var(--abyss); --fg: #f2e9d8; --fg2: #b9c6cc; --fg3: #8a9aa3; --em: var(--abyss); --hl: var(--coral); --tag: var(--foam); --line: var(--foam); --wm: var(--foam);
+  --rule: rgba(242, 233, 216, 0.15); --btn: var(--sand); --btn-ink: var(--abyss); --soft: rgba(242, 233, 216, 0.08); --card: #0c2230; --card-ink: #f2e9d8; --s0: #f2e9d8; --s1: #5b93e0; --s2: #e9836a; --s3: #7fd4c9; --bar-a: 0.78; }
+html[data-look="lagoon"] :is(.about, .results) { --bg: var(--petrol); --fg: #f2e9d8; --fg2: #c9d6da; --fg3: #9fb3ba; --em: var(--abyss); --hl: var(--sand); --tag: #f3bca8; --line: var(--coral); --wm: var(--sand);
+  --rule: rgba(242, 233, 216, 0.18); --btn: var(--coral); --btn-ink: var(--abyss); --soft: rgba(242, 233, 216, 0.1); --card: var(--abyss); --card-ink: #f2e9d8; --s0: #efe4cf; --s1: #7fd4c9; --s2: #e9836a; --s3: #f6d58a; --bar-a: 0.82;
+  --orb: repeating-radial-gradient(circle, rgba(242, 233, 216, 0) 0 42px, rgba(242, 233, 216, 0.11) 42px 43.5px); }
+html[data-look="lagoon"] :is(.law2, .people) { --bg: var(--deep); --fg: #f6eede; --fg2: #d8e8e4; --fg3: #b5d0cb; --em: var(--abyss); --hl: #f2e9d8; --tag: #f6eede; --line: #f6d58a; --wm: #f6eede;
+  --rule: rgba(246, 238, 222, 0.22); --btn: var(--abyss); --btn-ink: #f2e9d8; --soft: rgba(246, 238, 222, 0.12); --card: var(--abyss); --card-ink: #f2e9d8; --s0: #f6eede; --s1: #06131b; --s2: #f6d58a; --s3: #e9836a; --bar-a: 0.84; }
+html[data-look="lagoon"] :is(.law3, .voices, .tick) { --bg: var(--sand); --fg: var(--abyss); --fg2: #3d4a52; --fg3: #56646c; --em: #f2e9d8; --hl: var(--petrol); --tag: #0f6b6b; --line: #c9584a; --wm: #0f6b6b;
+  --rule: rgba(6, 19, 27, 0.16); --btn: var(--abyss); --btn-ink: var(--sand); --soft: rgba(6, 19, 27, 0.07); --card: #faf3e4; --card-ink: var(--abyss); --s0: #06131b; --s1: #1f8f8a; --s2: #c9584a; --s3: #3d78c9; --bar-a: 0.86; }
+html[data-look="lagoon"] .services { --bg: var(--inkblue); --fg: #f2e9d8; --fg2: #c4cfe0; --fg3: #9aa9c2; --em: var(--abyss); --hl: var(--sky); --tag: #a9c8ff; --line: var(--foam); --wm: #a9c8ff;
+  --rule: rgba(242, 233, 216, 0.17); --btn: var(--sand); --btn-ink: var(--abyss); --soft: rgba(242, 233, 216, 0.09); --card: var(--abyss); --card-ink: #f2e9d8; --s0: #f2e9d8; --s1: #5b93e0; --s2: #7fd4c9; --s3: #e9836a; --bar-a: 0.82; }
+html[data-look="lagoon"] .audit { --bg: var(--clay); --fg: var(--abyss); --fg2: #1f1210; --fg3: #2b1815; --em: #f2e9d8; --hl: var(--abyss); --tag: var(--abyss); --line: var(--abyss); --wm: var(--abyss);
+  --rule: rgba(6, 19, 27, 0.24); --btn: var(--abyss); --btn-ink: var(--sand); --soft: rgba(6, 19, 27, 0.1); --card: var(--abyss); --card-ink: #f2e9d8; --s0: #06131b; --s1: #efe4cf; --s2: #f6d58a; --s3: #fffaf0; --bar-a: 0.86; }
+html[data-look="lagoon"] :is(.h-xl, .h-l, .lead, .m2) em { display: inline-block; padding: 0.02em 0.18em 0.1em; margin: 0 0.03em; border-radius: 0.16em; background: var(--hl); color: var(--em); transform: rotate(-1.6deg); }
+html[data-look="lagoon"] .quotes li:nth-child(4n + 1) { --q: var(--petrol); --qi: #f2e9d8; }
+html[data-look="lagoon"] .quotes li:nth-child(4n) { --q: var(--abyss); --qi: #f2e9d8; }
+/* this look turns the page round: the figure on the left, its words on the right */
+@media (min-width: 861px) {
+  html[data-look="lagoon"] :is(.law1, .law.flow) .two, html[data-look="lagoon"] .res { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); }
+  html[data-look="lagoon"] :is(.law1, .law.flow) .two > .figure, html[data-look="lagoon"] .res > .figure { order: -1; }
+}
+
+/* ---- velvet: wine and champagne, set like a magazine. Serif statements, straight cuts, fine lines ---- */
+html[data-look="velvet"] {
+  --noir: #0c0a0b; --wine: #3b0f1f; --plum: #1f0d14; --bordeaux: #7a2740; --champagne: #e7cfa3; --blush: #efb8a7; --ivory: #f5ede1; --rose: #d9778a;
+  --w1: var(--champagne); --w1i: var(--noir); --w2: var(--blush); --w2i: var(--noir); --w3: var(--bordeaux); --w3i: var(--ivory); --w4: var(--ivory); --w4i: var(--noir);
+  --r: 10px; --r-s: 6px; --hw: 400; --sheet: 0px; --btn-r: 8px; --far-f: brightness(0.55); --back-f: brightness(0.8);
+  --frame: 0 0 0 1px rgba(231, 207, 163, 0.5); --lift: 0 34px 60px -30px rgba(0, 0, 0, 0.85); --focus: var(--champagne); --ph: #141011; --heart: var(--rose);
+  --ph-sh: 0 0 0 1px rgba(231, 207, 163, 0.5), 0 40px 80px -34px rgba(0, 0, 0, 0.85); --blk: 0 34px 70px -30px rgba(0, 0, 0, 0.8); --glow: rgba(231, 207, 163, 0.08);
+}
+html[data-look="velvet"] :is(.manifesto, .law1, .work, .foot) { --bg: var(--noir); --fg: var(--ivory); --fg2: #cbbfb3; --fg3: #9f9287; --em: var(--champagne); --tag: var(--champagne); --line: var(--blush); --wm: var(--champagne);
+  --rule: rgba(245, 237, 225, 0.16); --btn: var(--champagne); --btn-ink: var(--noir); --soft: rgba(245, 237, 225, 0.07); --card: #171213; --card-ink: var(--ivory); --s0: #f5ede1; --s1: #d9778a; --s2: #efb8a7; --s3: #e7cfa3; --bar-a: 0.76;
+  --bgi: radial-gradient(54vw 46vh at 6% 34%, rgba(122, 39, 64, 0.42), transparent 72%), radial-gradient(46vw 44vh at 98% 66%, rgba(122, 39, 64, 0.3), transparent 72%); }
+html[data-look="velvet"] :is(.about, .results, .people) { --bg: var(--wine); --fg: var(--ivory); --fg2: #e3cfcf; --fg3: #c3a5a8; --em: var(--champagne); --tag: var(--champagne); --line: var(--champagne); --wm: var(--champagne);
+  --rule: rgba(245, 237, 225, 0.2); --btn: var(--champagne); --btn-ink: var(--noir); --soft: rgba(245, 237, 225, 0.09); --card: #26090f; --card-ink: var(--ivory); --s0: #f5ede1; --s1: #efb8a7; --s2: #d9778a; --s3: #e7cfa3; --bar-a: 0.8;
+  --orb: radial-gradient(closest-side, rgba(239, 184, 167, 0.5), rgba(217, 119, 138, 0.22) 55%, rgba(217, 119, 138, 0) 100%);
+  --bgi: radial-gradient(50vw 46vh at 94% 32%, rgba(217, 119, 138, 0.2), transparent 72%), radial-gradient(52vw 46vh at 2% 68%, rgba(12, 10, 11, 0.5), transparent 72%); }
+html[data-look="velvet"] .law2 { --bg: #6a2238; --tail: #9c4257; --fg: var(--ivory); --fg2: #f3dfdc; --fg3: #e6c7c6; --em: #fbe9c7; --tag: #fbe9c7; --line: #fbe9c7; --wm: #fbe9c7;
+  --rule: rgba(245, 237, 225, 0.24); --btn: var(--ivory); --btn-ink: var(--noir); --soft: rgba(245, 237, 225, 0.12); --card: #1f0911; --card-ink: var(--ivory); --s0: #f5ede1; --s1: #e7cfa3; --s2: #1f0911; --s3: #fbe9c7; --bar-a: 0.8;
+  --bgi: linear-gradient(180deg, #230912 0%, #6a2238 56%, #9c4257 100%); --bgs: 100% 100%; }
+html[data-look="velvet"] .services { --bg: var(--plum); --fg: var(--ivory); --fg2: #d2c3c0; --fg3: #a89598; --em: var(--champagne); --tag: var(--champagne); --line: var(--champagne); --wm: var(--champagne);
+  --rule: rgba(245, 237, 225, 0.17); --btn: var(--champagne); --btn-ink: var(--noir); --soft: rgba(245, 237, 225, 0.08); --card: #2b131b; --card-ink: var(--ivory); --s0: #f5ede1; --s1: #e7cfa3; --s2: #d9778a; --s3: #efb8a7; --bar-a: 0.78;
+  --bgi: radial-gradient(48vw 44vh at 96% 34%, rgba(231, 207, 163, 0.12), transparent 72%), radial-gradient(50vw 46vh at 2% 66%, rgba(122, 39, 64, 0.36), transparent 72%); }
+html[data-look="velvet"] :is(.law3, .voices, .audit, .tick) { --bg: var(--ivory); --fg: var(--noir); --fg2: #54474a; --fg3: #6e5f62; --em: var(--bordeaux); --tag: var(--bordeaux); --line: #b9566a; --wm: var(--bordeaux);
+  --rule: rgba(12, 10, 11, 0.16); --btn: var(--noir); --btn-ink: var(--ivory); --soft: rgba(12, 10, 11, 0.06); --card: #fffaf2; --card-ink: var(--noir); --s0: #0c0a0b; --s1: #7a2740; --s2: #c79a52; --s3: #d9778a; --bar-a: 0.86; }
+/* the statements are set in the serif here, the accent word its italic; small labels are spaced capitals with a rule */
+html[data-look="velvet"] :is(.h-xl, .h-l, .m1, .m2, .lead, .svc h3, .seal, .fit .big2) { font-family: var(--serif); letter-spacing: -0.03em; font-weight: 400; }
+html[data-look="velvet"] :is(.h-xl, .h-l, .lead, .m2) em { font-size: 1.02em; }
+html[data-look="velvet"] .m2 { width: min(90vw, 8.8em); }
+html[data-look="velvet"] .kicker { padding: 0; background: none; border-radius: 0; gap: 12px; font-weight: 600; font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; }
+html[data-look="velvet"] .kicker::before { width: 30px; height: 1px; aspect-ratio: auto; border-radius: 0; }
 
 /* ---- what every look shares ---- */
 :root { --sheet: clamp(20px, 2.4vw, 38px); --r: 22px; --r-s: 14px; --back: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -406,7 +491,10 @@ html[data-look="paper"] :is(.h-xl, .h-l, .lead, .m2) em { color: var(--em); text
 .ln { padding: 0.1em 0.12em 0.2em; margin: -0.1em -0.12em -0.2em; }
 .kicker { display: inline-flex; align-items: center; gap: 9px; padding: 9px 15px 9px 12px; border-radius: 99px; background: var(--soft); color: var(--tag, var(--fg3)); font-weight: 700; }
 .kicker::before { content: ""; width: 7px; aspect-ratio: 9 / 16; border-radius: 2px; background: currentColor; }
-.btn { background: var(--btn-bg, var(--btn)); }
+.btn { background: var(--btn-bg, var(--btn)); border-radius: var(--btn-r, 99px); }
+/* a soft light that follows the cursor, in the dark looks that ask for one (--glow); never over the film */
+.glow { position: fixed; z-index: 1; left: 0; top: 0; width: 52vmax; height: 52vmax; margin: -26vmax 0 0 -26vmax; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, var(--glow, transparent), transparent); opacity: 0; transition: opacity 700ms var(--ease); will-change: transform; }
+.glow.is-on { opacity: 1; }
 .btn::after { content: ""; flex: none; width: 15px; height: 15px; background: currentColor; -webkit-mask: var(--arrow) center / contain no-repeat; mask: var(--arrow) center / contain no-repeat; transition: transform 260ms var(--out); }
 @media (hover: hover) { .btn:hover::after { transform: translateX(4px); } }
 .pc8 { --x: 17.5%; --w: clamp(84px, 8vw, 128px); --from: 104; --to: -40; --r: 5deg; }
@@ -488,7 +576,7 @@ html[data-look="paper"] :is(.h-xl, .h-l, .lead, .m2) em { color: var(--em); text
 
 /* ---------- services: one small scene per service, in a panel ---------- */
 .viewer { width: min(100%, 430px); aspect-ratio: 4 / 3; border-radius: var(--r); background: var(--card); color: var(--card-ink); overflow: hidden; box-shadow: var(--frame), var(--lift); }
-.viewer .dv { display: grid; place-items: center; padding: 7%; transform: scale(0.95); transition: opacity 300ms var(--ease), transform 520ms var(--out); }
+.viewer .dv { display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; padding: 7%; transform: scale(0.95); transition: opacity 300ms var(--ease), transform 520ms var(--out); }
 .viewer .dv.is-on { transform: none; }
 .svc li.is-on h3 { color: var(--fg); }
 .mg { position: relative; width: 100%; height: 100%; }
@@ -648,6 +736,7 @@ html[data-look="paper"] .founder figure { --blk: 14px 14px 0 var(--pen); } html[
 <body>
 
 <canvas id="stream" aria-hidden="true"></canvas>
+<div class="glow" aria-hidden="true"></div>
 
 <header class="bar" data-on="film" data-ui>
   <a class="wm" href="#top" aria-label="SocialStream">Social<em>Stream</em></a>
@@ -827,22 +916,22 @@ html[data-look="paper"] .founder figure { --blk: 14px 14px 0 var(--pen); } html[
       <div class="res" data-r="r81">
         <div class="copy"><p class="fig num"><span class="v" data-to="81">81</span><small>×</small></p><p class="c" data-en="ROAS, our best result in an e-commerce campaign">ROAS, a legjobb eredményünk e-commerce kampányban</p><p class="who" data-en="Door webshop · Google Performance Max">Ajtó webshop · Google Performance Max</p><figure class="shot"><img src="assets/case-ajto.webp" alt="" width="900" height="471" loading="lazy"></figure></div>
         <div class="figure rf" id="fig-r81" aria-hidden="true"><i class="to" style="left:32%"></i><p class="cap" style="left:16%" data-en="1 Ft ad spend">1 Ft hirdetési költés</p><p class="cap" style="left:65.7%" data-en="81 Ft revenue">81 Ft bevétel</p></div>
-        <i class="k" data-k="r81" data-fig="#fig-r81" data-auto="0.62 0.4" data-into="0.5 0 40 0" style="--t:26;--h:48"></i>
+        <i class="k" data-k="r81" data-fig="#fig-r81" data-auto="0.62 0.4" data-into="0.5 0 40 0" data-into-m="0.5 9 0 0" style="--t:26;--h:48"></i>
       </div>
       <div class="res" data-r="r79">
         <div class="copy"><p class="fig num"><span class="v" data-to="79">79</span><small>M Ft</small></p><p class="c" data-en="revenue in one week, from a B2B Meta campaign">bevétel egy hét alatt, B2B Meta kampányból</p><p class="who" data-en="Industrial hall builder · Meta">Csarnoképítő ügyfél · Meta</p><figure class="shot"><img src="assets/case-csarnok.webp" alt="" width="900" height="471" loading="lazy"></figure></div>
         <div class="figure rf" id="fig-r79" aria-hidden="true"><p class="cap" style="left:50%" data-en="One card is 1 M Ft. In one week, 79.">Egy kártya 1 M Ft. Egy hét alatt 79.</p></div>
-        <i class="k" data-k="r79" data-fig="#fig-r79" data-auto="0.62 0.4" data-into="0.6 0 30 0" style="--t:26;--h:48"></i>
+        <i class="k" data-k="r79" data-fig="#fig-r79" data-auto="0.62 0.4" data-into="0.6 0 30 0" data-into-m="0.5 9 0 0" style="--t:26;--h:48"></i>
       </div>
       <div class="res" data-r="r23">
         <div class="copy"><p class="fig num"><span class="v" data-to="23">23</span><small>×</small></p><p class="c" data-en="ROAS in a holiday campaign, 8M+ Ft revenue">ROAS ünnepi kampányban, 8M+ Ft bevétel</p><p class="who" data-en="Watch webshop · Christmas">Karóra webshop · Karácsony</p><figure class="shot"><img src="assets/case-karora.webp" alt="" width="900" height="471" loading="lazy"></figure></div>
         <div class="figure rf" id="fig-r23" aria-hidden="true"><i class="to" style="left:36%"></i><p class="cap" style="left:20%" data-en="1 Ft ad spend">1 Ft hirdetési költés</p><p class="cap" style="left:64.8%" data-en="23 Ft revenue">23 Ft bevétel</p></div>
-        <i class="k" data-k="r23" data-fig="#fig-r23" data-auto="0.62 0.4" data-into="0.6 0 30 0" style="--t:26;--h:48"></i>
+        <i class="k" data-k="r23" data-fig="#fig-r23" data-auto="0.62 0.4" data-into="0.6 0 30 0" data-into-m="0.5 9 0 0" style="--t:26;--h:48"></i>
       </div>
       <div class="res" data-r="r5700">
         <div class="copy"><p class="fig num"><span class="v" data-to="105">105</span><small>Ft</small></p><p class="c" data-en="per registrant: ~5,700 registrants from 600K Ft spend">jelentkezőnként: ~5700 jelentkező 600K Ft költésből</p><p class="who" data-en="Healthcare webinar · lead generation">Egészségügyi webinár · lead generation</p><figure class="shot"><img src="assets/case-webinar.webp" alt="" width="900" height="471" loading="lazy"></figure></div>
         <div class="figure rf" id="fig-r5700" aria-hidden="true"><p class="cap" style="left:50%" data-en="One card, one registrant: about 5,700.">Egy kártya, egy jelentkező: körülbelül 5700.</p></div>
-        <i class="k" data-k="r5700" data-fig="#fig-r5700" data-auto="0.62 0.4" data-into="0.45 2 40 0" style="--t:26;--h:48"></i>
+        <i class="k" data-k="r5700" data-fig="#fig-r5700" data-auto="0.62 0.4" data-into="0.45 2 40 0" data-into-m="0.5 9 0 0" style="--t:26;--h:48"></i>
       </div>
       <p class="seal" data-sc-in data-en="300M+ Ft in budget managed since 2022.">300M+ Ft kezelt büdzsé 2022 óta.</p>
     </div>
@@ -1255,6 +1344,7 @@ html[data-look="paper"] .founder figure { --blk: 14px 14px 0 var(--pen); } html[
 
   /* ---------------- one loop ---------------- */
   var lastY = scrollY, vel = 0, flowT = 0, tPrev = 0, ptr = [-999, -999, 0], ptrAt = 0, texAt = -1, running = true;
+  var glowEl = $('.glow'), gx = null, gy = 0, glowOk = fine && !reduce && !!getComputedStyle(root).getPropertyValue('--glow').trim();
   if (fine && !reduce) addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') { ptr[0] = e.clientX; ptr[1] = e.clientY; ptrAt = performance.now(); } }, { passive: true });
   function frame(now) {
     if (!running) return;
@@ -1269,6 +1359,11 @@ html[data-look="paper"] .founder figure { --blk: 14px 14px 0 var(--pen); } html[
     if (A && sy > A.outY && keys[i + 1]) { B = keys[i + 1]; mix = clamp((sy - A.outY) / Math.max(1, B.inY - A.outY), 0, 1); }
     seg.i = i; seg.mix = mix; seg.B = B;
     hero.tick(); chrome(y); litTick(vh); svcTick(now); phoneTick(); railTick();
+    if (glowOk) {
+      var gOn = now - ptrAt < 2600 && ptr[0] > -900 && !!was.band && !was.band.film;
+      if (gOn) { gx = gx == null ? ptr[0] : lerp(gx, ptr[0], 0.14); gy = gx === ptr[0] && !gy ? ptr[1] : lerp(gy, ptr[1], 0.14); glowEl.style.transform = 'translate3d(' + gx.toFixed(1) + 'px,' + gy.toFixed(1) + 'px,0)'; }
+      flag(glowEl, 'glow', 'is-on', gOn);
+    }
     if (A) hooks();
     if (st && A) {
       var filmy = A.fig === 'frame' || B.fig === 'frame';

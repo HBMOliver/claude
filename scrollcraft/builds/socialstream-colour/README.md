@@ -1,7 +1,8 @@
 # SocialStream: Stream, in colour
 
-Three colour versions of [Stream](../socialstream-stream/README.md), which
-stays as it is. The same ordinary one-page site with one living figure, a
+Six colour versions of [Stream](../socialstream-stream/README.md), which
+stays as it is: three first, then three darker and softer ones after the
+client chose Dusk. The same ordinary one-page site with one living figure, a
 stream of exactly 10 000 vertical cards between the section grounds and the
 text, but here the cards are posts: the nearer ones carry frames from the
 agency's own client videos. The page has pictures of its own as well: a phone
@@ -17,10 +18,10 @@ Static: `index.html`, `stream.js`, `ss.js`, `scrollcraft.css`, `scrollcraft.js`,
 node ../../../.claude/skills/scroll-craft/scripts/serve.mjs --root . --port 4551
 ```
 
-Then `http://localhost:4551/?look=riviera`, `?look=dusk` or `?look=paper`
-(no look given: riviera).
+Then `http://localhost:4551/?look=dusk`, or `riviera`, `paper`, `ember`,
+`lagoon`, `velvet` (no look given: riviera).
 
-## The three looks
+## The looks
 
 A look is `data-look` on the root, set by the first script in the head from
 `window.__LOOK` (fixed when published) or `?look=`. In the stylesheet a look is
@@ -36,8 +37,14 @@ three things:
 3. How the accent word looks: a tilted block (riviera), a gradient (dusk), a
    wavy rule (paper).
 
-To add a look, copy one block and change it. To drop two, delete their blocks
-and the two names in the head script and in `tools/artifact.mjs`.
+A look may also change the page's shape, still in the stylesheet alone:
+`--sheet` (how round a section's top corners are; 0 is a straight cut),
+`--btn-r`, `--glow` (a soft light that follows the cursor on dark looks, never
+over the film), the statement typeface (velvet sets them in the serif), and
+which side the figures stand on (lagoon puts them on the left from 861px up).
+
+To add a look, copy one block and change it. To drop one, delete its block and
+its name in the head script and in `tools/artifact.mjs`.
 
 ## How the page works (what is new against Stream)
 
@@ -88,7 +95,7 @@ node ../socialstream-colour/lab/phones.mjs "http://localhost:4551/?look=paper" /
 ```
 
 - `func.mjs`: every scene's state, the phone's feed, the rows, the services,
-  the form, English, reduced motion, no WebGL, a phone. Passes in all three.
+  the form, English, reduced motion, no WebGL, a phone. Passes in all six.
 - `phones.mjs`: nine screen sizes, no errors, no sideways overflow, no cut
   text (run on riviera; the looks share one layout). On a throttled phone the
   film starts at 3.8 s, as in Stream.
@@ -100,12 +107,16 @@ node ../socialstream-colour/lab/phones.mjs "http://localhost:4551/?look=paper" /
 ## Publishing
 
 ```bash
-node tools/artifact.mjs            # dist/riviera, dist/dusk, dist/paper
+node tools/artifact.mjs            # dist/<look>/index.html for all six
+node tools/artifact.mjs dusk       # or just the ones named
 ```
 
 Each `dist/<look>/index.html` is published as its own Artifact with `assets/`
 beside it. Publishing the same file again keeps the link.
 
+- Dusk (the client's favourite of the first three): https://claude.ai/artifact/FP8h51VQk1dMJnc5jX2cwk
 - Riviera: https://claude.ai/artifact/GR54VhMmGNH2u4dTf5txFQ
-- Dusk: https://claude.ai/artifact/FP8h51VQk1dMJnc5jX2cwk
 - Paper: https://claude.ai/artifact/U25ix1XNEVjh8iekHPWBka
+- Ember: https://claude.ai/artifact/SDHP3FnSG2Kr7LiXffdQFL
+- Lagoon: https://claude.ai/artifact/WkBp9nMz8BVFzZzHUbTkSf
+- Velvet: https://claude.ai/artifact/Eq6HJ4BWNGXGpnCTm48JXR

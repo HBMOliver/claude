@@ -1,10 +1,10 @@
-// node tools/artifact.mjs [riviera|dusk|paper ...]   (no argument: all three)
+// node tools/artifact.mjs [riviera|dusk|paper|ember|lagoon|velvet ...]   (no argument: all six)
 // Package the site as claude.ai Artifact pages, one per colour world: the host wraps the page in
 // its own <html>/<head>/<body>, so strip those, inline the stylesheet and every local script (no
 // other script hosts are allowed), fix the look, and keep assets/ as published files next to the
 // page. Each look is written to dist/<look>/index.html.
 import fs from 'node:fs';
-const LOOKS = { riviera: 'SocialStream Riviera', dusk: 'SocialStream Dusk', paper: 'SocialStream Paper' };
+const LOOKS = { riviera: 'SocialStream Riviera', dusk: 'SocialStream Dusk', paper: 'SocialStream Paper', ember: 'SocialStream Ember', lagoon: 'SocialStream Lagoon', velvet: 'SocialStream Velvet' };
 const src = fs.readFileSync('index.html', 'utf8');
 // Function replacements, so a "$&" or "$'" inside the inlined code is never read as a pattern.
 function swap(s, from, to) { if (!s.includes(from)) throw new Error('not found in index.html: ' + from); return s.replace(from, () => to); }

@@ -16,6 +16,9 @@ creative delegation; what is not quoted is authored.
   other new versions."
 - While it was being built: "also not enough pictures, need better motion
   graphycs. needs to feel 2026".
+- On the first three (riviera, dusk, paper): "i like dusk the best, bust can i
+  see 3 more templates and builds? reviera not bad but i dont like the too
+  bright colors".
 - Still in force from earlier rounds: their own 30 s brand film opens the page,
   full screen, nothing over it; only real numbers; testimonials verbatim;
   Hungarian first with an English switch; no video beyond the brand film.
@@ -44,7 +47,22 @@ creative delegation; what is not quoted is authored.
 | **Paper** | paper white with butter, pink, sky and mint; ink and cobalt for contrast | A dotted ground, an ink outline and a hard shadow on every card, a wavy rule under the accent word. |
 
 One page, one script; a look is a block of custom properties (see the README).
-The type is the brand film's in all three.
+The type is the brand film's in all of them.
+
+### The second three
+
+Dusk won and Riviera's colours were too bright, so the next three stay dark
+and soft, and each changes the page's shape as well as its colour, so that
+they read as different builds and not as recolours:
+
+| Look | Ground | What else changes |
+|---|---|---|
+| **Ember** | coal and umber with copper, amber and clay light; cream for the light sections | Dusk's warm sibling: the same shapes, firelight instead of violet. |
+| **Lagoon** | deep navy, petrol, teal and ink blue with sand; one terracotta block for the audit | Riviera after dark, which is the answer to "not bad but too bright": flat blocks again, larger round sheets, a thin sand edge on pictures, and the page turned round, the figures on the left and the words on the right. |
+| **Velvet** | near-black and wine with champagne and blush; ivory for the light sections | Set like a magazine: the statements in the serif with the accent word its italic, straight cuts between sections, sharp cards with a champagne hairline, spaced capitals for labels. |
+
+All three have a soft light that follows the cursor on their dark sections
+(not over the film).
 
 ## What changed against Stream
 
