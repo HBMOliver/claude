@@ -5,3 +5,4 @@ lab/*
 !lab/func.mjs
 dist/
 !lab/shots.mjs
+!lab/phones.mjs
