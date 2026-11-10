@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SocialStream</title>
+<meta name="description" content="A social media meghalt. Az érdeklődés vette át a helyét. Videó, social és hirdetés egy rendszerben. Tenerife és Budapest.">
+<meta name="theme-color" content="#0b0b0c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f0b18'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23ffb05c' stroke-width='4'/%3E%3Ccircle cx='22' cy='10' r='4' fill='%23ff6f91'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..500;1,9..144,300..500&family=Plus+Jakarta+Sans:wght@400..800&display=swap">
+<link rel="stylesheet" href="scrollcraft.css">
+<link rel="stylesheet" href="base.css">
+<style>
+/* Orbit: a centred showcase. Every section is one thing in the middle of the screen with a few
+   large, clear shapes behind it (after mastermind.com): the phone as the product shot with
+   handwritten callouts, one giant counted number, a ring that fills, a fan of their reels.
+   Nothing drifts at the page edges; a shape is placed, and it only leans with the cursor. */
+.claim .stage { display: block; overflow: hidden; }
+.claim-h { position: absolute; z-index: 2; left: 50%; top: calc(var(--bar) + 5vh); width: min(92vw, 1100px); translate: -50% 0; margin: 0; display: grid; text-align: center; }
+.claim-h > span { grid-area: 1 / 1; font: 700 clamp(2.1rem, 5.4vw, 5.4rem)/1 var(--sans); letter-spacing: -0.045em; text-wrap: balance; transition: opacity 500ms var(--ease), transform 700ms var(--out); }
+.claim-h em { font: italic 400 1.07em/1 var(--serif); letter-spacing: -0.02em; padding: 0 0.07em 0.12em 0; background: linear-gradient(100deg, var(--g1), var(--g2)); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+.claim-h .m2 { opacity: 0; transform: translateY(26px); }
+.claim.is-b .m1 { opacity: 0; transform: translateY(-26px); }
+.claim.is-b .m2 { opacity: 1; transform: none; }
+/* the product shot: the phone rises from the bottom edge into the middle */
+.shot { --pw: min(clamp(210px, 22vw, 320px), 34vh); position: absolute; z-index: 1; left: 50%; top: 33vh; margin-left: calc(var(--pw) / -2); transform: translateY(calc((1 - clamp(0, var(--sc-p, 0) * 2.8, 1)) * 72vh)); }
+.shot .tag { display: none; }
+.callout.c1 { right: calc(50% + min(clamp(210px, 22vw, 320px), 34vh) / 2 + 22px); top: 37vh; justify-items: end; text-align: right; }
+.callout.c2 { left: calc(50% + min(clamp(210px, 22vw, 320px), 34vh) / 2 + 22px); top: 60vh; justify-items: start; }
+.callout .hand { transform: rotate(-4deg); max-width: 9.5em; }
+.callout.c2 .hand { transform: rotate(3deg); }
+
+.about .wrap { gap: clamp(22px, 3.4vw, 40px); }
+.about .lead { max-width: 21ch; }
+
+/* law I: one number, as large as the screen, counted, struck, and then the forty */
+.law1 .stage { display: grid; place-items: center; overflow: hidden; }
+.law1 .wrap { width: 100%; gap: 8px; padding-top: var(--bar); }
+.giant { position: relative; margin: 6px 0 calc(var(--z, 0) * -0.52em); font: 300 clamp(5rem, 22vw, 20rem)/0.82 var(--serif); letter-spacing: -0.04em; white-space: nowrap; transform-origin: 50% 0; transform: scale(calc(1 - var(--z, 0) * 0.6)); opacity: calc(1 - var(--z, 0) * 0.5); }
+.giant::after { content: ""; position: absolute; left: -2%; right: -2%; top: 52%; height: 0.035em; border-radius: 1em; background: var(--tag); transform-origin: left; transform: scaleX(var(--k, 0)); }
+.unit { margin: 0; font: 600 1.06rem/1.2 var(--sans); color: var(--fg2); }
+.likes { position: relative; margin: 14px 0 0; font: 600 clamp(1.4rem, 2.6vw, 2.3rem)/1.1 var(--sans); letter-spacing: -0.02em; opacity: 0; transform: translateY(16px); transition: opacity 420ms var(--ease), transform 640ms var(--out); }
+.likes b { position: relative; display: inline-block; font: 300 1.9em/1 var(--serif); letter-spacing: -0.03em; margin-right: 0.12em; }
+.likes .loop { position: absolute; left: -22%; top: -14%; width: 144%; height: 128%; overflow: visible; color: var(--rose); }
+.likes .loop .ink { vector-effect: non-scaling-stroke; stroke-width: 2.5; }
+.likes .pct { margin-left: 0.6em; font: 600 0.62em/1 var(--sans); color: var(--tag); letter-spacing: 0; }
+.law1.is-likes .likes { opacity: 1; transform: none; }
+.law1.is-likes .ink { stroke-dashoffset: 0; }
+.law1 .after { display: grid; gap: 16px; justify-items: center; margin-top: clamp(16px, 3vh, 34px); opacity: 0; transform: translateY(18px); transition: opacity 500ms var(--ease), transform 700ms var(--out); }
+.law1.is-law .after { opacity: 1; transform: none; }
+
+.law .two { align-items: center; }
+.rules-fig { position: relative; display: grid; gap: 14px; }
+.rules-fig .swing { justify-self: center; width: clamp(90px, 10vw, 140px); color: var(--tag); margin-bottom: -6px; }
+
+/* the work: a hand of their reels, fanned out as it comes into view */
+.work .wrap { gap: 16px; }
+.fan { position: relative; z-index: 1; --cw: clamp(150px, 17vw, 250px); height: calc(var(--cw) * 2.25); margin-top: clamp(26px, 5vh, 56px); }
+.fan .card9 { position: absolute; left: 50%; top: 7%; width: var(--cw); margin-left: calc(var(--cw) / -2); transform-origin: 50% 135%; z-index: var(--zi, 1);
+  transform: rotate(calc((var(--a) * var(--k, 0) + var(--j) * (1 - var(--k, 0))) * 1deg)); transition: transform 600ms var(--out); }
+@media (hover: hover) { .fan .card9:hover { z-index: 9; transform: rotate(calc(var(--a) * var(--k, 0) * 1deg)) translateY(-7%) scale(1.05); } }
+
+/* services: a card each, with its scene */
+.sv-grid { list-style: none; margin: clamp(30px, 5vh, 56px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 1.7vw, 24px); text-align: left; width: 100%; }
+.sv { display: grid; gap: 10px; align-content: start; padding: 12px 12px 22px; border-radius: var(--r); background: var(--card); box-shadow: var(--frame); transition: transform 420ms var(--out); }
+@media (hover: hover) { .sv:hover { transform: translateY(-6px); } }
+.sv .scene { border-radius: calc(var(--r) - 8px); box-shadow: none; background: var(--bg); }
+.sv h3 { margin: 8px 8px 0; font: 700 1.32rem/1.12 var(--sans); letter-spacing: -0.03em; }
+.sv p { margin: 0 8px; color: var(--fg2); font-size: 0.98rem; line-height: 1.5; }
+
+/* results: four numbers, each with the client's still life tucked in the corner */
+.stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(14px, 1.7vw, 24px); margin-top: clamp(30px, 5vh, 56px); text-align: left; width: 100%; }
+.res { position: relative; display: grid; gap: 10px; align-content: end; min-height: clamp(280px, 27vw, 380px); padding: clamp(22px, 2.4vw, 34px); border-radius: var(--r); background: radial-gradient(44% 58% at 82% 24%, var(--halo), rgba(0, 0, 0, 0) 72%), var(--card); box-shadow: var(--frame); overflow: hidden; }
+.res-obj { position: absolute; right: 5%; top: 7%; width: clamp(112px, 31%, 196px); margin: 0; transform: rotate(4deg); transition: transform 500ms var(--out); }
+.res:nth-child(even) .res-obj { transform: rotate(-4deg); }
+@media (hover: hover) { .res:hover .res-obj { transform: scale(1.07); } }
+.res .fig { font-size: clamp(4.4rem, 9vw, 8.4rem); }
+.res .c { margin: 0; font: 600 clamp(1.05rem, 1.4vw, 1.3rem)/1.3 var(--sans); letter-spacing: -0.02em; max-width: 26ch; }
+.res .who { margin: 0; font: 600 0.95rem/1.3 var(--sans); color: var(--tag); }
+.seal { margin: clamp(30px, 6vh, 64px) 0 0; font: 600 clamp(1.3rem, 2.4vw, 2.2rem)/1.15 var(--sans); letter-spacing: -0.03em; }
+
+/* voices: one at a time, in large type */
+.voices .wrap { gap: clamp(26px, 4vh, 44px); }
+.quotes { list-style: none; margin: 0; padding: 0; display: grid; width: 100%; }
+.quotes li { grid-area: 1 / 1; display: grid; gap: 22px; justify-items: center; align-content: center; opacity: 0; transform: translateY(16px); transition: opacity 500ms var(--ease), transform 700ms var(--out); pointer-events: none; }
+.quotes li.is-on { opacity: 1; transform: none; pointer-events: auto; }
+.quotes .av { display: none; }
+.quotes .qb { display: grid; gap: 22px; justify-items: center; }
+.quotes blockquote { margin: 0; font: 500 clamp(1.25rem, 2.4vw, 2.1rem)/1.34 var(--sans); letter-spacing: -0.02em; max-width: 36ch; text-wrap: balance; }
+.quotes cite { font: 700 1rem/1.3 var(--sans); font-style: normal; color: var(--tag); }
+.qnav { display: flex; align-items: center; justify-content: center; gap: 14px; }
+.qnav button { width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--rule); background: none; color: inherit; cursor: pointer; display: grid; place-items: center; transition: background-color 200ms, transform 200ms var(--ease); }
+.qnav button::before { content: ""; width: 16px; height: 16px; background: currentColor; -webkit-mask: var(--arrow) center / contain no-repeat; mask: var(--arrow) center / contain no-repeat; }
+.qnav .prev::before { transform: scaleX(-1); }
+@media (hover: hover) { .qnav button:hover { background: var(--soft); } }
+.qnav span { font: 600 14px/1 var(--sans); color: var(--fg2); min-width: 3.2em; text-align: center; }
+
+@media (max-width: 1040px) { .sv-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 860px) {
+  .shot { --pw: min(56vw, 30vh); top: 36vh; }
+  .about .torus { --x: 112% !important; --y: 4% !important; }
+  .callout { display: none; }
+  .giant { font-size: clamp(4.2rem, 25vw, 9rem); }
+  .law1 .after .body { display: none; }
+  .fan { --cw: 40vw; }
+  .sv-grid, .stats { grid-template-columns: minmax(0, 1fr); }
+  .res { min-height: 250px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .claim-h { top: calc(var(--bar) + 2vh); } .claim-h > span { font-size: clamp(1.4rem, 4vw, 2.4rem); }
+  .shot { --pw: 30vh; top: 30vh; }
+  .giant { font-size: 30vh; } .law1 .after .body { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shot { transform: none; }
+  .claim-h .m1 { display: none; } .claim-h .m2 { opacity: 1; transform: none; }
+  .likes, .law1 .after, .quotes li { transition: none; }
+  .fan .card9 { transition: none; }
+}
+</style>
+</head>
+<body class="t-orbit">
+
+<header class="bar" data-on="film">
+  <a class="wm" href="#top" aria-label="SocialStream">Social<em>Stream</em></a>
+  <nav class="links" aria-label="Fő menü" data-en-aria="Main menu">
+    <a href="#torvenyek" data-en="Laws">Törvények</a>
+    <a href="#szolgaltatasok" data-en="Services">Szolgáltatások</a>
+    <a href="#eredmenyek" data-en="Results">Eredmények</a>
+    <a href="#csapat" data-en="People">Csapat</a>
+  </nav>
+  <div class="lang" role="group" aria-label="Nyelv / Language"><button type="button" data-set-lang="hu" aria-pressed="true" lang="hu">HU</button><button type="button" data-set-lang="en" aria-pressed="false" lang="en">EN</button></div>
+  <a class="btn" href="#audit" data-en="Free audit">Ingyenes audit</a>
+</header>
+
+<main>
+  <!-- the film, first: their brand film, full screen; its titles and numbers are in the film itself -->
+  <section class="hero f-film" id="top" data-field="film" aria-label="Film">
+    <div class="reel" id="reel">
+      <canvas class="amb" width="64" height="36" aria-hidden="true"></canvas>
+      <picture class="poster"><source media="(orientation: portrait)" srcset="assets/hero-v-poster.jpg"><img src="assets/hero-poster.jpg" alt="" width="1600" height="900" fetchpriority="high"></picture>
+      <video muted loop playsinline preload="none" aria-hidden="true" data-src="assets/hero-1080.mp4" data-poster="assets/hero-poster.jpg" data-src-s="assets/hero-540.mp4" data-poster-s="assets/hero-poster.jpg" data-src-v="assets/hero-v-720.mp4" data-poster-v="assets/hero-v-poster.jpg"></video>
+      <div class="shade"></div>
+      <div class="ui"><button class="toggle" type="button" aria-label="Film megállítása"></button></div>
+    </div>
+  </section>
+
+  <!-- the claim: the phone is the product shot; it leaves the Following tab as the second sentence arrives -->
+  <section class="sec sheet f-night claim" data-field="night" data-sc-act="pin" data-sc-span="2.2" aria-labelledby="claim">
+    <div class="stage" data-sc-stage>
+      <div class="shapes" aria-hidden="true">
+        <i class="shape rings" style="--x:50%;--y:68%;--s:min(125vh,115vw);--d:0.3"></i>
+        <i class="shape torus bob" style="--x:11%;--y:72%;--s:clamp(170px,25vw,400px);--d:1.4;--rot:-18deg;--i:1"></i>
+        <i class="shape sphere bob" style="--x:87%;--y:40%;--s:clamp(96px,14vw,230px);--d:2;--i:2"></i>
+        <i class="shape pill bob" style="--x:83%;--y:88%;--s:clamp(130px,19vw,300px);--d:1;--rot:-28deg;--i:3"></i>
+        <i class="shape sphere v bob" style="--x:13%;--y:37%;--s:clamp(48px,6.4vw,100px);--d:2.6;--i:4"></i>
+      </div>
+      <h1 class="claim-h" id="claim">
+        <span class="m1"><span data-l="hu">A social media meghalt.</span><span data-l="en">Social media is dead.</span></span>
+        <span class="m2"><span data-l="hu">Az <em>érdeklődés</em> vette át a helyét.</span><span data-l="en"><em>Interest</em> has taken its place.</span></span>
+      </h1>
+      <div class="shot" id="shot" aria-hidden="true"></div>
+      <div class="callout c1" aria-hidden="true"><p class="hand" data-en="not who you follow">nem az, akit követsz</p><svg viewBox="0 0 140 70"><path class="ink" d="M6 44 C 34 10, 86 4, 130 26"/><path class="ink" d="M130 26 l -22 -3 M130 26 l -9 19"/></svg></div>
+      <div class="callout c2" aria-hidden="true"><svg viewBox="0 0 140 70"><path class="ink" d="M134 20 C 104 58, 54 64, 10 44"/><path class="ink" d="M10 44 l 21 6 M10 44 l 12 -17"/></svg><p class="hand" data-en="but what interests you">hanem az, ami érdekel</p></div>
+    </div>
+  </section>
+
+  <!-- the name, explained -->
+  <section class="sec sheet f-plum flow about" data-field="plum" data-sc-act="flow">
+    <div class="shapes" aria-hidden="true">
+      <i class="shape torus thin" style="--x:99%;--y:8%;--s:clamp(200px,30vw,460px);--d:1.2;--rot:40deg"></i>
+      <i class="shape sphere t bob" style="--x:7%;--y:74%;--s:clamp(70px,9vw,150px);--d:2;--i:2"></i>
+    </div>
+    <div class="wrap center">
+      <p class="lead lit"><span data-l="hu">Igen, a nevünkben még ott a social. A <em>stream</em> maradt. Ami benne folyik, az változott.</span><span data-l="en">Yes, our name still says social. The <em>stream</em> stayed. What flows in it changed.</span></p>
+      <p class="body" data-sc-in data-en="SocialStream is an interest media agency in Tenerife and Budapest. Video content, social presence and performance ads in one growth system, built on the rules of the new age.">A SocialStream interest media ügynökség Tenerifén és Budapesten. Videó tartalom, social jelenlét és performance hirdetések egy growth rendszerben, ami az új kor szabályaira épült.</p>
+      <a class="btn" href="#audit" data-sc-in data-en="Free audit">Ingyenes audit</a>
+    </div>
+  </section>
+  <div class="tick f-cream" id="tick" aria-hidden="true"></div>
+
+  <!-- law I, the peak: ten thousand, counted across the whole screen; then the forty -->
+  <section class="sec f-night law law1" id="torvenyek" data-field="night" data-sc-act="pin" data-sc-span="2" aria-labelledby="l1-h">
+    <div class="stage" data-sc-stage>
+      <div class="shapes" aria-hidden="true">
+        <i class="shape rings" style="--x:50%;--y:46%;--s:min(140vh,120vw);--d:0.3;--gap:64px"></i>
+        <i class="shape sphere a bob" style="--x:90%;--y:20%;--s:clamp(70px,9vw,150px);--d:2.2;--i:1"></i>
+        <i class="shape pill v bob" style="--x:8%;--y:84%;--s:clamp(120px,16vw,260px);--d:1.4;--rot:24deg;--i:3"></i>
+      </div>
+      <div class="wrap center">
+        <p class="kicker" data-en="Law I">I. törvény</p>
+        <p class="giant num" id="cnt" aria-hidden="true">0</p>
+        <p class="unit"><span class="sr">10 000 </span><span data-en="followers">követő</span></p>
+        <p class="likes"><b class="num"><span id="likes">40</span><svg class="loop" viewBox="0 0 120 70" preserveAspectRatio="none" aria-hidden="true"><path class="ink" d="M64 6 C 102 4, 116 22, 112 38 C 106 58, 70 66, 44 62 C 14 57, 2 40, 10 24 C 18 8, 52 2, 80 9"/></svg></b><span data-en="likes">kedvelés</span><span class="pct num" data-en="0.4%">0,4%</span></p>
+        <div class="after">
+          <h2 class="h-l" id="l1-h"><span data-l="hu">A követőszám a régi kor <em>relikviája</em>.</span><span data-l="en">Follower count is a <em>relic</em> of the old age.</span></h2>
+          <p class="body" data-en="In the new age every post starts with a clean slate. What matters is not how many follow you, but how many watch to the end.">Az új korban minden poszt tiszta lappal indul. Nem az számít, hányan követnek, hanem hogy hányan nézik végig.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- law II: a ring fills round one of their reels as it is watched -->
+  <section class="sec sheet f-glow flow law law2" data-field="glow" data-sc-act="flow" aria-labelledby="l2-h">
+    <div class="shapes" aria-hidden="true">
+      <i class="shape rings" style="--x:74%;--y:50%;--s:min(110vh,80vw);--d:0.4"></i>
+      <i class="shape sphere a bob" style="--x:96%;--y:16%;--s:clamp(80px,10vw,170px);--d:2;--i:2"></i>
+    </div>
+    <div class="wrap two">
+      <div class="copy">
+        <p class="kicker" data-en="Law II">II. törvény</p>
+        <h2 class="h-l" id="l2-h" data-sc-in><span data-l="hu">A figyelmet nem lehet megvenni. Csak <em>kiérdemelni</em>.</span><span data-l="en">Attention cannot be bought. Only <em>earned</em>.</span></h2>
+        <p class="body lit"><span data-l="hu">Minden megjelenésért a legjobb alkotókkal versenyzel, nem a konkurenciáddal. Ami érdekes, azt a platform ingyen viszi el milliókhoz. Ami unalmas, azt büdzsével sem lehet megmenteni.</span><span data-l="en">For every impression you compete with the best creators, not with your competitors. What is interesting, the platform carries to millions for free. What is boring, no budget can save.</span></p>
+      </div>
+      <div class="ringfig" id="ring" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- law III: the old rules are struck out, the new ones come in -->
+  <section class="sec sheet f-cream flow law law3" data-field="cream" data-sc-act="flow" aria-labelledby="l3-h">
+    <div class="shapes" aria-hidden="true">
+      <i class="shape torus bob" style="--x:95%;--y:86%;--s:clamp(150px,20vw,320px);--d:1.3;--rot:60deg;--i:1"></i>
+      <i class="shape sphere v bob" style="--x:5%;--y:14%;--s:clamp(54px,7vw,110px);--d:2.2;--i:3"></i>
+    </div>
+    <div class="wrap two">
+      <div class="copy">
+        <p class="kicker" data-en="Law III">III. törvény</p>
+        <h2 class="h-l" id="l3-h" data-sc-in><span data-l="hu">Aki a régi szabályokkal játszik, <em>veszít</em>.</span><span data-l="en">Whoever plays by the old rules <em>loses</em>.</span></h2>
+        <p class="body" data-en="Most businesses still play by the old rules: post and hope. The new age's strategy: knowing from data what interests people, and building a system that turns interest into revenue.">A legtöbb vállalkozás még a régi kor szabályaival játszik: posztol és reménykedik. Az új kor stratégiája: adatból tudni, mi érdekli az embereket, és rendszert építeni, ami az érdeklődést bevétellé alakítja.</p>
+      </div>
+      <div class="rules-fig" id="rulesFig">
+        <svg class="swing" viewBox="0 0 140 50" aria-hidden="true"><path class="ink" d="M8 40 C 40 4, 96 2, 130 30"/><path class="ink" d="M130 30 l -22 -5 M130 30 l -7 20"/></svg>
+        <div class="rules" id="rules"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- the work: a hand of their reels -->
+  <section class="sec sheet f-night flow work" data-field="night" data-sc-act="flow" aria-labelledby="wk-h">
+    <div class="shapes" aria-hidden="true">
+      <i class="shape rings" style="--x:50%;--y:70%;--s:min(130vh,110vw);--d:0.3"></i>
+      <svg class="shape ribbon" style="--x:50%;--y:78%;--s:min(120vw,1500px);--d:0.8" viewBox="0 0 600 300" aria-hidden="true"><defs><linearGradient id="rbA" x1="0" y1="0" x2="1" y2="0"><stop offset="0" style="stop-color:var(--violet)"/><stop offset="0.5" style="stop-color:var(--rose)"/><stop offset="1" style="stop-color:var(--amber)"/></linearGradient></defs><path d="M-30 210 C 90 60, 210 300, 320 160 S 520 40, 640 130" fill="none" stroke="url(#rbA)" stroke-width="58" stroke-linecap="round"/><path d="M-30 196 C 90 46, 210 286, 320 146 S 520 26, 640 116" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="7" stroke-linecap="round"/></svg>
+    </div>
+    <div class="wrap center">
+      <h2 class="h-l" id="wk-h" data-sc-in><span data-l="hu">Ami <em>megállítja</em> a hüvelykujjat.</span><span data-l="en">What <em>stops</em> the thumb.</span></h2>
+      <p class="body" data-sc-in data-en="Frames from the videos we made for our clients.">Képkockák az ügyfeleinknek készült videókból.</p>
+    </div>
+    <div class="fan" id="fan" aria-hidden="true"></div>
+  </section>
+
+  <!-- services -->
+  <section class="sec sheet f-plum flow services" id="szolgaltatasok" data-field="plum" data-sc-act="flow" aria-labelledby="svc-h">
+    <div class="shapes" aria-hidden="true">
+      <i class="shape sphere bob" style="--x:95%;--y:8%;--s:clamp(90px,12vw,200px);--d:2;--i:1"></i>
+      <i class="shape torus thin" style="--x:3%;--y:60%;--s:clamp(190px,26vw,420px);--d:1.1;--rot:120deg"></i>
+    </div>
+    <div class="wrap center">
+      <h2 class="h-l" id="svc-h" data-sc-in><span data-l="hu">Hat szolgáltatás. Egy <em>stratégia</em>.</span><span data-l="en">Six services. One <em>strategy</em>.</span></h2>
+      <ul class="sv-grid" id="svc"></ul>
+    </div>
+  </section>
+
+  <!-- results -->
+  <section class="sec sheet f-night flow results" id="eredmenyek" data-field="night" data-sc-act="flow" aria-labelledby="res-h">
+    <div class="shapes" aria-hidden="true">
+      <i class="shape torus bob" style="--x:90%;--y:6%;--s:clamp(160px,22vw,360px);--d:1.4;--rot:-30deg;--i:2"></i>
+      <i class="shape pill bob" style="--x:4%;--y:92%;--s:clamp(120px,16vw,260px);--d:1.2;--rot:18deg;--i:4"></i>
+    </div>
+    <div class="wrap center">
+      <h2 class="h-l" id="res-h" data-sc-in><span data-l="hu">Nem ígéretek. <em>Számok</em>.</span><span data-l="en">Not promises. <em>Numbers</em>.</span></h2>
+      <div class="stats" id="res" data-sc-in data-sc-stagger="90"></div>
+      <p class="seal" data-sc-in data-en="300M+ Ft in budget managed since 2022.">300M+ Ft kezelt büdzsé 2022 óta.</p>
+    </div>
+  </section>
+
+  <!-- voices -->
+  <section class="sec sheet f-cream flow voices" data-field="cream" data-sc-act="flow" aria-labelledby="vo-h">
+    <div class="shapes" aria-hidden="true">
+      <i class="shape rings" style="--x:50%;--y:56%;--s:min(120vh,100vw);--d:0.3"></i>
+      <i class="shape sphere bob" style="--x:8%;--y:20%;--s:clamp(60px,8vw,130px);--d:2.2;--i:1"></i>
+      <i class="shape pill v bob" style="--x:93%;--y:80%;--s:clamp(110px,14vw,230px);--d:1.4;--rot:-22deg;--i:3"></i>
+    </div>
+    <div class="wrap center">
+      <h2 class="h-l" id="vo-h" data-sc-in><span data-l="hu">Nem mi mondjuk. Ők <em>mondják</em>.</span><span data-l="en">We don't say it. <em>They</em> do.</span></h2>
+      <ul class="quotes" id="quotes" aria-live="polite"></ul>
+      <div class="qnav"><button type="button" class="prev" aria-label="Előző" data-en-aria="Previous"></button><span class="num" id="qn">1 / 6</span><button type="button" class="next" aria-label="Következő" data-en-aria="Next"></button></div>
+    </div>
+  </section>
+
+  <!-- people -->
+  <section class="sec sheet f-plum flow people" id="csapat" data-field="plum" data-sc-act="flow" aria-labelledby="tm-h">
+    <div class="shapes" aria-hidden="true">
+      <i class="shape rings" style="--x:22%;--y:22%;--s:min(90vh,70vw);--d:0.4"></i>
+      <i class="shape sphere a bob" style="--x:44%;--y:9%;--s:clamp(60px,7vw,120px);--d:2;--i:2"></i>
+    </div>
+    <div class="wrap" id="people"></div>
+  </section>
+
+  <!-- the audit -->
+  <section class="sec sheet f-cream flow audit" id="audit" data-field="cream" data-sc-act="flow" aria-labelledby="au-h">
+    <div class="shapes" aria-hidden="true"><i class="shape torus thin" style="--x:97%;--y:9%;--s:clamp(180px,24vw,380px);--d:1.1;--rot:200deg"></i></div>
+    <div class="wrap" id="auditWrap"></div>
+  </section>
+
+  <footer class="sec sheet f-night foot" data-field="night" id="foot">
+    <div class="shapes" aria-hidden="true">
+      <i class="shape rings" style="--x:50%;--y:40%;--s:min(140vh,120vw);--d:0.3"></i>
+      <i class="shape sphere bob" style="--x:86%;--y:18%;--s:clamp(70px,9vw,150px);--d:2;--i:1"></i>
+      <i class="shape torus bob" style="--x:10%;--y:26%;--s:clamp(120px,15vw,250px);--d:1.4;--rot:30deg;--i:3"></i>
+    </div>
+    <div id="footIn"></div>
+  </footer>
+</main>
+
+<div class="rdisc" id="rdisc" aria-hidden="true"><span>Szünet</span></div>
+
+<script src="scrollcraft.js"></script>
+<script src="ss.js"></script>
+<script src="tpl.js"></script>
+<script>
+(function () {
+  var $ = SS.$, $$ = SS.$$, clamp = SS.clamp, reduce = SS.reduce, T = TPL;
+  T.ticker($('#tick')); T.services($('#svc'), 'grid'); T.results($('#res')); T.voices($('#quotes')); T.people($('#people')); T.audit($('#auditWrap')); T.footer($('#footIn'));
+
+  // the claim: the second sentence and the For You feed arrive together, then the notes
+  var claim = $('.claim'), phone = T.phone($('#shot'));
+  // law I: the count, the strike, the forty, the law
+  var law1 = $('.law1'), cnt = $('#cnt'), likes = $('#likes'), was = {};
+  function set(el, key, text) { if (was[key] !== text) { was[key] = text; el.textContent = text; } }
+  var ring = T.ring($('#ring'), 2), ringFig = $('#ring'), rules = T.rules($('#rules')), rulesFig = $('#rulesFig');
+  // the fan: seven reels, stacked a little askew, opened as the section comes up
+  var fan = $('#fan'), fanPics = [3, 12, 1, 16, 5, 13, 6], jit = [-5, 4, -2, 0, 3, -4, 6];
+  fan.innerHTML = fanPics.map(function (n, i) { return '<div class="card9" style="--a:' + (i - 3) * 11 + ';--j:' + jit[i] + ';--zi:' + (7 - Math.abs(i - 3)) + '">' + T.pic(T.PIC(n)) + '</div>'; }).join('');
+
+  T.onFrame(function (c) {
+    var p = reduce ? 1 : T.pinP(claim);
+    claim.classList.toggle('is-b', p > 0.42); claim.classList.toggle('is-notes', p > 0.6);
+    phone(p > 0.42, (p - 0.5) / 0.5);
+
+    var q = reduce ? 1 : T.pinP(law1);
+    set(cnt, 'cnt', SS.fmtN(Math.round(10000 * clamp(q / 0.36, 0, 1))));
+    var k = clamp((q - 0.4) / 0.1, 0, 1).toFixed(3), z = clamp((q - 0.5) / 0.14, 0, 1).toFixed(3);
+    if (was.k !== k) { was.k = k; cnt.style.setProperty('--k', k); }
+    if (was.z !== z) { was.z = z; cnt.style.setProperty('--z', z); }
+    law1.classList.toggle('is-likes', q > 0.6);
+    set(likes, 'likes', String(Math.round(40 * clamp((q - 0.6) / 0.14, 0, 1))));
+    law1.classList.toggle('is-law', q > 0.78);
+
+    ring((T.through(ringFig, c.vh) - 0.2) / 0.3);
+    rules((T.through(rulesFig, c.vh) - 0.18) / 0.3);
+    var f = clamp((T.through(fan, c.vh) - 0.16) / 0.34, 0, 1).toFixed(3);
+    if (was.fan !== f) { was.fan = f; fan.style.setProperty('--k', reduce ? 1 : f); }
+  });
+
+  // voices: one at a time; it moves on by itself unless someone is reading or steering
+  var qs = $$('#quotes li'), qi = 0, qn = $('#qn'), hold = false, timer = 0;
+  function show(i) { qi = (i + qs.length) % qs.length; qs.forEach(function (li, k) { li.classList.toggle('is-on', k === qi); li.setAttribute('aria-hidden', String(k !== qi)); }); qn.textContent = (qi + 1) + ' / ' + qs.length; }
+  $('.qnav .prev').addEventListener('click', function () { show(qi - 1); hold = true; });
+  $('.qnav .next').addEventListener('click', function () { show(qi + 1); hold = true; });
+  var vo = $('.voices'); vo.addEventListener('pointerenter', function () { timer = -1; }); vo.addEventListener('pointerleave', function () { timer = 0; }); vo.addEventListener('focusin', function () { hold = true; });
+  show(0);
+  if (!reduce) setInterval(function () { if (hold || timer < 0 || document.hidden) return; var r = vo.getBoundingClientRect(); if (r.bottom > 0 && r.top < innerHeight) show(qi + 1); }, 7000);
+
+  T.start();
+})();
+</script>
+</body>
+</html>

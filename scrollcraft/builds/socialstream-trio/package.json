@@ -1,0 +1,8 @@
+{
+  "name": "socialstream-trio",
+  "private": true,
+  "description": "SocialStream: three templates, Orbit, Screen and Bento (scroll-craft build)",
+  "dependencies": {
+    "playwright-core": "^1.64.1"
+  }
+}
