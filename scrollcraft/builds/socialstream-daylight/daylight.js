@@ -51,8 +51,9 @@
   var PLAY = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5l9 5.5-9 5.5z" fill="currentColor"/></svg>';
   var PAUSE = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2h3v10H3zM8 2h3v10H8z" fill="currentColor"/></svg>';
   var paused = reduce || SS.saveData, inView = true, loaded = '', started = false;
-  // a phone holds the frame upright and gets the vertical cut; elsewhere the small cut plays where the frame is small
-  function srcFor() { if (narrow.matches) return 'assets/hero-v-720.mp4'; return frame.offsetWidth * (window.devicePixelRatio || 1) < 1300 ? 'assets/hero-540.mp4' : 'assets/hero-1080.mp4'; }
+  // a phone holds the frame upright and gets the vertical cut; elsewhere the small cut plays where the frame is small,
+  // unless the frame is marked data-big (a first screen where the film grows to the full width)
+  function srcFor() { if (narrow.matches) return 'assets/hero-v-720.mp4'; if (frame.hasAttribute('data-big')) return 'assets/hero-1080.mp4'; return frame.offsetWidth * (window.devicePixelRatio || 1) < 1300 ? 'assets/hero-540.mp4' : 'assets/hero-1080.mp4'; }
   function load() {
     var s = srcFor(); if (loaded === s) return;
     var t = loaded ? v.currentTime : 0; loaded = s; frame.classList.remove('is-playing'); v.src = s; v.load();

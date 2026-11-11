@@ -1,0 +1,150 @@
+/* Daylight's first screen, three options. Each replaces only the first screen (heroes/<name>.html,
+   swapped in by tools/heroes.mjs); the rest of the page is the same.
+   Cinema: the film fills the first screen and the promise sits on a dark strip under it.
+   Glow: a dark stage lit by the film, which opens out to the full width as it comes up.
+   Capsule: type first; the film plays in a capsule inside the headline and grows to fill the screen. */
+
+:root { --film-black: #0c0b0d; --rose-on-dark: #f6a9bf; }
+.hf-h em, .hd-h em, .ht-h em { font: italic 400 1.08em/1 var(--serif); letter-spacing: -0.015em; }
+
+/* ---------- the menu over a dark first screen ---------- */
+.nav { transition: box-shadow 300ms var(--ease), background-color 300ms var(--ease); }
+.nav .wm, .nav .wm em, .nav .links a, .nav .lang button { transition: color 300ms var(--ease), background-color 160ms; }
+.nav.on-dark, .nav.on-dark.is-scrolled { background: rgba(14, 12, 16, 0.36); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1); }
+.nav.on-dark .wm { color: #fff; }
+.nav.on-dark .wm em { color: var(--rose-on-dark); }
+.nav.on-dark .links a { color: rgba(255, 255, 255, 0.8); }
+@media (hover: hover) { .nav.on-dark .links a:hover { color: #fff; background: rgba(255, 255, 255, 0.09); } }
+.nav.on-dark .lang button { color: rgba(255, 255, 255, 0.56); }
+.nav.on-dark .lang button[aria-pressed="true"] { color: #fff; }
+
+/* the film's own controls, shared */
+.hf-screen video, .hf-screen .poster, .hf-screen .poster img,
+.hd-screen video, .hd-screen .poster, .hd-screen .poster img,
+.ht-screen video, .ht-screen .poster, .ht-screen .poster img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+.hf-screen .poster, .hd-screen .poster, .ht-screen .poster { transition: opacity 500ms var(--ease); }
+.hf-screen.is-playing .poster, .hd-screen.is-playing .poster, .ht-screen.is-playing .poster { opacity: 0; }
+.hf .toggle, .hd .toggle, .ht .toggle { position: absolute; z-index: 3; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px 0 12px; border: 0; border-radius: 999px; cursor: pointer;
+  font: 700 13px/1 var(--sans); color: #fff; background: rgba(20, 17, 24, 0.42); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.hf .toggle svg, .hd .toggle svg, .ht .toggle svg { width: 12px; height: 12px; }
+.hf .ticks, .hd .ticks { color: rgba(255, 255, 255, 0.64); }
+.hf .ticks li::before, .hd .ticks li::before { background-color: rgba(246, 169, 191, 0.16); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.4 6.3l2.4 2.4 4.8-5.3' fill='none' stroke='%23f6a9bf' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+
+/* ================= Cinema ================= */
+.hero.hf { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: 100vh; height: 100svh; min-height: 540px; padding: 0; background: var(--film-black); color: #fff; }
+.hf-film { position: relative; overflow: hidden; background: var(--film-black); }
+.hf-screen { position: absolute; inset: 0; }
+.hf-screen video, .hf-screen .poster { transform: translate3d(0, calc(var(--sy, 0) * 16vh), 0); will-change: transform; }
+/* a soft shade at the very top so the menu reads; nothing else is laid over the film */
+.hf-film::after { content: ""; position: absolute; z-index: 1; inset: 0 0 auto 0; height: 150px; pointer-events: none; background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0)); }
+.hf .toggle { right: max(var(--gut), env(safe-area-inset-right, 0px)); bottom: 18px; }
+.hf-strip { position: relative; z-index: 2; padding: clamp(22px, 3.4vh, 36px) 0 calc(clamp(22px, 3.4vh, 36px) + env(safe-area-inset-bottom, 0px)); background: var(--film-black); box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.07); }
+.hf-strip .wrap { max-width: 1320px; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 18px 56px; }
+.hf-h { margin: 0; color: #fff; font: 700 clamp(1.6rem, 2.5vw, 2.6rem)/1.1 var(--sans); letter-spacing: -0.032em; text-wrap: balance; }
+.hf-h .ln { display: block; }
+.hf-h em { color: var(--rose-on-dark); }
+.hf-act { display: grid; justify-items: end; gap: 12px; }
+.hf-act .ticks { margin: 0; gap: 6px 16px; justify-content: flex-end; font-size: 13px; }
+.hf-after { padding: clamp(84px, 13vh, 140px) 0 0; }
+.hf-after .eyebrow { margin-bottom: 22px; }
+.hf-lead { margin: 0 auto; max-width: 31ch; font: 600 clamp(1.45rem, 2.55vw, 2.35rem)/1.28 var(--sans); letter-spacing: -0.024em; color: var(--ink3); text-wrap: balance; }
+.hf-lead strong { color: var(--ink); font-weight: 700; }
+.hf-after .link { margin-top: 14px; }
+
+/* ================= Glow ================= */
+.hero.hd { position: relative; padding: calc(64px + clamp(64px, 11vh, 112px)) 0 clamp(64px, 10vh, 110px); background: var(--night); color: #fff; overflow: clip; isolation: isolate; }
+.hd-light { position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(44% 40% at 16% 18%, rgba(201, 46, 93, 0.34), rgba(201, 46, 93, 0) 72%),
+    radial-gradient(40% 36% at 86% 26%, rgba(224, 102, 58, 0.24), rgba(224, 102, 58, 0) 72%),
+    radial-gradient(70% 34% at 50% 58%, rgba(140, 86, 170, 0.18), rgba(140, 86, 170, 0) 72%); }
+.hd .wrap { position: relative; z-index: 2; }
+.hd .eyebrow { color: var(--gold); }
+.hd-h { color: #fff; }
+.hd-h .ln { display: block; }
+.hd-h em { color: var(--rose-on-dark); }
+.hd .lead { color: rgba(255, 255, 255, 0.7); }
+.hd .lead strong { color: #fff; }
+.hd .link { color: #fff; }
+.hd .btn { box-shadow: 0 14px 34px -12px rgba(201, 46, 93, 0.9); }
+.hd-film { position: relative; z-index: 1; margin-top: clamp(52px, 8vh, 88px); }
+/* the film's light spills on the stage around it, as on a screen in a dark room */
+.hd-amb { position: absolute; z-index: 0; left: 2%; top: -14%; width: 96%; height: 128%; filter: blur(72px) saturate(1.6); opacity: 0.7; }
+.hd-screen { --in: 7vw; --rr: 26px; position: relative; z-index: 1; aspect-ratio: 16 / 9; width: 100%; overflow: hidden; background: #0b0b0c; clip-path: inset(0 var(--in) round var(--rr)); }
+.hd .toggle { right: calc(var(--in) + 16px); bottom: 16px; }
+/* the light page rises over the dark stage as a sheet */
+.hd + .count { position: relative; z-index: 2; margin-top: -34px; border-radius: 34px 34px 0 0; background: var(--bg); }
+.hd + .count .rule { opacity: 0; }
+
+/* ================= Capsule ================= */
+.hero.ht { position: relative; padding: 0; overflow: visible; background: var(--bg); }
+.ht-stage { position: relative; }
+/* sized by the screen's height too, so the scene fits a laptop window and a phone with its browser bars */
+.ht-copy { padding-top: calc(64px + clamp(36px, 8vh, 104px)); padding-bottom: clamp(28px, 5vh, 64px); }
+.ht .eyebrow { margin-bottom: clamp(14px, 2.4vh, 26px); }
+.ht-h { margin: 0; font: 800 clamp(2.6rem, min(7.2vw, 11.6vh), 8.1rem)/0.94 var(--sans); letter-spacing: -0.055em; color: var(--ink); }
+.ht-h .ln { display: block; }
+.ht-h em { position: relative; color: var(--rose); padding-right: 0.04em; }
+.ht-h .ul svg { position: absolute; left: -0.02em; right: 0.02em; bottom: -0.1em; width: calc(100% + 0.04em); height: 0.2em; overflow: visible; }
+/* the stroke is in the drawing's own units, so it thickens with the type and the dash covers the whole word */
+.ht-h .ul path { fill: none; stroke: var(--gold); stroke-width: 7; stroke-linecap: round; stroke-dasharray: 320; stroke-dashoffset: 320; animation: ht-ul 1100ms var(--out) 900ms forwards; }
+@keyframes ht-ul { to { stroke-dashoffset: 0; } }
+.ht-pill { display: inline-block; vertical-align: 0.02em; width: 2.3em; height: 0.8em; margin-left: 0.08em; border-radius: 999px; background: #0b0b0c url("assets/hero-poster.jpg") 50% 50% / cover; }
+.ht-foot { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 22px 56px; margin-top: clamp(26px, 4.6vh, 52px); padding-top: 24px; border-top: 1px solid var(--line); }
+.ht-lead { margin: 0; max-width: 54ch; font-size: clamp(1rem, 1.15vw, 1.1rem); line-height: 1.6; color: var(--ink2); }
+.ht-lead strong { color: var(--ink); }
+.ht-act { display: grid; justify-items: end; gap: 12px; }
+.ht-act .ticks { margin: 0; justify-content: flex-end; }
+/* without the scroll scene (no script, reduced motion, a screen too short) the film is simply full width under the type */
+.ht-film { position: relative; }
+.ht-screen { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #0b0b0c; }
+.ht .toggle { right: 16px; bottom: 16px; }
+/* the scroll scene: the stage holds the screen while the capsule grows to fill it */
+.ht.is-live { height: calc(var(--stage-h, 100vh) * 2.35); }
+.ht.is-live .ht-stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+/* the type at the top and the button at the bottom of the screen, like a poster */
+.ht.is-live .ht-copy { display: flex; flex-direction: column; height: 100%; opacity: var(--co, 1); transform: translate3d(0, var(--cy, 0px), 0); will-change: opacity, transform; }
+.ht.is-live .ht-h { margin-bottom: clamp(26px, 4.6vh, 52px); }
+.ht.is-live .ht-foot { margin-top: auto; }
+.ht.is-live .ht-film { position: absolute; z-index: 4; inset: 0; pointer-events: none; }
+.ht.is-live .ht-screen { position: absolute; left: 0; top: 0; aspect-ratio: auto; width: var(--fw, 0px); height: var(--fh, 0px); transform: translate3d(var(--fx, 0px), var(--fy, 0px), 0); border-radius: var(--fr, 0px); pointer-events: auto; }
+/* while the film is a capsule its button is a small round one at the capsule's end; grown, it is the usual one */
+.ht.is-live:not(.is-grown) .toggle { top: 50%; right: 7px; bottom: auto; width: 28px; height: 28px; margin-top: -14px; padding: 0; gap: 0; justify-content: center; }
+.ht.is-live:not(.is-grown) .toggle span { display: none; }
+
+/* ---------- tablets and phones ---------- */
+@media (max-width: 1080px) {
+  .hf-strip .wrap { gap: 18px 32px; }
+}
+@media (max-width: 760px) {
+  .hf-strip .wrap { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .hf-h { font-size: clamp(1.5rem, 6.9vw, 2rem); }
+  .hf-act { justify-items: stretch; }
+  .hf-act .btn { width: 100%; }
+  .hf-act .ticks { justify-content: center; gap: 6px 14px; }
+  .hf .toggle { bottom: 14px; }
+  .hf-after { padding-top: 84px; }
+  .hero.hd { padding-top: calc(58px + 60px); }
+  .hd-screen { aspect-ratio: 9 / 16; --in: 6vw; --rr: 22px; }
+  /* a phone gets the promise's first sentence and the button, so the film shows on the first screen */
+  .hd .lead .more, .hd .cta-row .link { display: none; }
+  .hd .lead { margin-top: 18px; }
+  .hd .cta-row { margin-top: 26px; }
+  .hd-film { margin-top: 40px; }
+  .hd + .count { margin-top: -26px; border-radius: 26px 26px 0 0; }
+  .ht-copy { padding-top: calc(58px + clamp(20px, 4vh, 44px)); }
+  .ht-h { font-size: clamp(2.3rem, min(13.6vw, 7.2vh), 3.6rem); }
+  .ht-foot { grid-template-columns: minmax(0, 1fr); gap: 16px; padding-top: 18px; }
+  .ht-lead { font-size: 15.5px; line-height: 1.55; }
+  /* in the scene a phone shows the promise and the button; the longer line returns in the plain layout */
+  .ht.is-live .ht-lead { display: none; }
+  .ht-act { justify-items: stretch; }
+  .ht-act .btn { width: 100%; }
+  .ht-act .ticks { justify-content: center; }
+  .ht-screen { aspect-ratio: 9 / 16; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hf-screen video, .hf-screen .poster { transform: none !important; }
+  .hd-screen { clip-path: none; }
+  .ht-h .ul path { animation: none; stroke-dashoffset: 0; }
+}

@@ -40,6 +40,13 @@ EN: Free · 30 minutes · No obligation
 Under the film: Saját márkafilmünk, 30 másodperc
 EN: Our own brand film, 30 seconds
 
+The three first-screen options (hero-cinema, hero-glow, hero-capsule) use exactly this copy;
+only where it sits changes. Cinema puts the headline, button and ticks on a dark strip under
+the film and the eyebrow and lead in a block after it, with no caption under the film. Glow
+keeps this order without the caption; on a phone it shows only the bold first sentence of the lead and drops the
+results link, so the film shows on the first screen. Capsule shows the eyebrow, headline,
+lead, button and ticks with no caption; on a phone, while the film grows, the lead is left out.
+
 ## 2. The number
 
 Eyebrow: 2022 ÓTA · EN: SINCE 2022

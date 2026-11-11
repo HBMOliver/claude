@@ -22,10 +22,33 @@ through the HU/EN switch.
   (bar shadow, frame rise, the four steps), the testimonial wall, the form.
 - `ss.js`: language, the mailto hand-off, copy buttons (shared with earlier builds).
 - `COPY.md`: the copy in both languages and the facts each line rests on.
-- `tools/artifact.mjs`: packages the page as one file in `dist/daylight/`.
-- `lab/func.mjs`: 22 checks without looking (film, counters, steps, wall, team
+- `tools/artifact.mjs`: packages the page (or a first-screen option) as one file in `dist/`.
+- `heroes/`, `heroes.css`, `heroes.js`, `tools/heroes.mjs`, `hero-*.html`: the first-screen options (below).
+- `lab/func.mjs`: 33 checks without looking (film, counters, steps, wall, team
   photos, form, English, reduced motion, phone). `lab/shots.mjs`: screenshots.
   Both run from a folder that has `playwright-core` (`../socialstream-split`).
+
+## First-screen options
+
+Asked for after "i dont like the hero section" (2026-11-11): three different first screens on
+the same page, each its own link. `index.html` keeps the original first screen.
+
+- Cinema (`hero-cinema.html`): the brand film fills the first screen, edge to edge; the
+  headline, button and ticks sit on a dark strip under it; the lead follows as a large statement.
+  https://claude.ai/artifact/9aegizUPHNFQKC189MGnyn
+- Glow (`hero-glow.html`): a dark stage with soft rose and amber light; the film below the
+  headline opens from an inset frame to the full width as it comes up, and its colours spill on
+  the stage around it; the light page rises over it as a sheet.
+  https://claude.ai/artifact/NwJHqsqEVWCkLZ9M6Bg3VV
+- Capsule (`hero-capsule.html`): big left-aligned type with the film playing in a capsule inside
+  the headline; scrolling grows it to fill the screen. It falls back to the film under the type
+  with reduced motion or on a screen too short for the type.
+  https://claude.ai/artifact/4XxESCorvniksmAGCYWmVv
+
+Edit `heroes/<name>.html`, `heroes.css` and `heroes.js`, then `node tools/heroes.mjs` writes the
+three pages next to `index.html`, and `node tools/artifact.mjs hero-<name>` packages one into
+`dist/<name>/`. `lab/heroes.mjs` runs 58 checks on them (`BASE=` for another address), and
+`URL=http://localhost:4553/hero-<name>.html node lab/func.mjs` runs the page's own 33.
 
 ## Pictures
 
