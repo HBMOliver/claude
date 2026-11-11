@@ -1,0 +1,202 @@
+/* Studio. Lead reference: Cutflow. Warm light grey, white rounded cards, one coral; Manrope throughout with
+   Fraunces italic for the turned words. Moving at rest: the vertical film and its story line, the reel frames
+   drifting in their cards, the two reels peeking out behind the story, the floating objects on the results,
+   problems, services and "Kiknek", the team's photos moving slowly in their frames, the fanned deck of reels over
+   the last call. With a mouse: the peeking reels lean toward the cursor and the buttons are pulled toward it. */
+:root {
+  --bg: #efede9; --card: #ffffff; --fg: #151515; --fg2: #4a4744; --fg3: #67635d; --line: #e2ded8; --line2: #d4cfc7;
+  --accent: #e8402f; --accent-ink: #c22d1c; --accent-soft: #ffe3df; --field: #f4f2ef; --btn-bg: #d4361f; --btn-fg: #ffffff; --strike: #e8402f;
+  --font-d: "Manrope", system-ui, sans-serif; --font-b: "Manrope", system-ui, sans-serif; --font-s: "Fraunces", Georgia, serif;
+  --max: 1240px; --reel-r: 18px; --strike-y: 0.76em;
+  color-scheme: light;
+}
+.st-card { border-radius: 26px; background: var(--card); box-shadow: 0 1px 0 rgba(20, 15, 10, 0.04), 0 24px 50px -38px rgba(40, 30, 20, 0.4); }
+.st-head { display: grid; gap: 12px; max-width: 760px; }
+.st-head.center { margin: 0 auto; justify-items: center; text-align: center; }
+.st-eyebrow, .st-offer .eyebrow { display: inline-flex; align-items: center; gap: 8px; font: 700 13px/1.2 var(--font-b); color: var(--accent-ink); }
+.st-eyebrow::before, .st-offer .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.st-h2 { font: 800 clamp(1.9rem, 3.8vw, 3.4rem)/1.06 var(--font-d); letter-spacing: -0.04em; }
+.st-h2 em, .st-turn em, .st-claim em { font-family: var(--font-s); font-style: italic; font-weight: 400; color: var(--accent); }
+.st-sub { max-width: 60ch; font-size: 17px; line-height: 1.6; color: var(--fg2); }
+
+/* ---------- menu ---------- */
+.st-nav { top: 0; left: 0; right: 0; height: 70px; padding: 0 max(var(--gut), env(safe-area-inset-right, 0px)) 0 max(var(--gut), env(safe-area-inset-left, 0px)); transition: background-color 300ms, box-shadow 300ms; }
+.st-nav.is-scrolled { background: rgba(239, 237, 233, 0.86); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 1px 0 var(--line); }
+.st-nav .wm em, .st-foot .wm em { color: var(--accent-ink); }
+.st-nav .links { margin: 0 6px 0 auto; }
+.st-nav .nav-cta { background: var(--fg); color: #fff; }
+@media (hover: hover) { .st-nav .links a:hover { background: rgba(0, 0, 0, 0.05); } }
+
+/* ---------- first screen: a white card and a tall story ---------- */
+.st-hero { padding: 86px 0 26px; overflow-x: clip; }
+.st-hero-in { display: grid; grid-template-columns: minmax(0, 1.36fr) minmax(0, 0.64fr); gap: 16px; align-items: stretch; }
+.st-hero-card { display: flex; flex-direction: column; min-height: min(calc(100svh - 150px), 760px); padding: clamp(28px, 4vw, 54px); }
+.st-chip { align-self: flex-start; display: inline-flex; align-items: center; gap: 9px; padding: 8px 13px; border-radius: 999px; background: var(--field); font: 700 13px/1 var(--font-b); }
+.st-chip i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.st-claim { margin-top: 22px; font: 800 clamp(2.4rem, 4.8vw, 4.9rem)/1 var(--font-d); letter-spacing: -0.045em; }
+.st-promise { margin-top: 20px; font: 600 clamp(1.05rem, 1.4vw, 1.25rem)/1.4 var(--font-b); color: var(--fg2); }
+.st-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; margin-top: 28px; }
+.st-cta .link { color: var(--fg); }
+.st-mini { max-width: 470px; margin-top: auto; padding: 18px 20px; border-radius: 18px; background: var(--field); }
+.st-cta + .st-mini { margin-top: max(28px, auto); }
+.st-mini blockquote { font: 600 15px/1.5 var(--font-b); }
+.st-mini figcaption, .st-q figcaption { display: flex; align-items: center; gap: 10px; margin-top: 12px; font: 700 13px/1.3 var(--font-b); color: var(--fg2); }
+.st-mini figcaption i, .st-q figcaption i { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-style: normal; font-size: 12.5px; }
+.st-story { position: relative; }
+/* two of their reels behind the story, peeking out at the side; they sway, and lean toward the cursor */
+.st-peek { position: absolute; inset: 0; pointer-events: none; }
+.st-pk { position: absolute; width: 50%; translate: var(--fx, 0px) var(--fy, 0px); }
+.st-pk .reel { box-shadow: 0 26px 50px -24px rgba(40, 25, 10, 0.5); }
+.st-pk-in { transform-origin: 20% 110%; animation: st-sway 6.4s ease-in-out var(--dl, 0s) infinite alternate; }
+.st-pk.k0 { right: -15%; top: 7%; } .st-pk.k0 .st-pk-in { --r: 7deg; --dl: -1.5s; }
+.st-pk.k1 { right: -23%; bottom: 9%; } .st-pk.k1 .st-pk-in { --r: 13deg; --dl: -4s; }
+.st-film { z-index: 1; }
+.st-film { height: 100%; min-height: 520px; border-radius: 26px; }
+.st-film .progress { position: absolute; z-index: 2; left: 12px; right: 12px; top: 12px; height: 3px; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.35); }
+.st-film .progress::before { content: ""; position: absolute; inset: 0; transform-origin: 0 50%; transform: scaleX(var(--pr, 0)); background: #fff; transition: transform 260ms linear; }
+.st-tag { position: absolute; z-index: 2; left: 12px; top: 26px; display: inline-flex; align-items: center; gap: 8px; font: 700 13px/1 var(--font-b); color: #fff; text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45); }
+.st-tag i { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); font-style: normal; font-size: 12px; box-shadow: 0 0 0 2px #fff; }
+.st-trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 34px; margin: 22px auto 0; padding-block: 6px; list-style: none; font: 600 14.5px/1.3 var(--font-b); color: var(--fg3); }
+.st-trust b { font-weight: 800; color: var(--fg); }
+
+/* ---------- reel frames drifting in their cards ---------- */
+.st-work { padding: clamp(80px, 12vh, 130px) 0; }
+.st-work-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin-top: 44px; }
+.st-work-cell { overflow: hidden; border-radius: 18px; }
+.st-work-cell:nth-child(even) { margin-top: 44px; }
+.kb { animation: st-kb var(--kb, 16s) ease-in-out var(--kbd, 0s) infinite alternate; }
+@keyframes st-kb { from { transform: scale(1.03) translate3d(0, 1.5%, 0); } to { transform: scale(1.16) translate3d(0, -3.5%, 0); } }
+
+/* ---------- what we do, and the results ---------- */
+.st-about { padding: clamp(40px, 6vh, 70px) 0 clamp(80px, 12vh, 130px); }
+.st-about .st-h2 { max-width: 22ch; }
+.st-res-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 44px; }
+.st-res-card { padding: 24px 22px 26px; }
+.st-res-card img { width: 80px; height: 80px; object-fit: contain; filter: drop-shadow(0 12px 12px rgba(40, 25, 10, 0.16)); }
+.st-res-card .n { margin-top: 12px; font: 800 clamp(2.4rem, 4vw, 3.6rem)/1 var(--font-d); letter-spacing: -0.045em; white-space: nowrap; }
+.st-res-card .n small { margin-left: 0.08em; font-size: 0.42em; color: var(--accent-ink); }
+.st-res-card .who { margin-top: 10px; font: 700 12px/1.3 var(--font-b); letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg3); }
+.st-res-card .d { margin-top: 6px; font-size: 15px; line-height: 1.5; color: var(--fg2); }
+
+/* ---------- services ---------- */
+.st-svc { padding: clamp(80px, 12vh, 130px) 0; }
+.st-svc-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 44px; }
+.st-svc-card { position: relative; overflow: hidden; padding: 26px 24px 28px; }
+.st-svc-n { position: absolute; right: 18px; top: 8px; font: 800 4.6rem/1 var(--font-d); letter-spacing: -0.06em; color: #f0ede8; }
+.st-svc-card img { position: relative; width: 92px; height: 92px; object-fit: contain; filter: drop-shadow(0 12px 12px rgba(40, 25, 10, 0.16)); }
+.st-svc-card h3 { margin-top: 16px; font: 800 1.25rem/1.2 var(--font-d); }
+.st-svc-card .h { margin-top: 6px; font-weight: 700; }
+.st-svc-card .d { margin-top: 8px; font-size: 15px; line-height: 1.55; color: var(--fg2); }
+
+/* ---------- the problem ---------- */
+.st-prob { padding: clamp(30px, 5vh, 60px) 0; }
+/* what goes wrong, each with the service that answers it (new, to confirm) */
+.st-prob-card { display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); gap: 36px 56px; align-items: start; padding: clamp(32px, 5vw, 64px); }
+.st-prob-intro { position: sticky; top: 110px; display: grid; justify-items: start; gap: 18px; }
+.st-pains { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.st-pain { display: grid; grid-template-columns: 66px minmax(0, 1fr); gap: 16px; align-items: center; padding: 16px 20px 16px 14px; border-radius: 18px; background: var(--field); }
+.st-pain img { width: 66px; height: 66px; object-fit: contain; filter: drop-shadow(0 10px 10px rgba(40, 25, 10, 0.16)); }
+.st-pain .q { font: 700 16.5px/1.4 var(--font-b); }
+.st-pain .a { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 9px; font: 700 14.5px/1.3 var(--font-b); color: var(--accent-ink); text-decoration: none; }
+.st-pain .a .k { padding: 4px 9px; border-radius: 999px; background: #fff; font: 600 11.5px/1.2 var(--font-b); color: var(--fg3); }
+.st-pain .a svg { width: 14px; height: 14px; transition: transform 260ms var(--out); }
+@media (hover: hover) { .st-pain .a:hover .n { text-decoration: underline; text-underline-offset: 0.2em; } .st-pain .a:hover svg { transform: translateX(3px); } }
+.st-turn { margin-top: 16px; max-width: 26ch; font: 800 clamp(1.6rem, 2.8vw, 2.4rem)/1.12 var(--font-d); letter-spacing: -0.035em; }
+
+/* ---------- how we work ---------- */
+.st-steps { padding: clamp(80px, 12vh, 130px) 0; }
+.st-steps-in { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 48px; align-items: start; }
+.st-steps .st-head { position: sticky; top: 100px; }
+.st-step-list { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.st-step-list li { display: flex; gap: 18px; padding: 22px 24px; }
+.st-step-n { flex: none; font: 800 14px/1.6 var(--font-d); color: var(--accent-ink); }
+.st-step-list h3 { font: 800 1.2rem/1.3 var(--font-d); }
+.st-step-list p { margin-top: 6px; font-size: 15px; line-height: 1.55; color: var(--fg2); }
+
+/* ---------- their words ---------- */
+.st-voices, .st-who, .st-team, .st-offer, .st-faq { padding: clamp(80px, 12vh, 130px) 0; }
+.st-wall { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; align-items: start; margin-top: 44px; }
+.st-q { padding: 24px; }
+.st-metric { font: 600 14px/1.3 var(--font-b); color: var(--fg3); }
+.st-metric b { display: block; margin-bottom: 4px; font: 800 2.2rem/1 var(--font-d); letter-spacing: -0.04em; color: var(--fg); }
+.st-quote-mark { height: 30px; font: 400 3.4rem/0.7 var(--font-s); color: var(--accent); }
+.st-q blockquote { margin-top: 14px; font-size: 15px; line-height: 1.6; color: var(--fg2); }
+
+/* ---------- who, team ---------- */
+.st-who-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 44px; }
+.st-who-grid .st-card { padding: 22px; }
+.st-who-grid img { width: 64%; margin: 0 auto 10px; filter: drop-shadow(0 14px 14px rgba(40, 25, 10, 0.16)); }
+.st-who-grid h3 { font: 800 1.1rem/1.25 var(--font-d); }
+.st-who-grid p { margin-top: 8px; font-size: 14.5px; line-height: 1.55; color: var(--fg2); }
+.st-who-grid b { color: var(--fg); }
+.st-notfor { margin-top: 26px; text-align: center; font-size: 15px; color: var(--fg3); }
+.st-team-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 44px; }
+.st-person { padding: 12px 12px 22px; }
+.st-ph { overflow: hidden; border-radius: 18px; }
+.st-person img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.st-ph .kb { animation-name: st-kb2; }
+@keyframes st-kb2 { from { transform: scale(1.02); } to { transform: scale(1.1); } }
+.st-person b { display: block; margin: 14px 8px 0; font: 800 1.15rem/1.2 var(--font-d); }
+.st-person span { display: block; margin: 4px 8px 0; font: 700 12px/1.3 var(--font-b); color: var(--accent-ink); }
+.st-person p { margin: 8px 8px 0; font-size: 14.5px; line-height: 1.55; color: var(--fg2); }
+
+/* ---------- offer, questions ---------- */
+.st-offer .wrap { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 16px; align-items: start; }
+.st-offer-copy { padding: clamp(26px, 4vw, 48px); }
+.st-offer .st-h2 { margin-top: 12px; }
+.st-offer .specs div { background: var(--field); }
+.st-offer .scarce { background: var(--accent-soft); color: #a8251a; }
+.st-form .app { padding: clamp(22px, 3vw, 36px); border-radius: 26px; background: var(--card); box-shadow: 0 24px 50px -38px rgba(40, 30, 20, 0.4); }
+.st-faq-list { display: grid; gap: 10px; max-width: 860px; margin: 40px auto 0; }
+.st-faq-list details { padding: 0 20px; border: 0; border-radius: 18px; background: var(--card); }
+
+/* ---------- last call under a fanned deck of reels ---------- */
+.st-final { padding: 0 0 clamp(60px, 9vh, 100px); }
+.st-final-card { position: relative; overflow: hidden; display: grid; justify-items: center; gap: 20px; padding: clamp(250px, 26vw, 330px) clamp(24px, 5vw, 60px) clamp(56px, 8vh, 90px); text-align: center; }
+.st-final-card .st-h2 { max-width: 16ch; }
+.st-final-card .small { font-size: 14px; color: var(--fg3); }
+.st-deck { position: absolute; left: 0; right: 0; top: clamp(30px, 4vw, 54px); display: flex; justify-content: center; pointer-events: none; }
+.st-dk { width: clamp(92px, 10vw, 136px); margin: 0 -14px; transform-origin: 50% 140%; transform: rotate(var(--r)); animation: st-sway 7s ease-in-out var(--dl) infinite alternate; }
+.st-dk .reel { box-shadow: 0 22px 40px -22px rgba(40, 25, 10, 0.55); }
+.d0 { --r: -18deg; --dl: -1s; } .d1 { --r: -9deg; --dl: -3s; margin-top: -10px; } .d2 { --r: 0deg; --dl: -2s; margin-top: -18px; z-index: 2; } .d3 { --r: 9deg; --dl: -4s; margin-top: -10px; } .d4 { --r: 18deg; --dl: -0.5s; }
+@keyframes st-sway { from { transform: rotate(calc(var(--r) - 3deg)); } to { transform: rotate(calc(var(--r) + 3deg)); } }
+.st-foot { border-top: 1px solid var(--line); color: var(--fg2); }
+.st-foot .wm em { color: var(--accent-ink); }
+
+/* ---------- tablets and phones ---------- */
+@media (max-width: 1080px) {
+  .st-nav .links { display: none; }
+  .st-nav .lang { margin-left: auto; }
+  .st-work-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .st-res-grid, .st-svc-grid, .st-who-grid, .st-wall { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .st-steps-in, .st-offer .wrap, .st-prob-card { grid-template-columns: minmax(0, 1fr); }
+  .st-prob-intro { position: static; }
+  .st-steps .st-head { position: static; }
+}
+@media (max-width: 760px) {
+  .st-nav { height: 62px; gap: 8px; }
+  .st-nav .nav-cta { min-height: 40px; padding: 0 14px; font-size: 13px; }
+  .st-nav .nav-cta svg { display: none; }
+  .st-hero { padding-top: 70px; }
+  .st-hero-in { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .st-hero-card { min-height: 0; padding: 26px 22px 28px; }
+  .st-claim { font-size: clamp(2.2rem, 10.4vw, 3.2rem); }
+  .st-cta .btn { width: 100%; }
+  .st-mini { display: none; }
+  .st-film { min-height: 0; height: auto; aspect-ratio: 9 / 16; max-height: 82svh; margin: 0 auto; }
+  .st-work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .st-work-cell:nth-child(even) { margin-top: 30px; }
+  .st-res-grid { gap: 10px; }
+  .st-res-card { padding: 18px 16px 20px; }
+  .st-res-card .n { font-size: 2.2rem; }
+  .st-svc-grid, .st-who-grid, .st-wall, .st-team-grid { grid-template-columns: minmax(0, 1fr); }
+  .st-pain { grid-template-columns: 52px minmax(0, 1fr); gap: 12px; padding: 14px 16px 14px 12px; }
+  .st-pain img { width: 52px; height: 52px; }
+  .st-pk { width: 46%; } .st-pk.k0 { right: -6%; } .st-pk.k1 { right: -12%; }
+  .st-dk { width: 84px; }
+}
+@media (max-width: 380px) { .lang button[aria-pressed="true"] { display: none; } .st-res-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) {
+  .kb, .st-dk, .st-pk-in { animation: none; }
+  .st-film .progress::before { transition: none; }
+}

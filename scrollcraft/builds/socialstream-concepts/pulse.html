@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SocialStream Pulse</title>
+<meta name="description" content="A social media meghalt. Az érdeklődés vette át a helyét. Videó, social és hirdetés egy csapattól.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23111'/%3E%3Crect x='8' y='8' width='7' height='12' rx='2' fill='%23fff'/%3E%3Crect x='17' y='12' width='7' height='12' rx='2' fill='%23fff' opacity='.7'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400..700&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&display=swap">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="pulse.css">
+</head>
+<body>
+<header class="nav p-nav" id="nav">
+  <a class="wm" href="#top" aria-label="SocialStream">Social<em>Stream</em></a>
+  <nav class="links" aria-label="Fő menü" data-en-aria="Main menu">
+    <a href="#eredmenyek" data-en="Results">Eredmények</a>
+    <a href="#igy" data-en="How we work">Így dolgozunk</a>
+    <a href="#szolgaltatasok" data-en="Services">Szolgáltatások</a>
+    <a href="#csapat" data-en="Team">Csapat</a>
+    <a href="#kerdesek" data-en="Questions">Kérdések</a>
+  </nav>
+  <div class="lang" role="group" aria-label="Nyelv / Language"><button type="button" data-set-lang="hu" aria-pressed="true" lang="hu">HU</button><button type="button" data-set-lang="en" aria-pressed="false" lang="en">EN</button></div>
+  <a class="btn nav-cta" href="#audit"><span data-en="Free audit">Ingyenes audit</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+</header>
+
+<main>
+  <!-- the claim in the middle; reel cards from their own client videos float around it, one of them the brand film -->
+  <section class="p-hero" id="top" aria-labelledby="hero-h" data-drift>
+    <div class="p-orbit" aria-hidden="true">
+      <div class="p-o o1" data-follow data-k="0.05"><div class="bob"><figure class="reel "><img src="assets/p02.jpg" alt="" width="486" height="864" decoding="async"></figure></div></div>
+      <div class="p-o o2"><div class="bob"><div class="film reel p-film" data-film data-cut="v">
+  <div class="poster"><img src="assets/hero-v-poster.jpg" alt="" width="720" height="1280"></div>
+  <video muted loop playsinline preload="none" aria-label="A SocialStream márkafilmje" data-en-aria="The SocialStream brand film"></video>
+  <button class="toggle" type="button"></button>
+</div></div></div>
+      <div class="p-o o3" data-follow data-k="-0.04"><div class="bob"><figure class="reel "><img src="assets/p14.jpg" alt="" width="486" height="864" decoding="async"></figure></div></div>
+      <div class="p-o o4" data-follow data-k="0.07"><div class="bob"><figure class="reel "><img src="assets/p17.jpg" alt="" width="486" height="864" decoding="async"></figure></div></div>
+      <div class="p-o o5" data-follow data-k="-0.05"><div class="bob"><figure class="reel "><img src="assets/p20.jpg" alt="" width="486" height="864" decoding="async"></figure></div></div>
+      <div class="p-o o6" data-follow data-k="0.035"><div class="bob"><figure class="reel "><img src="assets/p23.jpg" alt="" width="486" height="864" decoding="async"></figure></div></div>
+    </div>
+    <div class="wrap p-hero-copy">
+      <p class="p-chip" data-r><i aria-hidden="true"></i><span data-en="Interest media agency">Interest media ügynökség</span></p>
+      <h1 class="claim p-claim" id="hero-h" data-r style="--d:1"><span data-l="hu"><span class="ln">A <span class="strike">social media</span> meghalt.</span> <span class="ln">Az <em>érdeklődés</em> vette át a helyét.</span></span><span data-l="en"><span class="ln"><span class="strike">Social media</span> is dead.</span> <span class="ln"><em>Interest</em> has taken its place.</span></span></h1>
+      <p class="p-promise" data-r style="--d:2"><span data-l="hu"><span class="ln">Videók, amiket végignéznek.</span> <span class="ln">Hirdetések, amik megtérülnek.</span></span><span data-l="en"><span class="ln">Videos people watch to the end.</span> <span class="ln">Ads that pay off.</span></span></p>
+      <div class="p-cta" data-r style="--d:3"><a class="btn" href="#audit"><span data-en="Get my free audit">Kérem az ingyenes auditot</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="btn ghost" href="#eredmenyek"><span data-en="See the results">Megnézem az eredményeket</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+      <div data-r style="--d:3"><ul class="p-ticks"><li data-en="Free">Ingyenes</li><li data-en="30 minutes">30 perc</li><li data-en="No obligation">Kötelezettség nélkül</li></ul></div>
+    </div>
+  </section>
+
+  <!-- two rows of what we do, always running -->
+  <div class="p-tags" aria-hidden="true">
+    <div class="rail p-rail" data-rail="1" data-speed="46" aria-hidden="true"><div class="track"><span class="p-tag" data-en="Video production">Videó tartalomgyártás</span><span class="p-tag" data-en="Hooks">Hook</span><span class="p-tag" data-en="Shooting">Forgatás</span><span class="p-tag" data-en="Editing">Vágás</span><span class="p-tag" data-en="Social media presence">Social média jelenlét</span><span class="p-tag" data-en="Reels">Reels</span><span class="p-tag" data-en="TikTok">TikTok</span><span class="p-tag" data-en="Paid advertising">Fizetett hirdetés</span><span class="p-tag" data-en="Meta">Meta</span><span class="p-tag" data-en="Google">Google</span><span class="p-tag" data-en="A/B testing">A/B tesztelés</span><span class="p-tag" data-en="Website and landing pages">Weboldal és landing</span><span class="p-tag" data-en="Automation and email">Automatizáció és e-mail</span><span class="p-tag" data-en="Funnel">Funnel</span><span class="p-tag" data-en="Targeting">Célzás</span><span class="p-tag" data-en="Growth strategy">Növekedési stratégia</span></div></div>
+    <div class="rail p-rail" data-rail="-1" data-speed="38" aria-hidden="true"><div class="track"><span class="p-tag alt" data-en="Video production">Videó tartalomgyártás</span><span class="p-tag alt" data-en="Hooks">Hook</span><span class="p-tag alt" data-en="Shooting">Forgatás</span><span class="p-tag alt" data-en="Editing">Vágás</span><span class="p-tag alt" data-en="Social media presence">Social média jelenlét</span><span class="p-tag alt" data-en="Reels">Reels</span><span class="p-tag alt" data-en="TikTok">TikTok</span><span class="p-tag alt" data-en="Paid advertising">Fizetett hirdetés</span><span class="p-tag alt" data-en="Meta">Meta</span><span class="p-tag alt" data-en="Google">Google</span><span class="p-tag alt" data-en="A/B testing">A/B tesztelés</span><span class="p-tag alt" data-en="Website and landing pages">Weboldal és landing</span><span class="p-tag alt" data-en="Automation and email">Automatizáció és e-mail</span><span class="p-tag alt" data-en="Funnel">Funnel</span><span class="p-tag alt" data-en="Targeting">Célzás</span><span class="p-tag alt" data-en="Growth strategy">Növekedési stratégia</span></div></div>
+  </div>
+
+  <!-- what we do, said once: the sentence lights as it is read, reel cards drift in from the sides -->
+  <section class="p-say" aria-label="Interest media ügynökség" data-drift>
+    <div class="p-fly" aria-hidden="true">
+      <div class="p-f f1"><div class="bob"><figure class="reel "><img src="assets/p08.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure></div></div>
+      <div class="p-f f2"><div class="bob"><figure class="reel "><img src="assets/p14.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure></div></div>
+      <div class="p-f f3"><div class="bob"><figure class="reel "><img src="assets/p17.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure></div></div>
+      <div class="p-f f4"><div class="bob"><figure class="reel "><img src="assets/p22.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure></div></div>
+    </div>
+    <div class="wrap">
+      <p class="p-statement" data-lit><span data-l="hu">Mi gyártjuk a videót, mi futtatjuk a hirdetést, és mi mérjük, mit hozott. A SocialStream egy kézben tartja a kreatívot, a kampányt és a landing oldalt, hogy minden forint a bevételt szolgálja.</span><span data-l="en">We make the video, we run the ads, and we measure what they bring in. SocialStream keeps the creative, the campaign and the landing page in one pair of hands, so every forint works toward revenue.</span></p>
+      <div class="p-facts" data-r>
+        <span><b class="num">300M+ Ft</b> <span data-en="budget managed since 2022">kezelt büdzsé 2022 óta</span></span>
+        <span data-en="At most two new partners a month.">Havonta legfeljebb két új partner.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- what goes wrong for a business, each problem with the service that answers it (new, to confirm): the problem
+       as a message, the service as the reply; the service's object sits on the card's corner and leans toward the cursor -->
+  <section class="p-pains" aria-labelledby="prob-h">
+    <div class="wrap">
+      <div class="p-head">
+        <p class="eyebrow" data-en="Sound familiar?" data-r>Ismerős?</p>
+        <h2 class="p-h2" id="prob-h" data-r><span data-l="hu">Posztolsz. Hirdetsz. Mégsem jönnek a vevők?</span><span data-l="en">You post. You advertise. And still no buyers?</span></h2>
+        <p class="p-body" data-en="Most businesses hit the same wall. One person makes the video, another runs the ads, a third built the website years ago. Everyone does their own part well, and nobody answers for whether anything gets sold." data-r>A legtöbb vállalkozás ugyanabba a falba ütközik. A videót egy ember készíti, a hirdetést egy másik futtatja, az oldalt egy harmadik rakta össze évekkel ezelőtt. Mindenki jól csinálja a saját részét, de senki nem felel azért, hogy a végén legyen vásárlás.</p>
+      </div>
+      <ul class="p-pain-grid">
+        <li class="p-pain" data-r style="--d:0">
+          <img class="p-pain-ico bob" data-follow data-k="0.03" style="--dur:5.2s;--delay:-0s" src="assets/i-video.webp" alt="" width="520" height="520" loading="lazy">
+          <p class="q" data-en="People scroll straight past your videos.">A videóid mellett mindenki továbbgörget.</p>
+          <a class="a" href="#svc-video"><span class="k" data-en="How we help">Ebben segítünk</span><span class="n" data-en="Video production">Videó tartalomgyártás</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </li>
+        <li class="p-pain" data-r style="--d:1">
+          <img class="p-pain-ico bob" data-follow data-k="-0.025" style="--dur:5.65s;--delay:-0.7s" src="assets/i-social.webp" alt="" width="520" height="520" loading="lazy">
+          <p class="q" data-en="You post when you find the time, and hardly anyone reacts.">Posztolsz, amikor jut rá idő, de alig reagál valaki.</p>
+          <a class="a" href="#svc-social"><span class="k" data-en="How we help">Ebben segítünk</span><span class="n" data-en="Social media presence">Social média jelenlét</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </li>
+        <li class="p-pain" data-r style="--d:2">
+          <img class="p-pain-ico bob" data-follow data-k="0.04" style="--dur:6.1000000000000005s;--delay:-1.4s" src="assets/i-ads.webp" alt="" width="520" height="520" loading="lazy">
+          <p class="q" data-en="Ads cost more every month, and you can’t tell what they bring back.">A hirdetés hónapról hónapra drágul, és nem tudod, mit hoz vissza.</p>
+          <a class="a" href="#svc-ads"><span class="k" data-en="How we help">Ebben segítünk</span><span class="n" data-en="Paid advertising">Fizetett hirdetés</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </li>
+        <li class="p-pain" data-r style="--d:0">
+          <img class="p-pain-ico bob" data-follow data-k="0.03" style="--dur:6.550000000000001s;--delay:-2.0999999999999996s" src="assets/i-web.webp" alt="" width="520" height="520" loading="lazy">
+          <p class="q" data-en="People click, then leave your site without buying.">Kattintanak, aztán vásárlás nélkül eltűnnek az oldaladról.</p>
+          <a class="a" href="#svc-web"><span class="k" data-en="How we help">Ebben segítünk</span><span class="n" data-en="Website and landing pages">Weboldal és landing</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </li>
+        <li class="p-pain" data-r style="--d:1">
+          <img class="p-pain-ico bob" data-follow data-k="-0.025" style="--dur:7s;--delay:-2.8s" src="assets/i-auto.webp" alt="" width="520" height="520" loading="lazy">
+          <p class="q" data-en="Leads go cold because nobody gets back to them in time.">Az érdeklődők kihűlnek, mert senki nem keresi őket időben.</p>
+          <a class="a" href="#svc-auto"><span class="k" data-en="How we help">Ebben segítünk</span><span class="n" data-en="Automation and email">Automatizáció és e-mail</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </li>
+        <li class="p-pain" data-r style="--d:2">
+          <img class="p-pain-ico bob" data-follow data-k="0.04" style="--dur:7.45s;--delay:-3.5s" src="assets/i-strat.webp" alt="" width="520" height="520" loading="lazy">
+          <p class="q" data-en="You can’t tell which video brought the sale, or what to do next.">Nem tudod, melyik videó hozta a vásárlást, és hogy merre tovább.</p>
+          <a class="a" href="#svc-strat"><span class="k" data-en="How we help">Ebben segítünk</span><span class="n" data-en="Growth strategy">Növekedési stratégia</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </li>
+      </ul>
+      <p class="p-turn" data-r><span data-l="hu">Nem a platformmal van a baj, hanem azzal, hogy <em>senki nem látja egyben</em>.</span><span data-l="en">The platform isn't the problem. <em>Nobody sees the whole picture.</em></span></p>
+    </div>
+  </section>
+
+  <!-- services in a black panel; the objects float, a row of tags runs underneath -->
+  <section class="p-panel p-svc" id="szolgaltatasok" aria-labelledby="svc-h" data-dark>
+    <div class="wrap">
+      <div class="p-head">
+        <p class="eyebrow" data-en="Services" data-r>Szolgáltatások</p>
+        <h2 class="p-h2" id="svc-h" data-r><span data-l="hu">Minden, ami a növekedéshez kell. <em>Egy csapattól.</em></span><span data-l="en">Everything growth needs. <em>From one team.</em></span></h2>
+      </div>
+      <div class="p-svc-grid">
+        <article class="p-svc-card" id="svc-video" data-r style="--d:0">
+          <div class="p-ico"><img class="bob" style="--dur:5.4s;--delay:-0s" src="assets/i-video.webp" alt="" width="520" height="520" loading="lazy"></div>
+          <p class="k" data-en="Video production">Videó tartalomgyártás</p>
+          <h3 data-en="Videos that stop the scroll.">Videók, amik megállítják a görgetést.</h3>
+          <p class="d" data-en="Hooks, creative direction and production: creative drives the campaign, so we make that too.">Hookok, kreatív irány és gyártás: a kampány motorja a kreatív, ezért azt is mi készítjük.</p>
+        </article>
+        <article class="p-svc-card" id="svc-social" data-r style="--d:1">
+          <div class="p-ico"><img class="bob" style="--dur:5.9s;--delay:-0.9s" src="assets/i-social.webp" alt="" width="520" height="520" loading="lazy"></div>
+          <p class="k" data-en="Social media presence">Social média jelenlét</p>
+          <h3 data-en="More than posting.">Jelenlét, ami több, mint posztolás.</h3>
+          <p class="d" data-en="Feed, Stories, Reels and TikTok with one strategy and one voice: content calendar, community management, copywriting.">Feed, Stories, Reels és TikTok egy stratégiával és egy hanggal: tartalomnaptár, közösségkezelés, szövegírás.</p>
+        </article>
+        <article class="p-svc-card" id="svc-ads" data-r style="--d:2">
+          <div class="p-ico"><img class="bob" style="--dur:6.4s;--delay:-1.8s" src="assets/i-ads.webp" alt="" width="520" height="520" loading="lazy"></div>
+          <p class="k" data-en="Paid advertising">Fizetett hirdetés</p>
+          <h3 data-en="Ads that bring revenue, not just reach.">Hirdetés, ami bevételt hoz, nem csak megjelenést.</h3>
+          <p class="d" data-en="Meta, TikTok and Google campaigns with daily optimisation, A/B testing and scaling.">Meta, TikTok és Google kampányok napi optimalizálással, A/B teszteléssel, skálázással.</p>
+        </article>
+        <article class="p-svc-card" id="svc-web" data-r style="--d:0">
+          <div class="p-ico"><img class="bob" style="--dur:6.9s;--delay:-2.7s" src="assets/i-web.webp" alt="" width="520" height="520" loading="lazy"></div>
+          <p class="k" data-en="Website and landing pages">Weboldal és landing</p>
+          <h3 data-en="A page that finishes what the video started.">Oldal, ami befejezi, amit a videó elkezdett.</h3>
+          <p class="d" data-en="Fast, mobile-first landing pages and websites that convert.">Gyors, mobilra tervezett landingek és weboldalak, amik konvertálnak.</p>
+        </article>
+        <article class="p-svc-card" id="svc-auto" data-r style="--d:1">
+          <div class="p-ico"><img class="bob" style="--dur:7.4s;--delay:-3.6s" src="assets/i-auto.webp" alt="" width="520" height="520" loading="lazy"></div>
+          <p class="k" data-en="Automation and email">Automatizáció és e-mail</p>
+          <h3 data-en="Follow-up that forgets no one.">Követés, ami senkit nem felejt el.</h3>
+          <p class="d" data-en="Lead follow-up, email sequences, automated funnels: set up once, then it works for you.">Lead-követés, e-mail szekvenciák, automatizált tölcsérek: egyszer beállítjuk, utána dolgozik helyetted.</p>
+        </article>
+        <article class="p-svc-card" id="svc-strat" data-r style="--d:2">
+          <div class="p-ico"><img class="bob" style="--dur:7.9s;--delay:-4.5s" src="assets/i-strat.webp" alt="" width="520" height="520" loading="lazy"></div>
+          <p class="k" data-en="Growth strategy">Növekedési stratégia</p>
+          <h3 data-en="The strategy that ties it together.">Stratégia, ami összeköti a többit.</h3>
+          <p class="d" data-en="Campaign strategy, funnel audit and market positioning, as a partner.">Kampánystratégia, funnel audit és piaci pozicionálás, partnerként.</p>
+        </article>
+      </div>
+    </div>
+    <div class="rail p-rail in-panel" data-rail="1" data-speed="34" aria-hidden="true"><div class="track"><span class="p-tag dark" data-en="Video production">Videó tartalomgyártás</span><span class="p-tag dark" data-en="Hooks">Hook</span><span class="p-tag dark" data-en="Shooting">Forgatás</span><span class="p-tag dark" data-en="Editing">Vágás</span><span class="p-tag dark" data-en="Social media presence">Social média jelenlét</span><span class="p-tag dark" data-en="Reels">Reels</span><span class="p-tag dark" data-en="TikTok">TikTok</span><span class="p-tag dark" data-en="Paid advertising">Fizetett hirdetés</span><span class="p-tag dark" data-en="Meta">Meta</span><span class="p-tag dark" data-en="Google">Google</span><span class="p-tag dark" data-en="A/B testing">A/B tesztelés</span><span class="p-tag dark" data-en="Website and landing pages">Weboldal és landing</span><span class="p-tag dark" data-en="Automation and email">Automatizáció és e-mail</span><span class="p-tag dark" data-en="Funnel">Funnel</span><span class="p-tag dark" data-en="Targeting">Célzás</span><span class="p-tag dark" data-en="Growth strategy">Növekedési stratégia</span></div></div>
+  </section>
+
+  <!-- results: four real numbers that count, then two rows of reel frames that never stop -->
+  <section class="p-results" id="eredmenyek" aria-labelledby="res-h">
+    <div class="wrap">
+      <div class="p-head">
+        <p class="eyebrow" data-en="Real clients · real numbers" data-r>Valódi ügyfelek · valódi számok</p>
+        <h2 class="p-h2" data-en="Numbers we brought our clients." id="res-h" data-r>Számok, amiket az ügyfeleinknek hoztunk.</h2>
+      </div>
+      <div class="p-stats">
+        <article class="p-stat" data-r style="--d:0">
+          <img class="p-stat-obj bob" style="--dur:6s;--delay:-0s" src="assets/o-door.webp" alt="" width="400" height="400" loading="lazy">
+          <p class="n num"><span data-count="81">81</span><small>× ROAS</small></p>
+          <p class="who" data-en="Door webshop · Google Performance Max">Ajtó webshop · Google Performance Max</p>
+          <p class="d" data-en="81 forints of revenue for every forint of ads.">1 forint hirdetésből 81 forint bevétel.</p>
+        </article>
+        <article class="p-stat" data-r style="--d:1">
+          <img class="p-stat-obj bob" style="--dur:6.6s;--delay:-1.3s" src="assets/o-hall.webp" alt="" width="400" height="400" loading="lazy">
+          <p class="n num"><span data-count="79">79</span><small>M Ft</small></p>
+          <p class="who" data-en="Industrial hall builder · Meta">Csarnoképítő ügyfél · Meta</p>
+          <p class="d" data-en="Revenue in one week, from one B2B campaign.">Bevétel egy hét alatt, egy B2B kampányból.</p>
+        </article>
+        <article class="p-stat" data-r style="--d:2">
+          <img class="p-stat-obj bob" style="--dur:7.2s;--delay:-2.6s" src="assets/o-watch.webp" alt="" width="400" height="400" loading="lazy">
+          <p class="n num"><span data-count="23">23</span><small>× ROAS</small></p>
+          <p class="who" data-en="Watch webshop · Christmas">Karóra webshop · Karácsony</p>
+          <p class="d" data-en="A holiday campaign with over 8M Ft in revenue.">Ünnepi kampány, több mint 8M Ft bevétellel.</p>
+        </article>
+        <article class="p-stat" data-r style="--d:3">
+          <img class="p-stat-obj bob" style="--dur:7.8s;--delay:-3.9000000000000004s" src="assets/o-webinar.webp" alt="" width="400" height="400" loading="lazy">
+          <p class="n num"><span data-count="105">105</span><small>Ft</small></p>
+          <p class="who" data-en="Healthcare webinar">Egészségügyi webinár</p>
+          <p class="d" data-en="The cost of one registrant: about 5,700 registrants from 600K Ft.">Ennyibe került egy jelentkező: körülbelül 5700 jelentkező 600K Ft-ból.</p>
+        </article>
+      </div>
+    </div>
+    <div class="p-reels">
+      <div class="wrap">
+        <h3 class="p-h3 ital" data-r><span data-l="hu">Ami <em>megállítja</em> a hüvelykujjat.</span><span data-l="en">What <em>stops</em> the thumb.</span></h3>
+        <p class="p-cap" data-en="Frames from the videos we made for our clients." data-r>Képkockák az ügyfeleinknek készült videókból.</p>
+      </div>
+      <div class="rail p-reel-rail" data-rail="1" data-speed="42" aria-hidden="true"><div class="track"><figure class="reel "><img src="assets/p02.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p03.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p04.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p05.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p06.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p07.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p08.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p09.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p10.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p11.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p13.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure></div></div>
+      <div class="rail p-reel-rail" data-rail="-1" data-speed="36" aria-hidden="true"><div class="track"><figure class="reel "><img src="assets/p14.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p15.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p16.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p17.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p18.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p19.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p20.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p21.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p22.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p23.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure><figure class="reel "><img src="assets/p24.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"></figure></div></div>
+    </div>
+  </section>
+
+  <!-- elsewhere and with us: the problem's own sentences side by side (new arrangement, to confirm) -->
+  <section class="p-problem" aria-labelledby="cmp-h">
+    <div class="wrap">
+      <div class="p-compare" data-r>
+        <h2 class="ital" id="cmp-h"><span data-l="hu">Máshol és <em>nálunk</em>.</span><span data-l="en">Elsewhere and <em>with us</em>.</span></h2>
+        <div class="p-cmp">
+          <div class="p-cmp-else"><p class="k" data-en="Elsewhere">Máshol</p><ul><li data-en="One person makes the video.">A videót egy ember készíti.</li><li data-en="Another runs the ads.">A hirdetést egy másik futtatja.</li><li data-en="A third built the website.">Az oldalt egy harmadik rakta össze.</li><li data-en="Nobody answers for whether anything sells.">Senki nem felel azért, hogy legyen vásárlás.</li></ul></div>
+          <div class="p-cmp-us"><p class="k" data-en="At SocialStream">A SocialStreamnél</p><ul><li data-en="We make the video.">Mi gyártjuk a videót.</li><li data-en="We run the ads.">Mi futtatjuk a hirdetést.</li><li data-en="We build the page that finishes what the video started.">Mi építjük az oldalt, ami befejezi, amit a videó elkezdett.</li><li data-en="And we measure what it brought in.">És mi mérjük, mit hozott.</li></ul></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- who it is for: four cards, their objects floating -->
+  <section class="p-who" id="kiknek" aria-labelledby="who-h">
+    <div class="wrap">
+      <div class="p-head">
+        <p class="eyebrow" data-en="Who we work with" data-r>Kiknek dolgozunk</p>
+        <h2 class="p-h2" id="who-h" data-r><span data-l="hu">Márkáknak, amelyek már működnek, és most <em>nőni akarnak</em>.</span><span data-l="en">Brands that already work, and now <em>want to grow</em>.</span></h2>
+        <p class="p-lead" data-en="We are a good fit if your business has steady revenue, you think long term and you see marketing as an investment." data-r>Akkor vagyunk jó választás, ha a vállalkozásod stabil bevételt termel, hosszú távon gondolkodsz, és befektetésnek látod a marketinget.</p>
+      </div>
+      <div class="p-who-grid">
+        <article class="p-who-card" data-r style="--d:0">
+          <div class="art"><img class="bob" style="--dur:6.4s;--delay:-0s;--amp:-12px" src="assets/a-shop.webp" alt="" width="640" height="560" loading="lazy"></div>
+          <h3 data-en="Webshops">Webshopok</h3>
+          <p><span data-l="hu">Vásárlások Google és Meta kampányokból. A legjobb e-commerce eredményünk: <b>81× ROAS</b> egy ajtó webshopnál.</span><span data-l="en">Sales from Google and Meta campaigns. Our best e-commerce result: <b>81× ROAS</b> for a door webshop.</span></p>
+        </article>
+        <article class="p-who-card" data-r style="--d:1">
+          <div class="art"><img class="bob" style="--dur:6.800000000000001s;--delay:-1.1s;--amp:-12px" src="assets/a-b2b.webp" alt="" width="640" height="560" loading="lazy"></div>
+          <h3 data-en="B2B companies">B2B szolgáltatók</h3>
+          <p><span data-l="hu">Ajánlatkérések ott is, ahol „a Facebook nem működik”. Egy csarnoképítő ügyfélnek <b>79M Ft</b> bevétel egy hét alatt.</span><span data-l="en">Quote requests even where “Facebook doesn’t work”. <b>79M Ft</b> of revenue in one week for an industrial hall builder.</span></p>
+        </article>
+        <article class="p-who-card" data-r style="--d:2">
+          <div class="art"><img class="bob" style="--dur:7.2s;--delay:-2.2s;--amp:-12px" src="assets/a-events.webp" alt="" width="640" height="560" loading="lazy"></div>
+          <h3 data-en="Webinars and events">Webinárok és események</h3>
+          <p><span data-l="hu">Jelentkezők alacsony költséggel: egy egészségügyi webinárnál <b>105 Ft</b> volt egy jelentkező.</span><span data-l="en">Sign-ups at a low cost: <b>105 Ft</b> per registrant for a healthcare webinar.</span></p>
+        </article>
+        <article class="p-who-card" data-r style="--d:3">
+          <div class="art"><img class="bob" style="--dur:7.6000000000000005s;--delay:-3.3000000000000003s;--amp:-12px" src="assets/a-local.webp" alt="" width="640" height="560" loading="lazy"></div>
+          <h3 data-en="Local services and experiences">Helyi szolgáltatók és élményprogramok</h3>
+          <p><span data-l="hu">Szépségszalontól a tenerifei élményprogramig: videó, social és hirdetés egy csapattól.</span><span data-l="en">From beauty salons to experiences on Tenerife: video, social and ads from one team.</span></p>
+        </article>
+      </div>
+      <p class="p-notfor" data-en="Not for you if you are after overnight success or a cheap half-measure." data-r>Nem neked való, ha egy éjszaka alatti sikert vagy olcsó félmegoldást keresel.</p>
+    </div>
+  </section>
+
+  <!-- how we work: four big numbered cards -->
+  <section class="p-steps" id="igy" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="p-head row">
+        <div><p class="eyebrow" data-en="How we work" data-r>Így dolgozunk</p><h2 class="p-h2" id="how-h" data-r><span data-l="hu">Négy lépés az első beszélgetéstől a <em>skálázásig</em>.</span><span data-l="en">Four steps from the first call to <em>scaling</em>.</span></h2></div>
+        <div data-r><a class="btn" href="#audit"><span data-en="Start with the audit">Kezdjük az audittal</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+      </div>
+      <ol class="p-step-grid">
+        <li class="p-step" data-r style="--d:0">
+          <span class="p-step-n num" aria-hidden="true">01</span>
+          <h3 data-en="Audit">Audit</h3>
+          <p data-en="A free 30-minute review. We look at your campaigns, your landing page and your offer, and tell you honestly where the money leaks.">Ingyenes, 30 perces átvilágítás. Megnézzük a kampányaidat, a landing oldaladat és az ajánlatodat, és őszintén megmondjuk, hol folyik el a pénz.</p>
+          <div class="chips"><span data-en="Campaigns">Kampányok</span><span data-en="Landing page">Landing</span><span data-en="Offer">Ajánlat</span></div>
+        </li>
+        <li class="p-step" data-r style="--d:1">
+          <span class="p-step-n num" aria-hidden="true">02</span>
+          <h3 data-en="Strategy">Stratégia</h3>
+          <p data-en="Campaign strategy, funnel and positioning: what we show, to whom, and where.">Kampánystratégia, funnel és pozicionálás: kinek, mit és melyik platformon mutatunk.</p>
+          <div class="chips"><span data-en="Funnel">Funnel</span><span data-en="Targeting">Célzás</span><span data-en="Positioning">Pozicionálás</span></div>
+        </li>
+        <li class="p-step" data-r style="--d:2">
+          <span class="p-step-n num" aria-hidden="true">03</span>
+          <h3 data-en="Production">Gyártás</h3>
+          <p data-en="Hooks, creative direction, shooting and editing. We make the video ourselves, from concept to final cut.">Hookok, kreatív irány, forgatás és vágás. A videót mi készítjük, a koncepciótól a kész anyagig.</p>
+          <div class="chips"><span data-en="Hooks">Hook</span><span data-en="Shooting">Forgatás</span><span data-en="Editing">Vágás</span></div>
+        </li>
+        <li class="p-step" data-r style="--d:3">
+          <span class="p-step-n num" aria-hidden="true">04</span>
+          <h3 data-en="Ads and scaling">Hirdetés és skálázás</h3>
+          <p data-en="Meta, TikTok and Google campaigns with daily optimisation and A/B testing. What works, we scale.">Meta, TikTok és Google kampányok napi optimalizálással és A/B teszteléssel. Ami működik, azt skálázzuk.</p>
+          <div class="chips"><span data-en="Meta">Meta</span><span data-en="TikTok">TikTok</span><span data-en="Google">Google</span></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- their words: the first one large, then all six on coloured cards -->
+  <section class="p-voices" aria-labelledby="vo-h">
+    <div class="wrap">
+      <div class="p-head">
+        <p class="eyebrow" data-en="In our clients' words" data-r>Ügyfeleink szavaival</p>
+        <h2 class="p-h2" id="vo-h" data-r><span data-l="hu">Ne nekünk higgy. <em>Nekik.</em></span><span data-l="en">Don't take our word for it. <em>Take theirs.</em></span></h2>
+      </div>
+      <div class="p-wall">
+        <figure class="p-q q0" data-r style="--d:0">
+          <blockquote data-en="“We had already switched off our Facebook ads once because they simply weren’t worth it. After meeting Olivér we gave it another chance. There were purchases from launch day, and he produced numbers we had never seen before.”">„Egyszer már leállítottuk a Facebook hirdetéseinket, mert egyszerűen nem érte meg. Miután megismertük Olivért, adtunk egy újabb esélyt. Már az induláskor is volt vásárlás – olyan számokat produkált, amit eddig nem is láttunk.”</blockquote>
+          <figcaption data-en="Péter · Hoofbútor">Péter · Hoofbútor</figcaption>
+        </figure>
+        <figure class="p-q q1" data-r style="--d:1">
+          <blockquote data-en="“We thought Facebook was for young people and webshops; we build industrial halls. Then in one week we got as many quote requests as we used to get in half a year.”">„Azt hittük, a Facebook a fiataloknak és a webshopoknak való – mi csarnokot építünk. Aztán egy hét alatt annyi ajánlatkérésünk lett, mint korábban fél év alatt összesen.”</blockquote>
+          <figcaption data-en="Hall-building client · B2B">Csarnoképítő ügyfél · B2B</figcaption>
+        </figure>
+        <figure class="p-q q2" data-r style="--d:2">
+          <blockquote data-en="“Every December we dreaded ad prices. This year, for the first time, the holiday season felt like it was working for us, not against us.”">„Minden decemberben rettegtünk a hirdetési áraktól. Idén először éreztük úgy, hogy az ünnepi szezon nekünk dolgozik – nem ellenünk.”</blockquote>
+          <figcaption data-en="Watch webshop">Karóra webshop</figcaption>
+        </figure>
+        <figure class="p-q q0" data-r style="--d:0">
+          <blockquote data-en="“We expected a few hundred registrants for the webinar. When the counter stopped at almost 5,700, we could hardly believe it came from the same budget.”">„Pár száz jelentkezőre számítottunk a webinárra. Amikor a számláló majdnem 5700-nál állt meg, alig hittük el, hogy ez ugyanabból a büdzséből jött ki.”</blockquote>
+          <figcaption data-en="Healthcare provider">Egészségügyi szolgáltató</figcaption>
+        </figure>
+        <figure class="p-q q1" data-r style="--d:1">
+          <blockquote data-en="“I wanted a professional team after launch. They build professional campaigns across Facebook/Instagram, the website and ads. Results came quickly, and I had nothing to do.”">„Profi csapatot szerettem volna az indulás után. Mind Facebook/Instagram, mind weboldal és hirdetés területén profi kampányokat készítenek. Rövid időn belül jöttek az eredmények – nekem semmi dolgom nem volt velük.”</blockquote>
+          <figcaption data-en="Rita · Rita’s Beauty Corner">Rita · Rita’s Beauty Corner</figcaption>
+        </figure>
+        <figure class="p-q q2" data-r style="--d:2">
+          <blockquote data-en="“Social Stream built my website professionally. Everyone loved the polished, easy-to-follow content! I can only recommend them.”">„A Social Stream profi módon készítette el a weboldalam. Mindenkinek tetszett az igényes és könnyen áttekinthető tartalom! Csak ajánlani tudom őket.”</blockquote>
+          <figcaption data-en="János · EJ Massage Therapies">János · EJ Massage Therapies</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- the team -->
+  <section class="p-team" id="csapat" aria-labelledby="tm-h">
+    <div class="wrap">
+      <div class="p-head"><p class="eyebrow" data-en="The team" data-r>A csapat</p><h2 class="p-h2" data-en="The people working on your account." id="tm-h" data-r>Akik a fiókodon dolgoznak.</h2></div>
+      <div class="p-team-grid">
+        <article class="p-person" data-r style="--d:0">
+          <img src="assets/team-oliver.jpg" srcset="assets/team-oliver-400.jpg 400w, assets/team-oliver.jpg 800w" sizes="(max-width: 760px) 90vw, 360px" width="800" height="800" alt="Olivér" loading="lazy">
+          <div><b>Olivér</b><span data-en="Founder, campaign strategist">Alapító, kampánystratéga</span><p data-en="As a Meta Marketing Pro he saw how the most serious brands think. He founded SocialStream in 2022.">Meta Marketing Pro-ként látta, hogyan gondolkodnak a legkomolyabb márkák. 2022-ben alapította a SocialStreamet.</p></div>
+        </article>
+        <article class="p-person" data-r style="--d:1">
+          <img src="assets/team-david.jpg" srcset="assets/team-david-400.jpg 400w, assets/team-david.jpg 800w" sizes="(max-width: 760px) 90vw, 360px" width="800" height="800" alt="David" loading="lazy">
+          <div><b>David</b><span data-en="Creative and content production">Kreatív és tartalomgyártás</span><p data-en="Hooks, shooting, creative direction.">Hookok, forgatás, kreatív irány.</p></div>
+        </article>
+        <article class="p-person" data-r style="--d:2">
+          <img src="assets/team-lidi.jpg" srcset="assets/team-lidi-400.jpg 400w, assets/team-lidi.jpg 800w" sizes="(max-width: 760px) 90vw, 360px" width="800" height="800" alt="Lidi" loading="lazy">
+          <div><b>Lidi</b><span data-en="Production and editing">Produkció és szerkesztés</span><p data-en="Editing, rhythm, precision, on deadline.">Vágás, ritmus, precizitás, határidőre.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- the offer in a black panel, the form on white -->
+  <section class="p-panel p-offer" id="audit" aria-labelledby="au-h" data-dark>
+    <div class="wrap">
+      <div class="p-offer-copy"><p class="eyebrow" data-en="The offer" data-r>Az ajánlat</p>
+      <h2 class="p-h2" id="au-h" data-r><span data-l="hu">30 perc, ami megmutatja, <em>hol hagysz pénzt az asztalon</em>.</span><span data-l="en">30 minutes that show <em>where you're leaving money on the table</em>.</span></h2>
+      <ul class="checks" data-r><li data-en="We go through your ads and campaigns.">Átnézzük a hirdetéseidet és a kampányaidat.</li><li data-en="We look at your landing page.">Megnézzük a landing oldaladat.</li><li data-en="We assess your offer.">Értékeljük az ajánlatodat.</li><li data-en="We tell you honestly what we would do differently, before you pay anything.">Őszintén megmondjuk, mit csinálnánk másképp, még mielőtt bármit fizetnél.</li></ul>
+      <dl class="specs" data-r><div><dt data-en="Length">Hossz</dt><dd data-en="30 minutes">30 perc</dd></div><div><dt data-en="Price">Ár</dt><dd data-en="Free">Ingyenes</dd></div><div><dt data-en="Obligation">Kötelezettség</dt><dd data-en="None">Nincs</dd></div></dl>
+      <p class="scarce" data-r><i aria-hidden="true"></i><span data-en="We take on at most two new partners a month.">Havonta legfeljebb két új partnert vállalunk.</span></p></div>
+      <div class="p-form" data-r style="--d:1"><form class="app" id="appform" novalidate>
+  <h3 data-en="Apply for the free audit">Jelentkezés az ingyenes auditra</h3>
+  <div class="field"><label for="f-name" data-en="Your name">Neved</label><input id="f-name" name="name" autocomplete="name" required><span class="err" id="e-name"></span></div>
+  <div class="field"><label for="f-email" data-en="Email">E-mail</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="err" id="e-email"></span></div>
+  <div class="field"><label for="f-brand" data-en="Company or brand">Cég vagy márka</label><input id="f-brand" name="brand" autocomplete="organization" required><span class="err" id="e-brand"></span></div>
+  <div class="field"><label for="f-web"><span data-en="Website or Instagram">Weboldal vagy Instagram</span> <span class="opt" data-en="(optional)">(nem kötelező)</span></label><input id="f-web" name="web" autocomplete="url"><span class="err"></span></div>
+  <div class="field"><label for="f-budget"><span data-en="Monthly marketing budget">Havi marketing büdzsé</span> <span class="opt" data-en="(optional)">(nem kötelező)</span></label><select id="f-budget" name="budget"><option value="" data-en="Choose a range">Válassz sávot</option><option value="lt300" data-en="Under 300K Ft">300 ezer Ft alatt</option><option value="300-1m" data-en="300K–1M Ft">300 ezer – 1 millió Ft</option><option value="1-3m" data-en="1M–3M Ft">1–3 millió Ft</option><option value="gt3m" data-en="Over 3M Ft">3 millió Ft felett</option></select><span class="err"></span></div>
+  <div class="field"><label for="f-goal"><span data-en="Your main goal">Mi a fő célod?</span> <span class="opt" data-en="(optional)">(nem kötelező)</span></label><select id="f-goal" name="goal"><option value="" data-en="Choose a goal">Válassz célt</option><option value="sales" data-en="More sales (e-commerce)">Több eladás (webshop)</option><option value="leads" data-en="More leads and enquiries">Több érdeklődő és ajánlatkérés</option><option value="brand" data-en="Brand and content">Márka és tartalom</option><option value="web" data-en="Website or landing page">Weboldal vagy landing</option></select><span class="err"></span></div>
+  <fieldset><legend><span data-en="What can we help with?">Miben segítsünk?</span> <span class="opt" data-en="(optional)">(nem kötelező)</span></legend><div class="pick" id="pick"></div></fieldset>
+  <div class="field full"><label for="f-msg"><span data-en="In short: where are you now?">Röviden: hol tartasz most?</span> <span class="opt" data-en="(optional)">(nem kötelező)</span></label><textarea id="f-msg" name="msg" placeholder="Pl. webshopunk van, a Metán hirdetünk, de túl drága egy vásárlás." data-en-ph="E.g. we run a webshop and advertise on Meta, but each sale costs too much."></textarea><span class="err"></span></div>
+  <div class="actions">
+    <button class="btn" type="submit" aria-describedby="f-hint"><span data-en="Apply by email">Jelentkezem e-mailben</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <p class="hint" id="f-hint" data-en="This opens your mail app with the email filled in. You just press send.">A gomb megnyitja a leveleződ egy kitöltött e-maillel, neked csak el kell küldened.</p>
+    <p class="direct"><span data-en="Or write to us:">Vagy írj nekünk:</span> <a href="mailto:hello@socialstream.hu">hello@socialstream.hu</a><button type="button" class="copy-mini" id="copyMail" data-en="Copy address">Cím másolása</button></p>
+  </div>
+  <div class="sending" id="sending" hidden><i></i><span id="stext"></span></div>
+  <div class="sent" id="sent" hidden aria-live="polite"></div>
+</form></div>
+    </div>
+  </section>
+
+  <!-- questions -->
+  <section class="p-faq" id="kerdesek" aria-labelledby="faq-h">
+    <div class="wrap">
+      <div class="p-head"><p class="eyebrow" data-en="Questions" data-r>Kérdések</p><h2 class="p-h2" data-en="What most people ask." id="faq-h" data-r>Amit a legtöbben megkérdeznek.</h2></div>
+      <div class="faq-list p-faq-list" data-r>
+  <details><summary><span class="qn">01</span><span data-en="What does the audit cost?">Mennyibe kerül az audit?</span><i aria-hidden="true"></i></summary><p data-en="Nothing. It's free, with no obligation.">Semmibe. Ingyenes, és nem jár kötelezettséggel.</p></details>
+  <details><summary><span class="qn">02</span><span data-en="How long does it take?">Mennyi ideig tart?</span><i aria-hidden="true"></i></summary><p data-en="30 minutes.">30 percig.</p></details>
+  <details><summary><span class="qn">03</span><span data-en="What happens after I send it?">Mi történik, miután elküldöm?</span><i aria-hidden="true"></i></summary><p data-en="We reply to your email and set a time for the 30-minute audit.">Válaszolunk az e-mailedre, és egyeztetünk egy időpontot a 30 perces auditra.</p></details>
+  <details><summary><span class="qn">04</span><span data-en="What do I get from it?">Mit kapok az audit végén?</span><i aria-hidden="true"></i></summary><p data-en="We go through your campaigns, landing page and offer, and tell you honestly what we would do differently, before you pay anything.">Átnézzük a kampányaidat, a landing oldaladat és az ajánlatodat, és őszintén megmondjuk, mit csinálnánk másképp, még mielőtt bármit fizetnél.</p></details>
+  <details><summary><span class="qn">05</span><span data-en="Who do you work with?">Kikkel dolgoztok?</span><i aria-hidden="true"></i></summary><p data-en="Brands with steady revenue that think long term and see marketing as an investment. We take on at most two new partners a month.">Stabil bevételű márkákkal, amelyek hosszú távon gondolkodnak, és befektetésnek látják a marketinget. Havonta legfeljebb két új partnert vállalunk.</p></details>
+  <details><summary><span class="qn">06</span><span data-en="Do you make the videos too?">A videót is ti készítitek?</span><i aria-hidden="true"></i></summary><p data-en="Yes. From hooks and creative direction through shooting to editing, we make them, not just run them.">Igen. A hookoktól és a kreatív iránytól a forgatáson át a vágásig mi gyártjuk, nem csak hirdetjük.</p></details>
+  <details><summary><span class="qn">07</span><span data-en="Where do you advertise?">Hol hirdettek?</span><i aria-hidden="true"></i></summary><p data-en="On Meta (Facebook, Instagram), TikTok and Google.">A Meta felületein (Facebook, Instagram), a TikTokon és a Google-ön.</p></details>
+  <details><summary><span class="qn">08</span><span data-en="Where are you based?">Hol vagytok?</span><i aria-hidden="true"></i></summary><p data-en="Tenerife and Budapest.">Tenerifén és Budapesten.</p></details>
+</div>
+    </div>
+  </section>
+
+  <!-- the last call -->
+  <section class="p-final" aria-labelledby="fin-h">
+    <div class="wrap">
+      <div class="p-final-card" data-dark>
+        <h2 class="p-h2 ital" id="fin-h" data-r><span data-l="hu">A következő vevőd <em>már görget</em>. Te ott vagy?</span><span data-l="en">Your next customer <em>is already scrolling</em>. Are you there?</span></h2>
+        <div data-r><a class="btn" href="#audit"><span data-en="Get my free audit">Kérem az ingyenes auditot</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+        <p class="small" data-en="At most two new partners a month." data-r>Havonta legfeljebb két új partner.</p>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="foot p-foot">
+  <div class="wrap">
+    <a class="wm" href="#top" aria-label="SocialStream">Social<em>Stream</em></a>
+    <span data-en="Interest media agency · Tenerife and Budapest">Interest media ügynökség · Tenerife és Budapest</span>
+    <span><a href="mailto:hello@socialstream.hu">hello@socialstream.hu</a><button type="button" id="copyMail2" data-en="Copy address">Cím másolása</button></span>
+    <span>© 2026 SocialStream</span>
+  </div>
+  <p class="giant" aria-hidden="true">Social<em>Stream</em></p>
+</footer>
+<script src="ss.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

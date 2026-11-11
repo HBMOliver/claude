@@ -1,0 +1,202 @@
+/* Premiere. Lead reference: Talentank (Marketia for the giant running words). Black and warm white, with the
+   brand film's dusty blue as the one accent; a tight grotesque, Fraunces italic for the turned words.
+   Moving at rest: the film in its wide band, the giant running words, each service's object, the objects on
+   the stacking result cards and in "Kiknek". Moving with the scroll: the name line lights, the result cards
+   stack over each other. With a mouse: a light follows the cursor over the black of the first screen, a
+   problem's object comes out over its row and follows the cursor along it, and the buttons are pulled toward it. */
+:root {
+  --bg: #070708; --fg: #f2eee6; --fg2: #c9c4bb; --fg3: #8f8a93; --line: rgba(242, 238, 230, 0.12); --line2: rgba(242, 238, 230, 0.22);
+  --accent: #8fb2d4; --accent-soft: rgba(143, 178, 212, 0.16); --panel: #0f0f12; --panel2: #17171b;
+  --field: #18181c; --field-line: rgba(242, 238, 230, 0.1); --btn-bg: #f2eee6; --btn-fg: #070708; --strike: #8fb2d4; --err: #ff8a80;
+  --font-d: "Inter Tight", "Inter", system-ui, sans-serif; --font-b: "Inter", system-ui, sans-serif; --font-s: "Fraunces", Georgia, serif;
+  --max: 1320px; --strike-y: 0.66em;
+  color-scheme: dark;
+}
+.pr-kicker, .pr-offer .eyebrow { font: 600 13px/1.2 var(--font-b); letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg3); }
+.pr-kicker .num, .pr-offer .eyebrow { color: var(--accent); }
+.pr-head { display: grid; gap: 14px; max-width: 960px; }
+.pr-h2 { font: 700 clamp(2rem, 4.4vw, 4.2rem)/1.02 var(--font-d); letter-spacing: -0.045em; }
+.pr-h2.big { font-size: clamp(2.4rem, 6vw, 6.2rem); }
+.pr-h2 em, .pr-turn em, .pr-line em { font-family: var(--font-s); font-style: italic; font-weight: 300; color: var(--accent); }
+.pr-body { max-width: 54ch; font-size: 17px; line-height: 1.65; color: var(--fg2); }
+
+/* ---------- menu ---------- */
+.pr-nav { top: 0; left: 0; right: 0; height: 74px; padding: 0 max(var(--gut), env(safe-area-inset-right, 0px)) 0 max(var(--gut), env(safe-area-inset-left, 0px)); color: var(--fg); transition: background-color 300ms, box-shadow 300ms; }
+.pr-nav.is-scrolled { background: rgba(7, 7, 8, 0.78); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 1px 0 var(--line); }
+.pr-nav .wm em { color: var(--accent); }
+.pr-nav .links a { color: rgba(242, 238, 230, 0.74); }
+@media (hover: hover) { .pr-nav .links a:hover { color: var(--fg); background: rgba(242, 238, 230, 0.07); } }
+
+/* ---------- first screen: sentence, film band, sentence and button ---------- */
+.pr-hero { position: relative; padding: 96px 0 clamp(40px, 6vh, 64px); }
+.pr-hero > .wrap, .pr-band { position: relative; z-index: 1; }
+/* the light that follows the cursor over the black (only with a mouse; it rests up and to the right) */
+.pr-spot { display: none; }
+.fine .pr-spot { display: block; position: absolute; z-index: 0; left: 0; top: 0; width: 760px; height: 760px; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(143, 178, 212, 0.26), rgba(143, 178, 212, 0.08) 58%, rgba(143, 178, 212, 0)); translate: var(--fx, 0px) var(--fy, 0px); }
+.pr-top { display: grid; gap: 10px; }
+.pr-eyebrow { font: 600 13px/1.2 var(--font-b); letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg3); }
+.pr-line { font: 700 clamp(2.5rem, 7.1vw, 7.6rem)/0.94 var(--font-d); letter-spacing: -0.05em; }
+.pr-band { margin-top: clamp(14px, 2.4vh, 24px); }
+.pr-film { width: 100%; aspect-ratio: 3.4 / 1; }
+.pr-film .toggle { right: max(var(--gut), env(safe-area-inset-right, 0px)); }
+.pr-bottom { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 22px 48px; margin-top: clamp(14px, 2.4vh, 24px); }
+.pr-act { display: grid; justify-items: end; gap: 14px; padding-bottom: 6px; }
+.pr-promise { font: 500 15.5px/1.45 var(--font-b); color: var(--fg2); text-align: right; }
+
+/* ---------- giant running words ---------- */
+.pr-giant { padding: clamp(28px, 5vh, 56px) 0; border-block: 1px solid var(--line); }
+.pr-gw { flex: none; padding-right: 0.32em; font: 700 clamp(3.2rem, 9vw, 9rem)/1 var(--font-d); letter-spacing: -0.045em; white-space: nowrap; color: transparent; -webkit-text-stroke: 1.5px rgba(242, 238, 230, 0.5); }
+.pr-gw:nth-child(4n + 3) { color: var(--fg); -webkit-text-stroke: 0; }
+.pr-gd { flex: none; align-self: center; padding-right: 0.5em; font-size: clamp(1.4rem, 3vw, 3rem); color: var(--accent); }
+
+/* ---------- the name line ---------- */
+.pr-name { position: relative; overflow: clip; padding: clamp(110px, 16vh, 180px) 0 clamp(80px, 12vh, 130px); }
+/* the name, giant and faint, drifting behind the line about it */
+.pr-ghost { position: absolute; left: 0; right: 0; top: 50%; translate: 0 -50%; z-index: 0; pointer-events: none; }
+.pr-gh { flex: none; padding-right: 0.25em; font: 400 clamp(8rem, 26vw, 26rem)/1 var(--font-s); letter-spacing: -0.04em; white-space: nowrap; color: transparent; -webkit-text-stroke: 1px rgba(242, 238, 230, 0.17); }
+.pr-gh em { font-style: italic; -webkit-text-stroke-color: rgba(143, 178, 212, 0.3); }
+.pr-say { margin-top: 26px; max-width: 20ch; font: 600 clamp(2rem, 4.8vw, 4.8rem)/1.05 var(--font-d); letter-spacing: -0.04em; --lit-dim: #6f6b74; --lit-on: var(--fg); }
+.pr-lead { margin-top: 34px; max-width: 58ch; font-size: 18px; line-height: 1.65; color: var(--fg2); }
+.pr-lead strong { color: var(--fg); }
+
+/* ---------- services: a numbered list ---------- */
+.pr-svc { padding: clamp(90px, 13vh, 150px) 0; border-top: 1px solid var(--line); }
+.pr-list { list-style: none; margin: 50px 0 0; padding: 0; border-top: 1px solid var(--line); }
+.pr-row { display: grid; grid-template-columns: 64px minmax(0, 1.1fr) minmax(0, 1fr) 96px; gap: 24px; align-items: center; padding: 26px 0; border-bottom: 1px solid var(--line); }
+.pr-n { font: 600 14px/1 var(--font-b); color: var(--accent); }
+.pr-row h3 { font: 700 clamp(1.5rem, 2.7vw, 2.5rem)/1.05 var(--font-d); letter-spacing: -0.035em; transition: color 200ms; }
+.pr-row-h { margin-top: 6px; font: 500 15px/1.4 var(--font-b); color: var(--fg2); }
+.pr-row-p { font-size: 15px; line-height: 1.6; color: var(--fg3); }
+.pr-row-ico { justify-self: end; width: 84px; height: 84px; object-fit: contain; filter: drop-shadow(0 16px 16px rgba(0, 0, 0, 0.6)); --amp: -10px; --r0: -4deg; --r1: 4deg; }
+@media (hover: hover) { .pr-row:hover h3 { color: var(--accent); } }
+
+/* ---------- results: cards that stack ---------- */
+.pr-res { padding: clamp(90px, 13vh, 150px) 0; border-top: 1px solid var(--line); }
+.pr-stack { display: grid; gap: 22px; margin-top: 44px; }
+.pr-case { position: sticky; top: calc(98px + var(--i) * 18px); display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 24px; min-height: min(58vh, 520px);
+  padding: clamp(28px, 4vw, 56px); border-radius: 28px; background: #f2eee6; color: #0b0b0d; box-shadow: 0 -24px 60px -34px rgba(0, 0, 0, 0.85); }
+.pr-case.c1 { background: #8fb2d4; }
+.pr-case.c2 { background: #1a1a1f; color: var(--fg); box-shadow: inset 0 0 0 1px var(--line), 0 -24px 60px -34px rgba(0, 0, 0, 0.85); }
+.pr-case.c3 { background: #e5ddcf; }
+.pr-case .who { font: 700 12.5px/1.3 var(--font-b); letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.72; }
+.pr-case .n { margin-top: 14px; font: 700 clamp(4.4rem, 12vw, 12rem)/0.86 var(--font-d); letter-spacing: -0.06em; white-space: nowrap; }
+.pr-case .n small { margin-left: 0.1em; font-size: 0.3em; letter-spacing: -0.01em; }
+.pr-case .d { margin-top: 18px; max-width: 34ch; font-size: 18px; line-height: 1.5; }
+.pr-case-obj { width: clamp(130px, 22vw, 320px); filter: drop-shadow(0 30px 30px rgba(0, 0, 0, 0.35)); --amp: -16px; }
+.pr-res-cta { margin-top: 40px; }
+
+/* ---------- the problem ---------- */
+.pr-prob { padding: clamp(100px, 14vh, 170px) 0; border-top: 1px solid var(--line); }
+/* what goes wrong, each with the service that answers it (new, to confirm): the problem in the serif, the
+   service on the right; with a mouse, the service's object comes out over the row and follows the cursor along
+   it. Without one there is nothing to hover and nothing hidden. */
+.pr-pains { margin: 52px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.pr-pain { position: relative; display: grid; grid-template-columns: 64px minmax(0, 1.5fr) minmax(0, 0.8fr); gap: 24px; align-items: center; padding: 28px 0; border-bottom: 1px solid var(--line); }
+.pr-pain .q { font: 300 italic clamp(1.3rem, 2.3vw, 2rem)/1.25 var(--font-s); transition: color 200ms; }
+.pr-pain .a { justify-self: end; display: grid; grid-template-columns: auto auto; align-items: center; column-gap: 12px; text-align: right; text-decoration: none; }
+.pr-pain .a .k { grid-column: 1; font: 600 11.5px/1.2 var(--font-b); letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg3); }
+.pr-pain .a .n { grid-column: 1; margin-top: 5px; font: 700 1.05rem/1.2 var(--font-d); letter-spacing: -0.01em; color: var(--accent); }
+.pr-pain .a svg { grid-column: 2; grid-row: 1 / 3; width: 16px; height: 16px; color: var(--accent); transition: transform 260ms var(--out); }
+.pr-pain-ico { display: none; }
+.fine .pr-pain-ico { display: block; position: absolute; z-index: 2; left: 0; top: 0; width: 118px; height: 118px; object-fit: contain; pointer-events: none; opacity: 0; scale: 0.55; translate: var(--fx, 0px) var(--fy, 0px); filter: drop-shadow(0 24px 24px rgba(0, 0, 0, 0.7)); transition: opacity 220ms, scale 360ms var(--out); }
+@media (hover: hover) {
+  .pr-pain:hover .q { color: var(--accent); }
+  .pr-pain:hover .pr-pain-ico { opacity: 1; scale: 1; }
+  .pr-pain .a:hover svg { transform: translateX(3px); }
+}
+.pr-prob .pr-turn { margin-top: 72px; }
+.pr-prob .pr-h2 { margin-top: 18px; max-width: 16ch; }
+.pr-prob .pr-h2 + .pr-body { margin-top: 26px; }
+.pr-turn { margin-top: 64px; max-width: 24ch; font: 700 clamp(1.8rem, 3.6vw, 3.4rem)/1.08 var(--font-d); letter-spacing: -0.04em; }
+.pr-turn + .pr-body { margin-top: 18px; }
+
+/* ---------- who it is for ---------- */
+.pr-who { padding: clamp(90px, 13vh, 150px) 0; border-top: 1px solid var(--line); }
+.pr-who-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 44px; }
+.pr-who-card { padding: 22px; border-radius: 22px; background: var(--panel2); box-shadow: inset 0 0 0 1px var(--line); }
+.pr-who-card img { width: 64%; margin: 0 auto 12px; filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.55)); }
+.pr-who-card h3 { font: 700 1.15rem/1.25 var(--font-d); }
+.pr-who-card p { margin-top: 8px; font-size: 15px; line-height: 1.55; color: var(--fg2); }
+.pr-who-card b { color: var(--fg); }
+.pr-notfor { margin-top: 28px; font-size: 15px; color: var(--fg3); }
+
+/* ---------- how we work ---------- */
+.pr-steps { padding: clamp(90px, 13vh, 150px) 0; border-top: 1px solid var(--line); }
+.pr-step-row { list-style: none; margin: 48px 0 40px; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+.pr-step-n { display: block; font: 700 clamp(3.4rem, 6vw, 5.6rem)/0.9 var(--font-d); letter-spacing: -0.06em; color: transparent; -webkit-text-stroke: 1.2px rgba(242, 238, 230, 0.5); }
+.pr-step-row h3 { margin-top: 18px; font: 700 1.25rem/1.2 var(--font-d); }
+.pr-step-row p { margin-top: 8px; font-size: 15px; line-height: 1.55; color: var(--fg2); }
+
+/* ---------- their words ---------- */
+.pr-voices { padding: clamp(100px, 14vh, 170px) 0; border-top: 1px solid var(--line); }
+.pr-pull blockquote { margin-top: 26px; max-width: 24ch; font: 300 italic clamp(2rem, 4.6vw, 4.4rem)/1.1 var(--font-s); letter-spacing: -0.02em; }
+.pr-pull figcaption { margin-top: 22px; font: 600 13px/1.3 var(--font-b); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.pr-quotes { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 16px; margin-top: 56px; }
+.pr-q { padding: 24px; border-radius: 22px; background: var(--panel); box-shadow: inset 0 0 0 1px var(--line); }
+.pr-q blockquote { font-size: 15.5px; line-height: 1.6; color: var(--fg2); }
+.pr-q figcaption { margin-top: 14px; font: 700 13px/1.3 var(--font-b); }
+
+/* ---------- team ---------- */
+.pr-team { padding: clamp(90px, 13vh, 150px) 0; border-top: 1px solid var(--line); }
+.pr-team-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 44px; }
+.pr-person img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 22px; }
+.pr-person b { display: block; margin-top: 16px; font: 700 1.3rem/1.2 var(--font-d); }
+.pr-person span { display: block; margin-top: 4px; font: 600 12.5px/1.3 var(--font-b); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.pr-person p { margin-top: 8px; font-size: 15px; line-height: 1.55; color: var(--fg2); }
+
+/* ---------- offer ---------- */
+.pr-offer { padding: clamp(100px, 14vh, 160px) 0; background: var(--panel); }
+.pr-offer .wrap { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 56px; align-items: start; }
+.pr-offer .pr-h2 { margin-top: 14px; }
+.pr-offer .checks li { color: var(--fg2); }
+.pr-offer .checks li::before { background-color: var(--accent); }
+.pr-offer .specs div { background: var(--panel2); box-shadow: inset 0 0 0 1px var(--line); }
+.pr-offer .scarce { background: var(--accent-soft); color: var(--accent); }
+.pr-form .app { padding: clamp(22px, 3vw, 36px); border-radius: 26px; background: #0a0a0c; box-shadow: inset 0 0 0 1px var(--line2); }
+.pr-form .pick span { color: var(--fg2); }
+.pr-form .sent { background: #e9eef5; color: #0b0b0d; }
+
+/* ---------- questions, last call, footer ---------- */
+.pr-faq { padding: clamp(100px, 14vh, 160px) 0; }
+.pr-faq-list { max-width: 920px; margin-top: 40px; border-top: 1px solid var(--line); }
+.pr-faq-list summary i { background: var(--panel2); }
+.pr-final { padding: clamp(110px, 16vh, 190px) 0 clamp(70px, 10vh, 110px); border-top: 1px solid var(--line); }
+.pr-final .pr-h2 { max-width: 15ch; }
+.pr-final-act { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; margin-top: 40px; }
+.pr-final .small { font-size: 14px; color: var(--fg3); }
+.pr-foot { border-top: 1px solid var(--line); color: var(--fg2); }
+.pr-foot .wm em, .pr-foot .giant em { color: var(--accent); }
+.pr-foot .giant { color: var(--fg); }
+
+/* ---------- tablets and phones ---------- */
+@media (max-width: 1080px) {
+  .pr-nav .links { display: none; }
+  .pr-nav .lang { margin-left: auto; }
+  .pr-row { grid-template-columns: 48px minmax(0, 1fr) 76px; }
+  .pr-row-p { grid-column: 2 / 3; grid-row: 2; }
+  .pr-row-ico { grid-column: 3; grid-row: 1 / 3; width: 72px; height: 72px; }
+  .pr-who-grid, .pr-step-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pr-offer .wrap { grid-template-columns: minmax(0, 1fr); }
+  .pr-pain { grid-template-columns: 48px minmax(0, 1fr); }
+  .pr-pain .a { grid-column: 2; justify-self: start; text-align: left; }
+}
+@media (max-width: 760px) {
+  .pr-nav { height: 62px; gap: 8px; }
+  .pr-nav .nav-cta { min-height: 40px; padding: 0 14px; font-size: 13px; }
+  .pr-nav .nav-cta svg { display: none; }
+  .pr-hero { padding-top: 76px; }
+  .pr-line { font-size: 11.2vw; }
+  .pr-film { aspect-ratio: 16 / 10; }
+  .pr-bottom { grid-template-columns: minmax(0, 1fr); }
+  .pr-act { justify-items: stretch; }
+  .pr-act .btn { width: 100%; }
+  .pr-promise { display: none; }
+  .pr-row { grid-template-columns: 30px minmax(0, 1fr) 78px; gap: 12px; }
+  .pr-pain { grid-template-columns: 30px minmax(0, 1fr); gap: 10px 12px; padding: 22px 0; }
+  .pr-row-ico { width: 78px; height: 78px; --amp: -16px; }
+  .pr-case { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  .pr-case-obj { position: absolute; right: 18px; top: 18px; width: 96px; }
+  .pr-case .n { font-size: 18vw; }
+  .pr-who-grid, .pr-step-row, .pr-team-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 380px) { .lang button[aria-pressed="true"] { display: none; } }

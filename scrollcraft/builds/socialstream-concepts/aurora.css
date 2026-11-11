@@ -1,0 +1,229 @@
+/* Aurora. Lead reference: Conversion (Strivai for the horizon light and the glass). Night blue, a moving
+   aurora of rose, violet, amber and teal, glass cards; a geometric sans with Instrument Serif italic for the
+   turned words. Moving at rest: the aurora and the horizon line, the floating glass results, the running band
+   of numbers, the film, the light round the frame and round each service card, the floating objects,
+   the line of light from each problem to its service. Moving with the scroll: the sentence lights. With a mouse:
+   the glass results lean toward the cursor, two lights of the aurora away from it and one toward it, the frame's light follows
+   it, and the buttons are pulled toward it. */
+@property --a { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+:root {
+  --bg: #060914; --fg: #eef1f8; --fg2: #b9c1d6; --fg3: #8a94ad; --line: rgba(255, 255, 255, 0.1); --line2: rgba(255, 255, 255, 0.18);
+  --accent: #ff5c8a; --accent-soft: rgba(255, 92, 138, 0.16); --pink: #ff9ab8; --blush: #ffd1df; --teal: #2fd6c3;
+  --glass: rgba(255, 255, 255, 0.045); --glass2: rgba(255, 255, 255, 0.08);
+  --field: rgba(255, 255, 255, 0.06); --field-line: rgba(255, 255, 255, 0.1); --btn-bg: #d6336a; --btn-fg: #ffffff; --strike: #ff5c8a; --err: #ffa3a3;
+  --font-d: "Sora", "Inter", system-ui, sans-serif; --font-b: "Inter", system-ui, sans-serif; --font-s: "Instrument Serif", Georgia, serif;
+  --max: 1240px; --strike-y: 0.66em;
+  color-scheme: dark;
+}
+.au-head { display: grid; gap: 12px; max-width: 820px; }
+.au-head.center { margin: 0 auto; justify-items: center; text-align: center; }
+.au-eyebrow, .au-offer .eyebrow { font: 700 12.5px/1.2 var(--font-b); letter-spacing: 0.16em; text-transform: uppercase; color: var(--pink); }
+.au-h2 { font: 700 clamp(2rem, 4.2vw, 3.8rem)/1.05 var(--font-d); letter-spacing: -0.04em; }
+.au-h2.big { max-width: 15ch; margin: 0 auto; font-size: clamp(2.4rem, 5.6vw, 5.4rem); }
+.au-h2 em, .au-cmp-h em, .au-claim em { font-family: var(--font-s); font-style: italic; font-weight: 400; font-size: 1.12em; letter-spacing: 0; color: var(--blush); }
+.au-sub { max-width: 60ch; font-size: 17px; line-height: 1.65; color: var(--fg2); }
+.au-card { position: relative; border-radius: 22px; background: var(--glass); box-shadow: inset 0 0 0 1px var(--line); }
+.au-center { display: flex; justify-content: center; margin-top: 40px; }
+.btn { box-shadow: 0 14px 34px -12px rgba(255, 92, 138, 0.75); }
+
+/* ---------- menu: a glass pill ---------- */
+.au-nav { top: 14px; left: 50%; translate: -50% 0; width: min(calc(100% - 24px), 1180px); height: 60px; padding: 0 8px 0 20px; border-radius: 999px; color: var(--fg);
+  background: rgba(12, 16, 34, 0.55); -webkit-backdrop-filter: blur(16px) saturate(1.3); backdrop-filter: blur(16px) saturate(1.3); box-shadow: inset 0 0 0 1px var(--line); }
+.au-nav .wm em { color: var(--accent); }
+.au-nav .links a { color: rgba(238, 241, 248, 0.74); }
+@media (hover: hover) { .au-nav .links a:hover { color: var(--fg); background: rgba(255, 255, 255, 0.06); } }
+
+/* ---------- the aurora (soft radial lights that drift; no blur filter, so it stays cheap) ---------- */
+.au-sky { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.au-sky i { position: absolute; border-radius: 50%; will-change: transform; animation: au-drift 11s ease-in-out infinite alternate; translate: var(--fx, 0px) var(--fy, 0px); }
+.au-sky .b1 { width: 64vw; height: 50vw; left: -16vw; bottom: -24vw; background: radial-gradient(closest-side, rgba(255, 61, 127, 0.6), rgba(255, 61, 127, 0)); }
+.au-sky .b2 { width: 58vw; height: 46vw; right: -14vw; bottom: -20vw; background: radial-gradient(closest-side, rgba(110, 76, 255, 0.62), rgba(110, 76, 255, 0)); animation-duration: 13s; animation-delay: -6s; }
+.au-sky .b3 { width: 44vw; height: 36vw; left: 26vw; bottom: -26vw; background: radial-gradient(closest-side, rgba(255, 170, 80, 0.5), rgba(255, 170, 80, 0)); animation-duration: 9s; animation-delay: -3s; }
+.au-sky .b4 { width: 40vw; height: 34vw; right: 16vw; top: -18vw; background: radial-gradient(closest-side, rgba(40, 210, 190, 0.3), rgba(40, 210, 190, 0)); animation-duration: 14s; animation-delay: -9s; }
+.au-sky.low i { opacity: 0.55; }
+@keyframes au-drift { 0% { transform: translate3d(0, 0, 0) scale(1); } 50% { transform: translate3d(10vw, -7vw, 0) scale(1.22); } 100% { transform: translate3d(-8vw, 5vw, 0) scale(0.9); } }
+.au-horizon { position: absolute; left: 8%; right: 8%; bottom: 13%; height: 2px; border-radius: 2px; background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0)); box-shadow: 0 0 46px 12px rgba(255, 120, 170, 0.32); animation: au-pulse 5s ease-in-out infinite; }
+@keyframes au-pulse { 0%, 100% { opacity: 0.45; transform: scaleX(0.86); } 50% { opacity: 0.95; transform: scaleX(1); } }
+
+/* ---------- first screen ---------- */
+.au-hero { position: relative; isolation: isolate; overflow: clip; display: grid; align-items: center; min-height: 100vh; min-height: 100svh; padding: 140px 0 110px; }
+.au-hero-in { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr); align-items: center; gap: 40px; }
+.au-pill { display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 999px; background: var(--glass2); box-shadow: inset 0 0 0 1px var(--line); font: 600 13.5px/1 var(--font-b); color: var(--fg2); }
+.au-pill i { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 12px var(--teal); }
+.au-claim { margin-top: 22px; font: 700 clamp(2.5rem, 5.5vw, 5.5rem)/1 var(--font-d); letter-spacing: -0.045em; }
+.au-promise { margin-top: 22px; font: 500 clamp(1.08rem, 1.5vw, 1.32rem)/1.4 var(--font-b); color: var(--fg2); }
+.au-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-top: 30px; }
+.au-cta .link { color: var(--fg); }
+.au-ticks { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 18px 0 0; padding: 0; list-style: none; font: 600 14px/1.3 var(--font-b); color: var(--fg3); }
+.au-ticks li::before { content: ""; display: inline-block; width: 6px; height: 6px; margin: 0 8px 2px 0; border-radius: 50%; background: var(--teal); }
+.au-glass { position: relative; height: 520px; }
+.au-g { position: absolute; width: clamp(180px, 16vw, 236px); translate: var(--fx, 0px) var(--fy, 0px); }
+.au-g .bob { padding: 18px 18px 20px; border-radius: 22px; background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04)); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16), 0 30px 60px -30px rgba(0, 0, 0, 0.75); }
+.au-g img { width: 72px; height: 72px; object-fit: contain; filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.5)); }
+.au-g .n { margin-top: 8px; font: 700 2.6rem/1 var(--font-d); letter-spacing: -0.04em; white-space: nowrap; }
+.au-g .n small { margin-left: 0.1em; font-size: 0.45em; color: #ffc3d5; }
+.au-g .who { margin-top: 8px; font: 600 11.5px/1.3 var(--font-b); letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg3); }
+.g0 { left: 2%; top: 2%; } .g0 .bob { --dur: 6.4s; --amp: -16px; --r0: -3deg; --r1: 2deg; }
+.g1 { right: 0; top: 32%; } .g1 .bob { --dur: 7.2s; --delay: -2s; --amp: -14px; --r0: 3deg; --r1: -2deg; }
+.g2 { left: 12%; bottom: 0; } .g2 .bob { --dur: 5.8s; --delay: -1s; --amp: -18px; --r0: -1deg; --r1: 3deg; }
+
+/* ---------- the running band of numbers ---------- */
+.au-ticker { position: relative; z-index: 2; padding: 18px 0; border-block: 1px solid var(--line); background: rgba(255, 255, 255, 0.025); }
+.au-tk { flex: none; display: inline-flex; align-items: center; gap: 14px; padding-right: 44px; font: 600 15px/1 var(--font-b); white-space: nowrap; color: var(--fg2); }
+.au-tk::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+
+/* ---------- the sentence, then the film in glass ---------- */
+.au-say { position: relative; padding: clamp(100px, 15vh, 170px) 0; }
+.au-statement { max-width: 24ch; margin: 0 auto; text-align: center; font: 600 clamp(1.8rem, 3.8vw, 3.6rem)/1.15 var(--font-d); letter-spacing: -0.035em; --lit-dim: #5b6580; --lit-on: var(--fg); }
+.au-frame { position: relative; isolation: isolate; overflow: hidden; max-width: 1080px; margin: clamp(56px, 8vh, 90px) auto 0; padding: 10px; border-radius: 30px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03)); box-shadow: inset 0 0 0 1px var(--line2), 0 50px 120px -50px rgba(122, 92, 255, 0.6); }
+.au-frame-light { position: absolute; z-index: -1; left: 50%; top: 50%; width: 160%; aspect-ratio: 1; translate: -50% -50%; pointer-events: none;
+  background: conic-gradient(from 0deg, rgba(255, 92, 138, 0) 0deg, rgba(255, 92, 138, 0.7) 60deg, rgba(122, 92, 255, 0.6) 120deg, rgba(47, 214, 195, 0) 190deg, rgba(47, 214, 195, 0) 360deg); animation: au-turn 9s linear infinite; }
+@keyframes au-turn { to { rotate: 360deg; } }
+.au-frame::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: inherit; opacity: 0; transition: opacity 300ms;
+  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 60%); }
+.au-frame.lit::after { opacity: 1; }
+.au-film { position: relative; z-index: 1; aspect-ratio: 16 / 9; border-radius: 22px; }
+
+/* ---------- services: a light runs round each card's edge ---------- */
+.au-svc { padding: clamp(100px, 14vh, 160px) 0; }
+.au-svc-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 48px; }
+.au-svc-card { padding: 26px; isolation: isolate; }
+.au-svc-card::before { content: ""; position: absolute; inset: 0; z-index: -1; padding: 1.5px; border-radius: inherit; pointer-events: none;
+  background: conic-gradient(from var(--a), rgba(255, 92, 138, 0) 0deg, rgba(255, 92, 138, 0) 250deg, rgba(255, 92, 138, 0.95) 300deg, rgba(122, 92, 255, 0.9) 330deg, rgba(122, 92, 255, 0) 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: au-spin 6s linear infinite; animation-delay: var(--spin, 0s); }
+@keyframes au-spin { to { --a: 360deg; } }
+.au-svc-card img { width: 96px; height: 96px; object-fit: contain; filter: drop-shadow(0 14px 16px rgba(0, 0, 0, 0.55)); }
+.au-svc-card .k { margin-top: 14px; font: 700 12px/1.2 var(--font-b); letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); }
+.au-svc-card h3 { margin-top: 8px; font: 700 1.25rem/1.2 var(--font-d); letter-spacing: -0.02em; }
+.au-svc-card .d { margin-top: 8px; font-size: 15px; line-height: 1.55; color: var(--fg2); }
+
+/* ---------- elsewhere and with us ---------- */
+/* what goes wrong, each problem joined by a running line of light to the service that answers it (new, to confirm) */
+.au-pains { padding: clamp(100px, 14vh, 160px) 0 clamp(50px, 8vh, 90px); }
+.au-pain-list { display: grid; gap: 12px; max-width: 1060px; margin: 56px auto 0; padding: 0; list-style: none; }
+.au-pain { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(56px, 0.42fr) minmax(0, 0.95fr); align-items: center; gap: 22px; padding: 18px 22px 18px 28px; }
+.au-pain .q { font: 600 clamp(1.04rem, 1.55vw, 1.28rem)/1.42 var(--font-d); letter-spacing: -0.01em; }
+.au-pain-line { position: relative; height: 2px; border-radius: 2px; overflow: hidden; background: rgba(255, 255, 255, 0.12); }
+.au-pain-line::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 46%; border-radius: inherit; background: linear-gradient(90deg, rgba(255, 92, 138, 0), #ff5c8a 62%, #ffd1df); box-shadow: 0 0 14px rgba(255, 92, 138, 0.85); animation: au-flow 2.6s linear var(--flow, 0s) infinite; }
+@keyframes au-flow { from { transform: translateX(-110%); } to { transform: translateX(230%); } }
+.au-pain-to { display: flex; align-items: center; gap: 14px; }
+.au-pain-to img { flex: none; width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.5)); }
+.au-pain .a { display: grid; grid-template-columns: auto auto; align-items: center; column-gap: 10px; text-decoration: none; }
+.au-pain .a .k { grid-column: 1; font: 700 11px/1.2 var(--font-b); letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg3); }
+.au-pain .a .n { grid-column: 1; margin-top: 4px; font: 700 1.02rem/1.2 var(--font-d); color: var(--blush); }
+.au-pain .a svg { grid-column: 2; grid-row: 1 / 3; width: 16px; height: 16px; color: var(--pink); transition: transform 260ms var(--out); }
+@media (hover: hover) { .au-pain .a:hover .n { color: #fff; } .au-pain .a:hover svg { transform: translateX(3px); } }
+
+.au-cmp-sec { padding: clamp(100px, 14vh, 160px) 0; }
+.au-cmp-h { text-align: center; font: 700 clamp(1.7rem, 3vw, 2.6rem)/1.12 var(--font-d); letter-spacing: -0.02em; }
+.au-cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 900px; margin: 26px auto 0; }
+.au-cmp > div { padding: 26px; }
+.au-cmp .k { font: 700 12.5px/1.2 var(--font-b); letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg3); }
+.au-cmp-us { background: linear-gradient(160deg, rgba(255, 92, 138, 0.22), rgba(122, 92, 255, 0.18)); box-shadow: inset 0 0 0 1px rgba(255, 140, 180, 0.35); }
+.au-cmp-us .k { color: var(--blush); }
+.au-cmp ul { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+.au-cmp li { display: flex; gap: 10px; font-size: 15.5px; line-height: 1.45; color: var(--fg2); }
+.au-cmp-us li { color: var(--fg); }
+.au-cmp-else li::before { content: "✕"; flex: none; font-weight: 800; color: #6f7891; }
+.au-cmp-us li::before { content: "✓"; flex: none; font-weight: 800; color: var(--pink); }
+
+/* ---------- results ---------- */
+.au-res, .au-offer { position: relative; isolation: isolate; overflow: clip; padding: clamp(100px, 14vh, 160px) 0; }
+.au-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 48px; }
+.au-stat { padding: 24px 22px; }
+.au-stat img { width: 78px; height: 78px; object-fit: contain; filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.5)); }
+.au-stat .n { margin-top: 10px; font: 700 clamp(2.4rem, 3.8vw, 3.4rem)/1 var(--font-d); letter-spacing: -0.045em; white-space: nowrap; }
+.au-stat .n small { margin-left: 0.08em; font-size: 0.45em; color: #ffb3c9; }
+.au-stat .who { margin-top: 10px; font: 600 11.5px/1.3 var(--font-b); letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg3); }
+.au-stat .d { margin-top: 6px; font-size: 14.5px; line-height: 1.5; color: var(--fg2); }
+
+/* ---------- how we work ---------- */
+.au-steps, .au-who, .au-voices, .au-team, .au-faq { padding: clamp(100px, 14vh, 160px) 0; }
+.au-step-row { position: relative; list-style: none; margin: 56px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.au-step-row::before { content: ""; position: absolute; left: 6%; right: 6%; top: 46px; height: 2px; background: linear-gradient(90deg, rgba(255, 92, 138, 0), #ff5c8a, #7a5cff, #2fd6c3, rgba(47, 214, 195, 0)); opacity: 0.55; }
+.au-step-row li { padding: 26px 22px; }
+.au-step-n { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #0b1022; box-shadow: inset 0 0 0 1px var(--line2), 0 0 24px rgba(255, 92, 138, 0.35); font: 700 15px/1 var(--font-d); }
+.au-step-row h3 { margin-top: 18px; font: 700 1.2rem/1.2 var(--font-d); }
+.au-step-row p { margin-top: 8px; font-size: 15px; line-height: 1.55; color: var(--fg2); }
+
+/* ---------- who, voices, team ---------- */
+.au-who-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 48px; }
+.au-who-grid .au-card { padding: 22px; }
+.au-who-grid img { width: 62%; margin: 0 auto 12px; filter: drop-shadow(0 16px 16px rgba(0, 0, 0, 0.5)); }
+.au-who-grid h3 { font: 700 1.1rem/1.25 var(--font-d); }
+.au-who-grid p { margin-top: 8px; font-size: 14.5px; line-height: 1.55; color: var(--fg2); }
+.au-who-grid b { color: var(--fg); }
+.au-notfor { margin-top: 28px; text-align: center; font-size: 15px; color: var(--fg3); }
+.au-wall { columns: 3; column-gap: 16px; margin-top: 48px; }
+.au-q { break-inside: avoid; margin: 0 0 16px; padding: 24px; }
+.au-q blockquote { font-size: 15.5px; line-height: 1.6; color: var(--fg2); }
+.au-q figcaption { display: flex; align-items: center; gap: 10px; margin-top: 16px; font: 700 13.5px/1.3 var(--font-b); }
+.au-q figcaption i { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #ff5c8a, #7a5cff); font-style: normal; font-size: 13px; }
+.au-team-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 48px; }
+.au-person { padding: 14px 14px 22px; }
+.au-person img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 16px; }
+.au-person b { display: block; margin: 16px 8px 0; font: 700 1.2rem/1.2 var(--font-d); }
+.au-person span { display: block; margin: 4px 8px 0; font: 600 12px/1.3 var(--font-b); letter-spacing: 0.1em; text-transform: uppercase; color: var(--pink); }
+.au-person p { margin: 8px 8px 0; font-size: 14.5px; line-height: 1.55; color: var(--fg2); }
+
+/* ---------- offer, questions, last call ---------- */
+.au-offer .wrap { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 56px; align-items: start; }
+.au-offer .au-h2 { margin-top: 12px; }
+.au-offer .checks li { color: var(--fg2); }
+.au-offer .checks li::before { background-color: var(--blush); }
+.au-offer .specs div { background: var(--glass); box-shadow: inset 0 0 0 1px var(--line); }
+.au-offer .scarce { background: var(--accent-soft); color: #ffc0d2; }
+.au-form .app { padding: clamp(22px, 3vw, 36px); border-radius: 26px; background: rgba(10, 14, 30, 0.82); box-shadow: inset 0 0 0 1px var(--line2), 0 40px 90px -40px rgba(122, 92, 255, 0.55); }
+.au-form .pick span { color: var(--fg2); }
+.au-form .sent { background: #ffe1ea; color: #141118; }
+.au-faq-list { max-width: 860px; margin: 44px auto 0; border-top: 1px solid var(--line); }
+.au-faq-list summary i { background: var(--glass2); }
+.au-final { position: relative; isolation: isolate; overflow: clip; padding: clamp(130px, 20vh, 220px) 0 clamp(110px, 16vh, 180px); text-align: center; }
+.au-final .small { margin-top: 16px; font-size: 14px; color: var(--fg3); }
+.au-foot { border-top: 1px solid var(--line); color: var(--fg2); }
+.au-foot .wm em { color: var(--accent); }
+
+/* ---------- tablets and phones ---------- */
+@media (max-width: 1080px) {
+  .au-nav .links { display: none; }
+  .au-nav .lang { margin-left: auto; }
+  .au-hero-in, .au-offer .wrap { grid-template-columns: minmax(0, 1fr); }
+  .au-glass { height: 300px; }
+  .au-svc-grid, .au-stats, .au-who-grid, .au-step-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .au-step-row::before { display: none; }
+  .au-wall { columns: 2; }
+}
+@media (max-width: 760px) {
+  .au-nav { top: 10px; height: 54px; padding-left: 16px; gap: 6px; }
+  .au-nav .nav-cta { min-height: 40px; padding: 0 14px; font-size: 13px; }
+  .au-nav .nav-cta svg { display: none; }
+  .au-hero { padding: 104px 0 70px; align-items: start; }
+  /* on a phone the light rises behind the words instead of staying under the fold */
+  .au-hero .au-sky .b4 { top: 6vh; right: -34vw; width: 96vw; height: 84vw; background: radial-gradient(closest-side, rgba(40, 210, 190, 0.42), rgba(40, 210, 190, 0)); }
+  .au-hero .au-sky .b2 { top: 40vh; bottom: auto; right: -46vw; width: 120vw; height: 100vw; }
+  .au-hero .au-sky .b1 { bottom: -34vw; left: -44vw; width: 130vw; height: 110vw; }
+  .au-claim { font-size: clamp(2.3rem, 10.6vw, 3.4rem); }
+  .au-cta .btn { width: 100%; }
+  /* the three glass results ride above the claim on a phone, so the first screen already moves */
+  .au-hero-in { display: flex; flex-direction: column-reverse; gap: 22px; }
+  .au-glass { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; height: auto; }
+  .au-g { position: static; width: auto; }
+  .au-g .bob { padding: 12px 10px 14px; }
+  .au-g img { width: 44px; height: 44px; }
+  .au-g .n { font-size: 1.45rem; }
+  .au-g .who { display: none; }
+  .au-film { aspect-ratio: 9 / 16; max-height: 78svh; margin: 0 auto; }
+  .au-svc-grid, .au-who-grid, .au-step-row, .au-team-grid, .au-cmp { grid-template-columns: minmax(0, 1fr); }
+  .au-pain { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 20px 20px 18px; }
+  .au-pain-line { width: 84px; }
+  .au-stats { gap: 10px; }
+  .au-stat .n { font-size: 2.2rem; }
+  .au-wall { columns: 1; }
+}
+@media (max-width: 380px) { .lang button[aria-pressed="true"] { display: none; } .au-stats { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) {
+  .au-sky i, .au-horizon, .au-frame-light, .au-svc-card::before, .au-pain-line::after { animation: none; }
+  .au-pain-line::after { width: 100%; opacity: 0.6; }
+}
