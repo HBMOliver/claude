@@ -43,9 +43,9 @@ for (const [dev, opts] of [['desktop', DESK], ['phone', PHONE]]) {
     ok(`glow ${dev}: headline and button on the first screen`, await onScreen(p, '#hero-h') && await onScreen(p, '.hd .cta-row .btn'));
     ok(`glow ${dev}: the menu is dark over the stage`, await dark(p));
     const inset0 = await p.evaluate(() => getComputedStyle(document.getElementById('film')).getPropertyValue('--in'));
-    await p.evaluate(() => { const r = document.getElementById('film').getBoundingClientRect(); scrollTo({ top: scrollY + r.top - innerHeight * 0.2, behavior: 'instant' }); }); await p.waitForTimeout(500);
+    await p.evaluate(() => { const r = document.getElementById('film').getBoundingClientRect(); scrollTo({ top: scrollY + r.top - innerHeight * 0.12, behavior: 'instant' }); }); await p.waitForTimeout(500);
     const inset1 = await p.evaluate(() => getComputedStyle(document.getElementById('film')).getPropertyValue('--in'));
-    ok(`glow ${dev}: the frame opens to the full width`, parseFloat(inset0) > 0.5 && parseFloat(inset1) < 0.05, inset0 + ' -> ' + inset1);
+    ok(`glow ${dev}: the frame starts inset and opens to the full width`, parseFloat(inset0) > 4 && parseFloat(inset1) < 0.05, inset0 + ' -> ' + inset1);
     await p.evaluate(() => { const r = document.querySelector('.count').getBoundingClientRect(); scrollTo({ top: scrollY + r.top - 40, behavior: 'instant' }); }); await p.waitForTimeout(500);
     ok(`glow ${dev}: the menu is light over the page`, !(await dark(p)));
     ok(`glow ${dev}: no page errors`, !errs.length, errs.join(' | '));

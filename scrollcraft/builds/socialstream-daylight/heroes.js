@@ -11,7 +11,6 @@
   if (!kind) return;
   var video = $('video', screen), narrow = matchMedia('(max-width: 760px)'), was = {}, vh = innerHeight;
   function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
-  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
   function set(el, k, v) { if (el['_' + k] !== v) { el['_' + k] = v; el.style.setProperty(k, v); } }
 
   /* ---------- Glow: the film's light spills on the stage around it ---------- */
@@ -29,7 +28,7 @@
     var poster = $('.poster img', screen);
     var paint = function () { try { actx.drawImage(poster, 0, 0, amb.width, amb.height); } catch (e) {} };
     if (poster.complete) paint(); else poster.addEventListener('load', paint, { once: true });
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { seen = es[0].isIntersecting; if (seen) loop(); }, { threshold: 0 }).observe(hero);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { seen = es[es.length - 1].isIntersecting; if (seen) loop(); }, { threshold: 0 }).observe(hero);
     else loop();
   }
 
@@ -83,7 +82,8 @@
     if (kind === 'glow' && !reduce) {
       var r = screen.getBoundingClientRect();
       if (r.top < vh * 1.2 && r.bottom > 0) {
-        var q = easeOut(clamp((vh - r.top) / (vh * 0.75), 0, 1));
+        // fully inset while the film's top is in the lower part of the screen, fully open near the top
+        var q = ease(clamp((vh * 0.72 - r.top) / (vh * 0.57), 0, 1));
         set(screen, '--in', ((1 - q) * (narrow.matches ? 6 : 7)).toFixed(2) + 'vw');
         set(screen, '--rr', ((1 - q) * (narrow.matches ? 22 : 26)).toFixed(1) + 'px');
       }

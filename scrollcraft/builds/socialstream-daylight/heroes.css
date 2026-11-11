@@ -118,11 +118,17 @@
 }
 @media (max-width: 760px) {
   .hf-strip .wrap { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-  .hf-h { font-size: clamp(1.5rem, 6.9vw, 2rem); }
+  .hf-h { font-size: clamp(1.4rem, 6.2vw, 1.8rem); }
   .hf-act { justify-items: stretch; }
   .hf-act .btn { width: 100%; }
   .hf-act .ticks { justify-content: center; gap: 6px 14px; }
   .hf .toggle { bottom: 14px; }
+  /* a phone's film box is shorter than the vertical cut, and the cut's numbers sit low in the frame:
+     a smaller strip gives the film more height, and the crop is taken mostly from the top */
+  .hf-screen video, .hf-screen .poster img { object-position: 50% 78%; }
+  .hf-strip { padding: 20px 0 calc(22px + env(safe-area-inset-bottom, 0px)); }
+  .hf-strip .wrap { gap: 14px; }
+  .hf-act .ticks { display: none; }
   .hf-after { padding-top: 84px; }
   .hero.hd { padding-top: calc(58px + 60px); }
   .hd-screen { aspect-ratio: 9 / 16; --in: 6vw; --rr: 22px; }

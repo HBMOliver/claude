@@ -72,7 +72,8 @@
   }
   v.addEventListener('playing', function () { frame.classList.add('is-playing'); });
   tgl.addEventListener('click', function () { paused = !paused; started = true; apply(); });
-  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; apply(); }, { threshold: 0.1 }).observe(frame);
+  // two changes can arrive in one batch (a first screen that rearranges itself while loading): the last one is current
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[es.length - 1].isIntersecting; apply(); }, { threshold: 0.1 }).observe(frame);
   SS.onMQ(narrow, function () { if (!paused) apply(); else loaded = ''; });
   SS.onLang(state);
   // the film is fetched after the page has loaded, so it never holds up the first screen
