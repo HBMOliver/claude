@@ -77,3 +77,29 @@ BASE=http://localhost:4560/dist/ node lab/check.mjs
 
 The checks need `playwright-core` and Google Chrome. The fourth command packages the pages, and the
 last one runs the same checks on the packaged pages.
+
+## Measured (2026-11-11)
+
+**Motion at rest.** Each test stopped once per screen height down the page and took two screenshots
+1.2 s apart. A stop counts as moving when at least 1% of the screen changed. Stops past the end of the
+page are not counted.
+
+| Concept | Desktop, 1440x900 | Phone, 390x664 |
+|---|---|---|
+| Pulse | 6 of 15 | 12 of 31 |
+| Premiere | 3 of 16 | 7 of 27 |
+| Aurora | 3 of 14 | 11 of 29 |
+| Studio | 3 of 12 | 7 of 28 |
+
+On every page the first two screens keep moving: the film, running rows and floating cards. On Pulse
+the services and the results move too, because their rows keep running. Each page's last call moves:
+Studio's deck and Aurora's aurora.
+
+From "Kiknek" down to the questions, the sections are mostly still on a computer. In those sections the
+floating objects, the problem blocks' own loops and Studio's slow team photos each change less than 1%
+of the screen.
+
+**Slow phone.** The test slowed the CPU 4x and used 9 Mbit/s with a 150 ms round trip, from a cold cache.
+On every page the claim painted at about 0.7 s and the page loaded in 1.0 to 1.4 s. On Pulse,
+Premiere and Studio the film started playing at 1.4 to 1.7 s. Aurora's film sits below its first
+screen, so it starts when it is scrolled to.

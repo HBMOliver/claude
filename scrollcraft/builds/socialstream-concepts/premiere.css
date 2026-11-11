@@ -28,7 +28,7 @@
 @media (hover: hover) { .pr-nav .links a:hover { color: var(--fg); background: rgba(242, 238, 230, 0.07); } }
 
 /* ---------- first screen: sentence, film band, sentence and button ---------- */
-.pr-hero { position: relative; padding: 96px 0 clamp(40px, 6vh, 64px); }
+.pr-hero { position: relative; padding: 96px 0 clamp(40px, 6vh, 64px); overflow-x: clip; }
 .pr-hero > .wrap, .pr-band { position: relative; z-index: 1; }
 /* the light that follows the cursor over the black (only with a mouse; it rests up and to the right) */
 .pr-spot { display: none; }
@@ -86,7 +86,7 @@
 .pr-res-cta { margin-top: 40px; }
 
 /* ---------- the problem ---------- */
-.pr-prob { padding: clamp(100px, 14vh, 170px) 0; border-top: 1px solid var(--line); }
+.pr-prob { padding: clamp(100px, 14vh, 170px) 0; border-top: 1px solid var(--line); overflow-x: clip; }
 /* what goes wrong, each with the service that answers it (new, to confirm): the problem in the serif, the
    service on the right; with a mouse, the service's object comes out over the row and follows the cursor along
    it. Without one there is nothing to hover and nothing hidden. */
