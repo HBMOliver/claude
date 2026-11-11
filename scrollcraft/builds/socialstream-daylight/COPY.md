@@ -40,12 +40,26 @@ EN: Free · 30 minutes · No obligation
 Under the film: Saját márkafilmünk, 30 másodperc
 EN: Our own brand film, 30 seconds
 
-The three first-screen options (hero-cinema, hero-glow, hero-capsule) use exactly this copy;
-only where it sits changes. Cinema puts the headline, button and ticks on a dark strip under
-the film and the eyebrow and lead in a block after it, with no caption under the film. Glow
-keeps this order without the caption; on a phone it shows only the bold first sentence of the lead and drops the
-results link, so the film shows on the first screen. Capsule shows the eyebrow, headline,
-lead, button and ticks with no caption; on a phone, while the film grows, the lead is left out.
+First-screen options (hero-cinema, hero-glow, hero-capsule). Glow uses exactly the copy
+above, without the caption; on a phone it shows only the bold first sentence of the lead and
+drops the results link. Cinema and Capsule carry the brand's claim instead, as in the film
+and in Stream (asked for on 2026-11-11: the original concept must stay):
+
+Eyebrow: INTEREST MEDIA ÜGYNÖKSÉG · TENERIFE ÉS BUDAPEST
+EN: INTEREST MEDIA AGENCY · TENERIFE AND BUDAPEST
+
+Headline: A ~~social media~~ meghalt. Az *érdeklődés* vette át a helyét.
+EN: ~~Social media~~ is dead. *Interest* has taken its place.
+(a line is drawn through "social media", as in the film)
+
+Under it, the promise: Videók, amiket végignéznek. Hirdetések, amik megtérülnek.
+EN: Videos people watch to the end. Ads that pay off.
+
+Cinema: the headline, the promise, the button and the ticks on the strip under the film; a
+phone's strip keeps the headline and the button, and the promise opens the block after the
+film. The eyebrow and the lead are in that block. Capsule: eyebrow, headline, promise, lead,
+button, ticks; while the film grows, a short screen leaves out the lead and a short phone the
+ticks. "Meta Marketing Pro" is off the first screen in these two; it stays in Olivér's card.
 
 ## 2. The number
 

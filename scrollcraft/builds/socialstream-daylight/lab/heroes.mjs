@@ -23,6 +23,14 @@ const onScreen = (p, sel) => p.evaluate(sel => { const e = document.querySelecto
 const dark = p => p.evaluate(() => document.getElementById('nav').classList.contains('on-dark'));
 const wide = p => p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 const near = (a, b, d = 2) => Math.abs(a - b) <= d;
+// the line through "social media": drawn all the way, and through the middle of the lowercase letters
+const strike = p => p.evaluate(() => {
+  const s = [...document.querySelectorAll('#hero-h .strike')].find(e => e.offsetParent !== null), a = getComputedStyle(s, '::after');
+  const c = document.createElement('canvas').getContext('2d'); c.font = getComputedStyle(s).font; const t = c.measureText('x');
+  const mid = t.fontBoundingBoxAscent - t.actualBoundingBoxAscent / 2, line = parseFloat(a.top) + parseFloat(a.height) / 2;
+  const m = new DOMMatrix(a.transform === 'none' ? undefined : a.transform);
+  return { drawn: m.a > 0.99, off: Math.abs(line - mid) / parseFloat(getComputedStyle(s).fontSize) };
+});
 
 for (const [dev, opts] of [['desktop', DESK], ['phone', PHONE]]) {
   // Cinema: the film is the first screen, with the promise and the button on the strip under it
@@ -31,6 +39,10 @@ for (const [dev, opts] of [['desktop', DESK], ['phone', PHONE]]) {
     const vh = opts.viewport.height, f = await rect(p, '.hf-film');
     ok(`cinema ${dev}: the film fills most of the first screen`, f.y === 0 && f.h >= vh * 0.6, JSON.stringify(f));
     ok(`cinema ${dev}: headline and button on the first screen`, await onScreen(p, '#hero-h') && await onScreen(p, '.hf-act .btn'));
+    const st = await strike(p);
+    ok(`cinema ${dev}: "social media" is struck through the middle`, st.drawn && st.off < 0.06, JSON.stringify(st));
+    if (dev === 'desktop') ok('cinema desktop: the promise shows under the claim', await onScreen(p, '.hf-sub') && await p.evaluate(() => getComputedStyle(document.querySelector('.hf-say')).opacity === '1'));
+    else ok('cinema phone: the promise waits after the film', await p.evaluate(() => getComputedStyle(document.querySelector('.hf-sub')).display === 'none' && getComputedStyle(document.querySelector('.hf-promise')).display !== 'none'));
     ok(`cinema ${dev}: the menu is dark over the film`, await dark(p));
     await to(p, vh * 1.2); ok(`cinema ${dev}: and light again after it`, !(await dark(p)));
     ok(`cinema ${dev}: no page errors`, !errs.length, errs.join(' | '));
@@ -56,6 +68,8 @@ for (const [dev, opts] of [['desktop', DESK], ['phone', PHONE]]) {
     const { p, errs, ctx } = await open('capsule', opts);
     ok(`capsule ${dev}: the scroll scene is on`, await p.evaluate(() => document.querySelector('.ht').classList.contains('is-live')));
     ok(`capsule ${dev}: headline and button on the first screen`, await onScreen(p, '#hero-h') && await onScreen(p, '.ht-act .btn'));
+    const st = await strike(p);
+    ok(`capsule ${dev}: "social media" is struck through the middle`, st.drawn && st.off < 0.06, JSON.stringify(st));
     let f = await rect(p, '#film'), c = await rect(p, '.ht-pill');
     ok(`capsule ${dev}: the film sits on the capsule`, near(f.x, c.x) && near(f.y, c.y) && near(f.w, c.w) && near(f.h, c.h), JSON.stringify({ f, c }));
     const t = await rect(p, '#film .toggle');
@@ -72,7 +86,7 @@ for (const [dev, opts] of [['desktop', DESK], ['phone', PHONE]]) {
     await to(p, 0, 400); await p.locator('[data-set-lang="en"]').first().click(); await p.waitForTimeout(700);
     f = await rect(p, '#film'); c = await rect(p, '.ht-pill');
     const h1 = await p.evaluate(() => document.querySelector('#hero-h [data-l="en"]').textContent.replace(/\s+/g, ' ').trim());
-    ok(`capsule ${dev}: English, and the film on the English capsule`, h1 === 'Videos people watch to the end. Ads that pay off.' && near(f.x, c.x) && near(f.y, c.y), JSON.stringify({ h1, f, c }));
+    ok(`capsule ${dev}: English, and the film on the English capsule`, h1 === 'Social media is dead. Interest has taken its place.' && near(f.x, c.x) && near(f.y, c.y), JSON.stringify({ h1, f, c }));
     ok(`capsule ${dev}: no page errors`, !errs.length, errs.join(' | '));
     await ctx.close();
   }
@@ -85,13 +99,14 @@ for (const [label, opts] of [['laptop window', { viewport: { width: 1280, height
   ok(`capsule ${label}: headline and button on the first screen`, await onScreen(p, '#hero-h') && await onScreen(p, '.ht-act .btn'));
   await ctx.close();
 }
-for (const [label, opts] of [['short laptop', { viewport: { width: 1280, height: 480 } }], ['short phone', { ...PHONE, viewport: { width: 375, height: 480 } }], ['reduced motion', { ...DESK, reducedMotion: 'reduce' }]]) {
+for (const [label, opts] of [['short laptop', { viewport: { width: 1280, height: 480 } }], ['short phone', { ...PHONE, viewport: { width: 375, height: 420 } }], ['reduced motion', { ...DESK, reducedMotion: 'reduce' }]]) {
   const { p, ctx } = await open('capsule', opts);
   const live = await p.evaluate(() => document.querySelector('.ht').classList.contains('is-live'));
   const f = await rect(p, '#film'), h = await rect(p, '#hero-h');
   ok(`capsule ${label}: plain layout, the film under the type`, !live && f.y > h.b, JSON.stringify({ live, f, h }));
   await p.evaluate(() => document.querySelector('.ht-act .btn').scrollIntoView({ block: 'center' })); await p.waitForTimeout(300);
   ok(`capsule ${label}: the button is reachable`, await onScreen(p, '.ht-act .btn'));
+  if (label === 'reduced motion') ok('capsule reduced motion: the strike is drawn without animating', (await strike(p)).drawn);
   await ctx.close();
 }
 // no sideways scroll on narrow phones, at the top, in the middle of the first screen and past it

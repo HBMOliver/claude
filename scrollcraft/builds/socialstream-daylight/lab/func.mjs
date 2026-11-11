@@ -5,6 +5,8 @@
 import { createRequire } from 'node:module';
 const { chromium } = createRequire(process.cwd() + '/')('playwright-core');
 const URL = process.env.URL || 'http://localhost:4553/';
+// Cinema and Capsule carry the brand's claim as their headline; the page itself and Glow keep the original one
+const EN_H1 = /hero-(cinema|capsule)/.test(URL) ? 'Social media is dead. Interest has taken its place.' : 'Videos people watch to the end. Ads that pay off.';
 const b = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', args: ['--autoplay-policy=no-user-gesture-required'] });
 let pass = 0, fail = 0;
 const ok = (name, cond, info = '') => { if (cond) pass++; else { fail++; console.log('FAIL', name, info); } };
@@ -74,7 +76,7 @@ const film = p => p.evaluate(() => { const f = document.getElementById('film'), 
   ok('form: after sending, what is left and what comes next', after.sending && !after.pct && after.b === 'Az e-mailed kész, már csak el kell küldened.' && /hello@socialstream\.hu címre\. Amint megkaptuk, válaszolunk/.test(after.s), JSON.stringify(after).slice(0, 300));
   await p.locator('[data-set-lang="en"]').click(); await p.waitForTimeout(500);
   const en = await p.evaluate(() => ({ lang: document.documentElement.lang, nav: document.querySelector('.nav .links a').textContent.trim(), hu: [...document.querySelectorAll('[data-l="hu"]')].filter(e => e.offsetParent !== null).length, h1: document.querySelector('#hero-h [data-l="en"]').textContent.replace(/\s+/g, ' ').trim() }));
-  ok('English everywhere', en.lang === 'en' && en.nav === 'Results' && en.hu === 0 && /^Videos people watch to the end\. Ads that pay off\.$/.test(en.h1), JSON.stringify(en));
+  ok('English everywhere', en.lang === 'en' && en.nav === 'Results' && en.hu === 0 && en.h1 === EN_H1, JSON.stringify(en));
   const enf = await p.evaluate(() => ({ btn: document.querySelector('#appform button[type=submit]').textContent.trim(), hint: document.getElementById('f-hint').textContent, opt: [...document.querySelectorAll('#appform .opt')].every(o => o.textContent === '(optional)'), ph: document.getElementById('f-msg').placeholder, b: document.querySelector('#sent b').textContent, foot: document.getElementById('copyMail2').textContent }));
   ok('English form copy', enf.btn === 'Apply by email' && /^This opens your mail app/.test(enf.hint) && enf.opt && /^E\.g\. /.test(enf.ph) && enf.b === 'Your email is ready. Just press send.' && enf.foot === 'Copy address', JSON.stringify(enf));
   await p.fill('#f-name', ''); await p.locator('#appform button[type=submit]').click(); await p.waitForTimeout(250);

@@ -31,23 +31,25 @@ through the HU/EN switch.
 ## First-screen options
 
 Asked for after "i dont like the hero section" (2026-11-11): three different first screens on
-the same page, each its own link. `index.html` keeps the original first screen.
+the same page, each its own link. `index.html` keeps the original first screen. The user then
+kept Cinema and Capsule and asked for the original concept back, so those two carry the claim.
 
-- Cinema (`hero-cinema.html`): the brand film fills the first screen, edge to edge; the
-  headline, button and ticks sit on a dark strip under it; the lead follows as a large statement.
+- Cinema (`hero-cinema.html`): the brand film fills the first screen, edge to edge; the claim
+  ("A social media meghalt. Az érdeklődés vette át a helyét."), the promise, the button and the
+  ticks sit on a dark strip under it; the lead follows as a large statement.
   https://claude.ai/artifact/9aegizUPHNFQKC189MGnyn
 - Glow (`hero-glow.html`): a dark stage with soft rose and amber light; the film below the
   headline opens from an inset frame to the full width as it comes up, and its colours spill on
   the stage around it; the light page rises over it as a sheet.
   https://claude.ai/artifact/NwJHqsqEVWCkLZ9M6Bg3VV
-- Capsule (`hero-capsule.html`): big left-aligned type with the film playing in a capsule inside
-  the headline; scrolling grows it to fill the screen. It falls back to the film under the type
-  with reduced motion or on a screen too short for the type.
+- Capsule (`hero-capsule.html`): the claim in big left-aligned type with the film playing in a
+  capsule beside "érdeklődés"; scrolling grows it until it takes the place of the whole screen.
+  It falls back to the film under the type with reduced motion or on a screen too short for it.
   https://claude.ai/artifact/4XxESCorvniksmAGCYWmVv
 
 Edit `heroes/<name>.html`, `heroes.css` and `heroes.js`, then `node tools/heroes.mjs` writes the
 three pages next to `index.html`, and `node tools/artifact.mjs hero-<name>` packages one into
-`dist/<name>/`. `lab/heroes.mjs` runs 58 checks on them (`BASE=` for another address), and
+`dist/<name>/`. `lab/heroes.mjs` runs 65 checks on them (`BASE=` for another address), and
 `URL=http://localhost:4553/hero-<name>.html node lab/func.mjs` runs the page's own 33.
 
 ## Pictures
