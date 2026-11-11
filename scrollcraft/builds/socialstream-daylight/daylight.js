@@ -82,26 +82,38 @@
   var form = $('#appform'), pick = $('#pick'), sent = $('#sent'), sending = $('#sending'), chosen = [], lastBody = '';
   function renderPick() { pick.innerHTML = SS.TOPICS.map(function (c) { return '<label><input type="checkbox" value="' + c.id + '"' + (chosen.indexOf(c.id) > -1 ? ' checked' : '') + '><span>' + esc(SS.T(c)) + '</span></label>'; }).join(''); }
   pick.addEventListener('change', function (e) { var id = e.target.value, k = chosen.indexOf(id); if (e.target.checked && k < 0) chosen.push(id); else if (!e.target.checked && k > -1) chosen.splice(k, 1); });
-  function check() {
+  var ERR = {
+    name: { hu: 'Írd be a neved, hogy tudjuk, kinek válaszolunk.', en: 'Enter your name so we know who to reply to.' },
+    email: { hu: 'Írd be az e-mail címed, ide válaszolunk.', en: 'Enter your email. That’s where we’ll reply.' },
+    brand: { hu: 'Írd be a céged vagy a márkád nevét.', en: 'Enter your company or brand name.' },
+    mail: { hu: 'Ez nem tűnik e-mail címnek. Például: nev@ceg.hu', en: 'That doesn’t look like an email address. For example: name@company.com' }
+  };
+  function check(focus) {
     var ok = true;
     ['name', 'email', 'brand'].forEach(function (n) {
       var inp = $('#f-' + n), er = $('#e-' + n), val = inp.value.trim(), m = '';
-      if (!val) m = SS.T(SS.ERR.req); else if (inp.type === 'email' && !SS.isMail(val)) m = SS.T(SS.ERR.mail);
-      er.textContent = m; inp.setAttribute('aria-invalid', String(!!m)); if (m && ok) { inp.focus(); ok = false; }
+      if (!val) m = SS.T(ERR[n]); else if (inp.type === 'email' && !SS.isMail(val)) m = SS.T(ERR.mail);
+      er.textContent = m; inp.setAttribute('aria-invalid', String(!!m)); if (m && ok) { if (focus) inp.focus(); ok = false; }
     });
     return ok;
   }
+  function sentText() {
+    return SS.L === 'en'
+      ? { b: 'Your email is ready. Just press send.', s: 'If your mail app didn’t open, copy the text and send it to ' + SS.CONTACT + '. Once it reaches us, we’ll reply and set a time for the audit.', c: 'Copy the text' }
+      : { b: 'Az e-mailed kész, már csak el kell küldened.', s: 'Ha nem nyílt meg a leveleződ, másold ki a szöveget, és küldd el a ' + SS.CONTACT + ' címre. Amint megkaptuk, válaszolunk, és egyeztetünk egy időpontot az auditra.', c: 'Szöveg másolása' };
+  }
   function showSent(body) {
-    var s = SS.sentText(); sent.hidden = false;
+    var s = sentText(); sent.hidden = false;
     sent.innerHTML = '<b>' + s.b + '</b><span>' + esc(s.s) + '</span><button type="button" class="btn" id="copyBody">' + s.c + '</button>';
     var cb = $('#copyBody'); cb.addEventListener('click', function () { SS.copy(body, cb, function () { var m = $('#f-msg'); m.value = body; m.focus(); m.select(); }); });
   }
   var sel = function (id) { var s = $('#' + id); return s.value ? s.options[s.selectedIndex].text : ''; };
   form.addEventListener('submit', function (e) {
-    e.preventDefault(); if (!check()) return;
+    e.preventDefault(); if (!check(true)) return;
     var body = SS.compose({ name: $('#f-name').value.trim(), email: $('#f-email').value.trim(), brand: $('#f-brand').value.trim(), web: $('#f-web').value.trim(), budget: sel('f-budget'), goal: sel('f-goal'), interests: chosen, msg: $('#f-msg').value.trim() });
-    lastBody = body; sending.hidden = false; $('#stext').textContent = L('Készül az e-mailed…', 'Preparing your email…');
-    var done = function () { $('#stext').textContent = '100%'; showSent(body); SS.send($('#f-brand').value.trim(), body); };
+    lastBody = body; sent.hidden = true; sending.hidden = false; $('#stext').textContent = L('Megnyitjuk a leveleződ…', 'Opening your mail app…');
+    sending.style.setProperty('--w', '0%'); void sending.offsetWidth;
+    var done = function () { sending.hidden = true; showSent(body); SS.send($('#f-brand').value.trim(), body); };
     requestAnimationFrame(function () { sending.style.setProperty('--w', '100%'); });
     if (reduce) done(); else setTimeout(done, 800);
   });
@@ -131,7 +143,7 @@
 
   /* ---------------- start ---------------- */
   renderWall(); renderPick();
-  SS.onLang(function () { renderWall(); renderPick(); if (lastBody) showSent(lastBody); });
+  SS.onLang(function () { renderWall(); renderPick(); if (lastBody && sending.hidden) showSent(lastBody); if ($$('.app .err').some(function (e) { return e.textContent; })) check(false); });
   SS.start();
   $$('[data-r]').forEach(arrive);
   frameTick();

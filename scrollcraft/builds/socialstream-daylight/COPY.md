@@ -226,9 +226,33 @@ Specs: Hossz: 30 perc · Ár: ingyenes · Kötelezettség: nincs
 EN: Length: 30 minutes · Price: free · Obligation: none
 Scarcity: Havonta legfeljebb két új partnert vállalunk.
 EN: We take on at most two new partners a month.
-Form: Neved · E-mail · Cég vagy márka · Weboldal vagy Instagram · Havi marketing
-büdzsé · Mi a fő célod? · Miben segítsünk? (chips) · Röviden: hol tartasz most?
-Submit: Jelentkezem az auditra · EN: Apply for the audit
+Form: Neved · E-mail · Cég vagy márka · Weboldal vagy Instagram (nem kötelező) ·
+Havi marketing büdzsé (nem kötelező) · Mi a fő célod? (nem kötelező) · Miben
+segítsünk? (nem kötelező, chips) · Röviden: hol tartasz most? (nem kötelező)
+EN: Your name · Email · Company or brand · the other five marked (optional)
+Message box example: Pl. webshopunk van, a Metán hirdetünk, de túl drága egy
+vásárlás. · EN: E.g. we run a webshop and advertise on Meta, but each sale
+costs too much.
+Budget: 300 ezer Ft alatt · 300 ezer – 1 millió Ft · 1–3 millió Ft · 3 millió Ft
+felett · EN: Under 300K Ft · 300K–1M Ft · 1M–3M Ft · Over 3M Ft
+Submit: Jelentkezem e-mailben · EN: Apply by email
+Under it: A gomb megnyitja a leveleződ egy kitöltött e-maillel, neked csak el
+kell küldened. · EN: This opens your mail app with the email filled in. You
+just press send.
+Errors: Írd be a neved, hogy tudjuk, kinek válaszolunk. · Írd be az e-mail
+címed, ide válaszolunk. · Ez nem tűnik e-mail címnek. Például: nev@ceg.hu ·
+Írd be a céged vagy a márkád nevét.
+EN: Enter your name so we know who to reply to. · Enter your email. That’s
+where we’ll reply. · That doesn’t look like an email address. For example:
+name@company.com · Enter your company or brand name.
+While it works: Megnyitjuk a leveleződ… · EN: Opening your mail app…
+After sending: Az e-mailed kész, már csak el kell küldened. Ha nem nyílt meg a
+leveleződ, másold ki a szöveget, és küldd el a hello@socialstream.hu címre.
+Amint megkaptuk, válaszolunk, és egyeztetünk egy időpontot az auditra.
+[Szöveg másolása]
+EN: Your email is ready. Just press send. If your mail app didn’t open, copy
+the text and send it to hello@socialstream.hu. Once it reaches us, we’ll reply
+and set a time for the audit. [Copy the text]
 
 ## 11. Questions
 
@@ -237,6 +261,10 @@ Headline: Amit a legtöbben megkérdeznek. · EN: What most people ask.
 - Mennyibe kerül az audit? Semmibe. Ingyenes, és nem jár kötelezettséggel.
   EN: What does the audit cost? Nothing. It's free, with no obligation.
 - Mennyi ideig tart? 30 percig. · EN: How long does it take? 30 minutes.
+- Mi történik, miután elküldöm? Válaszolunk az e-mailedre, és egyeztetünk egy
+  időpontot a 30 perces auditra.
+  EN: What happens after I send it? We reply to your email and set a time for
+  the 30-minute audit.
 - Mit kapok az audit végén? Átnézzük a kampányaidat, a landing oldaladat és az
   ajánlatodat, és őszintén megmondjuk, mit csinálnánk másképp, még mielőtt
   bármit fizetnél.
@@ -265,4 +293,5 @@ Under: Havonta legfeljebb két új partner. · EN: At most two new partners a mo
 
 ## Footer
 
-Interest media ügynökség · Tenerife és Budapest · hello@socialstream.hu · © 2026 SocialStream
+Interest media ügynökség · Tenerife és Budapest · hello@socialstream.hu
+[Cím másolása] · © 2026 SocialStream

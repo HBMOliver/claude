@@ -211,7 +211,6 @@
           <div><dt data-en="Obligation">Kötelezettség</dt><dd data-en="None">Nincs</dd></div>
         </dl>
         <p class="scarce" data-r><i aria-hidden="true"></i><span data-en="We take on at most two new partners a month.">Havonta legfeljebb két új partnert vállalunk.</span></p>
-        <p class="notfor2" data-r data-en="Not for you if you are after overnight success or a cheap half-measure.">Nem neked való, ha egy éjszaka alatti sikert vagy olcsó félmegoldást keresel.</p>
       </div>
       <div class="formbox" data-r style="--d:1">
         <img class="silk-o" src="assets/silk-2.webp" alt="" aria-hidden="true" width="1800" height="1016" loading="lazy">
@@ -220,13 +219,14 @@
           <div class="field"><label for="f-name" data-en="Your name">Neved</label><input id="f-name" name="name" autocomplete="name" required><span class="err" id="e-name"></span></div>
           <div class="field"><label for="f-email" data-en="Email">E-mail</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="err" id="e-email"></span></div>
           <div class="field"><label for="f-brand" data-en="Company or brand">Cég vagy márka</label><input id="f-brand" name="brand" autocomplete="organization" required><span class="err" id="e-brand"></span></div>
-          <div class="field"><label for="f-web" data-en="Website or Instagram">Weboldal vagy Instagram</label><input id="f-web" name="web" autocomplete="url"><span class="err"></span></div>
-          <div class="field"><label for="f-budget" data-en="Monthly marketing budget">Havi marketing büdzsé</label><select id="f-budget" name="budget"><option value="" data-en="Choose a range">Válassz sávot</option><option value="lt300" data-en="Under 300K Ft">300K Ft alatt</option><option value="300-1m">300K–1M Ft</option><option value="1-3m">1M–3M Ft</option><option value="gt3m" data-en="Over 3M Ft">3M Ft felett</option></select><span class="err"></span></div>
-          <div class="field"><label for="f-goal" data-en="Your main goal">Mi a fő célod?</label><select id="f-goal" name="goal"><option value="" data-en="Choose a goal">Válassz célt</option><option value="sales" data-en="More sales (e-commerce)">Több eladás (webshop)</option><option value="leads" data-en="More leads and enquiries">Több érdeklődő és ajánlatkérés</option><option value="brand" data-en="Brand and content">Márka és tartalom</option><option value="web" data-en="Website or landing page">Weboldal vagy landing</option></select><span class="err"></span></div>
-          <fieldset><legend data-en="What can we help with?">Miben segítsünk?</legend><div class="pick" id="pick"></div></fieldset>
-          <div class="field full"><label for="f-msg" data-en="In short: where are you now?">Röviden: hol tartasz most?</label><textarea id="f-msg" name="msg"></textarea><span class="err"></span></div>
+          <div class="field"><label for="f-web"><span data-en="Website or Instagram">Weboldal vagy Instagram</span> <span class="opt" data-en="(optional)">(nem kötelező)</span></label><input id="f-web" name="web" autocomplete="url"><span class="err"></span></div>
+          <div class="field"><label for="f-budget"><span data-en="Monthly marketing budget">Havi marketing büdzsé</span> <span class="opt" data-en="(optional)">(nem kötelező)</span></label><select id="f-budget" name="budget"><option value="" data-en="Choose a range">Válassz sávot</option><option value="lt300" data-en="Under 300K Ft">300 ezer Ft alatt</option><option value="300-1m" data-en="300K–1M Ft">300 ezer – 1 millió Ft</option><option value="1-3m" data-en="1M–3M Ft">1–3 millió Ft</option><option value="gt3m" data-en="Over 3M Ft">3 millió Ft felett</option></select><span class="err"></span></div>
+          <div class="field"><label for="f-goal"><span data-en="Your main goal">Mi a fő célod?</span> <span class="opt" data-en="(optional)">(nem kötelező)</span></label><select id="f-goal" name="goal"><option value="" data-en="Choose a goal">Válassz célt</option><option value="sales" data-en="More sales (e-commerce)">Több eladás (webshop)</option><option value="leads" data-en="More leads and enquiries">Több érdeklődő és ajánlatkérés</option><option value="brand" data-en="Brand and content">Márka és tartalom</option><option value="web" data-en="Website or landing page">Weboldal vagy landing</option></select><span class="err"></span></div>
+          <fieldset><legend><span data-en="What can we help with?">Miben segítsünk?</span> <span class="opt" data-en="(optional)">(nem kötelező)</span></legend><div class="pick" id="pick"></div></fieldset>
+          <div class="field full"><label for="f-msg"><span data-en="In short: where are you now?">Röviden: hol tartasz most?</span> <span class="opt" data-en="(optional)">(nem kötelező)</span></label><textarea id="f-msg" name="msg" placeholder="Pl. webshopunk van, a Metán hirdetünk, de túl drága egy vásárlás." data-en-ph="E.g. we run a webshop and advertise on Meta, but each sale costs too much."></textarea><span class="err"></span></div>
           <div class="actions">
-            <button class="btn" type="submit"><span data-en="Apply for the audit">Jelentkezem az auditra</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="btn" type="submit" aria-describedby="f-hint"><span data-en="Apply by email">Jelentkezem e-mailben</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <p class="hint" id="f-hint" data-en="This opens your mail app with the email filled in. You just press send.">A gomb megnyitja a leveleződ egy kitöltött e-maillel, neked csak el kell küldened.</p>
             <p class="direct"><span data-en="Or write to us:">Vagy írj nekünk:</span> <a href="mailto:hello@socialstream.hu">hello@socialstream.hu</a><button type="button" class="copy-mini" id="copyMail" data-en="Copy address">Cím másolása</button></p>
           </div>
           <div class="sending" id="sending" hidden><i></i><span id="stext"></span></div>
@@ -244,6 +244,7 @@
       <div class="list" data-r>
         <details><summary><span data-en="What does the audit cost?">Mennyibe kerül az audit?</span><i aria-hidden="true"></i></summary><p data-en="Nothing. It's free, with no obligation.">Semmibe. Ingyenes, és nem jár kötelezettséggel.</p></details>
         <details><summary><span data-en="How long does it take?">Mennyi ideig tart?</span><i aria-hidden="true"></i></summary><p data-en="30 minutes.">30 percig.</p></details>
+        <details><summary><span data-en="What happens after I send it?">Mi történik, miután elküldöm?</span><i aria-hidden="true"></i></summary><p data-en="We reply to your email and set a time for the 30-minute audit.">Válaszolunk az e-mailedre, és egyeztetünk egy időpontot a 30 perces auditra.</p></details>
         <details><summary><span data-en="What do I get from it?">Mit kapok az audit végén?</span><i aria-hidden="true"></i></summary><p data-en="We go through your campaigns, landing page and offer, and tell you honestly what we would do differently, before you pay anything.">Átnézzük a kampányaidat, a landing oldaladat és az ajánlatodat, és őszintén megmondjuk, mit csinálnánk másképp, még mielőtt bármit fizetnél.</p></details>
         <details><summary><span data-en="Who do you work with?">Kikkel dolgoztok?</span><i aria-hidden="true"></i></summary><p data-en="Brands with steady revenue that think long term and see marketing as an investment. We take on at most two new partners a month.">Stabil bevételű márkákkal, amelyek hosszú távon gondolkodnak, és befektetésnek látják a marketinget. Havonta legfeljebb két új partnert vállalunk.</p></details>
         <details><summary><span data-en="Do you make the videos too?">A videót is ti készítitek?</span><i aria-hidden="true"></i></summary><p data-en="Yes. From hooks and creative direction through shooting to editing, we make them, not just run them.">Igen. A hookoktól és a kreatív iránytól a forgatáson át a vágásig mi gyártjuk, nem csak hirdetjük.</p></details>
@@ -271,7 +272,7 @@
   <div class="wrap">
     <a class="wm" href="#top" aria-label="SocialStream">Social<em>Stream</em></a>
     <span data-en="Interest media agency · Tenerife and Budapest">Interest media ügynökség · Tenerife és Budapest</span>
-    <span><a href="mailto:hello@socialstream.hu">hello@socialstream.hu</a><button type="button" id="copyMail2" data-en="Copy">Másolás</button></span>
+    <span><a href="mailto:hello@socialstream.hu">hello@socialstream.hu</a><button type="button" id="copyMail2" data-en="Copy address">Cím másolása</button></span>
     <span>© 2026 SocialStream</span>
   </div>
 </footer>
