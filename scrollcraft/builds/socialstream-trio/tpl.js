@@ -124,9 +124,11 @@
     return '<h2 class="h-l" id="tm-h" data-sc-in><span data-l="hu">A korszakváltást <em>belülről</em> láttam.</span><span data-l="en">I saw the shift from the <em>inside</em>.</span></h2>' +
       t('p', STORY[0], STORY[1], 'body') + t('p', 'Olivér, alapító és kampánystratéga', 'Olivér, founder and campaign strategist', 'kicker');
   }
-  function face(m, big) {
-    return big ? '<img src="assets/oliver-founder.jpg" alt="Olivér, a SocialStream alapítója" data-en-alt="Olivér, founder of SocialStream" width="1000" height="1250" loading="lazy">'
-      : '<img src="' + m.img + '" srcset="' + m.img + ' 400w, ' + m.img.replace('-sm', '') + ' 800w" sizes="(max-width: 860px) 112px, 30vw" alt="' + m.n + '" width="400" height="500" loading="lazy">';
+  // orbit and screen show the team on a backdrop of their own (lilac, ice: po-, ps-); bento prints the originals in monochrome
+  function face(m, big, look) {
+    var pre = look === 'orbit' ? 'po-' : look === 'screen' ? 'ps-' : '', at = function (f) { return f.replace('assets/', 'assets/' + pre); };
+    return big ? '<img src="' + at('assets/oliver-founder.jpg') + '" alt="Olivér, a SocialStream alapítója" data-en-alt="Olivér, founder of SocialStream" width="1000" height="1250" loading="lazy">'
+      : '<img src="' + at(m.img) + '" srcset="' + at(m.img) + ' 400w, ' + at(m.img.replace('-sm', '')) + ' 800w" sizes="(max-width: 860px) 112px, 30vw" alt="' + m.n + '" width="400" height="500" loading="lazy">';
   }
   T.people = function (el, look) {
     var says = function (m) { return '<b>' + m.n + '</b>' + t('span', m.r[0], m.r[1]) + t('p', m.l[0], m.l[1]); };
@@ -134,10 +136,10 @@
     var fit = '<div class="fit">' + t('p', 'Olyan márkákkal dolgozunk, amelyek megbízható, stabil bevétellel rendelkeznek, hosszú távú sikerre törekszenek, és befektetésnek tekintik a marketinget.', 'We work with brands that have reliable, stable revenue, aim for long-term success and see marketing as an investment.', 'body') + t('p', 'Havonta legfeljebb két új partner.', 'At most two new partners a month.', 'big2') + '</div>';
     if (look === 'orbit') {
       el.innerHTML = '<div class="o-head">' + peopleHead() + '</div><div class="o-crew"><i class="o-path" aria-hidden="true"></i>' +
-        crew('orb', [1, 0, 2], function (m, i, k) { return '<li' + (k === 0 ? ' class="is-f"' : '') + '><figure>' + face(m, k === 0) + '</figure>' + says(m) + '</li>'; }) + '</div>' + fit;
+        crew('orb', [1, 0, 2], function (m, i, k) { return '<li' + (k === 0 ? ' class="is-f"' : '') + '><figure>' + face(m, k === 0, 'orbit') + '</figure>' + says(m) + '</li>'; }) + '</div>' + fit;
     } else if (look === 'screen') {
       el.innerHTML = '<div class="s-team"><div class="copy">' + peopleHead() + '</div>' +
-        win('s-dir', 'Csapat', 'Team', crew('dir', [0, 1, 2], function (m, i, k) { return '<li' + (k === 0 ? ' class="me"' : '') + '><figure>' + face(m, k === 0) + '</figure><div>' + says(m) + '</div></li>'; })) + '</div>' + fit;
+        win('s-dir', 'Csapat', 'Team', crew('dir', [0, 1, 2], function (m, i, k) { return '<li' + (k === 0 ? ' class="me"' : '') + '><figure>' + face(m, k === 0, 'screen') + '</figure><div>' + says(m) + '</div></li>'; })) + '</div>' + fit;
     } else {
       el.innerHTML = '<div class="e-lead"><figure class="e-fig" data-sc-in>' + face(T.TEAM[0], true) + t('figcaption', 'Olivér, alapító', 'Olivér, founder') + '</figure><div class="copy">' + peopleHead() + '</div></div>' +
         crew('ed', [0, 1, 2], function (m, i) { return '<li><span class="no num" aria-hidden="true">0' + (i + 1) + '</span><figure>' + face(m) + '</figure>' + says(m) + '</li>'; }) + fit;

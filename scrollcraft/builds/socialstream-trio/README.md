@@ -34,6 +34,9 @@ No build step. Hungarian by default, English through the HU/EN switch.
 - `assets/so-*`, `ss-*`, `sb-*`: the six service pictures of Orbit (glass objects on
   lit discs), Screen (isometric renders) and Bento (still-life photographs), generated
   with ElevenLabs (Seedream 5.5).
+- `assets/po-*`, `ps-*`: the team photos on Orbit's lilac and Screen's ice backdrop
+  (cut out on the Mac with the Vision framework, same framing as the originals);
+  Bento prints the originals in monochrome.
 - `ss.js`: language, the film, the mailto hand-off (shared with earlier builds).
 - `scrollcraft.js/.css`: the scroll engine. Only Orbit uses its pins; Screen and
   Bento hold their sections with `position: sticky` and read progress themselves.
