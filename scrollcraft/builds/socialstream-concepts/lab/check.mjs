@@ -3,12 +3,13 @@
 // the line through "social media", the film playing and pausing, the running rows moving when nothing is
 // scrolled, the counters, the audit form (errors, the email it writes, the sent note), English, questions,
 // reduced motion and no sideways scroll; the six business problems, each linked to its service card before the
-// services; things on the first screen following a mouse, and nothing following on a phone or with reduced motion.
+// services; things on the first screen following a mouse, and nothing following on a phone or with reduced motion;
+// no sideways scroll with a mouse at the screen's edges anywhere down the page, at 1440 and 1100 wide.
 // One line per failed check, then a summary line per page.
 import { createRequire } from 'node:module';
 const { chromium } = createRequire(process.cwd() + '/')('playwright-core');
 const BASE = process.env.BASE || 'http://localhost:4560/';
-const names = process.argv[2] ? process.argv[2].split(',') : ['pulse', 'premiere', 'aurora', 'studio'];
+const names = process.argv[2] ? process.argv[2].split(',') : ['pulse', 'premiere', 'aurora', 'studio', 'mix'];
 const b = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', args: ['--autoplay-policy=no-user-gesture-required'] });
 const CLAIM_HU = 'A social media meghalt. Az érdeklődés vette át a helyét.', CLAIM_EN = 'Social media is dead. Interest has taken its place.';
 const DESK = { viewport: { width: 1440, height: 900 } }, PHONE = { viewport: { width: 390, height: 664 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 };
@@ -124,6 +125,17 @@ for (const name of names) {
     const H = await p.evaluate(() => document.documentElement.scrollHeight); let worst = 0;
     for (let y = 0; y < H; y += 900) { await p.evaluate(y => scrollTo({ top: y, behavior: 'instant' }), y); await p.waitForTimeout(120); worst = Math.max(worst, await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)); }
     ok(`${w}px: no sideways scroll`, worst <= 0, String(worst));
+    await ctx.close();
+  }
+  // with a mouse at the screen's edges, nothing that follows the cursor widens the page, anywhere down it
+  for (const w of [1440, 1100]) {
+    const { p, ctx } = await open({ viewport: { width: w, height: 900 } });
+    const H = await p.evaluate(() => document.documentElement.scrollHeight); let worst = 0;
+    for (let y = 0; y < H; y += 900) {
+      await p.evaluate(y => scrollTo({ top: y, behavior: 'instant' }), y);
+      for (const [x, yy] of [[w - 6, 894], [6, 6]]) { await p.mouse.move(x, yy, { steps: 3 }); await p.waitForTimeout(450); worst = Math.max(worst, await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)); }
+    }
+    ok(`${w}px, a mouse at the edges: no sideways scroll`, worst <= 0, String(worst));
     await ctx.close();
   }
   console.log(`${name}: ${pass} passed, ${fail} failed`);

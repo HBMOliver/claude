@@ -215,6 +215,16 @@
   addEventListener('resize', function () { measureRails(); frame(); });
   addEventListener('load', function () { measureRails(); run(); });
 
+  /* ---------------- rows the visitor scrolls sideways; buttons marked data-row-go move them a card at a time ---------------- */
+  $$('[data-row]').forEach(function (row) {
+    $$('[data-row-go]', row.closest('section') || document).forEach(function (b) {
+      b.addEventListener('click', function () {
+        var c = row.firstElementChild, step = c ? c.getBoundingClientRect().width + (parseFloat(getComputedStyle(row).columnGap) || 0) : row.clientWidth * 0.8;
+        row.scrollBy({ left: +b.getAttribute('data-row-go') * step, behavior: reduce ? 'auto' : 'smooth' });
+      });
+    });
+  });
+
   /* ---------------- the audit form (Daylight's, unchanged) ---------------- */
   var form = $('#appform'), pick = $('#pick'), sent = $('#sent'), sending = $('#sending'), chosen = [], lastBody = '';
   function renderPick() { pick.innerHTML = SS.TOPICS.map(function (c) { return '<label><input type="checkbox" value="' + c.id + '"' + (chosen.indexOf(c.id) > -1 ? ' checked' : '') + '><span>' + esc(SS.T(c)) + '</span></label>'; }).join(''); }

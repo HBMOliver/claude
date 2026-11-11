@@ -1,4 +1,4 @@
-// node tools/artifact.mjs [names]   (default: all four; run node build.mjs first)
+// node tools/artifact.mjs [names]   (default: all five; run node build.mjs first)
 // Package each concept as a claude.ai Artifact page. The host wraps the page in its own <html>/<head>/<body>,
 // so those are stripped; the stylesheets and the local scripts are inlined (no other script hosts are allowed);
 // assets/ stays as published files next to the page. For each concept it writes:
@@ -8,7 +8,7 @@
 //   dist/<name>.html         the same page wrapped the way the host wraps it, to test locally
 //                            (BASE=http://localhost:4560/dist/ node lab/check.mjs); dist/assets points at assets/
 import fs from 'node:fs';
-const all = ['pulse', 'premiere', 'aurora', 'studio'];
+const all = ['pulse', 'premiere', 'aurora', 'studio', 'mix'];
 const names = process.argv[2] ? process.argv[2].split(',') : all;
 const FILM = ['assets/hero-540.mp4', 'assets/hero-1080.mp4', 'assets/hero-v-720.mp4'];
 fs.mkdirSync('dist', { recursive: true });

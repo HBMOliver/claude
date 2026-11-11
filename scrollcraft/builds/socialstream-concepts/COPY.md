@@ -51,3 +51,9 @@ Heading: Máshol és *nálunk*. / Elsewhere and *with us*.
 | A hirdetést egy másik futtatja. / Another runs the ads. | Mi futtatjuk a hirdetést. / We run the ads. |
 | Az oldalt egy harmadik rakta össze. / A third built the website. | Mi építjük az oldalt, ami befejezi, amit a videó elkezdett. / We build the page that finishes what the video started. |
 | Senki nem felel azért, hogy legyen vásárlás. / Nobody answers for whether anything sells. | És mi mérjük, mit hozott. / And we measure what it brought in. |
+
+## NEW, to confirm: labels on Aurora Mix only
+
+- On the film's card, as a story's caption: Márkafilm / Brand film
+- The two arrows beside the reviews (read out by screen readers, not shown): Előző vélemény / Previous review,
+  Következő vélemény / Next review

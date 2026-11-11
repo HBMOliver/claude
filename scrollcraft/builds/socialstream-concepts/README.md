@@ -1,8 +1,10 @@
-# SocialStream: four concepts
+# SocialStream: four concepts and a mix
 
 Four whole-page concepts for SocialStream, built from ideas in six Framer sites the client sent
 (Talentank, Conversion, Cutflow, Marketia, Strivai, Scrolla). They share the words and the working
-parts; each one has its own markup, structure and look.
+parts; each one has its own markup, structure and look. A fifth page, Aurora Mix, puts Aurora's look into
+Scrolla's layout. The client asked for it after seeing the four ("aurorat kevernem ezzel", with the Scrolla link);
+Aurora itself is unchanged.
 
 | Concept | Lead reference | Look | Published |
 |---|---|---|---|
@@ -10,6 +12,7 @@ parts; each one has its own markup, structure and look.
 | Premiere | Talentank (Marketia for the giant running words) | Black and cinematic. The claim's two sentences sit above and below a wide film band. | https://claude.ai/artifact/F4yHZA3CbyoiQ7mN5ckVmT |
 | Aurora | Conversion (Strivai for the horizon light and the glass) | Night blue with a moving aurora. Real results float on glass cards. | https://claude.ai/artifact/PtcSvRhunabu4nDLBXoL82 |
 | Studio | Cutflow | Warm grey with white cards and one coral. The film plays like a story, with reels peeking out behind it. | https://claude.ai/artifact/2GpEg95SqLphnNoG937xu2 |
+| Aurora Mix | Scrolla's layout in Aurora's look | Night blue. The first screen, the services, Kiknek and the last call sit in inset panels with the aurora moving inside. The film stands beside the claim like a post, and the real numbers run along the panel's foot. The reels close in on the statement, the services are big-object cards over two running tag rows, the stat cards come with a running row of reels, the with-us card lies over the elsewhere card, the steps are big numbered cards, the reviews are a row you scroll, and a giant wordmark sits at the end. A light follows the cursor round the first screen. | https://claude.ai/artifact/C52b5BBkmGw83WvDFJyZCF |
 
 The published pages are private until they are shared from their Share menu.
 
@@ -53,7 +56,7 @@ The published pages are private until they are shared from their Share menu.
   - `[data-follow]` followers and magnetic buttons
   - the menu
   - the audit form
-- `build.mjs`: writes `pulse.html`, `premiere.html`, `aurora.html`, `studio.html`. It stops on an em dash
+- `build.mjs`: writes `pulse.html`, `premiere.html`, `aurora.html`, `studio.html`, `mix.html`. It stops on an em dash
   in visible copy.
 - `tools/artifact.mjs`: packages each page for claude.ai.
   - `dist/<name>/index.html` with styles and scripts inlined.
@@ -90,12 +93,15 @@ page are not counted.
 | Premiere | 3 of 16 | 7 of 27 |
 | Aurora | 3 of 14 | 11 of 29 |
 | Studio | 3 of 12 | 7 of 28 |
+| Aurora Mix | 7 of 14 | 13 of 27 |
 
 On every page the first two screens keep moving: the film, running rows and floating cards. On Pulse
 the services and the results move too, because their rows keep running. Each page's last call moves:
 Studio's deck and Aurora's aurora.
 
-From "Kiknek" down to the questions, the sections are mostly still on a computer. In those sections the
+Aurora Mix moves at twice as many stops as Aurora. Its panels carry the aurora, the reel and tag rows keep running, and the reels close in on the statement. From the reviews down to the questions it is still quiet too.
+
+On the first four pages, from "Kiknek" down to the questions, the sections are mostly still on a computer. In those sections the
 floating objects, the problem blocks' own loops and Studio's slow team photos each change less than 1%
 of the screen.
 
