@@ -9,29 +9,30 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23120d0b'/%3E%3Crect x='6' y='6' width='11' height='11' rx='3' fill='%23f5b85c'/%3E%3Crect x='19' y='6' width='7' height='20' rx='3' fill='%23e8834a'/%3E%3Crect x='6' y='19' width='11' height='7' rx='3' fill='%23d9766f'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..500;1,9..144,300..500&family=Plus+Jakarta+Sans:wght@400..800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400..700&display=swap">
 <link rel="stylesheet" href="scrollcraft.css">
 <link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="look-bento.css">
 <style>
 /* Bento: the page is tiles. The first sentence stands alone on the screen; a board of tiles
    rises over it one by one (a reel, the founder, two numbers, the name explained) and the second
    sentence lands last, on the largest tile. The three laws are three large cards that stack as
-   they are read, the work is a mosaic, the services open like drawers and the results are a
-   ledger. The grounds are kept clean: soft light and outlines only; shapes live inside tiles. */
+   they are read, the work is a mosaic, the services are a board of photographs and the results
+   are a ledger. No shapes stand on the grounds: grain, straight light and rules (look-bento.css). */
 
 /* ---------- the board. On a wide screen it holds for 1.3 screens of scroll while it assembles ---------- */
 .board { padding: 0; height: 230vh; }
 .board .stage { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); padding: calc(var(--bar) + clamp(10px, 2.2vh, 22px)) 0 clamp(12px, 2.4vh, 24px); overflow: hidden; border-radius: inherit; }
 .board .wrap { max-width: 1480px; width: 100%; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); }
-.m1 { position: absolute; inset: 0; z-index: 0; margin: 0; padding: 0 var(--gut); display: grid; place-items: center; text-align: center; font: 700 clamp(2.4rem, 6.4vw, 6.6rem)/1 var(--sans); letter-spacing: -0.045em; text-wrap: balance; opacity: var(--m1, 0); pointer-events: none; }
+.m1 { position: absolute; inset: 0; z-index: 0; margin: 0; padding: 0 var(--gut); display: grid; place-items: center; text-align: center; font: 400 clamp(2.8rem, 7.6vw, 7.8rem)/0.95 var(--serif); letter-spacing: -0.02em; text-wrap: balance; opacity: var(--m1, 0); pointer-events: none; }
 /* --u is the board's own unit: it shrinks on a short screen as well as on a narrow one, so every tile's type fits its tile */
 .bento { --u: min(1vw, 1.6vh); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(0, 1fr)); gap: clamp(10px, 1.2vw, 18px); }
 .tile { position: relative; overflow: hidden; min-height: 0; border-radius: var(--r); background: var(--card); color: var(--card-ink); box-shadow: var(--frame); padding: calc(var(--u) * 1.7); display: grid; align-content: end; gap: calc(var(--u) * 0.7);
   transform: translate3d(0, calc((1 - var(--k, 1)) * var(--from, 110vh)), 0) perspective(900px) rotateX(calc(var(--ry, 0) * 1deg)) rotateY(calc(var(--rx, 0) * 1deg)); }
 .board.is-set .tile { transition: transform 500ms var(--out); }   /* once the board is whole, a tile leans toward the cursor */
 .b-claim { grid-column: 1 / 8; grid-row: 1 / 3; align-content: center; padding: calc(var(--u) * 3.2);
-  background: radial-gradient(90% 120% at 0% 0%, color-mix(in srgb, var(--rose) 34%, transparent), transparent 60%), radial-gradient(80% 100% at 100% 100%, color-mix(in srgb, var(--violet) 32%, transparent), transparent 62%), var(--card); }
-.b-claim .h-xl { position: relative; font-size: calc(var(--u) * 4.9); }
+  background: linear-gradient(150deg, color-mix(in srgb, var(--rose) 22%, var(--card)) 0%, var(--card) 64%); }
+.b-claim .h-xl { position: relative; font-size: calc(var(--u) * 5.8); }
 .b-claim .l1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .b-reel { grid-column: 8 / 11; grid-row: 1 / 4; padding: 0; background: #000; }
 .b-reel img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 900ms var(--ease); }
@@ -43,21 +44,21 @@
 .b-reel .segs i { height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.34); } .b-reel .segs i.is-on { background: #fff; }
 .b-founder { grid-column: 11 / 13; grid-row: 1 / 3; padding: 0; }
 .b-founder img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 16%; }
-.b-founder span { position: absolute; left: 10px; bottom: 10px; padding: 8px 13px; border-radius: 99px; background: var(--warm); color: var(--ink2); font: 700 13px/1 var(--sans); }
+.b-founder span { position: absolute; left: 10px; bottom: 10px; padding: 8px 11px; border-radius: 3px; background: var(--warm); color: var(--ink2); font: 600 11.5px/1 var(--sans); text-transform: uppercase; letter-spacing: 0.12em; }
 .b-s1 { grid-column: 1 / 4; grid-row: 3; }
 .b-s2 { grid-column: 4 / 8; grid-row: 3; }
 .b-stat .fig { font-size: calc(var(--u) * 4.6); } .b-stat .fig small { font-size: max(12px, 0.24em); }
 .b-stat p:last-child { margin: 0; font: 600 max(13px, calc(var(--u) * 1))/1.3 var(--sans); color: var(--fg2); }
-.b-stat.alt { background: linear-gradient(135deg, var(--b1), var(--b2)); color: var(--ink2); } .b-stat.alt p:last-child { color: color-mix(in srgb, var(--ink2) 84%, transparent); }
+.b-stat.alt { background: var(--rose); color: var(--ink2); } .b-stat.alt p:last-child { color: color-mix(in srgb, var(--ink2) 84%, transparent); }
 .b-place { grid-column: 11 / 13; grid-row: 3; justify-items: start; }
-.b-place p { position: relative; margin: 0; font: 700 max(1rem, calc(var(--u) * 1.25))/1.12 var(--sans); letter-spacing: -0.03em; }
+.b-place p { position: relative; margin: 0; font: italic 400 max(1.3rem, calc(var(--u) * 1.75))/1 var(--serif); letter-spacing: -0.01em; }
 .b-place small { position: relative; font: 600 max(12px, calc(var(--u) * 0.85))/1.3 var(--sans); color: var(--fg2); }
 .b-about { grid-column: 1 / 8; grid-row: 4; align-content: center; justify-items: start; }
-.b-about .lead { font-size: max(1.05rem, calc(var(--u) * 2.15)); }
+.b-about .lead { font-size: max(1.25rem, calc(var(--u) * 2.55)); }
 .b-about .btn { display: none; }
-.b-cta { grid-column: 8 / 13; grid-row: 4; padding: 0; background: var(--cream); }
-.b-cta a { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 0 calc(var(--u) * 2.2); text-decoration: none; color: var(--ink2); font: 700 max(1.2rem, calc(var(--u) * 2.1))/1 var(--sans); letter-spacing: -0.03em; }
-.b-cta a::after { content: ""; flex: none; width: max(44px, calc(var(--u) * 3.8)); aspect-ratio: 1; border-radius: 50%; background: var(--ink2) var(--arw) center / 42% no-repeat; transition: transform 300ms var(--out); }
+.b-cta { grid-column: 8 / 13; grid-row: 4; padding: 0; background: var(--amber); }
+.b-cta a { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 0 calc(var(--u) * 2.2); text-decoration: none; color: var(--ink2); font: 400 max(1.45rem, calc(var(--u) * 2.6))/1 var(--serif); letter-spacing: -0.01em; }
+.b-cta a::after { content: ""; flex: none; width: max(44px, calc(var(--u) * 3.8)); aspect-ratio: 1; border-radius: 3px; background: var(--ink2) var(--arw) center / 42% no-repeat; transition: transform 300ms var(--out); }
 @media (hover: hover) { .b-cta a:hover::after { transform: translateX(6px) rotate(-12deg); } }
 :root { --arw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2 8h11M9 3.5 13.5 8 9 12.5' fill='none' stroke='%23fff3e6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
 
@@ -75,7 +76,6 @@
 .gridfig .lab b { font: 300 clamp(1.8rem, 3vw, 2.6rem)/1 var(--serif); letter-spacing: -0.03em; color: var(--fg); }
 .gridfig .lab.l2 { left: auto; right: 0; opacity: 0; transform: translateY(8px); transition: opacity 400ms var(--ease), transform 600ms var(--out); color: var(--tag); } .gridfig .lab.l2 b { color: var(--tag); }
 .is-lit .lab.l2 { opacity: 1; transform: none; }
-.scard .ringfig { width: min(100%, 50vh, 440px); }
 
 /* ---------- the work: a mosaic ---------- */
 .work .wrap { display: grid; gap: clamp(26px, 4vh, 44px); }
@@ -87,44 +87,28 @@
 .mosaic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; transition: transform 700ms var(--out); }
 @media (hover: hover) { .mosaic .m:hover img { transform: scale(1.06); } }
 
-/* ---------- services: drawers ---------- */
-.services .wrap { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(28px, 5vw, 80px); align-items: start; }
-.services h2 { position: sticky; top: calc(var(--bar) + clamp(24px, 8vh, 96px)); }
-.sv-acc { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
-.ac { border-bottom: 1px solid var(--rule); }
-.ac > button { all: unset; box-sizing: border-box; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: clamp(18px, 2.6vh, 26px) 0; }
-.ac > button:focus-visible { outline: 2px solid var(--tag); outline-offset: 4px; border-radius: 6px; }
-.ac h3 { margin: 0; font: 700 clamp(1.4rem, 2.5vw, 2.3rem)/1.08 var(--sans); letter-spacing: -0.035em; }
-.plus { position: relative; flex: none; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--rule); transition: transform 450ms var(--out), background-color 220ms; }
-.plus::before, .plus::after { content: ""; position: absolute; left: 50%; top: 50%; width: 14px; height: 2px; margin: -1px 0 0 -7px; border-radius: 2px; background: currentColor; }
-.plus::after { transform: rotate(90deg); }
-.is-open .plus { transform: rotate(45deg); background: var(--fg); color: var(--bg); }
-.pan { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 560ms var(--out); }
-.is-open .pan { grid-template-rows: 1fr; }
-.pan-in { overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px); gap: clamp(18px, 3vw, 44px); align-items: center; }
-.pan-in > p { margin: 0 0 26px; color: var(--fg2); font-size: 1.04rem; line-height: 1.58; max-width: 46ch; }
-.pan-in .scene { margin-bottom: 26px; border-radius: var(--r-s); }
+/* ---------- services: a board of photographs (look-bento.css) ---------- */
+.services .h-l { max-width: 14ch; margin-bottom: clamp(26px, 5vh, 54px); }
 
 /* ---------- results: a ledger ---------- */
 .results .wrap { display: grid; }
 .results .h-l { margin-bottom: clamp(20px, 4vh, 44px); }
-.res { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 5fr) minmax(0, 2fr); grid-template-areas: "fig c obj" "fig who obj"; column-gap: clamp(16px, 3vw, 48px); row-gap: 8px; align-items: center; padding: clamp(22px, 4vh, 44px) 0; border-top: 1px solid var(--rule); }
+.res { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); grid-template-areas: "fig c" "fig who"; column-gap: clamp(16px, 3vw, 48px); row-gap: 8px; align-items: center; padding: clamp(22px, 4vh, 44px) 0; border-top: 1px solid var(--rule); }
 .res .fig { grid-area: fig; }
 .res .c { grid-area: c; align-self: end; margin: 0; font: 600 clamp(1.1rem, 1.6vw, 1.5rem)/1.3 var(--sans); letter-spacing: -0.02em; max-width: 26ch; }
 .res .who { grid-area: who; align-self: start; margin: 0; font: 600 0.95rem/1.3 var(--sans); color: var(--tag); }
-.res-obj { grid-area: obj; margin: 0; width: min(100%, 150px); justify-self: end; transition: transform 500ms var(--out); }
-@media (hover: hover) { .res:hover .res-obj { transform: scale(1.08) rotate(-3deg); } }
+/* an editorial ledger: the number is the picture, so the drawn objects stay out */
+.res-obj { display: none; }
 .seal { margin: 0; padding-top: clamp(30px, 6vh, 64px); border-top: 1px solid var(--rule); font: 600 clamp(1.3rem, 2.4vw, 2.2rem)/1.15 var(--sans); letter-spacing: -0.03em; }
 
-/* ---------- voices: a wall ---------- */
+/* ---------- voices: columns of print, a rule between them ---------- */
 .voices .wrap { display: grid; gap: clamp(26px, 4vh, 44px); }
-.quotes { list-style: none; margin: 0; padding: 0; columns: 3; column-gap: clamp(12px, 1.4vw, 20px); }
-.quotes li { break-inside: avoid; margin: 0 0 clamp(12px, 1.4vw, 20px); padding: clamp(20px, 2vw, 28px); border-radius: var(--r); background: var(--q, var(--card)); color: var(--qi, var(--card-ink)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink2) 8%, transparent); }
-.quotes li:nth-child(4n + 1) { --q: var(--amber); --qi: var(--ink2); } .quotes li:nth-child(4n + 2) { --q: var(--ink2); --qi: var(--warm); } .quotes li:nth-child(4n + 3) { --q: var(--rose); --qi: var(--ink2); }
+.quotes { list-style: none; margin: 0; padding: 0; columns: 3; column-gap: clamp(24px, 3vw, 48px); column-rule: 1px solid var(--rule); }
+.quotes li { break-inside: avoid; margin: 0 0 clamp(28px, 4.5vh, 44px); }
 .quotes .av { display: none; }
-.qb { display: grid; gap: 16px; }
-.quotes blockquote { margin: 0; font: 500 clamp(1rem, 1.16vw, 1.14rem)/1.45 var(--sans); text-wrap: pretty; }
-.quotes cite { font: 700 0.94rem/1.2 var(--sans); font-style: normal; opacity: 0.92; }
+.qb { display: grid; gap: 14px; }
+.quotes blockquote { margin: 0; font: 400 clamp(1.2rem, 1.5vw, 1.45rem)/1.28 var(--serif); letter-spacing: -0.005em; text-wrap: pretty; }
+.quotes cite { font: 500 11.5px/1.3 var(--sans); font-style: normal; text-transform: uppercase; letter-spacing: 0.14em; color: var(--tag); }
 
 @media (max-width: 1040px) { .quotes { columns: 2; } }
 @media (max-width: 860px) {
@@ -150,16 +134,13 @@
   .scard .two { grid-template-columns: minmax(0, 1fr); gap: 26px; }
   .scard .body { display: none; }
   .gridfig { height: min(38vh, 340px); margin-top: 44px; }
-  .scard .ringfig { width: min(70%, 34vh); }
   .mosaic { grid-template-columns: repeat(3, minmax(0, 1fr)); } .mosaic .m.r { grid-column: 2 / span 2; }
-  .services .wrap { grid-template-columns: minmax(0, 1fr); } .services h2 { position: static; }
-  .pan-in { grid-template-columns: minmax(0, 1fr); gap: 0; } .pan-in > p { margin-bottom: 18px; }
-  .res { grid-template-columns: minmax(0, 1fr) 96px; grid-template-areas: "fig obj" "c c" "who who"; }
+  .res { grid-template-columns: minmax(0, 1fr); grid-template-areas: "fig" "c" "who"; }
   .quotes { columns: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
   .board { height: auto; }
-  .tile, .scard, .pan, .plus, .b-reel img { transition: none !important; } .scard { transform: none; filter: none; }
+  .tile, .scard, .b-reel img { transition: none !important; } .scard { transform: none; filter: none; }
 }
 </style>
 </head>
@@ -192,11 +173,6 @@
   <!-- the board: the first sentence alone, then the whole pitch rises over it as one screen of tiles -->
   <section class="sec sheet f-night board" id="board" data-field="night" aria-labelledby="claim">
     <div class="stage">
-      <div class="shapes" aria-hidden="true">
-        <i class="shape glowb g2" style="--x:16%;--y:24%;--s:min(100vh,76vw);--d:0.3"></i>
-        <i class="shape glowb g1" style="--x:86%;--y:80%;--s:min(90vh,70vw);--d:0.3"></i>
-        <i class="shape rings" style="--x:50%;--y:54%;--s:min(124vh,104vw);--d:0.3;--gap:56px"></i>
-      </div>
       <p class="m1" aria-hidden="true" data-en="Social media is dead.">A social media meghalt.</p>
       <div class="wrap">
         <div class="bento" id="bento">
@@ -206,18 +182,19 @@
           <div class="tile b-stat b-s2 alt"><p class="fig num">300<small>M+ Ft</small></p><p data-en="in budget managed since 2022">kezelt büdzsé 2022 óta</p></div>
           <div class="tile b-about"><p class="lead"><span data-l="hu">Igen, a nevünkben még ott a social. A <em>stream</em> maradt. Ami benne folyik, az változott.</span><span data-l="en">Yes, our name still says social. The <em>stream</em> stayed. What flows in it changed.</span></p><a class="btn" href="#torvenyek" data-en="The three laws">A három törvény</a></div>
           <div class="tile b-founder"><img data-src="assets/oliver-founder.jpg" alt="Olivér, a SocialStream alapítója" data-en-alt="Olivér, founder of SocialStream" width="1000" height="1250"><span data-en="Olivér, founder">Olivér, alapító</span></div>
-          <div class="tile b-place"><div class="shapes" aria-hidden="true"><i class="shape rings" style="--x:74%;--y:30%;--s:230px;--d:0.3;--gap:20px"></i><i class="shape sphere bob" style="--x:74%;--y:30%;--s:clamp(34px,3.4vw,54px);--d:1;--i:1"></i></div><p>Tenerife · Budapest</p><small data-en="Interest media agency">Interest media ügynökség</small></div>
+          <div class="tile b-place"><p>Tenerife · Budapest</p><small data-en="Interest media agency">Interest media ügynökség</small></div>
           <div class="tile b-cta"><a href="#audit" data-en="Free audit">Ingyenes audit</a></div>
         </div>
       </div>
     </div>
   </section>
-  <div class="tick f-cream" id="tick" aria-hidden="true"></div>
+  <div class="tick f-light" id="tick" aria-hidden="true"></div>
 
   <!-- the laws: three cards that stack -->
   <section class="sec f-plum flow stack" id="torvenyek" data-field="plum" data-sc-act="flow" aria-labelledby="st-h">
-    <div class="shapes" aria-hidden="true"><i class="shape rings" style="--x:88%;--y:5%;--s:min(90vh,70vw);--d:0.4"></i><i class="shape glowb g4" style="--x:88%;--y:5%;--s:min(70vh,54vw);--d:0.3"></i></div>
+    <p class="gnum num" aria-hidden="true">01</p>
     <div class="wrap">
+      <p class="folio" aria-hidden="true"><span class="num">01</span><span data-en="The laws">Törvények</span></p>
       <div class="top"><p class="kicker" data-en="The rules of the new age">Az új kor szabályai</p><h2 class="h-l" id="st-h" data-sc-in><span data-l="hu">Három <em>törvény</em>.</span><span data-l="en">Three <em>laws</em>.</span></h2></div>
       <i class="mk"></i>
       <article class="scard f-night" style="--n:0" aria-labelledby="l1-h">
@@ -238,11 +215,11 @@
             <h3 class="h-l" id="l2-h"><span data-l="hu">A figyelmet nem lehet megvenni. Csak <em>kiérdemelni</em>.</span><span data-l="en">Attention cannot be bought. Only <em>earned</em>.</span></h3>
             <p class="body" data-en="For every impression you compete with the best creators, not with your competitors. What is interesting, the platform carries to millions for free. What is boring, no budget can save.">Minden megjelenésért a legjobb alkotókkal versenyzel, nem a konkurenciáddal. Ami érdekes, azt a platform ingyen viszi el milliókhoz. Ami unalmas, azt büdzsével sem lehet megmenteni.</p>
           </div>
-          <div class="ringfig" id="ring" aria-hidden="true"></div>
+          <div class="wfig" id="ring" aria-hidden="true"></div>
         </div>
       </article>
       <i class="mk"></i>
-      <article class="scard f-cream" style="--n:2" aria-labelledby="l3-h">
+      <article class="scard f-light" style="--n:2" aria-labelledby="l3-h">
         <div class="two">
           <div class="copy">
             <p class="kicker" data-en="Law III">III. törvény</p>
@@ -257,8 +234,8 @@
 
   <!-- the work: a mosaic -->
   <section class="sec sheet f-night flow work" data-field="night" data-sc-act="flow" aria-labelledby="wk-h">
-    <div class="shapes" aria-hidden="true"><i class="shape glowb g1" style="--x:92%;--y:4%;--s:min(90vh,70vw);--d:0.3"></i></div>
     <div class="wrap">
+      <p class="folio" aria-hidden="true"><span class="num">02</span><span data-en="Work">Munkák</span></p>
       <div class="head">
         <h2 class="h-l" id="wk-h" data-sc-in><span data-l="hu">Ami <em>megállítja</em> a hüvelykujjat.</span><span data-l="en">What <em>stops</em> the thumb.</span></h2>
         <p class="body" data-sc-in data-en="Frames from the videos we made for our clients.">Képkockák az ügyfeleinknek készült videókból.</p>
@@ -269,17 +246,18 @@
 
   <!-- services -->
   <section class="sec sheet f-plum flow services" id="szolgaltatasok" data-field="plum" data-sc-act="flow" aria-labelledby="svc-h">
-    <div class="shapes" aria-hidden="true"><i class="shape glowb g4" style="--x:4%;--y:90%;--s:min(90vh,70vw);--d:0.3"></i></div>
+    <p class="gnum num" aria-hidden="true">03</p>
     <div class="wrap">
+      <p class="folio" aria-hidden="true"><span class="num">03</span><span data-en="Services">Szolgáltatások</span></p>
       <h2 class="h-l" id="svc-h" data-sc-in><span data-l="hu">Hat szolgáltatás. Egy <em>stratégia</em>.</span><span data-l="en">Six services. One <em>strategy</em>.</span></h2>
-      <ul class="sv-acc" id="svc"></ul>
+      <ul class="sv-tiles" id="svc"></ul>
     </div>
   </section>
 
   <!-- results -->
   <section class="sec sheet f-night flow results" id="eredmenyek" data-field="night" data-sc-act="flow" aria-labelledby="res-h">
-    <div class="shapes" aria-hidden="true"><i class="shape glowb g1" style="--x:94%;--y:6%;--s:min(90vh,70vw);--d:0.3"></i></div>
     <div class="wrap">
+      <p class="folio" aria-hidden="true"><span class="num">04</span><span data-en="Results">Eredmények</span></p>
       <h2 class="h-l" id="res-h" data-sc-in><span data-l="hu">Nem ígéretek. <em>Számok</em>.</span><span data-l="en">Not promises. <em>Numbers</em>.</span></h2>
       <div class="ledger" id="res"></div>
       <p class="seal" data-sc-in data-en="300M+ Ft in budget managed since 2022.">300M+ Ft kezelt büdzsé 2022 óta.</p>
@@ -287,8 +265,10 @@
   </section>
 
   <!-- voices -->
-  <section class="sec sheet f-cream flow voices" data-field="cream" data-sc-act="flow" aria-labelledby="vo-h">
+  <section class="sec sheet f-light flow voices" data-field="light" data-sc-act="flow" aria-labelledby="vo-h">
+    <p class="gnum num" aria-hidden="true">05</p>
     <div class="wrap">
+      <p class="folio" aria-hidden="true"><span class="num">05</span><span data-en="Clients">Ügyfeleink</span></p>
       <h2 class="h-l" id="vo-h" data-sc-in><span data-l="hu">Nem mi mondjuk. Ők <em>mondják</em>.</span><span data-l="en">We don't say it. <em>They</em> do.</span></h2>
       <ul class="quotes" id="quotes" data-sc-in></ul>
     </div>
@@ -296,17 +276,19 @@
 
   <!-- people -->
   <section class="sec sheet f-plum flow people" id="csapat" data-field="plum" data-sc-act="flow" aria-labelledby="tm-h">
-    <div class="shapes" aria-hidden="true"><i class="shape rings" style="--x:20%;--y:24%;--s:min(90vh,70vw);--d:0.4"></i></div>
+    <p class="gnum num" aria-hidden="true">06</p>
+    <div class="wrap"><p class="folio" aria-hidden="true"><span class="num">06</span><span data-en="People">Csapat</span></p></div>
     <div class="wrap" id="people"></div>
   </section>
 
   <!-- the audit -->
-  <section class="sec sheet f-cream flow audit" id="audit" data-field="cream" data-sc-act="flow" aria-labelledby="au-h">
+  <section class="sec sheet f-light flow audit" id="audit" data-field="light" data-sc-act="flow" aria-labelledby="au-h">
+    <p class="gnum num" aria-hidden="true">07</p>
+    <div class="wrap"><p class="folio" aria-hidden="true"><span class="num">07</span><span data-en="Audit">Audit</span></p></div>
     <div class="wrap" id="auditWrap"></div>
   </section>
 
   <footer class="sec sheet f-night foot" data-field="night">
-    <div class="shapes" aria-hidden="true"><i class="shape glowb g1" style="--x:50%;--y:64%;--s:min(120vh,90vw);--d:0.3"></i><i class="shape rings" style="--x:50%;--y:40%;--s:min(140vh,120vw);--d:0.3"></i></div>
     <div id="footIn"></div>
   </footer>
 </main>
@@ -319,7 +301,7 @@
 <script>
 (function () {
   var $ = SS.$, $$ = SS.$$, clamp = SS.clamp, reduce = SS.reduce, fine = SS.fine, T = TPL;
-  T.ticker($('#tick')); T.services($('#svc'), 'acc'); T.results($('#res')); T.voices($('#quotes')); T.people($('#people')); T.audit($('#auditWrap')); T.footer($('#footIn'));
+  T.ticker($('#tick')); T.services($('#svc'), 'tiles', 'bento'); T.results($('#res')); T.voices($('#quotes')); T.people($('#people'), 'bento'); T.audit($('#auditWrap'), 'bento'); T.footer($('#footIn'));
   var was = {};
 
   // the reel tile: five of their posts, one after another
@@ -365,7 +347,7 @@
     if (l > 0) { cx.globalAlpha = l; cx.fillStyle = LIT; for (var k in lit) { var x = (k % COLS) * cw, y = Math.floor(k / COLS) * ch, s = 1 + l * 3.4; cx.beginPath(); cx.roundRect(x - cw * (s - 1) / 2, y - ch * (s - 1) / 2, cw * s, ch * s, cw * 0.5); cx.fill(); } }
     cx.globalAlpha = 1;
   }
-  var cards = $$('.scard'), marks = $$('.mk'), ring = T.ring($('#ring'), 2), rules = T.rules($('#rules'));
+  var cards = $$('.scard'), marks = $$('.mk'), ring = T.ring($('#ring'), 2, 'bar'), rules = T.rules($('#rules'));
   T.onFrame(function (c) {
     cards.forEach(function (card, i) {
       var r = card.getBoundingClientRect(); if (r.bottom < -200 || r.top > c.vh + 200) return;

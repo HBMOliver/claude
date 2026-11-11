@@ -1,7 +1,9 @@
 /* Shared by the three templates: the content every page carries (services, results, voices,
    people, the audit), written into the page once with its English beside it, and the behaviour
    they have in common (the bar, the film, words that light or rise, numbers that count, shapes
-   that move with the cursor, the phone, the form). A page calls TPL.start() last. */
+   that move with the cursor, the phone, the form). Where a template shows a block its own way
+   (a service's picture, the crew, the audit's frame, law II's figure) the block takes the
+   template's name. A page calls TPL.start() last. */
 (function () {
   'use strict';
   var SS = window.SS, $ = SS.$, $$ = SS.$$, clamp = SS.clamp, lerp = SS.lerp, reduce = SS.reduce, fine = SS.fine, esc = SS.esc;
@@ -72,31 +74,29 @@
   };
   T.obj = function (name, s) { s = s || name.charAt(0); return '<svg class="obj o-' + name + '" viewBox="0 0 200 200" aria-hidden="true">' + ograd(s) + OBJ[name](s) + '</svg>'; };
 
-  /* ---------------- one small scene per service ---------------- */
-  T.scene = {
-    video: function () { return '<div class="mg mg-video"><div class="vb">' + T.pic(T.PIC(1)) + '</div><div class="vf">' + T.pic(T.PIC(2)) + '<i class="vp"></i><span class="vbar"><i></i></span></div></div>'; },
-    social: function () { return '<div class="mg mg-social">' + [1, 13, 5, 16, 6, 14, 18, 3, 12].map(function (n, i) { return '<i style="--d:' + i + '">' + T.pic(T.PIC(n)) + '</i>'; }).join('') + '</div>'; },
-    ads: function () { return '<svg class="mg draw d-ads" viewBox="0 0 200 150"><path class="ar" d="M22 122 62 104 94 110 132 70 176 36V126H22z"/><line x1="18" y1="126" x2="186" y2="126"/><polyline class="b dash" points="22,122 62,104 94,110 132,70 176,36"/><circle class="end bfill" cx="176" cy="36" r="6"/><g class="pill2"><rect x="92" y="5" width="76" height="24" rx="12"/><text x="130" y="21.5" text-anchor="middle">81× ROAS</text></g></svg>'; },
-    web: function () { return '<div class="mg mg-web"><div class="bw"><div class="bb"><i></i><i></i><i></i></div><div class="bg2"><div class="bh">' + T.obj('watch', 'ws') + '</div><div class="bl"><b style="--d:0"></b><b style="--d:1"></b><b style="--d:2"></b><u style="--d:3"></u></div></div></div></div>'; },
-    auto: function () { return '<svg class="mg draw d-auto" viewBox="0 0 200 150"><line x1="38" y1="66" x2="162" y2="66"/><circle class="n1" cx="38" cy="66" r="19"/><circle class="n2" cx="100" cy="66" r="19"/><circle class="n3" cx="162" cy="66" r="19"/><circle class="dot" cx="38" cy="66" r="8"/><text x="38" y="114" text-anchor="middle" data-en="Lead">Lead</text><text x="100" y="114" text-anchor="middle" data-en="Email">E-mail</text><text x="162" y="114" text-anchor="middle" data-en="Offer">Ajánlat</text></svg>'; },
-    strat: function () { return '<svg class="mg draw d-strat" viewBox="0 0 200 150"><rect class="bar3 q1" style="--d:0" x="16" y="10" width="168" height="27" rx="7"/><rect class="bar3 q2" style="--d:1" x="40" y="45" width="120" height="27" rx="7"/><rect class="bar3 q3" style="--d:2" x="62" y="80" width="76" height="27" rx="7"/><rect class="bar3 q4" style="--d:3" x="82" y="115" width="36" height="27" rx="7"/></svg>'; }
+  /* ---------------- each template's own picture of a service ---------------- */
+  // orbit: a glass object floating over a lit disc; bento: a still-life photograph; screen: an isometric render of a
+  // screen or a device, in a window. A window is three squares and its name in the bar.
+  function win(cls, hu, en, body) { return '<div class="ap ' + cls + '"><div class="ap-bar" aria-hidden="true"><i></i><i></i><i></i>' + t('span', hu, en) + '</div><div class="ap-in">' + body + '</div></div>'; }
+  T.win = win;
+  T.vis = {
+    orbit: function (d) { return '<div class="gv"><i class="disc" aria-hidden="true"></i>' + T.pic('assets/so-' + d + '.webp', ' width="600" height="600"') + '</div>'; },
+    bento: function (d) { return '<figure class="ph">' + T.pic('assets/sb-' + d + '.webp', ' width="960" height="720"') + '</figure>'; },
+    screen: function (d, s) { return win('ap-iso', s.hu, s.en, '<div class="iso">' + T.pic('assets/ss-' + d + '.webp', ' width="900" height="675"') + '</div>'); }
   };
 
   /* ---------------- blocks: written once, each page lays them out its own way ---------------- */
-  // services. 'grid': a card per service with its scene; 'list': a list with one panel (view) beside it; 'acc': rows that open
-  T.services = function (el, variant, view) {
-    if (variant === 'grid') {
-      el.innerHTML = T.SVC.map(function (s) { return '<li class="sv"><div class="scene"><div class="dv">' + T.scene[s.d]() + '</div></div>' + t('h3', s.hu, s.en) + t('p', s.thu, s.ten) + '</li>'; }).join('');
+  // services, each template its own way: 'grid' (orbit) a glass card per service; 'tiles' (bento) a board of photographs;
+  // 'list' (screen) a list with one window beside it (view) that shows the row in hand
+  T.services = function (el, variant, look, view) {
+    var vis = T.vis[look];
+    if (variant !== 'list') {
+      el.innerHTML = T.SVC.map(function (s, i) { return '<li class="sv sv' + i + '"><div class="dv">' + vis(s.d, s) + '</div><div class="sv-t">' + (variant === 'tiles' ? '<span class="no num" aria-hidden="true">0' + (i + 1) + '</span>' : '') + t('h3', s.hu, s.en) + t('p', s.thu, s.ten) + '</div></li>'; }).join('');
       see($$('.sv', el), function (li, on) { $('.dv', li).classList.toggle('is-on', on); }, 0.35);
-    } else if (variant === 'acc') {
-      el.innerHTML = T.SVC.map(function (s, i) { return '<li class="ac"><button type="button" aria-expanded="false" aria-controls="ac' + i + '">' + t('h3', s.hu, s.en) + '<i class="plus" aria-hidden="true"></i></button><div class="pan" id="ac' + i + '"><div class="pan-in">' + t('p', s.thu, s.ten) + '<div class="scene"><div class="dv">' + T.scene[s.d]() + '</div></div></div></div></li>'; }).join('');
-      var open = function (li) { $$('.ac', el).forEach(function (o) { var on = o === li && !o.classList.contains('is-open'); o.classList.toggle('is-open', on); $('button', o).setAttribute('aria-expanded', String(on)); $('.dv', o).classList.toggle('is-on', on); }); };
-      el.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) open(b.parentNode); });
-      open($('.ac', el));
     } else {
       var on = -1, hoverAt = 0;
       el.innerHTML = T.SVC.map(function (s, i) { return '<li><button type="button" data-svc="' + i + '">' + t('h3', s.hu, s.en) + t('p', s.thu, s.ten) + '</button></li>'; }).join('');
-      view.innerHTML = T.SVC.map(function (s) { return '<div class="dv">' + T.scene[s.d]() + '</div>'; }).join('');
+      view.innerHTML = T.SVC.map(function (s) { return '<div class="dv">' + vis(s.d, s) + '</div>'; }).join('');
       var set = function (i) { if (i === on) return; on = i; $$('li', el).forEach(function (li, k) { li.classList.toggle('is-on', k === i); }); $$('.dv', view).forEach(function (d, k) { d.classList.toggle('is-on', k === i); }); };
       el.addEventListener('pointerover', function (e) { var b = e.target.closest('[data-svc]'); if (b && fine) { hoverAt = performance.now(); set(+b.dataset.svc); } });
       el.addEventListener('focusin', function (e) { var b = e.target.closest('[data-svc]'); if (b) { hoverAt = performance.now(); set(+b.dataset.svc); } });
@@ -117,28 +117,48 @@
   T.voices = function (el) {
     el.innerHTML = T.QS.map(function (q) { return '<li><i class="av" aria-hidden="true">' + esc(q.who.charAt(0)) + '</i><div class="qb">' + t('blockquote', q.hu, q.en) + t('cite', q.who, q.whoEn) + '</div></li>'; }).join('');
   };
-  T.people = function (el) {
-    el.innerHTML = '<div class="founder"><figure data-sc-in><img src="assets/oliver-founder.jpg" alt="Olivér, a SocialStream alapítója" data-en-alt="Olivér, founder of SocialStream" width="1000" height="1250" loading="lazy"></figure><div class="copy">' +
-      '<h2 class="h-l" id="tm-h" data-sc-in><span data-l="hu">A korszakváltást <em>belülről</em> láttam.</span><span data-l="en">I saw the shift from the <em>inside</em>.</span></h2>' +
-      t('p', 'Dániai tanulmányaim alatt szereztem meg az első ügyfelemet. Aztán Meta Marketing Pro-ként közelről láttam, hogyan gondolkodnak a legkomolyabb márkák, amikor valódi pénz van a kampányban. 2022-ben alapítottam a SocialStreamet; azóta 300M+ Ft büdzsét kezeltünk.', 'I landed my first client while studying in Denmark. Then, as a Meta Marketing Pro, I saw up close how the most serious brands think when there is real money in a campaign. I founded SocialStream in 2022; since then we have managed 300M+ Ft in budget.', 'body') +
-      t('p', 'Olivér, alapító és kampánystratéga', 'Olivér, founder and campaign strategist', 'kicker') + '</div></div>' +
-      '<ul class="crew" data-sc-in data-sc-stagger="70">' + T.TEAM.map(function (m) { return '<li><img src="' + m.img + '" srcset="' + m.img + ' 400w, ' + m.img.replace('-sm', '') + ' 800w" sizes="(max-width: 860px) 112px, 30vw" alt="' + m.n + '" width="400" height="500" loading="lazy"><b>' + m.n + '</b>' + t('span', m.r[0], m.r[1]) + t('p', m.l[0], m.l[1]) + '</li>'; }).join('') + '</ul>' +
-      '<div class="fit">' + t('p', 'Olyan márkákkal dolgozunk, amelyek megbízható, stabil bevétellel rendelkeznek, hosszú távú sikerre törekszenek, és befektetésnek tekintik a marketinget.', 'We work with brands that have reliable, stable revenue, aim for long-term success and see marketing as an investment.', 'body') + t('p', 'Havonta legfeljebb két új partner.', 'At most two new partners a month.', 'big2') + '</div>';
+  // people: the founder's story and the crew of three. orbit: the three on one orbit, the founder in front;
+  // screen: a team window, the founder's profile first; bento: the founder as a magazine portrait, the crew in ruled columns
+  var STORY = ['Dániai tanulmányaim alatt szereztem meg az első ügyfelemet. Aztán Meta Marketing Pro-ként közelről láttam, hogyan gondolkodnak a legkomolyabb márkák, amikor valódi pénz van a kampányban. 2022-ben alapítottam a SocialStreamet; azóta 300M+ Ft büdzsét kezeltünk.', 'I landed my first client while studying in Denmark. Then, as a Meta Marketing Pro, I saw up close how the most serious brands think when there is real money in a campaign. I founded SocialStream in 2022; since then we have managed 300M+ Ft in budget.'];
+  function peopleHead() {
+    return '<h2 class="h-l" id="tm-h" data-sc-in><span data-l="hu">A korszakváltást <em>belülről</em> láttam.</span><span data-l="en">I saw the shift from the <em>inside</em>.</span></h2>' +
+      t('p', STORY[0], STORY[1], 'body') + t('p', 'Olivér, alapító és kampánystratéga', 'Olivér, founder and campaign strategist', 'kicker');
+  }
+  function face(m, big) {
+    return big ? '<img src="assets/oliver-founder.jpg" alt="Olivér, a SocialStream alapítója" data-en-alt="Olivér, founder of SocialStream" width="1000" height="1250" loading="lazy">'
+      : '<img src="' + m.img + '" srcset="' + m.img + ' 400w, ' + m.img.replace('-sm', '') + ' 800w" sizes="(max-width: 860px) 112px, 30vw" alt="' + m.n + '" width="400" height="500" loading="lazy">';
+  }
+  T.people = function (el, look) {
+    var says = function (m) { return '<b>' + m.n + '</b>' + t('span', m.r[0], m.r[1]) + t('p', m.l[0], m.l[1]); };
+    var crew = function (cls, order, li) { return '<ul class="crew ' + cls + '" data-sc-in data-sc-stagger="80">' + order.map(function (k, i) { return li(T.TEAM[k], i, k); }).join('') + '</ul>'; };
+    var fit = '<div class="fit">' + t('p', 'Olyan márkákkal dolgozunk, amelyek megbízható, stabil bevétellel rendelkeznek, hosszú távú sikerre törekszenek, és befektetésnek tekintik a marketinget.', 'We work with brands that have reliable, stable revenue, aim for long-term success and see marketing as an investment.', 'body') + t('p', 'Havonta legfeljebb két új partner.', 'At most two new partners a month.', 'big2') + '</div>';
+    if (look === 'orbit') {
+      el.innerHTML = '<div class="o-head">' + peopleHead() + '</div><div class="o-crew"><i class="o-path" aria-hidden="true"></i>' +
+        crew('orb', [1, 0, 2], function (m, i, k) { return '<li' + (k === 0 ? ' class="is-f"' : '') + '><figure>' + face(m, k === 0) + '</figure>' + says(m) + '</li>'; }) + '</div>' + fit;
+    } else if (look === 'screen') {
+      el.innerHTML = '<div class="s-team"><div class="copy">' + peopleHead() + '</div>' +
+        win('s-dir', 'Csapat', 'Team', crew('dir', [0, 1, 2], function (m, i, k) { return '<li' + (k === 0 ? ' class="me"' : '') + '><figure>' + face(m, k === 0) + '</figure><div>' + says(m) + '</div></li>'; })) + '</div>' + fit;
+    } else {
+      el.innerHTML = '<div class="e-lead"><figure class="e-fig" data-sc-in>' + face(T.TEAM[0], true) + t('figcaption', 'Olivér, alapító', 'Olivér, founder') + '</figure><div class="copy">' + peopleHead() + '</div></div>' +
+        crew('ed', [0, 1, 2], function (m, i) { return '<li><span class="no num" aria-hidden="true">0' + (i + 1) + '</span><figure>' + face(m) + '</figure>' + says(m) + '</li>'; }) + fit;
+    }
   };
-  T.audit = function (el) {
+  // the audit: the same form everywhere; screen sets it in a window
+  T.audit = function (el, look) {
     var opt = function (v, hu, en) { return '<option value="' + v + '"' + (en ? ' data-en="' + esc(en) + '"' : '') + '>' + esc(hu) + '</option>'; };
     var fld = function (id, name, hu, en, more) { return '<div class="field"><label for="' + id + '" data-en="' + esc(en) + '">' + esc(hu) + '</label><input id="' + id + '" name="' + name + '"' + (more || '') + '><span class="err" id="e-' + name + '"></span></div>'; };
-    el.innerHTML = '<div class="copy">' +
+    var copy = '<div class="copy">' +
       '<h2 class="h-l" id="au-h" data-sc-in><span data-l="hu">A piacod már az új korban jár. A marketinged <em>is</em>?</span><span data-l="en">Your market already lives in the new age. Does your <em>marketing</em>?</span></h2>' +
       t('p', '30 perces ingyenes audit: megnézzük a kampányaidat, a landing page-edet és az ajánlatodat, és őszintén megmondjuk, hol játszol még a régi kor szabályaival, még fizetés előtt.', 'A free 30-minute audit: we look at your campaigns, your landing page and your offer, and tell you honestly where you still play by the old rules, before you pay anything.', 'body') +
-      '<dl class="specs"><div>' + t('dt', 'Hossz', 'Length') + t('dd', '30 perc', '30 minutes') + '</div><div>' + t('dt', 'Ár', 'Price') + t('dd', 'Ingyenes, kötelezettség nélkül', 'Free, no obligation') + '</div><div>' + t('dt', 'Kapacitás', 'Capacity') + t('dd', 'Havonta legfeljebb két új partner', 'At most two new partners a month') + '</div><div>' + t('dt', 'Nem neked, ha', 'Not for you if') + t('dd', 'egy éjszaka alatti sikert vagy olcsó félmegoldást keresel', 'you want overnight success or cheap half-solutions') + '</div></dl></div>' +
-      '<form class="app" id="appform" novalidate data-sc-in>' + fld('f-name', 'name', 'Neved', 'Your name', ' autocomplete="name" required') + fld('f-email', 'email', 'E-mail', 'Email', ' type="email" autocomplete="email" required') + fld('f-brand', 'brand', 'Cég vagy márka', 'Company or brand', ' autocomplete="organization" required') + fld('f-web', 'web', 'Weboldal vagy Instagram', 'Website or Instagram', ' autocomplete="url"') +
+      '<dl class="specs"><div>' + t('dt', 'Hossz', 'Length') + t('dd', '30 perc', '30 minutes') + '</div><div>' + t('dt', 'Ár', 'Price') + t('dd', 'Ingyenes, kötelezettség nélkül', 'Free, no obligation') + '</div><div>' + t('dt', 'Kapacitás', 'Capacity') + t('dd', 'Havonta legfeljebb két új partner', 'At most two new partners a month') + '</div><div>' + t('dt', 'Nem neked, ha', 'Not for you if') + t('dd', 'egy éjszaka alatti sikert vagy olcsó félmegoldást keresel', 'you want overnight success or cheap half-solutions') + '</div></dl></div>';
+    var form = '<form class="app" id="appform" novalidate data-sc-in>' + fld('f-name', 'name', 'Neved', 'Your name', ' autocomplete="name" required') + fld('f-email', 'email', 'E-mail', 'Email', ' type="email" autocomplete="email" required') + fld('f-brand', 'brand', 'Cég vagy márka', 'Company or brand', ' autocomplete="organization" required') + fld('f-web', 'web', 'Weboldal vagy Instagram', 'Website or Instagram', ' autocomplete="url"') +
       '<div class="field"><label for="f-budget" data-en="Monthly marketing budget">Havi marketing büdzsé</label><select id="f-budget" name="budget">' + opt('', 'Válassz sávot', 'Choose a range') + opt('lt300', '300K Ft alatt', 'Under 300K Ft') + opt('300-1m', '300K–1M Ft') + opt('1-3m', '1M–3M Ft') + opt('gt3m', '3M Ft felett', 'Over 3M Ft') + '</select><span class="err"></span></div>' +
       '<div class="field"><label for="f-goal" data-en="Main goal">Fő cél</label><select id="f-goal" name="goal">' + opt('', 'Válassz célt', 'Choose a goal') + opt('sales', 'Több eladás (webshop)', 'More sales (e-commerce)') + opt('leads', 'Több érdeklődő és ajánlatkérés', 'More leads and enquiries') + opt('brand', 'Márka és tartalom', 'Brand and content') + opt('web', 'Weboldal vagy landing', 'Website or landing page') + '</select><span class="err"></span></div>' +
       '<fieldset><legend data-en="What interests you">Ami érdekel</legend><div class="chips" id="chips"></div></fieldset>' +
       '<div class="field full"><label for="f-msg" data-en="Where are you now?">Hol tartasz most?</label><textarea id="f-msg" name="msg"></textarea><span class="err"></span></div>' +
       '<div class="actions"><button class="btn" type="submit" data-en="Request my free audit">Kérem az ingyenes auditot</button><span class="direct"><span data-en="Or write to us:">Vagy írj nekünk:</span> <a href="mailto:hello@socialstream.hu">hello@socialstream.hu</a><button type="button" class="copy-mini" id="copyMail" data-en="Copy address">Cím másolása</button></span></div>' +
       '<div class="sending" id="sending" hidden><i></i><span id="stext"></span></div><div class="sent" id="sent" hidden aria-live="polite"></div></form>';
+    el.innerHTML = copy + (look === 'screen' ? win('s-form', 'Audit kérés', 'Audit request', form) : form);
     var form = $('#appform'), chips = $('#chips'), sent = $('#sent'), sending = $('#sending'), chosen = [], lastBody = '';
     function renderChips() { chips.innerHTML = SS.TOPICS.map(function (c) { return '<label class="chip"><input type="checkbox" value="' + c.id + '"' + (chosen.indexOf(c.id) > -1 ? ' checked' : '') + '><span>' + esc(SS.T(c)) + '</span></label>'; }).join(''); }
     chips.addEventListener('change', function (e) { var id = e.target.value, k = chosen.indexOf(id); if (e.target.checked && k < 0) chosen.push(id); else if (!e.target.checked && k > -1) chosen.splice(k, 1); });
@@ -175,9 +195,11 @@
     var set = '<div class="tick-set"><span><b>81×</b>' + t('i', 'ROAS, ajtó webshop', 'ROAS, door webshop') + '</span><span><b>79M Ft</b>' + t('i', 'egy hét alatt, B2B', 'in one week, B2B') + '</span><span><b>23×</b>' + t('i', 'ROAS, ünnepi kampány', 'ROAS, holiday campaign') + '</span><span><b>105 Ft</b>' + t('i', 'jelentkezőnként', 'per registrant') + '</span><span><b>300M+ Ft</b>' + t('i', 'kezelve 2022 óta', 'managed since 2022') + '</span></div>';
     el.innerHTML = '<div class="tick-run">' + set + set + '</div>';
   };
-  // a reel in a ring that fills as it is watched; the old rules struck out and the new ones in
-  T.ring = function (el, n) {
-    el.innerHTML = '<svg viewBox="0 0 104 104" aria-hidden="true"><defs><linearGradient id="ringg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--amber)"/><stop offset="1" style="stop-color:var(--rose)"/></linearGradient></defs><circle class="trk" cx="52" cy="52" r="47"/><circle class="bar2" cx="52" cy="52" r="47" pathLength="100"/></svg><div class="card9">' + T.pic(T.PIC(n || 2)) + '</div><p class="pct"><b class="num">0%</b>' + t('span', 'Végignézve', 'Watched to the end') + '</p>';
+  // law II's figure: a reel in a ring that fills as it is watched, or (bento) the reel beside a large figure over a straight bar
+  T.ring = function (el, n, kind) {
+    var pct = '<p class="pct"><b class="num">0%</b>' + t('span', 'Végignézve', 'Watched to the end') + '</p>';
+    if (kind === 'bar') el.innerHTML = '<div class="card9">' + T.pic(T.PIC(n || 2)) + '</div><div class="wb">' + pct + '<i class="track"><u></u></i></div>';
+    else el.innerHTML = '<svg viewBox="0 0 104 104" aria-hidden="true"><defs><linearGradient id="ringg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--amber)"/><stop offset="1" style="stop-color:var(--rose)"/></linearGradient></defs><circle class="trk" cx="52" cy="52" r="47"/><circle class="bar2" cx="52" cy="52" r="47" pathLength="100"/></svg><div class="card9">' + T.pic(T.PIC(n || 2)) + '</div>' + pct;
     var b = $('.pct b', el), was = '';
     return function (v) { v = clamp(v, 0, 1); var s = v.toFixed(3); if (s === was) return; was = s; el.style.setProperty('--wv', s); b.textContent = Math.round(v * 100) + '%'; };
   };

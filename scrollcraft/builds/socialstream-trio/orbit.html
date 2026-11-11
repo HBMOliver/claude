@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..500;1,9..144,300..500&family=Plus+Jakarta+Sans:wght@400..800&display=swap">
 <link rel="stylesheet" href="scrollcraft.css">
 <link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="look-orbit.css">
 <style>
 /* Orbit: a centred showcase. Every section is one thing in the middle of the screen with a few
    large, clear shapes behind it (after mastermind.com): the phone as the product shot with
@@ -62,13 +63,8 @@
   transform: rotate(calc((var(--a) * var(--k, 0) + var(--j) * (1 - var(--k, 0))) * 1deg)); transition: transform 600ms var(--out); }
 @media (hover: hover) { .fan .card9:hover { z-index: 9; transform: rotate(calc(var(--a) * var(--k, 0) * 1deg)) translateY(-7%) scale(1.05); } }
 
-/* services: a card each, with its scene */
+/* services: a glass card each (look-orbit.css) */
 .sv-grid { list-style: none; margin: clamp(30px, 5vh, 56px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 1.7vw, 24px); text-align: left; width: 100%; }
-.sv { display: grid; gap: 10px; align-content: start; padding: 12px 12px 22px; border-radius: var(--r); background: var(--card); box-shadow: var(--frame); transition: transform 420ms var(--out); }
-@media (hover: hover) { .sv:hover { transform: translateY(-6px); } }
-.sv .scene { border-radius: calc(var(--r) - 8px); box-shadow: none; background: var(--bg); }
-.sv h3 { margin: 8px 8px 0; font: 700 1.32rem/1.12 var(--sans); letter-spacing: -0.03em; }
-.sv p { margin: 0 8px; color: var(--fg2); font-size: 0.98rem; line-height: 1.5; }
 
 /* results: four numbers, each with the client's still life tucked in the corner */
 .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(14px, 1.7vw, 24px); margin-top: clamp(30px, 5vh, 56px); text-align: left; width: 100%; }
@@ -179,7 +175,7 @@
       <a class="btn" href="#audit" data-sc-in data-en="Free audit">Ingyenes audit</a>
     </div>
   </section>
-  <div class="tick f-cream" id="tick" aria-hidden="true"></div>
+  <div class="tick f-light" id="tick" aria-hidden="true"></div>
 
   <!-- law I, the peak: ten thousand, counted across the whole screen; then the forty -->
   <section class="sec f-night law law1" id="torvenyek" data-field="night" data-sc-act="pin" data-sc-span="2" aria-labelledby="l1-h">
@@ -219,7 +215,7 @@
   </section>
 
   <!-- law III: the old rules are struck out, the new ones come in -->
-  <section class="sec sheet f-cream flow law law3" data-field="cream" data-sc-act="flow" aria-labelledby="l3-h">
+  <section class="sec sheet f-light flow law law3" data-field="light" data-sc-act="flow" aria-labelledby="l3-h">
     <div class="shapes" aria-hidden="true">
       <i class="shape torus bob" style="--x:95%;--y:86%;--s:clamp(150px,20vw,320px);--d:1.3;--rot:60deg;--i:1"></i>
       <i class="shape sphere v bob" style="--x:5%;--y:14%;--s:clamp(54px,7vw,110px);--d:2.2;--i:3"></i>
@@ -276,7 +272,7 @@
   </section>
 
   <!-- voices -->
-  <section class="sec sheet f-cream flow voices" data-field="cream" data-sc-act="flow" aria-labelledby="vo-h">
+  <section class="sec sheet f-light flow voices" data-field="light" data-sc-act="flow" aria-labelledby="vo-h">
     <div class="shapes" aria-hidden="true">
       <i class="shape rings" style="--x:50%;--y:56%;--s:min(120vh,100vw);--d:0.3"></i>
       <i class="shape sphere bob" style="--x:8%;--y:20%;--s:clamp(60px,8vw,130px);--d:2.2;--i:1"></i>
@@ -299,7 +295,7 @@
   </section>
 
   <!-- the audit -->
-  <section class="sec sheet f-cream flow audit" id="audit" data-field="cream" data-sc-act="flow" aria-labelledby="au-h">
+  <section class="sec sheet f-light flow audit" id="audit" data-field="light" data-sc-act="flow" aria-labelledby="au-h">
     <div class="shapes" aria-hidden="true"><i class="shape torus thin" style="--x:97%;--y:9%;--s:clamp(180px,24vw,380px);--d:1.1;--rot:200deg"></i></div>
     <div class="wrap" id="auditWrap"></div>
   </section>
@@ -322,7 +318,7 @@
 <script>
 (function () {
   var $ = SS.$, $$ = SS.$$, clamp = SS.clamp, reduce = SS.reduce, T = TPL;
-  T.ticker($('#tick')); T.services($('#svc'), 'grid'); T.results($('#res')); T.voices($('#quotes')); T.people($('#people')); T.audit($('#auditWrap')); T.footer($('#footIn'));
+  T.ticker($('#tick')); T.services($('#svc'), 'grid', 'orbit'); T.results($('#res')); T.voices($('#quotes')); T.people($('#people'), 'orbit'); T.audit($('#auditWrap'), 'orbit'); T.footer($('#footIn'));
 
   // the claim: the second sentence and the For You feed arrive together, then the notes
   var claim = $('.claim'), phone = T.phone($('#shot'));

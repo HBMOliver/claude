@@ -88,3 +88,29 @@ Screen (the count inside the phone).
 - The shared blocks (services, results, voices, people, the form) are written by
   one script so the three stay in step while a choice is made. The chosen
   template gets them written into its HTML.
+
+## Round 2 (2026-11-11)
+
+What the client said about round 1: "even tho i like them, they are similar. the
+cirlces in the background, scream color, same basic stock photos/ for weboldal and
+fizetett hirdetes"; "doesnt feel as premium as mastermind even tho i like multiple
+elements"; and, while round 2 was being made, "i hope you are making 3 different
+styles, colors and templates now as well".
+
+So structure was not enough: the three shared the concentric rings, the same cream
+sections and the same drawn service scenes. Round 2 keeps each structure and gives
+each template its own look as well (the light, Mastermind-like version with new copy
+is a separate build, socialstream-daylight):
+
+| | Orbit | Screen | Bento |
+|---|---|---|---|
+| Look | night glass | product UI | editorial warm |
+| Light field | lilac | ice | warm stone |
+| Fonts | Plus Jakarta Sans, Fraunces | Space Grotesk, JetBrains Mono | Instrument Serif, Inter Tight |
+| Background | the only one with rings, spheres, a hoop, a pill | a fine grid, dotted guides, crop marks; no circles or glows | paper grain, straight shafts of light, folio lines and outlined numerals |
+| Services | glass and chrome objects on lit discs, in frosted cards | isometric renders of screens and devices, in windows | still-life photographs in a board of tiles |
+| Results | the drawn objects, solid | the drawn objects as lit teal lines | a ledger of numbers, no objects |
+| People | three round portraits on one orbit | a team window | a magazine portrait, the crew in ruled columns, printed monochrome |
+| Audit | centred, frosted spec chips | a mono spec sheet beside a windowed form | numbered specs, an underline-only form |
+| Footer | the name in serif among shapes | the name in bold grotesk inside crop marks | the name in serif italic between hairlines |
+

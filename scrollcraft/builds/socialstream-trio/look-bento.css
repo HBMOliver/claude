@@ -1,0 +1,131 @@
+/* Bento's own look: editorial warm. Ember's coal, umber, copper, amber and clay, and no circles or
+   rings anywhere. Paper grain lies on every ground and light falls across the dark ones in straight
+   shafts; each section opens with a folio line (its number and its name over a hairline) and an
+   oversized numeral; corners are nearly square; the light field is a warm stone (base.css,
+   .p-ember); every service is a still-life photograph; portraits are printed warm and monochrome
+   until the cursor brings their colour back. Instrument Serif for display, Inter Tight for text. */
+.t-bento { --sans: "Inter Tight", "Helvetica Neue", Arial, sans-serif; --serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --r: 6px; --r-s: 4px; --sheet: 0px;
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0' intercept='1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.f-night, .f-plum { --btn-bg: var(--warm); --btn-ink: var(--ink2); }
+
+/* ---------- the ground: paper grain, and light in straight shafts across the dark ---------- */
+.sec:not(.hero)::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: var(--grain) 0 0 / 240px 240px; opacity: 0.13; mix-blend-mode: overlay; }
+.sec.f-light::before { opacity: 0.42; }
+.sec.f-night::after, .sec.f-plum::after, .scard.f-night::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(108deg, transparent 0 20%, rgba(255, 196, 140, 0.05) 20% 30%, transparent 30% 37%, rgba(255, 196, 140, 0.032) 37% 40.5%, transparent 40.5%); }
+.sec.sheet { box-shadow: inset 0 1px 0 color-mix(in srgb, var(--warm) 10%, transparent); }
+.sec.sheet.f-light { box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ink2) 14%, transparent); }
+
+/* each section opens with a folio line, and an oversized numeral stands behind it */
+.folio { margin: 0 0 clamp(26px, 5vh, 54px); display: flex; justify-content: space-between; gap: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--rule);
+  font: 500 12px/1 var(--sans); text-transform: uppercase; letter-spacing: 0.16em; color: var(--fg2); }
+.folio .num { color: var(--tag); }
+.gnum { position: absolute; z-index: 0; top: clamp(60px, 11vh, 130px); right: max(calc(var(--gut) - 0.04em), calc(50% - var(--max) / 2 + var(--gut))); margin: 0;
+  font: 400 clamp(11rem, 27vw, 25rem)/0.76 var(--serif); letter-spacing: -0.05em; color: transparent; -webkit-text-stroke: 1px color-mix(in srgb, var(--fg) 16%, transparent); pointer-events: none; user-select: none; }
+
+/* ---------- type: a display serif over a plain sans ---------- */
+:is(.h-xl, .h-l, .h-m, .lead) { font-family: var(--serif); font-weight: 400; letter-spacing: -0.02em; }
+.h-xl { font-size: clamp(2.9rem, 7vw, 7.2rem); line-height: 0.92; }
+.h-l { font-size: clamp(2.5rem, 5vw, 4.8rem); line-height: 0.98; }
+.h-m { font-size: clamp(1.7rem, 3vw, 2.6rem); line-height: 1.02; }
+.lead { line-height: 1.05; }
+:is(.h-xl, .h-l, .h-m, .lead) em { font: italic 400 1em/1 var(--serif); letter-spacing: -0.01em; padding: 0 0.06em 0.08em 0; background: none; -webkit-background-clip: border-box; background-clip: border-box; color: var(--g1); -webkit-text-fill-color: currentColor; }
+.kicker { padding: 0; gap: 12px; border-radius: 0; background: none; font: 500 12px/1 var(--sans); text-transform: uppercase; letter-spacing: 0.16em; }
+.kicker::before { width: 28px; height: 1px; aspect-ratio: auto; border-radius: 0; }
+.fig { font-weight: 400; letter-spacing: -0.03em; }
+.btn { border-radius: 3px; font: 600 14.5px/1 var(--sans); letter-spacing: 0.01em; }
+.wm { font: 400 1.62rem/1 var(--serif); letter-spacing: -0.01em; }
+.bar .btn { border-radius: 3px; }
+.reel .toggle { border-radius: 4px; }
+.rdisc { width: 104px; height: 42px; margin: -21px 0 0 -52px; border-radius: 3px; font: 600 12px/1 var(--sans); text-transform: uppercase; letter-spacing: 0.12em; }
+@media (hover: none) { .reel.is-paused .shade::after { border-radius: 6px; } }
+.rules > div { border-radius: var(--r-s); }
+.rules .new li::before { border-radius: 2px; }
+.tag { border-radius: 3px; }
+
+/* ---------- the numbers, running: serif figures between hairlines ---------- */
+.tick { border-block: 1px solid var(--rule); }
+.tick-set b { font: 400 clamp(2.1rem, 4vw, 3.4rem)/1 var(--serif); letter-spacing: -0.02em; }
+.tick-set i { font: 500 11.5px/1 var(--sans); text-transform: uppercase; letter-spacing: 0.14em; }
+.tick-set span::before { width: 1px; height: 1.8em; aspect-ratio: auto; border-radius: 0; transform: none; background: var(--rule); }
+
+/* ---------- law II: the reel beside one large figure over a straight bar ---------- */
+.wfig { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(18px, 3vw, 40px); align-items: end; justify-self: center; width: min(100%, 540px); }
+.wfig .card9 { width: clamp(118px, 13vw, 180px); border-radius: var(--r-s); }
+.wfig .wb { display: grid; gap: 14px; padding-bottom: 6px; }
+.wfig .pct { margin: 0; display: grid; gap: 8px; }
+.wfig .pct b { font: 400 clamp(4.2rem, 9vw, 8.4rem)/0.8 var(--serif); letter-spacing: -0.03em; }
+.wfig .pct span { font: 500 12px/1.2 var(--sans); text-transform: uppercase; letter-spacing: 0.14em; color: var(--fg2); }
+.wfig .track { display: block; height: 2px; background: color-mix(in srgb, var(--fg) 22%, transparent); }
+.wfig .track u { display: block; height: 100%; background: var(--fg); transform-origin: left; transform: scaleX(var(--wv, 0)); }
+
+/* ---------- services: a board of still-life photographs ---------- */
+.sv-tiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(10px, 1.2vw, 18px); }
+.sv-tiles .sv { grid-column: span 6; display: grid; grid-template-rows: auto 1fr; overflow: hidden; border-radius: var(--r); background: var(--card); box-shadow: var(--frame); }
+.sv-tiles .sv0, .sv-tiles .sv3 { grid-column: span 7; }
+.sv-tiles .sv1, .sv-tiles .sv2 { grid-column: span 5; }
+.ph { margin: 0; height: clamp(230px, 25vw, 360px); overflow: hidden; background: #2a1c15; }
+.ph img { width: 100%; height: 100%; object-fit: cover; transition: transform 1400ms var(--out); }
+@media (hover: hover) { .sv-tiles .sv:hover .ph img { transform: scale(1.04); } }
+.sv-t { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 16px; row-gap: 8px; align-content: start; padding: clamp(16px, 1.7vw, 26px); }
+.sv-t .no { grid-row: span 2; font: 400 clamp(2.4rem, 3.2vw, 3.3rem)/0.8 var(--serif); color: var(--tag); }
+.sv-t h3 { margin: 0; font: 400 clamp(1.55rem, 2.1vw, 2.1rem)/1.02 var(--serif); letter-spacing: -0.01em; }
+.sv-t p { margin: 0; color: var(--fg2); font-size: 0.97rem; line-height: 1.5; }
+
+/* ---------- people: a magazine portrait, the crew in ruled columns ---------- */
+.e-lead { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 6fr); gap: clamp(28px, 6vw, 100px); align-items: end; }
+.e-fig { margin: 0; display: grid; gap: 12px; }
+.e-fig img, .crew.ed img { filter: grayscale(1) sepia(0.3) contrast(1.06) brightness(0.98); transition: filter 700ms var(--ease); }
+@media (hover: hover) { .e-fig:hover img, .crew.ed li:hover img { filter: none; } }
+.e-fig img { width: 100%; max-height: 74vh; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 12%; border-radius: var(--r); }
+.e-fig figcaption { padding-top: 10px; border-top: 1px solid var(--rule); font: 500 11.5px/1.3 var(--sans); text-transform: uppercase; letter-spacing: 0.14em; color: var(--fg2); }
+.e-lead .copy { gap: 22px; padding-bottom: 8px; }
+.crew.ed { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--rule); }
+.crew.ed li { gap: 12px; padding: 22px clamp(14px, 2vw, 30px) 0; border-left: 1px solid var(--rule); }
+.crew.ed li:first-child { padding-left: 0; border-left: 0; }
+.crew.ed .no { font: 400 2.4rem/0.9 var(--serif); color: var(--tag); }
+.crew.ed figure { margin: 0; }
+.crew.ed img { aspect-ratio: 1; object-position: 50% 16%; border-radius: var(--r-s); box-shadow: none; }
+.crew.ed b { font: 400 2rem/1 var(--serif); letter-spacing: -0.01em; }
+.crew.ed span { font: 500 11.5px/1.3 var(--sans); text-transform: uppercase; letter-spacing: 0.12em; }
+
+/* ---------- the audit: two columns and a rule between; the form a printed one ---------- */
+.audit .wrap { gap: 0; }
+.audit .copy { padding-right: clamp(24px, 4vw, 64px); }
+.specs { counter-reset: sp; }
+.specs div { counter-increment: sp; grid-template-columns: 2.6rem 7.5rem minmax(0, 1fr); align-items: baseline; }
+.specs div::before { content: "0" counter(sp); font: 400 1.6rem/1 var(--serif); color: var(--tag); }
+.app { border-radius: 0; background: transparent; box-shadow: none; padding: 0 0 0 clamp(24px, 4vw, 64px); border-left: 1px solid var(--rule); }
+.field label, .app legend { font: 500 11.5px/1.3 var(--sans); text-transform: uppercase; letter-spacing: 0.14em; color: color-mix(in srgb, var(--ink2) 78%, transparent); }
+.field input, .field select { border: 0; border-bottom: 1px solid color-mix(in srgb, var(--ink2) 40%, transparent); border-radius: 0; background: transparent; padding: 10px 0; }
+.field textarea { border-color: color-mix(in srgb, var(--ink2) 32%, transparent); border-radius: 2px; background: transparent; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--ink2); box-shadow: 0 1px 0 0 var(--ink2); }
+.chip span { border-radius: 3px; background: transparent; border-color: color-mix(in srgb, var(--ink2) 32%, transparent); }
+.app .btn { border-radius: 3px; }
+.sent { border-radius: 3px; }
+
+/* ---------- the close: the name in the serif, between hairlines ---------- */
+.foot .wrap { padding-top: clamp(28px, 5vh, 48px); border-top: 1px solid var(--rule); }
+.foot .big { font: 400 100px/0.9 var(--serif); letter-spacing: -0.03em; }
+.foot .big em { font-style: italic; background: none; -webkit-background-clip: border-box; background-clip: border-box; color: var(--g1); -webkit-text-fill-color: currentColor; }
+.frow { font: 500 11.5px/1.7 var(--sans); text-transform: uppercase; letter-spacing: 0.14em; }
+.frow a { text-transform: none; letter-spacing: 0.02em; }
+
+@media (max-width: 860px) {
+  .gnum { font-size: clamp(8rem, 44vw, 12rem); top: 40px; }
+  .sv-tiles { grid-template-columns: minmax(0, 1fr); }
+  .sv-tiles .sv, .sv-tiles .sv0, .sv-tiles .sv1, .sv-tiles .sv2, .sv-tiles .sv3 { grid-column: auto; }
+  .ph { height: auto; aspect-ratio: 4 / 3; }
+  .e-lead { grid-template-columns: minmax(0, 1fr); }
+  .e-fig { width: min(100%, 420px); }
+  .crew.ed { grid-template-columns: minmax(0, 1fr); border-top: 0; }
+  .crew.ed li, .crew.ed li:first-child { grid-template-columns: 96px minmax(0, 1fr); column-gap: 16px; padding: 20px 0; border-left: 0; border-top: 1px solid var(--rule); }
+  .crew.ed .no { display: none; }
+  .crew.ed figure { grid-row: 1 / span 3; }
+  .audit .copy { padding-right: 0; }
+  .app { padding: 28px 0 0; border-left: 0; border-top: 1px solid var(--rule); }
+  .specs div { grid-template-columns: 2.4rem 6.4rem minmax(0, 1fr); }
+  .wfig { grid-template-columns: minmax(0, 92px) minmax(0, 1fr); }
+  .wfig .card9 { width: 92px; }
+}

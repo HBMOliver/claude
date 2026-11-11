@@ -56,8 +56,9 @@ const OWN = {
     await dwell(1, 0.45); ok('law II: the ring is full', (await txt(p, '#ring .pct b')) === '100%', await txt(p, '#ring .pct b'));
     ok('law II lies on law I', (await p.evaluate(() => +document.querySelectorAll('.scard')[0].style.getPropertyValue('--t'))) > 0.9);
     await dwell(2, 0.02); ok('law III: two struck, three in', (await p.evaluate(() => document.querySelectorAll('#rules .is-x').length + '/' + document.querySelectorAll('#rules .is-in').length)) === '2/3');
-    await mid(p, '#svc', 0.3); await p.locator('#svc .ac').nth(2).locator('button').click(); await p.waitForTimeout(700);
-    ok('services: one drawer open at a time', (await p.evaluate(() => [...document.querySelectorAll('#svc .ac')].map(a => +a.classList.contains('is-open')).join(''))) === '001000');
+    // the services are a board of photographs: walk past it so every one has loaded
+    for (const k of [0.15, 0.5, 0.85]) await mid(p, '#svc', k, 600);
+    ok('services: six photographs, all loaded', (await p.evaluate(() => [...document.querySelectorAll('#svc .ph img')].filter(i => i.complete && i.naturalWidth > 0).length)) === 6);
   }
 };
 
@@ -71,7 +72,14 @@ for (const t of which) {
     ok('film plays, bar clear over it', film.src === 'hero-1080.mp4' && !film.paused && film.bar === 'film', JSON.stringify(film));
     await OWN[t](p, ok);
     ok('six services, each with its scene', (await p.evaluate(() => document.querySelectorAll('#svc > li').length + '/' + document.querySelectorAll('.dv').length)) === '6/6');
+    // each template its own picture of a service, and its own ground: circles and the old cream belong to none but orbit
+    const look = await p.evaluate(() => ({ orbit: document.querySelectorAll('#svc .gv img').length, screen: document.querySelectorAll('#viewer .ap-iso .iso img').length, bento: document.querySelectorAll('#svc .ph img').length,
+      shapes: document.querySelectorAll('.rings, .glowb, .sphere, .torus, .pill').length, cream: document.querySelectorAll('.f-cream, [data-field="cream"]').length, mock: document.querySelectorAll('.ap-video, .ap-ads, .ap-web').length }));
+    ok('its own service pictures', look[t] === 6 && look.mock === 0, JSON.stringify(look));
+    ok('no cream; shapes only in orbit', look.cream === 0 && (t === 'orbit' ? look.shapes > 0 : look.shapes === 0), JSON.stringify(look));
     await mid(p, '#res', 0.5, 1900); ok('results counted', (await p.evaluate(() => [...document.querySelectorAll('#res [data-count]')].map(e => e.textContent).join(','))) === '81,79,23,105');
+    const drawn = await p.evaluate(() => { const o = document.querySelector('#res .res-obj'); const e = [...o.querySelectorAll('svg *')].find(x => !x.closest('defs')); return { d: getComputedStyle(o).display, fill: e ? getComputedStyle(e).fill : '' }; });
+    ok('results drawn in the template\'s own way', t === 'bento' ? drawn.d === 'none' : t === 'screen' ? drawn.d !== 'none' && drawn.fill === 'none' : drawn.d !== 'none' && drawn.fill !== 'none', JSON.stringify(drawn));
     ok('four drawn objects, no still lifes', (await p.evaluate(() => document.querySelectorAll('#res svg.obj').length + '/' + document.querySelectorAll('img[src*="case-"], img[data-src*="case-"]').length)) === '4/0');
     ok('six voices, three people', (await p.evaluate(() => document.querySelectorAll('#quotes > li').length + '/' + document.querySelectorAll('.crew > li').length)) === '6/3');
     ok('every picture loaded', (await p.evaluate(() => [...document.images].filter(i => i.currentSrc && i.complete && !i.naturalWidth).length)) === 0);

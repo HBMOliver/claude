@@ -1,7 +1,7 @@
 // node tools/artifact.mjs [orbit|screen|bento ...]   (no argument: all three)
 // Package each template as a claude.ai Artifact page: the host wraps the page in its own
 // <html>/<head>/<body>, so strip those (the body's classes, the palette among them, move to the
-// root element), inline both stylesheets and every local script
+// root element), inline the shared stylesheets, the template's look and every local script
 // (no other script hosts are allowed), and keep assets/ as published files next to the page.
 // Each template is written to dist/<name>/index.html.
 import fs from 'node:fs';
@@ -20,6 +20,8 @@ for (const name of want) {
   head = swap(head, '<title>SocialStream</title>', '<title>' + TITLES[name] + '</title>\n<meta name="claude:viewport-fit-sides" content="cover">');
   head = swap(head, '<link rel="stylesheet" href="scrollcraft.css">', '<style>\n' + fs.readFileSync('scrollcraft.css', 'utf8') + '\n</style>');
   head = swap(head, '<link rel="stylesheet" href="base.css">', '<style>\n' + fs.readFileSync('base.css', 'utf8') + '\n</style>');
+  // each template's own look
+  head = swap(head, '<link rel="stylesheet" href="look-' + name + '.css">', '<style>\n' + fs.readFileSync('look-' + name + '.css', 'utf8') + '\n</style>');
   // the palette class sits on <body> in the page; the host owns <body>, so a first script puts it on the root element,
   // which is there whether or not the host has opened <body> yet
   body = '<script>document.documentElement.classList.add(' + open[1].split(/\s+/).filter(Boolean).map(c => JSON.stringify(c)).join(', ') + ');</script>\n' + body.trim();

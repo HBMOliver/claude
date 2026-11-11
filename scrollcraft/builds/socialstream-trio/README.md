@@ -5,6 +5,14 @@ showcase with large shapes behind a phone), **Screen** (one phone that holds its
 place while captions pass) and **Bento** (a board of tiles, then stacking cards).
 Why three, in the client's words: [BRIEF.md](BRIEF.md).
 
+Round 2 (2026-11-11): the three also look different now, not only move differently.
+Each has its own fonts, light field, background motif, service pictures, people,
+audit and footer, set in `look-orbit.css`, `look-screen.css` and `look-bento.css`:
+Orbit is night glass (the only one with circles and 3D shapes), Screen is product
+UI (a grid, crop marks, isometric renders, Space Grotesk and JetBrains Mono),
+Bento is editorial warm (paper grain, folio lines, still-life photographs,
+Instrument Serif and Inter Tight).
+
 ```bash
 node ../../../.claude/skills/scroll-craft/scripts/serve.mjs --root . --port 4552
 ```
@@ -21,6 +29,11 @@ No build step. Hungarian by default, English through the HU/EN switch.
 - `tpl.js`: the content every page carries (services, results, voices, people,
   the audit, the footer), written into the page once with its English beside it,
   and the shared behaviour. A page calls `TPL.start()` last.
+- `look-orbit.css`, `look-screen.css`, `look-bento.css`: each template's own look,
+  loaded after `base.css`; the root carries `t-orbit`, `t-screen` or `t-bento`.
+- `assets/so-*`, `ss-*`, `sb-*`: the six service pictures of Orbit (glass objects on
+  lit discs), Screen (isometric renders) and Bento (still-life photographs), generated
+  with ElevenLabs (Seedream 5.5).
 - `ss.js`: language, the film, the mailto hand-off (shared with earlier builds).
 - `scrollcraft.js/.css`: the scroll engine. Only Orbit uses its pins; Screen and
   Bento hold their sections with `position: sticky` and read progress themselves.
@@ -33,7 +46,9 @@ another template in another palette, change that one class. `--rose`, `--amber`,
 `--violet` and `--teal` are four accent slots named after Dusk's colours; shapes,
 drawn objects, scenes and the phone all read them, so nothing else needs editing.
 
-A section takes a field class (`f-night`, `f-plum`, `f-glow`, `f-cream`); the bar
+A section takes a field class (`f-night`, `f-plum`, `f-glow`, `f-light`); `f-light`
+is each palette's own light ground (lilac for Dusk, ice for Lagoon, stone for Ember,
+set as `--lt` in the palette block), so no two templates share it. The bar
 and the browser's theme colour are read from the field under the bar.
 
 ## Background shapes
@@ -41,7 +56,7 @@ and the browser's theme colour are read from the field under the bar.
 `.shapes` is a layer inside a section; a `.shape` in it is placed with `--x`,
 `--y`, `--s` and moves a little with the cursor and its own travel by `--d`.
 Kinds: `sphere` (`v`, `t`, `a`), `torus` (`thin`), `pill` (`v`), `rings`,
-`glowb` (`g1`..`g4`), `svg.ribbon`. The rule: a solid shape may stand behind a
+`glowb` (`g1`..`g4`), `svg.ribbon`. Since round 2 only Orbit uses them. The rule: a solid shape may stand behind a
 card, a phone or the form and lean out from it; it is never placed behind
 running text. `main` clips sideways, so a shape or a turned card cannot widen
 the page on a phone.
@@ -49,7 +64,9 @@ the page on a phone.
 ## Drawn objects
 
 `TPL.obj('door' | 'hall' | 'watch' | 'webinar')` returns an SVG built from five
-palette gradients. They stand where the case still lifes used to.
+palette gradients. They stand where the case still lifes used to. Orbit shows them
+solid; Screen draws them as lit teal lines; Bento leaves them out and lets the
+numbers stand alone in its ledger.
 
 ## How each page moves
 

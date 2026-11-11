@@ -1,0 +1,136 @@
+/* Screen's own look: product UI. Lagoon's navy, petrol, teal, coral and sky, and no circles,
+   spheres, rings or round glows anywhere. The ground is a fine grid with dotted layout guides at
+   the edges of the content; windows carry crop marks at their corners; a word in accent is
+   selected (a box round it), not set in italic; the phone stands selected on an artboard; every
+   service is an isometric render of a screen or a device, in matte navy and petrol, in a window. Space Grotesk, with JetBrains Mono for labels. Its light
+   field is ice (base.css, .p-lagoon). */
+.t-screen { --sans: "Space Grotesk", "Helvetica Neue", Arial, sans-serif; --serif: "Space Grotesk", "Helvetica Neue", Arial, sans-serif; --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --r: 14px; --r-s: 10px; --sheet: 0px; --sel: var(--teal);
+  --grid: color-mix(in srgb, var(--warm) 5.5%, transparent); --guide: color-mix(in srgb, var(--warm) 16%, transparent); --cm: color-mix(in srgb, var(--warm) 46%, transparent); }
+.f-light { --grid: color-mix(in srgb, var(--ink2) 6%, transparent); --guide: color-mix(in srgb, var(--ink2) 20%, transparent); --cm: color-mix(in srgb, var(--ink2) 42%, transparent); --sel: #0b7a78; }
+
+/* ---------- the ground: a fine grid, and dotted guides at the edges of the content ---------- */
+.sec:not(.hero) { background: linear-gradient(var(--grid) 1px, transparent 1px) 50% 0 / 44px 44px, linear-gradient(90deg, var(--grid) 1px, transparent 1px) 50% 0 / 44px 44px, var(--bg); }
+.sec:not(.hero)::after { content: ""; position: absolute; z-index: 0; top: 0; bottom: 0; left: max(calc(var(--gut) - 18px), calc(50% - var(--max) / 2 + var(--gut) - 18px)); right: max(calc(var(--gut) - 18px), calc(50% - var(--max) / 2 + var(--gut) - 18px));
+  border-inline: 1px dashed var(--guide); pointer-events: none; }
+.sec + .sec, .tick + .sec { box-shadow: inset 0 1px 0 var(--guide); }
+/* crop marks: four corners drawn just outside a frame */
+.ap::before, .foot .big span::before { content: ""; position: absolute; inset: -10px; z-index: 2; pointer-events: none; background-repeat: no-repeat;
+  background-image: linear-gradient(var(--cm), var(--cm)), linear-gradient(var(--cm), var(--cm)), linear-gradient(var(--cm), var(--cm)), linear-gradient(var(--cm), var(--cm)),
+    linear-gradient(var(--cm), var(--cm)), linear-gradient(var(--cm), var(--cm)), linear-gradient(var(--cm), var(--cm)), linear-gradient(var(--cm), var(--cm));
+  background-size: 13px 1px, 1px 13px, 13px 1px, 1px 13px, 13px 1px, 1px 13px, 13px 1px, 1px 13px;
+  background-position: 0 0, 0 0, 100% 0, 100% 0, 0 100%, 0 100%, 100% 100%, 100% 100%; }
+
+/* ---------- type: a grotesk; labels in mono; a word in accent is selected ---------- */
+.h-xl, .h-l, .h-m { font-weight: 600; letter-spacing: -0.04em; }
+.lead { font-weight: 500; }
+:is(.h-xl, .h-l, .h-m, .lead) em { font: inherit; letter-spacing: inherit; padding: 0 0.08em; margin: 0 -0.02em; border-radius: 3px; color: inherit; -webkit-text-fill-color: currentColor;
+  background: color-mix(in srgb, var(--sel) 22%, transparent); -webkit-background-clip: border-box; background-clip: border-box; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--sel) 88%, transparent); }
+.kicker { padding: 7px 10px; border-radius: 6px; background: none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fg) 24%, transparent); font: 500 12px/1 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; }
+.kicker::before { width: 7px; aspect-ratio: 1; border-radius: 1px; }
+.fig { font-weight: 300; letter-spacing: -0.05em; }
+.btn { border-radius: 10px; font: 600 15px/1 var(--sans); letter-spacing: -0.01em; }
+.wm { font: 600 1.28rem/1 var(--sans); letter-spacing: -0.045em; }
+.wm em { font-style: normal; }
+.bar .links a { font: 500 12px/1 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; }
+.bar .btn { border-radius: 9px; }
+.lang button { font-family: var(--mono); font-weight: 500; }
+
+/* the film's controls, square like the rest */
+.reel .toggle { border-radius: 10px; }
+.rdisc { width: 108px; height: 44px; margin: -22px 0 0 -54px; border-radius: 10px; font: 500 12px/1 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; }
+@media (hover: none) { .reel.is-paused .shade::after { border-radius: 18px; } }
+
+/* the phone's own parts, squared */
+.pf-av { border-radius: 24%; }
+.pf-av::after { border-radius: 20%; }
+.tag, .tag:nth-of-type(even) { --tr: 0deg; border-radius: 7px; font: 500 12.5px/1 var(--mono); }
+.rules .new li::before { border-radius: 3px; }
+.av { border-radius: 10px; }
+
+/* ---------- the numbers, running ---------- */
+.tick { border-block: 1px solid var(--rule); }
+.tick-set b { font: 600 clamp(1.5rem, 2.6vw, 2.3rem)/1 var(--sans); letter-spacing: -0.04em; }
+.tick-set i { font: 500 11.5px/1 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; }
+.tick-set span::before { width: 8px; aspect-ratio: 1; border-radius: 1px; transform: none; }
+
+/* ---------- the phone on its artboard, selected ---------- */
+.dock::before { content: ""; position: absolute; inset: calc(var(--bar) + 4vh) 4% 5vh; border: 1px solid var(--guide); pointer-events: none;
+  background: linear-gradient(var(--grid) 1px, transparent 1px) 50% 0 / 22px 22px, linear-gradient(90deg, var(--grid) 1px, transparent 1px) 50% 0 / 22px 22px, color-mix(in srgb, var(--plum) 55%, transparent); }
+.art { position: absolute; inset: -14px; z-index: 2; pointer-events: none; border: 1px solid var(--sel); transition: border-color 500ms var(--ease); }
+.art i { position: absolute; width: 9px; height: 9px; background: var(--night); border: 1.5px solid var(--sel); transition: border-color 500ms var(--ease); }
+.art .hd1 { left: -5px; top: -5px; } .art .hd2 { right: -5px; top: -5px; } .art .hd3 { left: -5px; bottom: -5px; } .art .hd4 { right: -5px; bottom: -5px; }
+.art .lbl { position: absolute; left: -1px; bottom: calc(100% + 7px); padding: 5px 8px; border-radius: 4px; background: var(--sel); color: var(--ink2); font: 600 11px/1 var(--mono); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; transition: background-color 500ms var(--ease); }
+.story[data-ch="3"] { --sel: var(--amber); } .story[data-ch="4"] { --sel: var(--rose); } .story[data-ch="5"] { --sel: var(--violet); }
+
+/* ---------- windows: an app screen, the team, the audit form ---------- */
+.ap { --ab: color-mix(in srgb, var(--warm) 11%, transparent); position: relative; height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr); border-radius: 12px; background: #0a2230; color: var(--warm);
+  font: 400 12px/1.3 var(--sans); text-align: left; box-shadow: 0 0 0 1px var(--ab), 0 34px 70px -34px rgba(0, 0, 0, 0.8); container-type: inline-size; }
+.ap-bar { display: flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-bottom: 1px solid var(--ab); border-radius: 12px 12px 0 0; background: color-mix(in srgb, var(--warm) 4%, transparent); }
+.ap-bar i { flex: none; width: 9px; height: 9px; border-radius: 2px; background: color-mix(in srgb, var(--warm) 22%, transparent); }
+.ap-bar i:first-child { background: var(--rose); }
+.ap-bar span { min-width: 0; margin-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 500 11px/1 var(--mono); letter-spacing: 0.02em; color: var(--n2); }
+.ap-in { position: relative; min-height: 0; padding: 14px; overflow: hidden; border-radius: 0 0 12px 12px; }
+.f-light .ap { --ab: rgba(7, 24, 32, 0.12); background: #fff; color: var(--ink2); box-shadow: 0 0 0 1px var(--ab), 0 30px 60px -36px rgba(7, 24, 32, 0.35); }
+.f-light .ap-bar { background: #f2f6f8; }
+.f-light .ap-bar span { color: var(--lt3); }
+
+/* the service viewer holds one window at a time */
+.sv-side .scene { width: min(100%, 470px); aspect-ratio: 4 / 3.25; overflow: visible; background: none; box-shadow: none; border-radius: 0; }
+.sv-list { counter-reset: sv; }
+.sv-list button::before { counter-increment: sv; content: "0" counter(sv); font: 500 11.5px/1 var(--mono); letter-spacing: 0.06em; color: var(--fg3); }
+.sv-list li.is-on button::before { color: var(--teal); }
+
+/* a service's picture: an isometric render on the window's own fine grid */
+.ap-iso .ap-in { padding: 0; background: linear-gradient(var(--grid) 1px, transparent 1px) 50% 0 / 22px 22px, linear-gradient(90deg, var(--grid) 1px, transparent 1px) 50% 0 / 22px 22px, linear-gradient(160deg, #0d2a3a, #081b26); }
+.iso { position: absolute; inset: 0; display: grid; place-items: center; }
+.iso img { width: 92%; height: 92%; object-fit: contain; filter: drop-shadow(0 26px 30px rgba(0, 0, 0, 0.5)); transform: translateY(10px) scale(0.97); opacity: 0; transition: transform 700ms var(--out), opacity 400ms var(--ease); }
+.is-on .iso img { transform: none; opacity: 1; }
+
+/* ---------- people: the founder's story beside a team window ---------- */
+.s-team { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(28px, 5vw, 88px); align-items: center; }
+.s-team .copy { gap: 22px; }
+.s-dir { height: auto; }
+.s-dir .ap-in { padding: 4px 0; }
+.crew.dir { margin: 0; grid-template-columns: minmax(0, 1fr); gap: 0; }
+.crew.dir li { grid-template-columns: 60px minmax(0, 1fr); column-gap: 16px; align-items: start; padding: 16px 18px; border-top: 1px solid var(--ab); }
+.crew.dir li:first-child { border-top: 0; }
+.crew.dir figure { margin: 0; width: 60px; aspect-ratio: 1; border-radius: 10px; overflow: hidden; background: var(--card); }
+.crew.dir .me { grid-template-columns: 112px minmax(0, 1fr); padding-block: 20px; }
+.crew.dir .me figure { width: 112px; border-radius: 14px; }
+.crew.dir img { width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; object-position: 50% 16%; border-radius: 0; box-shadow: none; background: none; }
+.crew.dir li > div { display: grid; gap: 5px; }
+.crew.dir b { font: 600 1.2rem/1.1 var(--sans); letter-spacing: -0.02em; }
+.crew.dir span { font: 500 11.5px/1.3 var(--mono); text-transform: uppercase; letter-spacing: 0.05em; color: var(--teal); }
+.crew.dir p { margin: 0; color: var(--n2); font-size: 0.95rem; line-height: 1.5; }
+
+/* ---------- the audit: a spec sheet, and the form in a window ---------- */
+.audit .wrap { align-items: start; }
+.specs div { grid-template-columns: 9.5rem 1fr; border-top: 1px dashed color-mix(in srgb, var(--ink2) 24%, transparent); }
+.specs dt { font: 500 11.5px/1.6 var(--mono); text-transform: uppercase; letter-spacing: 0.05em; }
+.s-form { height: auto; }
+.s-form .ap-in { padding: 0; }
+.s-form .app { border-radius: 0; box-shadow: none; background: transparent; }
+.field input, .field select, .field textarea { border-radius: 8px; border-color: #c9d6dc; }
+.field label, .app legend { font: 500 11.5px/1.3 var(--mono); text-transform: uppercase; letter-spacing: 0.05em; }
+.chip span { border-radius: 7px; font: 500 12.5px/1 var(--mono); border-color: #c9d6dc; }
+.app .btn { border-radius: 9px; }
+.sent { border-radius: 8px; }
+
+/* ---------- the close: the name, in the grotesk, between crop marks ---------- */
+.foot .big { font: 700 100px/1 var(--sans); letter-spacing: -0.06em; }
+.foot .big span { position: relative; padding: 0 0.05em; }
+.foot .big span::before { inset: -0.04em -0.02em; }
+.foot .big em { font-style: normal; background: none; -webkit-background-clip: border-box; background-clip: border-box; color: var(--teal); -webkit-text-fill-color: var(--teal); padding-right: 0; }
+.frow { font: 500 12px/1.6 var(--mono); text-transform: uppercase; letter-spacing: 0.04em; }
+.frow a { text-transform: none; }
+
+@media (max-width: 860px) {
+  .sec:not(.hero)::after { display: none; }
+  .dock::before { inset: 10px 0 8px; }
+  .s-team { grid-template-columns: minmax(0, 1fr); }
+  .crew.dir li, .crew.dir .me { grid-template-columns: 64px minmax(0, 1fr); padding-inline: 14px; }
+  .crew.dir .me figure { width: 64px; }
+  .specs div { grid-template-columns: 7.6rem 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { .iso img { transition: none; } }
