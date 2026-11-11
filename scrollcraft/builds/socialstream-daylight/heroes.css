@@ -127,9 +127,53 @@
 .ht.is-live:not(.is-grown) .toggle { top: 50%; right: 7px; bottom: auto; width: 28px; height: 28px; margin-top: -14px; padding: 0; gap: 0; justify-content: center; }
 .ht.is-live:not(.is-grown) .toggle span { display: none; }
 
+/* ================= after the first screen (Cinema and Capsule: heroes/after.html) =================
+   Each section its own composition and one thing that moves with its own scroll: the number slides
+   into place, the problem's long sentence lights word by word, the objects float at their own pace,
+   and the steps' line fills (daylight.js, as before). Nothing pins. */
+.x-count { padding-block: clamp(96px, 14vh, 150px) clamp(64px, 9vh, 100px); overflow: clip; }
+.x-count-top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.75fr); align-items: end; gap: 20px 64px; }
+.x-count .h2 { max-width: 15ch; }
+.x-count .line { margin: 0 0 6px; max-width: 28ch; justify-self: end; }
+.x-count .big { margin: clamp(30px, 5vh, 60px) 0 0; font-size: clamp(3.4rem, 12.6vw, 12.4rem); color: var(--ink); translate: var(--nx, 0px) 0; }
+.x-count .big small { color: var(--rose); }
+.x-count .label { margin-top: 12px; }
+
+.x-problem .wrap { max-width: var(--max); }
+.x-prob-top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px 72px; align-items: start; }
+.x-problem .h2 { max-width: none; font-size: clamp(2.2rem, 3.9vw, 3.8rem); line-height: 1.04; }
+.x-problem .h2 .ln { display: block; }
+/* the long sentence: grey until it is read, then ink; both states read well on the mist */
+.x-lit { margin: 0.35em 0 0; font: 600 clamp(1.22rem, 1.85vw, 1.7rem)/1.45 var(--sans); letter-spacing: -0.016em; color: var(--ink3); text-wrap: pretty; }
+.x-lit .w { transition: color 260ms var(--ease); }
+.x-lit .w.on { color: var(--ink); }
+.x-qs { margin: clamp(48px, 7vh, 76px) 0 0; grid-template-columns: repeat(3, minmax(0, 1fr)); justify-items: stretch; }
+.x-qs li { align-items: flex-start; padding: 20px 22px; border-radius: 18px; }
+.x-prob-end { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 24px 72px; align-items: end; margin-top: clamp(48px, 7vh, 76px); }
+.x-problem .body { margin: 0; max-width: 46ch; }
+.x-problem .turn { margin: 14px 0 0; max-width: 20ch; }
+.x-prob-act .cta-row { justify-content: flex-start; margin-top: 20px; }
+
+.x-who-top, .x-method-top { display: grid; align-items: end; gap: 20px 64px; text-align: left; }
+.x-who-top { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); }
+.x-who .h2, .x-method .h2 { max-width: 17ch; }
+.x-who .lead { margin: 0 0 6px; max-width: 44ch; }
+/* the row is staggered, and each object drifts at its own rate (--k px, --t degrees over the pass) */
+.x-who .cards4 { align-items: start; }
+.x-who .cards4 .card:nth-child(even) { margin-top: 56px; }
+.x-who .fl { display: grid; place-items: center; width: 100%; translate: 0 calc(var(--wf, 0) * var(--k, 40) * 1px); rotate: calc(var(--wf, 0) * var(--t, 4) * 1deg); }
+.x-who .notfor { margin-top: 40px; }
+
+.x-method-top { grid-template-columns: minmax(0, 1fr) auto; }
+.x-method .cta-row { margin: 0; justify-content: flex-end; }
+
 /* ---------- tablets and phones ---------- */
 @media (max-width: 1080px) {
   .hf-strip .wrap { gap: 18px 32px; }
+  .x-prob-top, .x-prob-end, .x-who-top { grid-template-columns: minmax(0, 1fr); }
+  .x-qs { grid-template-columns: minmax(0, 1fr); }
+  .x-who .cards4 .card:nth-child(even) { margin-top: 0; }
+  .x-who .cards4 .card:nth-child(2), .x-who .cards4 .card:nth-child(4) { translate: 0 40px; }
 }
 @media (max-width: 760px) {
   .hf-strip .wrap { grid-template-columns: minmax(0, 1fr); gap: 16px; }
@@ -166,6 +210,13 @@
   .ht-act .btn { width: 100%; }
   .ht-act .ticks { justify-content: center; }
   .ht-screen { aspect-ratio: 9 / 16; }
+  /* the capsule's still is the vertical poster a phone has already loaded for the film */
+  .ht-pill { background-image: url("assets/hero-v-poster.jpg"); }
+  .x-count-top, .x-method-top { grid-template-columns: minmax(0, 1fr); }
+  .x-count .line { justify-self: start; }
+  .x-count .big { font-size: 12vw; }
+  .x-who .cards4 .card:nth-child(2), .x-who .cards4 .card:nth-child(4) { translate: none; }
+  .x-method .cta-row { justify-content: flex-start; }
 }
 /* short screens: in the scene the claim, the promise and the button come first; the longer line and the
    ticks give way (they return in the plain layout) */
@@ -179,4 +230,6 @@
   .hf-screen video, .hf-screen .poster { transform: none !important; }
   .hd-screen { clip-path: none; }
   .strike::after { animation: none; transform: none; }
+  .x-count .big, .x-who .fl { translate: none; rotate: none; }
+  .x-lit .w { transition: none; }
 }

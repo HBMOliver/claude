@@ -45,8 +45,10 @@ above, without the caption; on a phone it shows only the bold first sentence of 
 drops the results link. Cinema and Capsule carry the brand's claim instead, as in the film
 and in Stream (asked for on 2026-11-11: the original concept must stay):
 
-Eyebrow: INTEREST MEDIA ÜGYNÖKSÉG · TENERIFE ÉS BUDAPEST
-EN: INTEREST MEDIA AGENCY · TENERIFE AND BUDAPEST
+Eyebrow: INTEREST MEDIA ÜGYNÖKSÉG
+EN: INTEREST MEDIA AGENCY
+(no "Tenerife és Budapest" on the first screen, at the user's word; it stays in the
+footer and in the "Hol vagytok?" answer)
 
 Headline: A ~~social media~~ meghalt. Az *érdeklődés* vette át a helyét.
 EN: ~~Social media~~ is dead. *Interest* has taken its place.
@@ -60,6 +62,12 @@ phone's strip keeps the headline and the button, and the promise opens the block
 film. The eyebrow and the lead are in that block. Capsule: eyebrow, headline, promise, lead,
 button, ticks; while the film grows, a short screen leaves out the lead and a short phone the
 ticks. "Meta Marketing Pro" is off the first screen in these two; it stays in Olivér's card.
+
+After the first screen, Cinema and Capsule use heroes/after.html for the number, the problem,
+who it is for and how we work: the same words as below, laid out differently (headings on the
+left, the problem's three questions in a row, the cards staggered), with one moving thing each.
+The problem's heading breaks per sentence: Posztolsz. / Hirdetsz. / Mégsem jönnek a vevők?
+EN: You post. / You advertise. / And still no buyers?
 
 ## 2. The number
 

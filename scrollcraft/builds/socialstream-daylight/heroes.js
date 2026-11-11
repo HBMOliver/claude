@@ -1,7 +1,8 @@
 /* Daylight's first screen, three options: the parts that move. daylight.js already runs the film
    (which cut, play and pause, the button); this adds what each option needs on top of it: the menu
-   turning dark over a dark first screen, Cinema's slower film, Glow's light and opening frame, and
-   Capsule's film growing out of the headline. */
+   turning dark over a dark first screen, Cinema's slower film, Glow's light and opening frame,
+   Capsule's film growing out of the headline, and, after the first screen of Cinema and Capsule,
+   the number sliding in, the long sentence lighting word by word and the objects floating. */
 (function () {
   'use strict';
   var $ = SS.$, $$ = SS.$$, clamp = SS.clamp, reduce = SS.reduce;
@@ -11,6 +12,7 @@
   if (!kind) return;
   var video = $('video', screen), narrow = matchMedia('(max-width: 760px)'), was = {}, vh = innerHeight;
   function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
   function set(el, k, v) { if (el['_' + k] !== v) { el['_' + k] = v; el.style.setProperty(k, v); } }
 
   /* ---------- Glow: the film's light spills on the stage around it ---------- */
@@ -73,11 +75,43 @@
     if (was.grown !== grown) { was.grown = grown; cap.classList.toggle('is-grown', grown); }
   }
 
-  /* ---------- every frame: the menu, Cinema's slower film, Glow's opening frame, Capsule ---------- */
+  /* ---------- after the first screen (Cinema and Capsule): one moving thing per section ---------- */
+  var slide = $('[data-slide]'), lit = $('[data-lit]'), float = $('[data-float]');
+  if (lit) {
+    // every word in its own span, once for each language; the language on show is the one that lights
+    $$('[data-l]', lit).forEach(function (l) {
+      l.innerHTML = l.textContent.split(/(\s+)/).map(function (t) { return !t || /^\s+$/.test(t) ? t : '<span class="w">' + SS.esc(t) + '</span>'; }).join('');
+    });
+    if (reduce) $$('.w', lit).forEach(function (w) { w.classList.add('on'); });
+  }
+  function after() {
+    if (reduce) return;
+    // the number slides in from the right and is in place by the time it is a little above the middle
+    if (slide) {
+      var s = slide.getBoundingClientRect();
+      if (s.top < vh * 1.2 && s.bottom > -vh * 0.2) set(slide, '--nx', ((1 - easeOut(clamp((vh - s.top) / (vh * 0.62), 0, 1))) * 24).toFixed(2) + 'vw');
+    }
+    // the sentence lights from when it enters the lower part of the screen until its end passes the middle
+    if (lit) {
+      var l = $$('[data-l]', lit).filter(function (e) { return getComputedStyle(e).display !== 'none'; })[0], b = lit.getBoundingClientRect();
+      if (l && b.top < vh && b.bottom > 0) {
+        var ws = l._ws || (l._ws = $$('.w', l)), k = Math.round(clamp((vh * 0.85 - b.top) / (b.height + vh * 0.35), 0, 1) * ws.length);
+        if (l._k !== k) { l._k = k; ws.forEach(function (w, i) { w.classList.toggle('on', i < k); }); }
+      }
+    }
+    // the objects drift from +1 to -1 of their own amount across the row's pass through the screen
+    if (float) {
+      var f = float.getBoundingClientRect();
+      if (f.top < vh && f.bottom > 0) set(float, '--wf', ((0.5 - clamp((vh - f.top) / (vh + f.height), 0, 1)) * 2).toFixed(3));
+    }
+  }
+
+  /* ---------- every frame: the menu, Cinema's slower film, Glow's opening frame, Capsule, the sections after ---------- */
   var ticking = false;
   function frame() {
     ticking = false;
     vh = innerHeight;
+    after();
     if (kind === 'cinema' && !reduce && hero.getBoundingClientRect().bottom > 0) set(hero, '--sy', clamp(scrollY / vh, 0, 1).toFixed(3));
     if (kind === 'glow' && !reduce) {
       var r = screen.getBoundingClientRect();

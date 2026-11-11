@@ -47,9 +47,15 @@ kept Cinema and Capsule and asked for the original concept back, so those two ca
   It falls back to the film under the type with reduced motion or on a screen too short for it.
   https://claude.ai/artifact/4XxESCorvniksmAGCYWmVv
 
-Edit `heroes/<name>.html`, `heroes.css` and `heroes.js`, then `node tools/heroes.mjs` writes the
+After the first screen, Cinema and Capsule take `heroes/after.html` in place of the number, the
+problem, who it is for and how we work (asked for on 2026-11-11: "static and monotonous after the
+hero"). Same words, a different composition each, and one thing that moves with the section's own
+scroll: the number slides in while it counts, the problem's long sentence lights word by word, the
+objects in the cards float at their own pace, and the steps' line fills as before. Nothing pins.
+
+Edit `heroes/<name>.html`, `heroes/after.html`, `heroes.css` and `heroes.js`, then `node tools/heroes.mjs` writes the
 three pages next to `index.html`, and `node tools/artifact.mjs hero-<name>` packages one into
-`dist/<name>/`. `lab/heroes.mjs` runs 65 checks on them (`BASE=` for another address), and
+`dist/<name>/`. `lab/heroes.mjs` runs 87 checks on them (`BASE=` for another address), and
 `URL=http://localhost:4553/hero-<name>.html node lab/func.mjs` runs the page's own 33.
 
 ## Pictures

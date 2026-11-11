@@ -109,6 +109,35 @@ for (const [label, opts] of [['short laptop', { viewport: { width: 1280, height:
   if (label === 'reduced motion') ok('capsule reduced motion: the strike is drawn without animating', (await strike(p)).drawn);
   await ctx.close();
 }
+// after the first screen (Cinema and Capsule): each section's moving thing changes with the scroll and
+// ends in place; with reduced motion everything is simply in its end state
+const at = (p, sel, k) => p.evaluate(([sel, k]) => { const r = document.querySelector(sel).getBoundingClientRect(); scrollTo({ top: scrollY + r.top - innerHeight * k, behavior: 'instant' }); }, [sel, k]).then(() => p.waitForTimeout(450));
+const lit = p => p.evaluate(() => { const l = [...document.querySelectorAll('[data-lit] [data-l]')].find(e => getComputedStyle(e).display !== 'none'); return { on: l.querySelectorAll('.w.on').length, all: l.querySelectorAll('.w').length }; });
+const varOf = (p, sel, v) => p.evaluate(([sel, v]) => parseFloat(getComputedStyle(document.querySelector(sel)).getPropertyValue(v)) || 0, [sel, v]);
+for (const name of ['cinema', 'capsule']) {
+  for (const [dev, opts] of [['desktop', DESK], ['phone', PHONE]]) {
+    const { p, errs, ctx } = await open(name, opts);
+    const nx = []; for (const k of [0.98, 0.7, 0.3]) { await at(p, '[data-slide]', k); nx.push(await varOf(p, '[data-slide]', '--nx')); }
+    ok(`${name} ${dev}: the number slides into place`, nx[0] > nx[1] && nx[1] > nx[2] && nx[2] < 0.5 && nx[0] > 8, nx.join(' > '));
+    const ws = []; for (const k of [0.95, 0.6, 0.1]) { await at(p, '[data-lit]', k); ws.push(await lit(p)); }
+    ok(`${name} ${dev}: the sentence lights word by word`, ws[0].on < ws[1].on && ws[1].on < ws[2].on && ws[2].on === ws[2].all, JSON.stringify(ws));
+    const wf = []; for (const k of [0.95, 0.5, 0.05]) { await at(p, '[data-float]', k); wf.push(await varOf(p, '[data-float]', '--wf')); }
+    ok(`${name} ${dev}: the objects drift`, wf[0] > wf[1] && wf[1] > wf[2], wf.join(' > '));
+    // English and back: the language on show lights, and the Hungarian is whole again afterwards
+    await p.locator('[data-set-lang="en"]').first().click(); await at(p, '[data-lit]', 0.1); const en = await lit(p);
+    await p.locator('[data-set-lang="hu"]').first().click(); await at(p, '[data-lit]', 0.1); const hu = await lit(p);
+    const txt = await p.evaluate(() => document.querySelector('[data-lit] [data-l="hu"]').textContent);
+    ok(`${name} ${dev}: English lights too, and Hungarian comes back whole`, en.on === en.all && en.all > 20 && hu.on === hu.all && txt.startsWith('A legtöbb vállalkozás') && txt.endsWith('vásárlás.'), JSON.stringify({ en, hu }));
+    ok(`${name} ${dev}: no page errors after the first screen`, !errs.length, errs.join(' | '));
+    await ctx.close();
+  }
+  const { p, ctx } = await open(name, { ...DESK, reducedMotion: 'reduce' });
+  await at(p, '[data-slide]', 0.95);
+  const r = await p.evaluate(() => ({ tr: getComputedStyle(document.querySelector('[data-slide]')).translate, fl: getComputedStyle(document.querySelector('.x-who .fl')).translate }));
+  const w = await lit(p);
+  ok(`${name} reduced motion: everything after the first screen in its end state`, (r.tr === 'none' || r.tr === '0px') && (r.fl === 'none' || r.fl === '0px') && w.on === w.all, JSON.stringify({ r, w }));
+  await ctx.close();
+}
 // no sideways scroll on narrow phones, at the top, in the middle of the first screen and past it
 for (const name of ['cinema', 'glow', 'capsule']) {
   for (const w of [320, 393]) {
