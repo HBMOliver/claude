@@ -41,7 +41,8 @@ The six problems:
 
 ## NEW arrangement, to confirm: elsewhere and with us
 
-The problem's own sentences, set side by side. Pulse has it after the results, Aurora after the services.
+The problem's own sentences, set side by side. Pulse has it after the results, Aurora after the services, and
+Aurora Mix after the results, as two cards laid over each other.
 
 Heading: Máshol és *nálunk*. / Elsewhere and *with us*.
 

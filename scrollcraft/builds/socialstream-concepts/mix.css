@@ -182,7 +182,7 @@
 .mx-who-grid h3 { font: 700 1.1rem/1.25 var(--font-d); }
 .mx-who-grid p { margin-top: 8px; font-size: 14.5px; line-height: 1.55; color: var(--fg2); }
 .mx-who-grid b { color: var(--fg); }
-.mx-notfor { margin-top: 28px; text-align: center; font-size: 15px; color: var(--fg3); }
+.mx-notfor { margin-top: 28px; text-align: center; font-size: 15px; color: #aab3c9; } /* in a panel, over the aurora */
 
 /* ---------- their words: a row the visitor scrolls, or moves with the arrows ---------- */
 .mx-voices { padding: clamp(100px, 14vh, 160px) 0; }
