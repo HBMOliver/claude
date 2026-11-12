@@ -3,8 +3,8 @@
    Moving at rest: the film, the aurora in every panel, the numbers band, the reels round the statement, the lines
    of light from the problems, the service objects and the two tag rows, the stat objects and the reel row, the light
    running round the "with us" card, the light moving through the step numbers, the "Kiknek" objects, the team's
-   photos, the light in the giant wordmark. With the scroll: the reels close in on the statement and it lights word
-   by word. With a mouse: the aurora's brightest light follows the cursor round the first screen, the reels and the
+   photos, the light in the giant wordmark. With the scroll: the film alone first, settling into its card beside the claim
+   (or the panel rising over it on phones), then the reels close in on the statement and it lights word by word. With a mouse: the aurora's brightest light follows the cursor round the first screen, the reels and the
    service objects lean toward it, and the buttons are pulled toward it. */
 @property --a { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
 :root {
@@ -73,6 +73,40 @@
 .mx-acct { position: absolute; z-index: 2; left: 14px; top: 26px; display: flex; align-items: center; gap: 9px; font: 600 14px/1 var(--font-b); color: #fff; text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6); }
 .mx-acct i { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #ff5c8a, #7a5cff); font-style: normal; font-weight: 800; font-size: 13px; text-shadow: none; }
 .mx-fcap { position: absolute; z-index: 2; left: 14px; bottom: 14px; padding: 11px 14px; border-radius: 999px; background: rgba(8, 10, 24, 0.66); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18); font: 600 13px/1 var(--font-b); color: #fff; }
+/* ---------- the opening: the film alone, then the panel (kit.js sets is-morph or is-sheet and drives --q) ----------
+   is-morph (wide and tall screens): the stage pins for a screen and a half while the film settles into its card
+   beside the claim, and the panel, the claim and the numbers come in around it. is-sheet (phones, short screens):
+   the film stays put and the panel rises over it. Neither (no script, reduced motion): the panel as it was. */
+.mx-open { display: none; }
+.is-morph > .mx-open, .is-sheet > .mx-open { display: block; }
+.mx-open .film { width: 100%; height: 100%; border-radius: 0; }
+.mx-cue { position: absolute; z-index: 3; left: 50%; bottom: 26px; translate: -50% 0; width: 26px; height: 42px; border-radius: 14px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.78); pointer-events: none; opacity: calc(1 - clamp(0, calc(var(--q, 0) / 0.08), 1)); }
+.mx-cue i { position: absolute; left: 50%; top: 8px; width: 4px; height: 8px; margin-left: -2px; border-radius: 2px; background: #fff; animation: mx-cue 1.6s var(--ease) infinite; }
+@keyframes mx-cue { 0% { transform: translateY(0); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(16px); opacity: 0; } }
+/* pinned: the film settles into its card; everything else is a stretch of --q */
+.mx-hero.is-morph { display: grid; grid-template-columns: minmax(0, 1fr); height: 250vh; padding: 0; overflow-x: clip; --sk: clamp(0, calc((var(--q, 1) - 0.68) / 0.14), 1); }
+.is-morph > .mx-open, .is-morph > .mx-hero-panel { grid-area: 1 / 1; min-width: 0; position: sticky; align-self: start; } /* one column as wide as the page: the running numbers inside must not widen it */
+.is-morph > .mx-open { top: 0; z-index: 5; height: 100vh; transform-origin: 50% 50%; will-change: transform, clip-path; opacity: calc(1 - clamp(0, calc((var(--q, 1) - 0.52) / 0.08), 1)); }
+.is-morph.gone > .mx-open { visibility: hidden; pointer-events: none; } /* faded out by then; it must not sit over the card's button */
+.is-morph > .mx-hero-panel { top: 86px; margin-top: 86px; height: calc(100vh - 100px); min-height: 0; opacity: clamp(0, calc((var(--q, 1) - 0.2) / 0.3), 1); }
+.is-morph:not(.live) .mx-copy { pointer-events: none; }
+.is-morph .mx-pill { opacity: clamp(0, calc((var(--q, 1) - 0.44) / 0.14), 1); translate: calc((1 - clamp(0, calc((var(--q, 1) - 0.44) / 0.14), 1)) * -24px) 0; }
+.is-morph .mx-claim .ln:first-child { opacity: clamp(0, calc((var(--q, 1) - 0.5) / 0.16), 1); translate: calc((1 - clamp(0, calc((var(--q, 1) - 0.5) / 0.16), 1)) * -44px) 0; }
+.is-morph .mx-claim .ln:last-child { opacity: clamp(0, calc((var(--q, 1) - 0.57) / 0.16), 1); translate: calc((1 - clamp(0, calc((var(--q, 1) - 0.57) / 0.16), 1)) * -44px) 0; }
+.is-morph .mx-promise { opacity: clamp(0, calc((var(--q, 1) - 0.64) / 0.14), 1); translate: 0 calc((1 - clamp(0, calc((var(--q, 1) - 0.64) / 0.14), 1)) * 16px); }
+.is-morph .mx-cta { opacity: clamp(0, calc((var(--q, 1) - 0.7) / 0.14), 1); translate: 0 calc((1 - clamp(0, calc((var(--q, 1) - 0.7) / 0.14), 1)) * 16px); }
+.is-morph .mx-post .mx-film { opacity: clamp(0, calc((var(--q, 1) - 0.44) / 0.1), 1); } /* the upright cut takes over while the film is nearly in place, so its cropped wide frame is barely seen */
+.is-morph .mx-band { translate: 0 calc((1 - clamp(0, calc((var(--q, 1) - 0.7) / 0.16), 1)) * 100%); }
+/* the line through "social media" is drawn by the scroll, not on load, so it is drawn while it can be seen */
+.is-morph .mx-claim .strike::after, .is-sheet .mx-claim .strike::after { animation: none; transform: scaleX(var(--sk, 1)); }
+/* a sheet: the film stays put and dims a little while the panel rises over it */
+.mx-hero.is-sheet { padding: 0; overflow-x: clip; --sk: clamp(0, calc((var(--q, 1) - 0.4) / 0.3), 1); }
+.is-sheet > .mx-open { position: sticky; top: 0; z-index: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.is-sheet > .mx-open .film { transform: scale(calc(1 - var(--q, 0) * 0.07)); transform-origin: 50% 35%; border-radius: calc(var(--q, 0) * 28px); }
+.is-sheet > .mx-open::after { content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none; background: #05070f; opacity: calc(var(--q, 0) * 0.55); }
+.is-sheet > .mx-hero-panel { position: relative; z-index: 2; margin-top: -28px; box-shadow: inset 0 0 0 1px var(--line), 0 -24px 60px -20px rgba(0, 0, 0, 0.7); }
+.is-sheet.done > .mx-open { visibility: hidden; }
+
 /* the real numbers running along the panel's foot */
 /* a dark glass strip, so the aurora moving behind it never washes the numbers out */
 .mx-band { position: relative; padding: 16px 0; border-top: 1px solid var(--line); background: rgba(8, 10, 24, 0.74); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
@@ -288,4 +322,5 @@
   .mx-pain-line::after { width: 100%; opacity: 0.6; }
   .mx-f { translate: none !important; }
   .mx-glow { display: none !important; }
+  .mx-cue i { animation: none; }
 }

@@ -28,19 +28,31 @@
 </header>
 
 <main>
-  <!-- the first screen in an inset panel: the claim on the left, the film standing on the right like a post, the
-       real numbers running along the panel's foot; the aurora moves inside, and its brightest light follows the cursor -->
-  <section class="mx-hero" id="top" aria-labelledby="hero-h">
+  <!-- the opening: the film alone fills the first screen (it carries the claim itself, a few seconds in). Scrolling
+       on, where the screen has room to pin, the film settles into its card beside the claim while the panel, the claim
+       and the numbers come in around it; on phones and short screens the panel rises over the film like a sheet.
+       kit.js drives it all from one value, --q; without script or with reduced motion the page opens on the panel.
+       The panel: the claim on the left, the film standing on the right like a post, the real numbers running along
+       its foot; the aurora moves inside, and its brightest light follows the cursor -->
+  <section class="mx-hero" id="top" aria-labelledby="hero-h" data-seq="(min-width: 900px) and (min-height: 700px)">
+    <div class="mx-open" data-seq-open>
+      <div class="film mx-openfilm" data-film data-cut="auto" data-big>
+  <div class="poster"><picture><source media="(max-width: 760px)" srcset="assets/hero-v-poster.jpg"><img src="assets/hero-poster.jpg" alt="" width="1600" height="900"></picture></div>
+  <video muted loop playsinline preload="none" aria-label="A SocialStream márkafilmje" data-en-aria="The SocialStream brand film"></video>
+  <button class="toggle" type="button"></button>
+  <span class="mx-cue" aria-hidden="true"><i></i></span>
+</div>
+    </div>
     <div class="mx-panel mx-hero-panel">
       <div class="mx-sky" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i><span class="mx-glow" data-follow="in" data-home="0.3,0.42"></span></div>
       <div class="mx-hero-in">
         <div class="mx-copy">
-          <p class="mx-pill" data-r><i aria-hidden="true"></i><span data-en="Interest media agency">Interest media ügynökség</span></p>
-          <h1 class="claim mx-claim" id="hero-h" data-r style="--d:1"><span data-l="hu"><span class="ln">A <span class="strike">social media</span> meghalt.</span> <span class="ln">Az <em>érdeklődés</em> vette át a helyét.</span></span><span data-l="en"><span class="ln"><span class="strike">Social media</span> is dead.</span> <span class="ln"><em>Interest</em> has taken its place.</span></span></h1>
-          <p class="mx-promise" data-r style="--d:2"><span data-l="hu"><span class="ln">Videók, amiket végignéznek.</span> <span class="ln">Hirdetések, amik megtérülnek.</span></span><span data-l="en"><span class="ln">Videos people watch to the end.</span> <span class="ln">Ads that pay off.</span></span></p>
-          <div class="mx-cta" data-r style="--d:3"><a class="btn" href="#audit"><span data-en="Get my free audit">Kérem az ingyenes auditot</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="btn ghost" href="#eredmenyek"><span data-en="See the results">Megnézem az eredményeket</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+          <p class="mx-pill"><i aria-hidden="true"></i><span data-en="Interest media agency">Interest media ügynökség</span></p>
+          <h1 class="claim mx-claim" id="hero-h"><span data-l="hu"><span class="ln">A <span class="strike">social media</span> meghalt.</span> <span class="ln">Az <em>érdeklődés</em> vette át a helyét.</span></span><span data-l="en"><span class="ln"><span class="strike">Social media</span> is dead.</span> <span class="ln"><em>Interest</em> has taken its place.</span></span></h1>
+          <p class="mx-promise"><span data-l="hu"><span class="ln">Videók, amiket végignéznek.</span> <span class="ln">Hirdetések, amik megtérülnek.</span></span><span data-l="en"><span class="ln">Videos people watch to the end.</span> <span class="ln">Ads that pay off.</span></span></p>
+          <div class="mx-cta"><a class="btn" href="#audit"><span data-en="Get my free audit">Kérem az ingyenes auditot</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="btn ghost" href="#eredmenyek"><span data-en="See the results">Megnézem az eredményeket</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
         </div>
-        <div class="mx-post" data-r style="--d:2">
+        <div class="mx-post" data-seq-to>
           <div class="film mx-film" data-film data-cut="v">
   <div class="poster"><img src="assets/hero-v-poster.jpg" alt="" width="720" height="1280"></div>
   <video muted loop playsinline preload="none" aria-label="A SocialStream márkafilmje" data-en-aria="The SocialStream brand film"></video>

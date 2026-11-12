@@ -38,7 +38,8 @@
   var PAUSE = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2h3v10H3zM8 2h3v10H8z" fill="currentColor"/></svg>';
   var films = $$('[data-film]').map(function (box) {
     var v = $('video', box), tgl = $('.toggle', box), cut = box.getAttribute('data-cut') || 'auto';
-    var f = { paused: reduce || SS.saveData, seen: false, loaded: '', started: false };
+    var f = { paused: reduce || SS.saveData, seen: false, loaded: '', started: false, hidden: false };
+    box._f = f;
     // a vertical cut where the frame stands upright, the full cut where the film is big, the small one elsewhere
     function src() {
       if (cut === 'v' || (cut === 'auto' && narrow.matches)) return 'assets/hero-v-720.mp4';
@@ -59,6 +60,7 @@
     f.apply = function () {
       if (!f.started) { f.state(); return; }
       if (f.paused || !f.seen) v.pause();
+      else if (f.hidden) { load(); v.pause(); } // covered by its twin (see the opening below): ready, but waiting
       else { load(); var p = v.play(); if (p && p.catch) p.catch(function (e) { if (e && e.name === 'NotAllowedError') { f.paused = true; f.state(); } }); }
       f.state();
     };
@@ -67,7 +69,8 @@
     // a frame may carry a progress line, as a story does; it follows the film
     var bar = $('.progress', box);
     if (bar) v.addEventListener('timeupdate', function () { if (v.duration) bar.style.setProperty('--pr', (v.currentTime / v.duration).toFixed(3)); });
-    if (tgl) tgl.addEventListener('click', function () { f.paused = !f.paused; f.started = true; f.apply(); });
+    // a film with a twin (the same film in another frame) pauses and plays with it
+    if (tgl) tgl.addEventListener('click', function () { f.paused = !f.paused; f.started = true; f.apply(); var g = box._pair && box._pair._f; if (g) { g.paused = f.paused; g.started = true; g.apply(); } });
     // two changes can arrive in one batch; the last one is current
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { f.seen = es[es.length - 1].isIntersecting; f.apply(); }, { threshold: 0.1 }).observe(box);
     else f.seen = true;
@@ -195,6 +198,73 @@
     addEventListener('scroll', kick, { passive: true });
   }
 
+  /* ---------------- an opening (data-seq): the film alone on the first screen ----------------
+     Scrolling on, where the media query in data-seq holds, the stage pins and the film ([data-seq-open]) settles into
+     its card ([data-seq-to]): it shrinks with a scale and a clip, so it never stretches, then hands over to the card's
+     own film, the same film in its upright cut, whose clock is set to the opening's just before they cross. Elsewhere
+     the film stays put and the panel rises over it. --q runs 0 to 1 on the stage and the page's CSS does the rest.
+     With reduced motion nothing of this runs: the page opens on the panel. */
+  var ease = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+  var seqs = $$('[data-seq]').map(function (st) {
+    var open = $('[data-seq-open]', st), to = $('[data-seq-to]', st);
+    var s = { st: st, open: open, ob: $('[data-film]', open), cb: to && $('[data-film]', to), mq: matchMedia(st.getAttribute('data-seq') || '(min-width: 900px)'), mode: null, q: -1, card: null };
+    if (s.ob && s.cb) { s.ob._pair = s.cb; s.cb._pair = s.ob; }
+    // a control of the panel that takes the keyboard's focus while the film still covers it brings the end of the opening
+    st.addEventListener('focusin', function (e) {
+      if (s.mode !== 'morph' || s.q >= 0.9 || open.contains(e.target)) return;
+      scrollTo({ top: scrollY + st.getBoundingClientRect().top + Math.max(0, st.offsetHeight - vh), behavior: 'instant' });
+    });
+    return s;
+  });
+  function seqMeasure(s) {
+    var t = s.open.style.transform, c = s.open.style.clipPath;
+    s.open.style.transform = 'none'; s.open.style.clipPath = 'none';
+    var o = s.open.getBoundingClientRect(), r = s.cb.getBoundingClientRect();
+    s.open.style.transform = t; s.open.style.clipPath = c;
+    s.card = { x: r.left - o.left, y: r.top - o.top, w: r.width, h: r.height, W: o.width, H: o.height };
+  }
+  function seqTick(force) {
+    seqs.forEach(function (s) {
+      var mode = reduce ? '' : s.mq.matches ? 'morph' : 'sheet';
+      if (mode !== s.mode) {
+        s.mode = mode; s.card = null; force = true;
+        s.st.classList.toggle('is-morph', mode === 'morph'); s.st.classList.toggle('is-sheet', mode === 'sheet');
+        s.open.style.transform = ''; s.open.style.clipPath = '';
+      }
+      if (!mode) return;
+      var r = s.st.getBoundingClientRect(), span = mode === 'morph' ? Math.max(1, s.st.offsetHeight - vh) : vh;
+      var q = clamp(-r.top / span, 0, 1);
+      if (mode === 'morph' && s.cb && !s.card && r.top <= 1 && -r.top <= span) { seqMeasure(s); force = true; }
+      if (q === s.q && !force) return;
+      var was = s.q; s.q = q;
+      s.st.style.setProperty('--q', q.toFixed(4));
+      s.st.classList.toggle('live', mode === 'sheet' || q > 0.78);
+      s.st.classList.toggle('done', q >= 0.985);
+      s.st.classList.toggle('gone', mode === 'morph' && q > 0.62);
+      if (mode === 'morph' && s.card) {
+        var c = s.card, e = ease(clamp((q - 0.06) / 0.6, 0, 1)), W = c.W + (c.w - c.W) * e, H = c.H + (c.h - c.H) * e, k = H / c.H;
+        var dx = (c.x + c.w / 2 - c.W / 2) * e, dy = (c.y + c.h / 2 - c.H / 2) * e, ix = Math.max(0, (c.W - W / k) / 2);
+        s.open.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) scale(' + k.toFixed(4) + ')';
+        s.open.style.clipPath = 'inset(0px ' + ix.toFixed(1) + 'px round ' + (26 * e / k).toFixed(1) + 'px)';
+      }
+      var of = s.ob && s.ob._f, cf = s.cb && s.cb._f;
+      if (of && cf) {
+        if (mode === 'morph' && was < 0.42 && q >= 0.42) {
+          var ov = $('video', s.ob), cv = $('video', s.cb);
+          try { if (ov.readyState > 0 && cv.readyState > 0 && Math.abs(cv.currentTime - ov.currentTime) > 0.25) cv.currentTime = ov.currentTime; } catch (err) {}
+        }
+        var oh = mode === 'morph' ? q > 0.62 : q >= 0.985, ch = mode === 'morph' && q < 0.4;
+        if (of.hidden !== oh) { of.hidden = oh; of.apply(); }
+        if (cf.hidden !== ch) { cf.hidden = ch; cf.apply(); }
+      }
+    });
+  }
+  if (seqs.length) {
+    var reseq = function () { seqs.forEach(function (s) { s.card = null; }); seqTick(true); };
+    SS.onLang(reseq);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(reseq);
+  }
+
   /* ---------------- the menu: a shadow once scrolled, the dark style over parts marked data-dark ---------------- */
   var nav = $('#nav'), darks = $$('[data-dark]'), was = {};
   function navTick() {
@@ -208,11 +278,11 @@
   function frame() {
     ticking = false; vh = innerHeight;
     var y = scrollY; if (!reduce) boost = Math.min(520, boost + Math.abs(y - lastY) * 2.2); lastY = y;
-    litTick(); driftTick(); navTick();
+    litTick(); driftTick(); navTick(); seqTick();
   }
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } run(); }
   addEventListener('scroll', onScroll, { passive: true });
-  addEventListener('resize', function () { measureRails(); frame(); });
+  addEventListener('resize', function () { measureRails(); seqs.forEach(function (s) { s.card = null; }); frame(); seqTick(true); });
   addEventListener('load', function () { measureRails(); run(); });
 
   /* ---------------- rows the visitor scrolls sideways; buttons marked data-row-go move them a card at a time ---------------- */

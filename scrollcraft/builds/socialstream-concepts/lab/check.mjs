@@ -39,9 +39,23 @@ for (const name of names) {
     // the first screen: the claim and the button
     const h1 = await p.evaluate(() => document.querySelector('#hero-h [data-l="hu"]').textContent.replace(/\s+/g, ' ').trim());
     ok(`${dev}: the claim is the headline`, h1 === CLAIM_HU, h1);
-    ok(`${dev}: the claim and the audit button on the first screen`, await onScreen(p, '.claim') && await onScreen(p, '#top a.btn[href="#audit"]'));
-    const st = await strike(p);
-    ok(`${dev}: "social media" is struck through the middle`, st && st.drawn && st.off < 0.06, JSON.stringify(st));
+    // a page that opens on its film alone (#top[data-seq]): the film fills the first screen and plays; at the end of the
+    // opening the claim and the audit button are on screen and fully shown, the line is drawn, and the light follows
+    const seq = await p.evaluate(() => !!document.querySelector('#top[data-seq]'));
+    const toSeqEnd = () => p.evaluate(() => { const s = document.getElementById('top'), r = s.getBoundingClientRect(); const span = s.classList.contains('is-morph') ? s.offsetHeight - innerHeight : innerHeight; scrollTo({ top: scrollY + r.top + Math.max(0, span), behavior: 'instant' }); }).then(() => p.waitForTimeout(900));
+    if (!seq) {
+      ok(`${dev}: the claim and the audit button on the first screen`, await onScreen(p, '.claim') && await onScreen(p, '#top a.btn[href="#audit"]'));
+      const st = await strike(p);
+      ok(`${dev}: "social media" is struck through the middle`, st && st.drawn && st.off < 0.06, JSON.stringify(st));
+    } else {
+      const cover = await p.evaluate(() => { const f = document.querySelector('#top [data-seq-open] [data-film]'), r = f.getBoundingClientRect(), v = f.querySelector('video'); return { area: +((Math.min(r.right, innerWidth) - Math.max(r.left, 0)) * (Math.min(r.bottom, innerHeight) - Math.max(r.top, 0)) / (innerWidth * innerHeight)).toFixed(2), playing: !v.paused && v.currentTime > 0, src: (v.currentSrc || '').split('/').pop() }; });
+      ok(`${dev}: the film alone fills the first screen and plays`, cover.area > 0.9 && cover.playing, JSON.stringify(cover));
+      await toSeqEnd();
+      const vis = await p.evaluate(() => { const op = e => { let o = 1; for (; e && e !== document.body; e = e.parentElement) o *= +getComputedStyle(e).opacity; return o; }; const on = e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.top >= 0 && r.bottom <= innerHeight; }; const c = document.querySelector('#top .claim'), b = document.querySelector('#top a.btn[href="#audit"]'); return { claim: on(c), claimShown: +op(c).toFixed(2), button: on(b), buttonShown: +op(b).toFixed(2) }; });
+      ok(`${dev}: after the opening, the claim and the audit button are on screen and fully shown`, vis.claim && vis.button && vis.claimShown > 0.98 && vis.buttonShown > 0.98, JSON.stringify(vis));
+      const st = await strike(p);
+      ok(`${dev}: after the opening, "social media" is struck through the middle`, st && st.drawn && st.off < 0.06, JSON.stringify(st));
+    }
     ok(`${dev}: no Tenerife or Budapest on the first screen`, await p.evaluate(() => !/Tenerif|Budapest/i.test(document.getElementById('top').innerText)));
     // the business problems: six, each pointing at its own service card, all of them before the services
     const pains = await p.evaluate(() => {
@@ -50,6 +64,7 @@ for (const name of names) {
     });
     ok(`${dev}: six problems, each linked to its service, before the services`, pains.n === 6 && pains.uniq === 6 && pains.hit && pains.before, JSON.stringify(pains));
     // the first screen follows a mouse; on a phone nothing follows
+    if (seq) await toSeqEnd();
     const fxy = () => p.evaluate(() => [...document.querySelectorAll('#top [data-follow]')].map(e => [parseFloat(e.style.getPropertyValue('--fx')) || 0, parseFloat(e.style.getPropertyValue('--fy')) || 0]));
     const vw = opts.viewport.width, vhh = opts.viewport.height;
     await p.mouse.move(70, 120, { steps: 4 }); await p.waitForTimeout(1300); const f0 = await fxy();
@@ -58,6 +73,7 @@ for (const name of names) {
     if (dev === 'desktop') ok('desktop: the first screen follows the cursor', f0.length > 0 && moved >= 10, `${f0.length} followers, moved ${moved.toFixed(1)}px`);
     else ok('phone: nothing follows a cursor', f1.every(v => v[0] === 0 && v[1] === 0), JSON.stringify(f1));
     await p.mouse.move(2, 2);
+    if (seq) { await p.evaluate(() => scrollTo({ top: 0, behavior: 'instant' })); await p.waitForTimeout(900); }
     // the film plays where it is seen, and its button pauses it
     await to(p, '[data-film]', 0.15, 1800);
     let f = await film(p);
@@ -66,11 +82,12 @@ for (const name of names) {
     await p.locator('[data-film] .toggle').first().click({ force: true }); await p.waitForTimeout(300); f = await film(p);
     ok(`${dev}: the film's button pauses it`, f.paused, JSON.stringify(f));
     // the running rows move without any scrolling
-    const rails = await p.evaluate(() => document.querySelectorAll('[data-rail]').length);
+    // (the first row outside an opening: one inside it only runs once the opening has brought it in)
+    const rails = await p.evaluate(() => { const r = [...document.querySelectorAll('[data-rail]')].find(e => !e.closest('#top[data-seq]')); if (r) r.setAttribute('data-test-rail', ''); return !!r; });
     if (rails) {
-      await to(p, '[data-rail]', 0.4, 600);
-      const x0 = await p.evaluate(() => document.querySelector('[data-rail] .track').style.transform); await p.waitForTimeout(1000);
-      const x1 = await p.evaluate(() => document.querySelector('[data-rail] .track').style.transform);
+      await to(p, '[data-test-rail]', 0.4, 600);
+      const x0 = await p.evaluate(() => document.querySelector('[data-test-rail] .track').style.transform); await p.waitForTimeout(1000);
+      const x1 = await p.evaluate(() => document.querySelector('[data-test-rail] .track').style.transform);
       ok(`${dev}: a running row moves at rest`, x0 !== x1, x0 + ' -> ' + x1);
     }
     // counters reach the real numbers

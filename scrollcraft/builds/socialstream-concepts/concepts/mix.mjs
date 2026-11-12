@@ -1,5 +1,6 @@
 // Aurora Mix. Aurora's look (night blue, a moving aurora, glass; Sora with Instrument Serif italics) laid out the
-// way Scrolla is: the first screen in an inset rounded panel with the claim on the left and the film standing on
+// way Scrolla is. It opens on the film alone, which settles into its card as the page scrolls; then the first screen
+// in an inset rounded panel with the claim on the left and the film standing on
 // the right like a post, the real numbers running along the panel's foot; the statement with their reels closing
 // in from the sides; the problems; services as big-object cards in a panel over two running rows of tags; results
 // as stat cards with a running row of reel frames; the elsewhere/with-us cards laid over each other; big numbered
@@ -28,19 +29,27 @@ export function page() {
     css: 'mix.css', theme: '#05070f',
   }) + nav('mx-nav') + `
 <main>
-  <!-- the first screen in an inset panel: the claim on the left, the film standing on the right like a post, the
-       real numbers running along the panel's foot; the aurora moves inside, and its brightest light follows the cursor -->
-  <section class="mx-hero" id="top" aria-labelledby="hero-h">
+  <!-- the opening: the film alone fills the first screen (it carries the claim itself, a few seconds in). Scrolling
+       on, where the screen has room to pin, the film settles into its card beside the claim while the panel, the claim
+       and the numbers come in around it; on phones and short screens the panel rises over the film like a sheet.
+       kit.js drives it all from one value, --q; without script or with reduced motion the page opens on the panel.
+       The panel: the claim on the left, the film standing on the right like a post, the real numbers running along
+       its foot; the aurora moves inside, and its brightest light follows the cursor -->
+  <section class="mx-hero" id="top" aria-labelledby="hero-h" data-seq="(min-width: 900px) and (min-height: 700px)">
+    <div class="mx-open" data-seq-open>
+      ${film('mx-openfilm', 'auto', true, `
+  <span class="mx-cue" aria-hidden="true"><i></i></span>`)}
+    </div>
     <div class="mx-panel mx-hero-panel">
       <div class="mx-sky" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i><span class="mx-glow" data-follow="in" data-home="0.3,0.42"></span></div>
       <div class="mx-hero-in">
         <div class="mx-copy">
-          <p class="mx-pill" data-r><i aria-hidden="true"></i><span data-en="${esc(C.eyebrow.en)}">${esc(C.eyebrow.hu)}</span></p>
-          ${claim('mx-claim', 'data-r style="--d:1"')}
-          ${promise('mx-promise', 'data-r style="--d:2"')}
-          <div class="mx-cta" data-r style="--d:3">${btn()}${btn(C.ctaResults, 'btn ghost', '#eredmenyek')}</div>
+          <p class="mx-pill"><i aria-hidden="true"></i><span data-en="${esc(C.eyebrow.en)}">${esc(C.eyebrow.hu)}</span></p>
+          ${claim('mx-claim')}
+          ${promise('mx-promise')}
+          <div class="mx-cta">${btn()}${btn(C.ctaResults, 'btn ghost', '#eredmenyek')}</div>
         </div>
-        <div class="mx-post" data-r style="--d:2">
+        <div class="mx-post" data-seq-to>
           ${film('mx-film', 'v', false, `
   <div class="progress" aria-hidden="true"></div>
   <p class="mx-acct" aria-hidden="true"><i>S</i>SocialStream</p>
