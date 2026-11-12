@@ -10,10 +10,11 @@ don'ts, which file) and `presentation/board.html` (slides as PNGs in `presentati
 
 | Use | File |
 |---|---|
-| Website header (light page / dark page) | `source/socialstream-logo-horizontal-light.svg` / `-dark.svg` |
+| Website header (light page / dark page) | `source/socialstream-logo-horizontal-light.svg` / `-dark.svg`; under 250 px wide use `socialstream-logo-horizontal-small-*.svg` |
 | Favicon and app icons | everything in `web/`; paste `web/head-snippet.html` into the page `<head>` |
 | Instagram, TikTok, Facebook profile picture | `social/socialstream-avatar-night-1080.png` (or `-cream-`) |
-| Corner mark and end card on reels | `source/socialstream-symbol-dark.svg` on video; `social/socialstream-stacked-night-1080.png` for an end card |
+| Corner mark on reels | `source/socialstream-symbol-corner.svg` or `digital/socialstream-symbol-corner-256.png` (cream phone, night S: readable on bright frames too) |
+| End card on reels | `social/socialstream-stacked-night-1080.png` |
 | Shirts, merch | stacked or symbol, one colour: `print/socialstream-logo-stacked-white.pdf` on dark fabric |
 | Embroidery under 40 mm | `source/socialstream-symbol-small-*.svg` (its slice stays above 1.5 mm) |
 | Printer (cards, signs) | `print/*.pdf` (vector) + the colour table below |
@@ -21,11 +22,12 @@ don'ts, which file) and `presentation/board.html` (slides as PNGs in `presentati
 
 ## Folders
 
-- `source/` SVG masters, light and dark: horizontal, stacked, wordmark (one and two lines), symbol, the
-  small-size cut, and the two-colour favicon drawing. Light = Night + Deep Stream (for cream/white grounds);
-  dark = Cream + Stream Blue (for night blue and dark photos).
-- `digital/` transparent PNGs of every colour master and one-colour SVGs (+ PNGs of the symbol) in black,
-  white, cream (`mono-f1eee6`) and night (`mono-05070f`).
+- `source/` SVG masters, light and dark: horizontal (and its small-size cut), stacked, wordmark (one and two
+  lines), symbol (and its small-size cut), the two-colour corner mark for video and the two-colour favicon
+  drawing. Light = Night + Deep Stream (for cream/white grounds); dark = Cream + Stream Blue (for night blue
+  and dark photos), drawn with the heavier S and wider slice.
+- `digital/` transparent PNGs of every colour master and one-colour SVGs (+ PNGs of the symbol): black and
+  night (`mono-05070f`) from the light drawing, white and cream (`mono-f1eee6`) from the dark drawing.
 - `web/` `favicon.ico`, `favicon.svg`, 16/32/48 px favicons, `apple-touch-icon.png`, `icon-192/512.png`,
   `maskable-512.png`, `site.webmanifest`, `head-snippet.html`, the app-icon and square SVGs.
 - `social/` 1080 px profile pictures on night and on cream (circle-safe), and a stacked square.
@@ -61,13 +63,26 @@ tilted phone's sides), and the M's diagonals sit at exactly 60°.
 - **Optical corrections.** The S sits 3 % of the phone's height above centre, so it is centred in the area
   above the slice. The reversed (dark) drawing uses a heavier S and a wider slice, so it does not look thinner
   on night blue. Spacing was evened by eye (C·I, O·C, T·R, R·E and A·M tightened).
-- **Small sizes.** At 32 px and below use the small cut (bigger S, wider slice). Browser tabs get a two-colour
-  drawing (night phone, cream S) so the favicon reads on light and dark tab bars.
+- **Small sizes.** Below 32 px use the small cut of the phone (bigger S, wider slice), and below 250 px wide the
+  small-cut horizontal lockup; below 140 px use the phone alone. Browser tabs get a two-colour drawing (night
+  phone, cream S) so the favicon reads on light and dark tab bars; app icons use the cream small cut on Night.
+- **Video.** The see-through S disappears on bright frames, so video gets a two-colour corner mark (cream
+  phone, night S).
+
+| Minimum size | Screen | Print |
+|---|---|---|
+| Horizontal | 250 px wide (small cut from 140 px) | 60 mm (small cut from 35 mm) |
+| Stacked | 100 px wide | 25 mm |
+| Phone | 32 px tall (small cut from 16 px) | 8 mm (small cut from 5 mm) |
 
 ## Tests
 
-- `svg_audit.py` on all 36 SVGs: 92–100, no failures. The only remaining note is the anchor count of the
-  stacked lockups (letter outlines). Report: `tests/audit.txt`.
+- `svg_audit.py` on every SVG in the kit: 92–100, no failures. The only remaining note is the anchor count of
+  the stacked lockups (letter outlines). Report: `tests/audit.txt`.
+- Corner mark on six of the team's reel frames, dark to bright (`tests/corner-on-reels.png`): the see-through
+  phone fails on the brightest frames, the two-colour corner mark reads on all of them.
+- Lockups rendered at their real minimum widths on cream and night blue: STREAM still reads at 140 px; the
+  primary phone's slice fades below about 250 px wide, hence the small-cut horizontal.
 - Preview sheet of the final symbol and small cut (`tests/preview.html`, `tests/preview-full.png`): size ladder,
   16/32/48 px pixel test, one colour, reversed, blur, mirror, 180°, favicon, app icon, round avatar, header.
 - Earlier rounds checked distinctness against social-category logos and S app icons (`../round-2/`,

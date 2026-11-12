@@ -117,6 +117,8 @@ def main():
                           f"SocialStream symbol, small-size cut ({scheme} version)", scheme, pad=0.06, square=True))
         made.append(write(horizontal(kind), f"{src}/{n}-logo-horizontal-{scheme}.svg",
                           f"SocialStream logo, horizontal ({scheme} version)", scheme))
+        made.append(write(horizontal(ksmall), f"{src}/{n}-logo-horizontal-small-{scheme}.svg",
+                          f"SocialStream logo, horizontal small-size cut ({scheme} version)", scheme))
         made.append(write(stacked(kind), f"{src}/{n}-logo-stacked-{scheme}.svg",
                           f"SocialStream logo, stacked ({scheme} version)", scheme, pad=0.10))
         made.append(write(word(), f"{src}/{n}-wordmark-{scheme}.svg", f"SocialStream wordmark ({scheme} version)", scheme))
@@ -141,3 +143,16 @@ def favicon_source(path):
     m = (s, 0, 0, s, 128 - s * (x0 + x1) / 2, 128 - s * (y0 + y1) / 2)
     els = [el(tf(phone, m), COLOURS["night"]), el(tf(S, m), COLOURS["cream"])]
     open(path, "w").write(svg(els, (0, 0, 256, 256), "SocialStream favicon"))
+
+
+def corner_mark(path):
+    """Two-colour phone for video overlays: cream phone, night S (filled, not see-through), so the S
+    stays readable over any frame."""
+    p, meta = g2_symbol(**SYMBOLS["reversed"])
+    phone, S = p[:2], p[2:]
+    x0, y0, x1, y1 = bbox_many([phone, S])
+    side = max(x1 - x0, y1 - y0)
+    s = 256 * 0.92 / side
+    m = (s, 0, 0, s, 128 - s * (x0 + x1) / 2, 128 - s * (y0 + y1) / 2)
+    els = [el(tf(phone, m), COLOURS["cream"]), el(tf(S, m), COLOURS["night"])]
+    open(path, "w").write(svg(els, (0, 0, 256, 256), "SocialStream corner mark for video"))

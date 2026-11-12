@@ -45,10 +45,10 @@ def main():
     title_mark = art("socialstream-wordmark-light.svg", "height:30px;width:auto")
     hl = art("socialstream-logo-horizontal-light.svg", "width:100%;height:auto")
     hd = art("socialstream-logo-horizontal-dark.svg", "width:100%;height:auto")
-    st = art("socialstream-logo-stacked-light.svg", "height:92px;width:auto")
-    sd = art("socialstream-logo-stacked-dark.svg", "height:92px;width:auto")
-    sy = art("socialstream-symbol-light.svg", "height:84px;width:auto")
-    syd = art("socialstream-symbol-dark.svg", "height:84px;width:auto")
+    st = art("socialstream-logo-stacked-light.svg", "height:80px;width:auto")
+    sd = art("socialstream-logo-stacked-dark.svg", "height:80px;width:auto")
+    sy = art("socialstream-symbol-light.svg", "height:72px;width:auto")
+    syd = art("socialstream-symbol-dark.svg", "height:72px;width:auto")
     dont = [
         (art("socialstream-logo-horizontal-light.svg", "width:100%;height:34px", par="none"), "Don't stretch or squash"),
         (art("socialstream-symbol-light.svg", "height:54px;width:auto", transform="rotate(-15 128 128)"), "Don't straighten the phone"),
@@ -75,7 +75,7 @@ header{{display:flex;align-items:center;gap:4mm}} header h1{{font:600 15px Monts
 h2{{font:600 9.5px Montserrat,Helvetica;letter-spacing:1.8px;text-transform:uppercase;color:#40658C;margin:0 0 2mm}}
 .row{{display:grid;gap:4mm}} .row>*{{min-width:0}}
 .c2{{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}} .c4{{grid-template-columns:repeat(4,minmax(0,1fr))}} .c6{{grid-template-columns:repeat(6,minmax(0,1fr))}}
-.tile{{border-radius:2.5mm;padding:4.5mm 6mm;display:flex;align-items:center;justify-content:center;min-width:0}} .tile svg{{max-width:100%}}
+.tile{{border-radius:2.5mm;padding:4mm 6mm;display:flex;align-items:center;justify-content:center;min-width:0}} .tile svg{{max-width:100%}}
 .cream{{background:#F1EEE6}} .night{{background:#05070F}}
 .note{{font-size:10px;color:#57534a;margin:1.6mm 0 0}}
 table{{border-collapse:collapse;width:100%;font-size:10.3px}} td,th{{text-align:left;padding:1.1mm 1.6mm;border-bottom:1px solid #e7e2d6;vertical-align:top}} th{{font-weight:600}}
@@ -93,31 +93,26 @@ table{{border-collapse:collapse;width:100%;font-size:10.3px}} td,th{{text-align:
 <section><h2>Versions</h2>
 <div class="row c2"><div class="tile cream">{hl}</div><div class="tile night">{hd}</div></div>
 <div class="row c4" style="margin-top:3.4mm"><div class="tile cream">{st}</div><div class="tile night">{sd}</div><div class="tile cream">{sy}</div><div class="tile night">{syd}</div></div>
-<p class="note">Horizontal is the default; stacked for square formats and shirts; the phone alone where the name is already there (profile pictures, favicon, the corner of a reel). Light versions (Night + Deep Stream) go on cream or white, dark versions (Cream + Stream Blue) on night blue or calm, dark photos.</p></section>
+<p class="note">Horizontal is the default; stacked for square formats and shirts; the phone alone where the name is already there (profile pictures, favicon); on video, the corner mark (cream phone, night S), which stays readable on bright frames. Light versions (Night + Deep Stream) go on cream or white, dark versions (Cream + Stream Blue) on night blue or calm, dark photos.</p></section>
 
 <section class="row c2"><div><h2>Clear space</h2>{clear_space()}
 <p class="note">Keep at least <b>x</b> clear on every side: x is the cap height of SOCIAL. For the phone alone, x is half the phone's width.</p></div>
 <div><h2>Minimum size</h2><table><tr><th>Version</th><th>Screen</th><th>Print</th></tr>
-<tr><td>Horizontal</td><td>140 px wide</td><td>35 mm wide</td></tr>
-<tr><td>Stacked</td><td>80 px wide</td><td>20 mm wide</td></tr>
-<tr><td>Phone</td><td>24 px; small cut below 32 px</td><td>6 mm, small cut</td></tr>
-<tr><td>Favicon</td><td>16 px: web/favicon.*</td><td>–</td></tr></table></div></section>
+<tr><td>Horizontal</td><td>250 px · small cut from 140 px</td><td>60 mm · small cut from 35 mm</td></tr>
+<tr><td>Stacked</td><td>100 px</td><td>25 mm</td></tr>
+<tr><td>Phone</td><td>32 px · small cut from 16 px</td><td>8 mm · small cut from 5 mm</td></tr>
+<tr><td>Favicon</td><td>16 px: web/favicon.*</td><td>–</td></tr></table>
+<p class="note">Widths for the lockups, heights for the phone. Smaller than that: the phone alone.</p></div></section>
 
 <section><h2>Colour</h2><div class="row c4">{swatches}</div>
 <p class="note">* CMYK values are plain conversions from RGB: have the printer proof them with their profile. Pantone matches are not set yet; choose them from a physical guide at the first print job.</p></section>
 
-<section class="row c2"><div class="type"><h2>Typefaces</h2>
-<div class="a">A SOCIAL MEDIA MEGHALT.</div><div class="b">Az érdeklődés vette át a helyét.</div>
-<p class="note">Montserrat for headlines: ExtraBold caps for statements, Light for the second voice. <span class="c">Plus Jakarta Sans</span> for body text. Both are free (SIL Open Font License). The logo's letters are custom outlines based on Montserrat (the sliced A, S terminals cut at 75°, an M at exact 60°), so the logo can't be typed.</p></div>
-<div><h2>Which file</h2><table class="files">
-<tr><td>source/</td><td>SVG masters, light and dark: every lockup, the symbol, its small cut, the favicon drawing</td></tr>
-<tr><td>digital/</td><td>transparent PNGs (512–2400 px); one-colour SVGs in black, white, cream and night</td></tr>
-<tr><td>web/</td><td>favicons (ico, svg, 16–48 px), app icons, webmanifest, &lt;head&gt; snippet</td></tr>
-<tr><td>social/</td><td>1080 px profile pictures (night, cream) and a stacked square</td></tr>
-<tr><td>print/</td><td>vector PDFs (RGB): horizontal, stacked, symbol in light, dark, black, white</td></tr></table></div></section>
+<section><h2>Typefaces</h2><div class="row c2 type"><div><div class="a">A SOCIAL MEDIA MEGHALT.</div><div class="b">Az érdeklődés vette át a helyét.</div></div>
+<p class="note" style="margin:0">Montserrat for headlines: ExtraBold caps for statements, Light for the second voice. <span class="c">Plus Jakarta Sans</span> for body text. Both are free (SIL Open Font License). The logo's letters are custom outlines based on Montserrat (the sliced A, S terminals cut at 75°, an M at exact 60°), so the logo can't be typed.</p></div></section>
 
 <section><h2>Please don't</h2><div class="row c6">{dont_html}</div>
 <p class="note">No shadows, outlines, gradients or effects. Don't rearrange or resize the parts of a lockup. On busy photos use the phone alone or a calm area.</p></section>
+<p class="note" style="margin:0"><b>Files</b> · source/ SVG masters · digital/ PNGs and one-colour files · web/ favicons and app icons · social/ profile pictures · print/ vector PDFs. Details: kit/README.md.</p>
 </div></body></html>"""
     path = os.path.join(out, "socialstream-logo-guide.html")
     open(path, "w").write(html)

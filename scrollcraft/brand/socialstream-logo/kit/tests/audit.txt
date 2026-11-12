@@ -22,6 +22,22 @@ margins L35.9 R35.9 T35.8 B35.8 · bbox fill 0.685
 · INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
 production-readiness score: 98/100 (heuristic)
 
+=== socialstream-logo-horizontal-small-dark.svg  (9337 bytes)
+viewBox 0 0 1471 256 · aspect 5.746 (extra-wide)
+colours 2: #f1eee6 #7fa1c4 · gradients 0 · anchors 294
+margins L35.9 R35.9 T35.8 B35.8 · bbox fill 0.685
+· INFO [complexity] 294 anchor points (library median 75.0, p75 155.0). Check every point earns its place.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 98/100 (heuristic)
+
+=== socialstream-logo-horizontal-small-light.svg  (9325 bytes)
+viewBox 0 0 1471 256 · aspect 5.746 (extra-wide)
+colours 2: #05070f #40658c · gradients 0 · anchors 294
+margins L35.9 R35.9 T35.8 B35.8 · bbox fill 0.685
+· INFO [complexity] 294 anchor points (library median 75.0, p75 155.0). Check every point earns its place.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 98/100 (heuristic)
+
 === socialstream-logo-stacked-dark.svg  (9027 bytes)
 viewBox 0 0 289 256 · aspect 1.129 (square)
 colours 2: #f1eee6 #7fa1c4 · gradients 0 · anchors 294
@@ -35,6 +51,13 @@ colours 2: #05070f #40658c · gradients 0 · anchors 294
 margins L25.7 R25.7 T25.6 B25.6 · bbox fill 0.658
 ▲ WARN [complex] 294 anchor points — more than 95% of comparable reference logos (median 53.0). Simplify: fewer points, merged shapes, less detail.
 production-readiness score: 92/100 (heuristic)
+
+=== socialstream-symbol-corner.svg  (2046 bytes)
+viewBox 0 0 256 256 · aspect 1.0 (square)
+colours 2: #f1eee6 #05070f · gradients 0 · anchors 50
+margins L44.6 R44.6 T10.2 B10.2 · bbox fill 0.599
+✔ no issues found
+production-readiness score: 100/100 (heuristic)
 
 === socialstream-symbol-dark.svg  (2036 bytes)
 viewBox 0 0 256 256 · aspect 1.0 (square)
@@ -110,7 +133,7 @@ margins L35.9 R35.9 T35.8 B35.8 · bbox fill 0.685
 · INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
 production-readiness score: 98/100 (heuristic)
 
-=== socialstream-logo-horizontal-mono-f1eee6.svg  (9372 bytes)
+=== socialstream-logo-horizontal-mono-f1eee6.svg  (9360 bytes)
 viewBox 0 0 1471 256 · aspect 5.746 (extra-wide)
 colours 1: #f1eee6 · gradients 0 · anchors 294
 margins L35.9 R35.9 T35.8 B35.8 · bbox fill 0.685
@@ -118,7 +141,7 @@ margins L35.9 R35.9 T35.8 B35.8 · bbox fill 0.685
 · INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
 production-readiness score: 98/100 (heuristic)
 
-=== socialstream-logo-horizontal-white.svg  (9372 bytes)
+=== socialstream-logo-horizontal-white.svg  (9360 bytes)
 viewBox 0 0 1471 256 · aspect 5.746 (extra-wide)
 colours 1: #ffffff · gradients 0 · anchors 294
 margins L35.9 R35.9 T35.8 B35.8 · bbox fill 0.685
@@ -140,14 +163,14 @@ margins L25.7 R25.7 T25.6 B25.6 · bbox fill 0.658
 ▲ WARN [complex] 294 anchor points — more than 95% of comparable reference logos (median 53.0). Simplify: fewer points, merged shapes, less detail.
 production-readiness score: 92/100 (heuristic)
 
-=== socialstream-logo-stacked-mono-f1eee6.svg  (9080 bytes)
+=== socialstream-logo-stacked-mono-f1eee6.svg  (9074 bytes)
 viewBox 0 0 289 256 · aspect 1.129 (square)
 colours 1: #f1eee6 · gradients 0 · anchors 294
 margins L25.7 R25.7 T25.6 B25.6 · bbox fill 0.658
 ▲ WARN [complex] 294 anchor points — more than 95% of comparable reference logos (median 53.0). Simplify: fewer points, merged shapes, less detail.
 production-readiness score: 92/100 (heuristic)
 
-=== socialstream-logo-stacked-white.svg  (9080 bytes)
+=== socialstream-logo-stacked-white.svg  (9074 bytes)
 viewBox 0 0 289 256 · aspect 1.129 (square)
 colours 1: #ffffff · gradients 0 · anchors 294
 margins L25.7 R25.7 T25.6 B25.6 · bbox fill 0.658
@@ -168,14 +191,14 @@ margins L51.9 R51.9 T20.5 B20.5 · bbox fill 0.5
 ✔ no issues found
 production-readiness score: 100/100 (heuristic)
 
-=== socialstream-symbol-mono-f1eee6.svg  (2069 bytes)
+=== socialstream-symbol-mono-f1eee6.svg  (2078 bytes)
 viewBox 0 0 256 256 · aspect 1.0 (square)
 colours 1: #f1eee6 · gradients 0 · anchors 50
 margins L51.9 R51.9 T20.5 B20.5 · bbox fill 0.5
 ✔ no issues found
 production-readiness score: 100/100 (heuristic)
 
-=== socialstream-symbol-white.svg  (2069 bytes)
+=== socialstream-symbol-white.svg  (2078 bytes)
 viewBox 0 0 256 256 · aspect 1.0 (square)
 colours 1: #ffffff · gradients 0 · anchors 50
 margins L51.9 R51.9 T20.5 B20.5 · bbox fill 0.5
@@ -198,7 +221,7 @@ margins L35.9 R35.9 T35.8 B35.8 · bbox fill 0.696
 · INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
 production-readiness score: 98/100 (heuristic)
 
-=== socialstream-wordmark-mono-f1eee6.svg  (7578 bytes)
+=== socialstream-wordmark-mono-f1eee6.svg  (7577 bytes)
 viewBox 0 0 2119 256 · aspect 8.277 (extra-wide)
 colours 1: #f1eee6 · gradients 0 · anchors 244
 margins L35.9 R35.9 T35.8 B35.8 · bbox fill 0.696
@@ -220,21 +243,21 @@ margins L30.8 R30.8 T30.7 B30.7 · bbox fill 0.675
 · INFO [complexity] 244 anchor points (library median 75.0, p75 155.0). Check every point earns its place.
 production-readiness score: 99/100 (heuristic)
 
-=== socialstream-wordmark-stacked-mono-f1eee6.svg  (7164 bytes)
+=== socialstream-wordmark-stacked-mono-f1eee6.svg  (7163 bytes)
 viewBox 0 0 554 256 · aspect 2.164 (wide)
 colours 1: #f1eee6 · gradients 0 · anchors 244
 margins L30.8 R30.8 T30.7 B30.7 · bbox fill 0.675
 · INFO [complexity] 244 anchor points (library median 75.0, p75 155.0). Check every point earns its place.
 production-readiness score: 99/100 (heuristic)
 
-=== socialstream-wordmark-stacked-white.svg  (7164 bytes)
+=== socialstream-wordmark-stacked-white.svg  (7163 bytes)
 viewBox 0 0 554 256 · aspect 2.164 (wide)
 colours 1: #ffffff · gradients 0 · anchors 244
 margins L30.8 R30.8 T30.7 B30.7 · bbox fill 0.675
 · INFO [complexity] 244 anchor points (library median 75.0, p75 155.0). Check every point earns its place.
 production-readiness score: 99/100 (heuristic)
 
-=== socialstream-wordmark-white.svg  (7578 bytes)
+=== socialstream-wordmark-white.svg  (7577 bytes)
 viewBox 0 0 2119 256 · aspect 8.277 (extra-wide)
 colours 1: #ffffff · gradients 0 · anchors 244
 margins L35.9 R35.9 T35.8 B35.8 · bbox fill 0.696
@@ -249,7 +272,7 @@ margins L41.0 R41.0 T5.1 B5.1 · bbox fill 0.652
 ✔ no issues found
 production-readiness score: 100/100 (heuristic)
 
-=== socialstream-app-icon.svg  (2164 bytes)
+=== socialstream-app-icon.svg  (2170 bytes)
 viewBox 0 0 256 256 · aspect 1.0 (square)
 colours 2: #05070f #f1eee6 · gradients 0 · anchors 59
 margins L0.0 R0.0 T0.0 B0.0 · bbox fill 1.0
