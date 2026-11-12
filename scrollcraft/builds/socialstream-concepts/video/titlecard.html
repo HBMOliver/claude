@@ -1,27 +1,39 @@
 <!doctype html>
-<!-- The brand film's title card, one frame at a time (video/recut.mjs drives it): the logo kit's stacked dark lockup,
-     unchanged, centred on Night #05070F. The page itself is transparent, so a screenshot keeps the card's alpha for the
-     dissolves. The logo's height is the same share of the frame's height in both cuts, so on Aurora Mix, where the
-     wide film settles into the upright card and hands over to the upright cut, the two logos coincide. -->
+<!-- The brand film's title card, one frame at a time (video/recut.mjs drives it). Three layers over the film's own reel
+     wall, all in Night #05070F:
+       the band   a soft horizontal band through the middle, opaque over the middle 37 % of the frame's height (where the
+                  old Fraunces title is baked into the wall) and feathered over another 10 % above and below it, so the
+                  wall keeps playing at the top and the bottom of the frame
+       the card   the whole frame, for the dissolves into and out of the claim
+       the lockup the logo kit's stacked dark lockup, unchanged, centred
+     The page is transparent, so a screenshot keeps the alpha. The band and the lockup are shares of the frame's height
+     around its centre in both cuts, so on Aurora Mix, where the wide film settles into the upright card and hands over
+     to the upright cut, the two coincide. -->
 <html lang="hu">
 <head>
 <meta charset="utf-8">
 <style>
   html, body { margin: 0; background: transparent; overflow: hidden; }
-  #card { position: fixed; inset: 0; background: rgba(5, 7, 15, var(--a, 1)); }
+  #band { position: fixed; inset: 0; opacity: var(--v, 1);
+    background: linear-gradient(to bottom,
+      rgba(5, 7, 15, 0) 21.5%, rgba(5, 7, 15, 0.08) 23.5%, rgba(5, 7, 15, 0.25) 25.5%, rgba(5, 7, 15, 0.5) 27.5%, rgba(5, 7, 15, 0.75) 29.5%,
+      rgba(5, 7, 15, 1) 31.5%, rgba(5, 7, 15, 1) 68.5%,
+      rgba(5, 7, 15, 0.75) 70.5%, rgba(5, 7, 15, 0.5) 72.5%, rgba(5, 7, 15, 0.25) 74.5%, rgba(5, 7, 15, 0.08) 76.5%, rgba(5, 7, 15, 0) 78.5%); }
+  #card { position: fixed; inset: 0; background: rgba(5, 7, 15, var(--a, 0)); }
   #lockup { position: absolute; left: 50%; top: 50%; display: grid; justify-items: center; transform: translate(-50%, -50%) scale(var(--s, 1)); opacity: var(--o, 1); }
   #logo { display: block; height: 28.125vh; width: auto; }
   /* the descriptor line, only with DESC=1 (off by default: the kit has no lockup with a line) */
-  #desc { display: none; margin-top: 4.4vh; font: 400 2.05vh/1 "Montserrat", sans-serif; letter-spacing: 0.32em; margin-right: -0.32em; text-transform: uppercase; color: rgba(241, 238, 230, 0.72); white-space: nowrap; }
+  #desc { display: none; margin-top: 3.2vh; font: 400 1.9vh/1 "Montserrat", sans-serif; letter-spacing: 0.32em; margin-right: -0.32em; text-transform: uppercase; color: rgba(241, 238, 230, 0.72); white-space: nowrap; }
   .desc #desc { display: block; }
 </style>
 </head>
 <body>
+<div id="band"></div>
 <div id="card"></div>
 <div id="lockup"><img id="logo" alt="" src="../../../brand/socialstream-logo/kit/source/socialstream-logo-stacked-dark.svg"><div id="desc">Interest media ügynökség</div></div>
 <script>
-  // set(a, o, s): the card's alpha, the lockup's opacity and its scale
-  window.set = (a, o, s) => { const r = document.documentElement.style; r.setProperty('--a', a); r.setProperty('--o', o); r.setProperty('--s', s); };
+  // set(v, a, o, s): the band's opacity, the card's alpha, the lockup's opacity and its scale
+  window.set = (v, a, o, s) => { const r = document.documentElement.style; r.setProperty('--v', v); r.setProperty('--a', a); r.setProperty('--o', o); r.setProperty('--s', s); };
 </script>
 </body>
 </html>
