@@ -93,7 +93,7 @@ this folder's root, where the head's root paths (`/favicon.ico` and the rest) fi
   - the giant footer wordmark on Pulse and Premiere
   - Premiere's running ghost words
 
-  The brand film opens and closes on the kit's stacked logo since b1ae71e, over the reel wall since ef0dd7e (see
+  The brand film opens and closes on the kit's stacked logo since b1ae71e, over the reel wall since ef0dd7e, with a 4.56 s opening since 877347d (see
   `video/README.md`), on every page that plays it.
 - **Published links:** they still show the old logo until republished. The host sets its own tab icon, so the
   favicon shows only when the folder is served.
@@ -113,7 +113,7 @@ folder to `dist/site/`:
 - `404.html` (every link in it starts at the root, so it works at any depth), `robots.txt` and `sitemap.xml`.
 
 It writes real files only (no symlinks), and stops if a file the page names is missing or the folder breaks
-Pulse's limits (60 MB, 1,500 files). On 2026-11-12 it was 59 files and 19.4 MB. `tools/og.mjs` renders the share
+Pulse's limits (60 MB, 1,500 files). On 2026-11-12 it was 59 files and 18.8 MB. `tools/og.mjs` renders the share
 image from `tools/og.html`: the logo, the claim and three of their reels on the night blue.
 
 To update the live site: change the page, `node build.mjs mix`, `node tools/site.mjs`, run the last three commands
@@ -127,7 +127,8 @@ Before launch (2026-11-12):
 - **Fonts: open.** The page loads Sora, Inter, Instrument Serif and Fraunces from Google Fonts, which sends each
   visitor's IP address to Google. Serving them from the site is waiting for the user's decision.
 - **Film: done.** The title card was re-cut with the new logo (b1ae71e), then made longer, with the logo on a
-  soft night band over the moving reel wall (ef0dd7e: 798 frames, 31.92 s, the same timeline in both cuts). The
+  soft night band over the moving reel wall (ef0dd7e), and its opening shortened to 4.56 s (877347d: 774 frames,
+  30.96 s, the same timeline in both cuts). The
   opening's shrink now ends at 0.56 of the scroll, so the two cuts line up while they crossfade (66918b5).
 
 ## Run
