@@ -5,15 +5,17 @@
 // of the client's film (25 fps, 750 frames, 30 s, silent) carry the old Fraunces "Social Stream" title baked into the
 // reel wall, at the start (source frames ~19-88) and at the end (~680-746). It cannot be lifted out, so a soft Night
 // band through the middle of the frame covers it, with the logo kit's stacked dark lockup on the band, while the wall
-// keeps playing above and below (titlecard.html). The new film is 798 frames (31.92 s), both cuts on the same frames:
-//   new 0-137     the opening, 5.5 s (it was 3.6): the wall from the source's first frame (0-77), blending over 12
-//                 frames into the wall of the source's ending (680-739), so the wall keeps moving at its own speed;
-//                 the band and the lockup are there from the first frame (the poster's frame), the lockup pushing in
-//                 3 % and fading out by 126, the card closing over the wall by 130
-//   new 138-789   the source's 90-741, untouched (the card dissolves into the claim's black over 138-141)
-//   new 718-797   the ending: the card dissolves in over the claim's fade-out, opens onto the band and the wall, the
-//                 lockup fades in and holds; the last 8 frames blend the wall into the source's first frame, so the
-//                 loop (797 -> 0) is seamless
+// keeps playing above and below (titlecard.html). The new film is OPEN + 660 frames, both cuts on the same frames
+// (OPEN = 114: 774 frames, 30.96 s):
+//   new 0 to OPEN-1   the opening (the source's was 90 frames): the wall from the source's first frame (0-77),
+//                     blending over 12 frames into the wall of the source's ending (from 680) for as long as needed,
+//                     so the wall keeps moving at its own speed; the band and the lockup are there from the first
+//                     frame (the poster's frame), the lockup pushing in 3 % and fading out by OPEN-12, the card
+//                     closing over the wall by OPEN-8
+//   new OPEN on       the source's 90-741, untouched (the card dissolves into the claim's black over OPEN to OPEN+3)
+//   the last 80       the ending, from the source's 670: the card dissolves in over the claim's fade-out, opens onto
+//                     the band and the wall, the lockup fades in and holds; the last 8 frames blend the wall into the
+//                     source's first frame, so the loop back to frame 0 is seamless
 // The band and the lockup are shares of the frame's height in both cuts, so on Aurora Mix the wide film can hand over
 // to the upright cut with one band and one logo on screen. WALL_FIRST=<frames, at most 18> lets the wall play alone
 // that long before the band and the lockup come in (the poster then comes from frame 60).
@@ -39,7 +41,11 @@ const OUT = path.resolve(process.env.OUT || path.join(here, 'out'));
 const SRC = { h: process.env.H, v: process.env.V };
 for (const [k, f] of Object.entries(SRC)) if (!f || !fs.existsSync(f)) throw new Error(`set ${k.toUpperCase()}= to the ${k === 'h' ? '16:9' : 'vertical'} film`);
 const SIZE = { h: [1920, 1080], v: [1080, 1920] };
-const FRAMES = 798, SHIFT = 48; // the opening grows by 48 frames: source frame s (90-741) lands at s + 48
+// OPEN: the opening's length in frames, where the claim starts (the source's is 90). 114 (4.56 s) came after 90
+// (3.6 s, "a bit short") and 138 (5.52 s, "a bit long in the beginning")
+const OPEN = Math.round(+(process.env.OPEN || 114));
+if (!(OPEN >= 90 && OPEN <= 145)) throw new Error('OPEN must be 90-145 frames');
+const SHIFT = OPEN - 90, FRAMES = OPEN + 660; // source frame s (90-741) lands at s + SHIFT; then 8 frames of loop blend
 const WALL = Math.min(18, Math.max(0, +(process.env.WALL_FIRST || 0)));
 const POSTER = WALL ? 60 : 0;
 
@@ -49,17 +55,18 @@ const smooth = t => { t = clamp(t); return t * t * (3 - 2 * t); };
 const outCubic = t => 1 - Math.pow(1 - clamp(t), 3);
 const inOut = t => { t = clamp(t); return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
 function state(f) {
-  if (f <= 141) {                                   // the opening
-    const v = f >= 138 ? 0 : WALL ? smooth((f - (WALL - 10)) / 10) : 1;
-    const a = f <= 117 ? 0 : f <= 137 ? smooth((f - 117) / 13) : 1 - (f - 137) / 5;
-    const o = WALL ? smooth((f - WALL) / 16) * (1 - smooth((f - 110) / 16)) : 1 - smooth((f - 110) / 16);
-    const s = 1 + 0.03 * inOut((f - WALL) / (126 - WALL));
+  if (f <= OPEN + 3) {                              // the opening; the claim's black from OPEN
+    const v = f >= OPEN ? 0 : WALL ? smooth((f - (WALL - 10)) / 10) : 1;
+    const a = f <= OPEN - 21 ? 0 : f < OPEN ? smooth((f - (OPEN - 21)) / 13) : 1 - (f - OPEN + 1) / 5;
+    const o = (WALL ? smooth((f - WALL) / 16) : 1) * (1 - smooth((f - (OPEN - 28)) / 16));
+    const s = 1 + 0.03 * inOut((f - WALL) / (OPEN - 12 - WALL));
     return [v, a, o, s];
   }
-  if (f >= 718) {                                   // the ending
-    const a = f <= 723 ? (f - 717) / 6 : 1 - smooth((f - 723) / 15);
-    const o = smooth((f - 732) / 18);
-    const s = 0.975 + 0.025 * outCubic((f - 732) / 24);
+  const CS = 670 + SHIFT;                           // the ending, from the source's frame 670
+  if (f >= CS) {
+    const a = f <= CS + 5 ? (f - CS + 1) / 6 : 1 - smooth((f - (CS + 5)) / 15);
+    const o = smooth((f - (CS + 14)) / 18);
+    const s = 0.975 + 0.025 * outCubic((f - (CS + 14)) / 24);
     return [1, a, o, s];
   }
   return null;
@@ -70,11 +77,12 @@ const ff = args => run('ffmpeg', ['-v', 'error', '-y', ...args]);
 const count = f => +execFileSync('ffprobe', ['-v', 'error', '-select_streams', 'v', '-count_packets', '-show_entries', 'stream=nb_read_packets', '-of', 'csv=p=0', f]).toString().trim();
 const TAGS = ['-colorspace', 'bt470bg', '-color_range', 'tv'];
 const X264 = ['-c:v', 'libx264', '-preset', 'slow', '-profile:v', 'high', '-pix_fmt', 'yuv420p', '-g', '50', '-keyint_min', '25', '-an', ...TAGS];
-// the wall's new timeline: source 0-89 blending into 680-739 (12 frames from new 78), the source's 90-741, then
-// 742-748 blending into a hold of the source's first frame (pure from new 797)
+// the wall's new timeline: source 0-89 blending (12 frames from new 78) into the ending's wall from 680 for as long
+// as the opening needs, the source's 90-741, then 742-748 blending into a hold of the source's first frame (pure on
+// the last frame)
 const BG = [
   '[0:v]trim=start_frame=0:end_frame=90,setpts=PTS-STARTPTS[a]',
-  '[0:v]trim=start_frame=680:end_frame=740,setpts=PTS-STARTPTS[b]',
+  `[0:v]trim=start_frame=680:end_frame=${602 + OPEN},setpts=PTS-STARTPTS[b]`,
   '[a][b]xfade=transition=fade:duration=0.48:offset=3.12[ab]',
   '[0:v]trim=start_frame=90:end_frame=742,setpts=PTS-STARTPTS[c]',
   '[0:v]trim=start_frame=742:end_frame=749,setpts=PTS-STARTPTS[d]',
