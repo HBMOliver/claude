@@ -1,6 +1,22 @@
 # SocialStream logo concepts
 
-Two rounds so far, both shown before any logo kit is built. The brief, clichés and longlist are in `brief.md`.
+Three rounds so far, all shown before any logo kit is built. The brief, clichés and longlist are in `brief.md`.
+
+## Round 3: G with H's tilt (`round-3/`)
+
+The founder picked G as the base but liked how H's phone is tilted. Tilting the sliced phone 15° raises one
+question, what happens to the slice, so `round-3/concepts.png` shows three answers (all with E's wordmark):
+
+| | Variant | What the slice does |
+|---|---|---|
+| **G2** (recommended) | tilted 15°, slice parallel to the A | The cut stays at 15°, parallel to the bar of the sliced A, so symbol and wordmark share one move. |
+| **G2a** | tilted 15°, slice turns level | The cut turns with the phone and ends up horizontal; calmer, but reads more like a phone on a shelf. |
+| **G2c** | tilted 15°, no slice | H's phone next to G's wordmark; the cleanest, but loses the link to the A. |
+
+Tests: symbols 100 in the audit, lockups 90 (only Montserrat's M diagonals again). The tilted phone reads at
+16 px in a browser tab, sits better in a round avatar than the upright one, and holds on cream and night blue
+(`round-3/renders/test-dark-light.png`, `round-3/preview/`). `round-3/colour-hint.png` shows G2 in the film
+palette. Built by `tools/build_r3.py`.
 
 ## Round 2: the shirt wordmark and the phone S (`round-2/`)
 

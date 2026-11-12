@@ -9,7 +9,7 @@ def inner(path):
     return vb, body
 """Review strip: each lockup and symbol (160/64/32/16 px) on cream and on night blue."""
 rows = []; Y = 10
-for k in KEYS:
+for k in (KEYS.split(",") if "," in KEYS else KEYS):   # "abcd" or "g2,g2a,g2c"
     for scheme, bg, f in (("light", "#f6f4ef", f"concepts/{k}-lockup.svg"), ("night", "#05070f", f"test/{k}-lockup-night.svg")):
         vb, body = inner(os.path.join(out, f))
         w, h = [float(v) for v in vb.split()[2:]]
