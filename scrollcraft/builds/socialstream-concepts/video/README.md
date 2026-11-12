@@ -46,9 +46,10 @@ Measured in Chrome on 2026-11-12, decoding each file:
 - **Frames 94–669:** identical to the film. The 1080 cut scores 49 dB against the original on them.
 - **Loop seam:** frames 749 and 0 match at 64–67 dB.
 
-On Aurora Mix the two cuts crossfade while the wide film is still finishing its shrink (opacity 0.52–0.60 of
-the opening's `--q`). For about a tenth of a second of scrolling, the logos sit up to about 10 px and 1–3 % in
-size apart. Moving that fade later in `mix.css` and `kit.js` would make them coincide exactly.
+On Aurora Mix the two cuts crossfade at 0.52–0.60 of the opening's `--q`. Until 2026-11-12 the wide film was
+still finishing its shrink then (it ended at 0.66), so the two logos sat up to about 10 px and 1–3 % in size
+apart, and anyone who paused mid-scroll saw a doubled logo. `kit.js` now ends the shrink at 0.56, so the cuts
+sit on each other through the fade (under 1 px apart where it starts).
 
 ## Run
 

@@ -242,7 +242,9 @@
       s.st.classList.toggle('done', q >= 0.985);
       s.st.classList.toggle('gone', mode === 'morph' && q > 0.62);
       if (mode === 'morph' && s.card) {
-        var c = s.card, e = ease(clamp((q - 0.06) / 0.6, 0, 1)), W = c.W + (c.w - c.W) * e, H = c.H + (c.h - c.H) * e, k = H / c.H;
+        // the shrink ends at 0.56, before most of the crossfade (0.52 to 0.60 in mix.css), so the two cuts of the film (and the
+        // logo on its title card) sit exactly on each other while one fades into the other
+        var c = s.card, e = ease(clamp((q - 0.06) / 0.5, 0, 1)), W = c.W + (c.w - c.W) * e, H = c.H + (c.h - c.H) * e, k = H / c.H;
         var dx = (c.x + c.w / 2 - c.W / 2) * e, dy = (c.y + c.h / 2 - c.H / 2) * e, ix = Math.max(0, (c.W - W / k) / 2);
         s.open.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) scale(' + k.toFixed(4) + ')';
         s.open.style.clipPath = 'inset(0px ' + ix.toFixed(1) + 'px round ' + (26 * e / k).toFixed(1) + 'px)';
