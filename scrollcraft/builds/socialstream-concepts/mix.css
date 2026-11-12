@@ -267,10 +267,14 @@
 .mx-final-panel { padding: clamp(110px, 17vh, 190px) var(--gut) clamp(90px, 14vh, 150px); text-align: center; }
 .mx-final .small { margin-top: 16px; font-size: 14px; color: #cdd3e2; } /* over the aurora, so brighter than elsewhere */
 .mx-foot { color: var(--fg2); }
-.mx-foot .wm em { color: var(--accent); }
-/* the giant wordmark, with a light moving through it */
-.mx-foot .giant { color: transparent; -webkit-background-clip: text; background-clip: text;
-  background-image: linear-gradient(100deg, #1f2640 0%, #1f2640 34%, #ff7aa8 44%, #a58cff 51%, #5fe3d3 58%, #1f2640 68%, #1f2640 100%); background-size: 300% 100%; animation: mx-sheen 10s linear infinite; }
+/* the logo kit's files in the footer (footer() in parts.mjs), shown as they are: the kit allows no gradient, sheen or
+   other effect on the logo. The small-cut dark lockup in the line; the full dark lockup as the giant sign-off, as wide
+   as the content column, with at least the cap height of SOCIAL clear above and below it */
+.mx-foot .wm { display: inline-flex; }
+.mx-foot .wm img { width: 172px; height: 30px; max-width: none; }
+.mx-foot .giant-kit { max-width: var(--max); margin: 0 auto; padding: clamp(12px, 4vw, 60px) max(var(--gut), env(safe-area-inset-right, 0px)) clamp(24px, 5vw, 72px) max(var(--gut), env(safe-area-inset-left, 0px));
+  font: inherit; letter-spacing: normal; white-space: normal; overflow: visible; }
+.mx-foot .giant-kit img { width: 100%; height: auto; }
 
 /* ---------- tablets and phones ---------- */
 @media (max-width: 1080px) {
@@ -317,7 +321,7 @@
 }
 @media (max-width: 380px) { .lang button[aria-pressed="true"] { display: none; } .mx-stats { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) {
-  .mx-sky i, .mx-horizon, .mx-pain-line::after, .mx-svc-card::before, .mx-cmp-us::before, .mx-step-n, .mx-ph .kb, .mx-foot .giant { animation: none; }
+  .mx-sky i, .mx-horizon, .mx-pain-line::after, .mx-svc-card::before, .mx-cmp-us::before, .mx-step-n, .mx-ph .kb { animation: none; }
   .mx-pain-line::after { width: 100%; opacity: 0.6; }
   .mx-f { translate: none !important; }
   .mx-glow { display: none !important; }

@@ -125,14 +125,19 @@ export const faqList = (cls = 'faq-list') => `<div class="${cls}" data-r>
 ${C.faq.items.map(([q, a], i) => `  <details><summary><span class="qn">${String(i + 1).padStart(2, '0')}</span><span data-en="${esc(q[1])}">${esc(q[0])}</span><i aria-hidden="true"></i></summary><p data-en="${esc(a[1])}">${esc(a[0])}</p></details>`).join('\n')}
 </div>`;
 
-export function footer(cls = '', big = false) {
+// kit: the logo kit's files instead of the typed wordmark, for a dark footer (Aurora Mix, the page that goes live):
+// the small-cut dark lockup in the line, and the full dark lockup as the giant sign-off, both unchanged kit files
+export function footer(cls = '', big = false, kit = false) {
+  const wm = kit ? '<img src="assets/socialstream-logo-horizontal-small-dark.svg" alt="" width="172" height="30">' : 'Social<em>Stream</em>';
+  const giant = kit ? '<p class="giant giant-kit" aria-hidden="true"><img src="assets/socialstream-logo-horizontal-dark.svg" alt="" width="1471" height="256"></p>'
+    : '<p class="giant" aria-hidden="true">Social<em>Stream</em></p>';
   return `<footer class="foot ${cls}">
   <div class="wrap">
-    <a class="wm" href="#top" aria-label="SocialStream">Social<em>Stream</em></a>
+    <a class="wm" href="#top" aria-label="SocialStream">${wm}</a>
     ${tx('span', '', C.footer.line)}
     <span><a href="mailto:hello@socialstream.hu">hello@socialstream.hu</a><button type="button" id="copyMail2" data-en="Copy address">Cím másolása</button></span>
     <span>© 2026 SocialStream</span>
   </div>${big ? `
-  <p class="giant" aria-hidden="true">Social<em>Stream</em></p>` : ''}
+  ${giant}` : ''}
 </footer>`;
 }

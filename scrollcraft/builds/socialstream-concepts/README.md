@@ -84,12 +84,16 @@ this folder's root, where the head's root paths (`/favicon.ico` and the rest) fi
   - Light or dark files by the page's ground; Pulse switches to the dark ones over its black panels (`on-dark`).
   - While Mix's opening film lies under the bar, the corner mark (`on-film` in `kit.js`).
 - **On the film:** Mix's and Studio's account line uses the corner mark, the kit's mark for video.
-- **Still typed in Fraunces:**
-  - the footer's small wordmark on every page
-  - the giant footer wordmark on Pulse, Premiere and Mix
+- **Mix's footer** (Mix is the page going live on socialstream.hu): `footer(cls, big, kit)` uses the kit's files.
+  - The small-cut dark lockup in the line.
+  - The full dark lockup as the giant sign-off, as wide as the content column. The typed giant's gradient sheen
+    is gone, because the kit allows no effects on the logo.
+- **Still typed in Fraunces** on the other four pages:
+  - the footer's small wordmark
+  - the giant footer wordmark on Pulse and Premiere
   - Premiere's running ghost words
 
-  The brand film's own title also still shows the old wordmark.
+  The brand film's own title also still shows the old wordmark, on Mix too.
 - **Published links:** they still show the old logo until republished. The host sets its own tab icon, so the
   favicon shows only when the folder is served.
 

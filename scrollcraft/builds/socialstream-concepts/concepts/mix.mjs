@@ -252,5 +252,5 @@ export function page() {
     </div>
   </section>
 </main>
-` + footer('mx-foot', true) + scripts();
+` + footer('mx-foot', true, true) + scripts();
 }
