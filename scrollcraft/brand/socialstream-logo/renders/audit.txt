@@ -1,0 +1,61 @@
+
+=== a-lockup.svg  (21994 bytes)
+viewBox 0 0 1287 256 · aspect 5.027 (extra-wide)
+colours 2: #111111 #7fa1c4 · gradients 0 · anchors 557
+margins L35.8 R36.3 T35.8 B35.8 · bbox fill 0.68
+▲ WARN [complex] 557 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+▲ WARN [near-miss-angle] 7 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 75.7° (→75°) len 51.8 at (138,43); 105.8° (→105°) len 105.2 at (781,92); 105.8° (→105°) len 80.4 at (730,197); 107.2° (→105°) len 70.4 at (795,205); 107.7° (→105°) len 70.0 at (1146,207); 106.9° (→105°) len 56.8 at (1248,138) …. (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 83/100 (heuristic)
+
+=== a-symbol.svg  (1715 bytes)
+viewBox 0 0 256 256 · aspect 1.0 (square)
+colours 1: #000000 · gradients 0 · anchors 40
+margins L85.9 R85.9 T20.5 B20.5 · bbox fill 0.277
+· INFO [small-in-canvas] The mark occupies little of its square canvas; tighten the viewBox or scale up.
+production-readiness score: 99/100 (heuristic)
+
+=== b-lockup.svg  (23765 bytes)
+viewBox 0 0 1077 256 · aspect 4.207 (horizontal)
+colours 2: #111111 #7fa1c4 · gradients 0 · anchors 615
+margins L35.8 R36.3 T35.8 B35.8 · bbox fill 0.672
+▲ WARN [complex] 615 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+▲ WARN [near-miss-angle] 4 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 105.8° (→105°) len 71.3 at (722,102); 105.8° (→105°) len 54.5 at (687,173); 107.2° (→105°) len 47.7 at (731,179); 107.7° (→105°) len 47.4 at (970,181). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+production-readiness score: 84/100 (heuristic)
+
+=== b-symbol.svg  (2309 bytes)
+viewBox 0 0 256 256 · aspect 1.0 (square)
+colours 1: #000000 · gradients 0 · anchors 59
+margins L56.4 R56.4 T25.6 B25.6 · bbox fill 0.448
+✔ no issues found
+production-readiness score: 100/100 (heuristic)
+
+=== c-lockup.svg  (19641 bytes)
+viewBox 0 0 434 256 · aspect 1.695 (wide)
+colours 2: #111111 #7fa1c4 · gradients 0 · anchors 512
+margins L35.8 R35.9 T35.8 B35.8 · bbox fill 0.601
+▲ WARN [complex] 512 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+▲ WARN [near-miss-angle] 6 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 105.8° (→105°) len 47.8 at (185,162); 105.8° (→105°) len 36.5 at (162,210); 107.2° (→105°) len 32.0 at (191,214); 107.7° (→105°) len 31.8 at (351,214); 106.9° (→105°) len 25.8 at (397,183); 107.0° (→105°) len 26.9 at (379,210). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+production-readiness score: 84/100 (heuristic)
+
+=== c-symbol.svg  (2414 bytes)
+viewBox 0 0 256 256 · aspect 1.0 (square)
+colours 1: #000000 · gradients 0 · anchors 57
+margins L48.5 R48.5 T25.6 B25.6 · bbox fill 0.497
+✔ no issues found
+production-readiness score: 100/100 (heuristic)
+
+=== d-lockup.svg  (12501 bytes)
+viewBox 0 0 1563 256 · aspect 6.105 (extra-wide)
+colours 2: #111111 #7fa1c4 · gradients 0 · anchors 367
+margins L35.8 R36.4 T35.8 B35.8 · bbox fill 0.687
+· INFO [complexity] 367 anchor points (library median 75.0, p75 155.0). Check every point earns its place.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 98/100 (heuristic)
+
+=== d-symbol.svg  (1572 bytes)
+viewBox 0 0 256 256 · aspect 1.0 (square)
+colours 1: #000000 · gradients 0 · anchors 54
+margins L27.0 R27.0 T25.6 B25.6 · bbox fill 0.631
+✔ no issues found
+production-readiness score: 100/100 (heuristic)

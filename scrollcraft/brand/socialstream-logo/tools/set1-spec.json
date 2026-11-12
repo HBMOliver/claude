@@ -1,0 +1,133 @@
+{
+ "css": "@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1;1,9..144,100..900,0..100,0..1&display=block');@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:200 800;src:url('fonts/plus-jakarta-sans-latin-wght-normal.woff2') format('woff2')}@font-face{font-family:'Plus Jakarta Sans';font-style:italic;font-weight:200 800;src:url('fonts/plus-jakarta-sans-latin-wght-italic.woff2') format('woff2')}",
+ "runs": [
+  {
+   "id": "rom",
+   "text": "Social",
+   "family": "Fraunces",
+   "italic": false,
+   "axes": {
+    "opsz": 144,
+    "wght": 400
+   },
+   "size": 1000
+  },
+  {
+   "id": "ita",
+   "text": "Stream",
+   "family": "Fraunces",
+   "italic": true,
+   "axes": {
+    "opsz": 144,
+    "wght": 400
+   },
+   "size": 1000
+  },
+  {
+   "id": "ita_i",
+   "text": "Soc i al",
+   "family": "Fraunces",
+   "italic": true,
+   "axes": {
+    "opsz": 144,
+    "wght": 400
+   },
+   "size": 1000
+  },
+  {
+   "id": "rom_full",
+   "text": "SocialStream",
+   "family": "Fraunces",
+   "italic": false,
+   "axes": {
+    "opsz": 144,
+    "wght": 400
+   },
+   "size": 1000
+  },
+  {
+   "id": "ita_S36",
+   "text": "S",
+   "family": "Fraunces",
+   "italic": true,
+   "axes": {
+    "opsz": 36,
+    "wght": 500
+   },
+   "size": 1000
+  },
+  {
+   "id": "ita_S72",
+   "text": "S",
+   "family": "Fraunces",
+   "italic": true,
+   "axes": {
+    "opsz": 72,
+    "wght": 450
+   },
+   "size": 1000
+  },
+  {
+   "id": "ita_i36",
+   "text": "i",
+   "family": "Fraunces",
+   "italic": true,
+   "axes": {
+    "opsz": 36,
+    "wght": 500
+   },
+   "size": 1000
+  },
+  {
+   "id": "rom_S36",
+   "text": "S",
+   "family": "Fraunces",
+   "italic": false,
+   "axes": {
+    "opsz": 36,
+    "wght": 500
+   },
+   "size": 1000
+  },
+  {
+   "id": "jak500",
+   "text": "socialstream",
+   "family": "Plus Jakarta Sans",
+   "italic": false,
+   "axes": {
+    "wght": 500
+   },
+   "size": 1000
+  },
+  {
+   "id": "jak600",
+   "text": "socialstream",
+   "family": "Plus Jakarta Sans",
+   "italic": false,
+   "axes": {
+    "wght": 600
+   },
+   "size": 1000
+  },
+  {
+   "id": "jak_it500",
+   "text": "stream",
+   "family": "Plus Jakarta Sans",
+   "italic": true,
+   "axes": {
+    "wght": 500
+   },
+   "size": 1000
+  },
+  {
+   "id": "jak_it600",
+   "text": "stream",
+   "family": "Plus Jakarta Sans",
+   "italic": true,
+   "axes": {
+    "wght": 600
+   },
+   "size": 1000
+  }
+ ]
+}
