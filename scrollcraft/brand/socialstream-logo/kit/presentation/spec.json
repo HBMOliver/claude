@@ -1,0 +1,58 @@
+{
+  "brand": "SocialStream",
+  "tagline": "Interest media ügynökség",
+  "brief": "An interest media agency (Tenerife and Budapest) for established businesses: short-form video, paid ads, websites, automation and growth. The claim: social media is dead, interest has taken its place. The mark should be confident and modern, work as a profile picture and on reels, and grow out of the team's own shirt wordmark.",
+  "adjectives": [
+    "confident",
+    "modern",
+    "alive",
+    "direct"
+  ],
+  "criteria": "Success: reads at 16 px and as a round profile picture, works white on video, one colour, on night blue and on cream; clearly not a copy of any agency's mark.",
+  "mockups": [
+    "social",
+    "website",
+    "tshirt",
+    "business-card",
+    "favicon-tab",
+    "sticker"
+  ],
+  "nav": [
+    "Szolgáltatások",
+    "Munkáink",
+    "Kapcsolat"
+  ],
+  "brand_color": "#05070F",
+  "tile_color": "#05070F",
+  "greyscale": false,
+  "final": true,
+  "designer": "SocialStream × Claude",
+  "round": 4,
+  "concepts": [
+    {
+      "name": "G2 · The phone that leans in",
+      "symbol": "../source/socialstream-symbol-light.svg",
+      "lockup": "../source/socialstream-logo-horizontal-light.svg",
+      "stacked": "../source/socialstream-logo-stacked-light.svg",
+      "avatar": "../source/socialstream-symbol-small-light.svg",
+      "symbol_on_tile": "../source/socialstream-symbol-dark.svg",
+      "stacked_on_tile": "../source/socialstream-logo-stacked-dark.svg",
+      "lockup_on_tile": "../source/socialstream-logo-horizontal-dark.svg",
+      "symbol_on_dark": "../source/socialstream-symbol-dark.svg",
+      "lockup_on_dark": "../source/socialstream-logo-horizontal-dark.svg",
+      "stacked_on_dark": "../source/socialstream-logo-stacked-dark.svg",
+      "idea": "A bold S on a 9:16 phone that leans in at 15 degrees; its foot is sliced off at the same 15 degrees as the A in SOCIAL.",
+      "rationale": [
+        "Grows out of the team's own shirt wordmark: SOCIAL heavy, STREAM light, the A sliced once",
+        "One rule ties it together: every cut and lean is 15 degrees (the A, the phone's slice, its tilt, the S terminals)",
+        "The phone is the reel: it works as the profile picture, the favicon and the corner mark on video"
+      ]
+    }
+  ],
+  "recommendation": "Use the horizontal lockup by default, the stacked one for square formats and the shirt, and the phone alone wherever the name is already present (profile pictures, favicon, reels).",
+  "next_steps": [
+    "Run a trademark search (HU/EU) before launch",
+    "Match the colours to Pantone at the first print job",
+    "Re-cut the brand film's title card with the new mark"
+  ]
+}

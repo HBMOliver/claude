@@ -1,6 +1,15 @@
 # SocialStream logo concepts
 
-Three rounds so far, all shown before any logo kit is built. The brief, clichés and longlist are in `brief.md`.
+The founder chose **G2** and the full logo kit is built in `kit/` (start with `kit/README.md` and the one-page
+`kit/guide/socialstream-logo-guide.pdf`). The three concept rounds that led there are below; the brief,
+clichés and longlist are in `brief.md`.
+
+## Kit: G2, the phone that leans in (`kit/`)
+
+Masters for every lockup in light and dark versions, one-colour files, PNGs, web icons and favicons, social
+profile pictures, vector print PDFs, the final presentation board and a one-page usage guide. Built by
+`tools/build_kit.py`, `tools/kitmark.py` and `tools/refine.py` (letter refinements), `tools/make_guide.py`,
+`tools/pdf_export.py` and `tools/render_page.py`.
 
 ## Round 3: G with H's tilt (`round-3/`)
 
