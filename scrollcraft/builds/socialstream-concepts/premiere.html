@@ -6,7 +6,11 @@
 <title>SocialStream Premiere</title>
 <meta name="description" content="A social media meghalt. Az érdeklődés vette át a helyét. Videó, social és hirdetés egy csapattól.">
 <meta name="theme-color" content="#070708">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23111'/%3E%3Crect x='8' y='8' width='7' height='12' rx='2' fill='%23fff'/%3E%3Crect x='17' y='12' width='7' height='12' rx='2' fill='%23fff' opacity='.7'/%3E%3C/svg%3E">
+<!-- the favicon set from the logo kit (kit/web/head-snippet.html); the page keeps its own theme-color above -->
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500..800&family=Inter:wght@400..700&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,300..500&display=swap">
@@ -14,8 +18,8 @@
 <link rel="stylesheet" href="premiere.css">
 </head>
 <body>
-<header class="nav pr-nav" id="nav">
-  <a class="wm" href="#top" aria-label="SocialStream">Social<em>Stream</em></a>
+<header class="nav pr-nav" id="nav" data-ground="dark">
+  <a class="wm" href="#top" aria-label="SocialStream"><img class="lg lg-full lg-dark" src="assets/socialstream-logo-horizontal-small-dark.svg" alt="" width="172" height="30"><img class="lg lg-mark lg-dark" src="assets/socialstream-symbol-dark.svg" alt="" width="38" height="38"></a>
   <nav class="links" aria-label="Fő menü" data-en-aria="Main menu">
     <a href="#eredmenyek" data-en="Results">Eredmények</a>
     <a href="#igy" data-en="How we work">Így dolgozunk</a>

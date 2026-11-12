@@ -18,10 +18,9 @@
 
 /* ---------- the menu over a dark first screen ---------- */
 .nav { transition: box-shadow 300ms var(--ease), background-color 300ms var(--ease); }
-.nav .wm, .nav .wm em, .nav .links a, .nav .lang button { transition: color 300ms var(--ease), background-color 160ms; }
+.nav .links a, .nav .lang button { transition: color 300ms var(--ease), background-color 160ms; }
 .nav.on-dark, .nav.on-dark.is-scrolled { background: rgba(14, 12, 16, 0.36); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1); }
-.nav.on-dark .wm { color: #fff; }
-.nav.on-dark .wm em { color: var(--rose-on-dark); }
+/* the logo's files for these states (dark lockup, corner mark on the film) are picked in daylight.css */
 .nav.on-dark .links a { color: rgba(255, 255, 255, 0.8); }
 @media (hover: hover) { .nav.on-dark .links a:hover { color: #fff; background: rgba(255, 255, 255, 0.09); } }
 .nav.on-dark .lang button { color: rgba(255, 255, 255, 0.56); }

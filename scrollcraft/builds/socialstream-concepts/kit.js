@@ -265,20 +265,32 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(reseq);
   }
 
-  /* ---------------- the menu: a shadow once scrolled, the dark style over parts marked data-dark ---------------- */
+  /* ---------------- the menu: a shadow once scrolled, the dark style over parts marked data-dark, and on-film while
+     an opening's film lies under the bar (the logo shows the kit's corner mark for video then, base.css): until the
+     film fades into its card, or until the panel rising over it reaches the bar ---------------- */
   var nav = $('#nav'), darks = $$('[data-dark]'), was = {};
+  function onFilm(nb) {
+    return seqs.some(function (s) {
+      if (!s.mode) return false;
+      var cs = getComputedStyle(s.open); if (cs.display === 'none' || cs.visibility === 'hidden' || +cs.opacity < 0.6) return false;
+      var r = s.open.getBoundingClientRect(); if (r.top > nb || r.bottom < nb) return false;
+      var c = s.mode === 'sheet' && s.open.nextElementSibling;
+      return !(c && c.getBoundingClientRect().top <= nb);
+    });
+  }
   function navTick() {
     if (!nav) return;
     var sc = scrollY > 8; if (was.sc !== sc) { was.sc = sc; nav.classList.toggle('is-scrolled', sc); }
     var nb = nav.getBoundingClientRect().bottom - 10, dark = darks.some(function (d) { var r = d.getBoundingClientRect(); return r.top <= nb && r.bottom >= nb; });
     if (was.dark !== dark) { was.dark = dark; nav.classList.toggle('on-dark', dark); }
+    var film = onFilm(nb); if (was.film !== film) { was.film = film; nav.classList.toggle('on-film', film); }
   }
 
   var ticking = false;
   function frame() {
     ticking = false; vh = innerHeight;
     var y = scrollY; if (!reduce) boost = Math.min(520, boost + Math.abs(y - lastY) * 2.2); lastY = y;
-    litTick(); driftTick(); navTick(); seqTick();
+    litTick(); driftTick(); seqTick(); navTick(); // the opening first: the bar reads where its film has got to
   }
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } run(); }
   addEventListener('scroll', onScroll, { passive: true });

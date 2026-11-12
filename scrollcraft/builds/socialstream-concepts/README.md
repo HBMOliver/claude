@@ -70,6 +70,29 @@ The published pages are private until they are shared from their Share menu.
   - the problems and their links, cursor followers
   - reduced motion, no sideways scroll
 
+## Logo (2026-11-12)
+
+The approved logo (direction G2) comes from the kit in `../../brand/socialstream-logo/kit/`. Its files are
+copied unchanged: the header files and the corner mark into `assets/`, and the favicon set from `kit/web/` to
+this folder's root, where the head's root paths (`/favicon.ico` and the rest) find it. The page keeps its own
+`theme-color` instead of the snippet's.
+
+- **Header:** `nav()` in `parts.mjs` takes `{ ground, dark, film }` and stacks the files in one cell; `base.css`
+  shows one at a time.
+  - From 480 px wide: the small-cut horizontal lockup, 172 x 30 px.
+  - Narrower: the phone alone. The kit's floor for the lockup is 140 px, more than a phone's bar has room for.
+  - Light or dark files by the page's ground; Pulse switches to the dark ones over its black panels (`on-dark`).
+  - While Mix's opening film lies under the bar, the corner mark (`on-film` in `kit.js`).
+- **On the film:** Mix's and Studio's account line uses the corner mark, the kit's mark for video.
+- **Still typed in Fraunces:**
+  - the footer's small wordmark on every page
+  - the giant footer wordmark on Pulse, Premiere and Mix
+  - Premiere's running ghost words
+
+  The brand film's own title also still shows the old wordmark.
+- **Published links:** they still show the old logo until republished. The host sets its own tab icon, so the
+  favicon shows only when the folder is served.
+
 ## Run
 
 ```bash

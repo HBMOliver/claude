@@ -69,6 +69,19 @@ p { text-wrap: pretty; }
 .nav.is-scrolled { box-shadow: 0 0 0 1px rgba(20, 17, 24, 0.06), 0 16px 34px -18px rgba(20, 17, 24, 0.28); }
 .wm { font: 400 1.38rem/1 var(--serif); letter-spacing: -0.01em; text-decoration: none; color: var(--ink); white-space: nowrap; }
 .wm em { font-style: italic; color: var(--rose); }
+/* the header logo: kit files stacked in one cell, one shown at a time. The lockup from 480 px wide, the phone alone
+   below; light or dark by the bar's ground and its on-dark state; the corner mark while the bar lies on the film
+   (on-film, heroes.js). The files are shown as they are: no filters, shadows or recolouring. */
+.nav .wm { display: inline-grid; flex: none; align-items: center; justify-items: start; }
+.nav .wm .lg { grid-area: 1 / 1; max-width: none; opacity: 0; transition: opacity 300ms var(--ease); }
+.nav .wm .lg-full { width: 172px; height: 30px; }
+.nav .wm .lg-mark { display: none; width: 38px; height: 38px; }
+.nav .wm .lg-film { width: 35px; height: 35px; }
+@media (max-width: 479.98px) { .nav .wm .lg-full { display: none; } .nav .wm .lg-mark { display: block; } }
+.nav[data-ground="light"]:not(.on-dark):not(.on-film) .lg-light,
+.nav[data-ground="dark"]:not(.on-film) .lg-dark,
+.nav.on-dark:not(.on-film) .lg-dark,
+.nav.on-film .lg-film { opacity: 1; }
 .nav .links { display: flex; gap: 4px; margin: 0 auto; }
 .nav .links a { padding: 10px 12px; border-radius: 10px; font: 600 14px/1 var(--sans); color: var(--ink2); text-decoration: none; transition: color 160ms, background-color 160ms; }
 @media (hover: hover) { .nav .links a:hover { color: var(--ink); background: var(--mist); } }

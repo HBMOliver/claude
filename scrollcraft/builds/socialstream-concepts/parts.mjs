@@ -22,7 +22,11 @@ export function head({ title, fonts, css, theme = '#ffffff', desc }) {
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc || 'A social media meghalt. Az érdeklődés vette át a helyét. Videó, social és hirdetés egy csapattól.')}">
 <meta name="theme-color" content="${theme}">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23111'/%3E%3Crect x='8' y='8' width='7' height='12' rx='2' fill='%23fff'/%3E%3Crect x='17' y='12' width='7' height='12' rx='2' fill='%23fff' opacity='.7'/%3E%3C/svg%3E">
+<!-- the favicon set from the logo kit (kit/web/head-snippet.html); the page keeps its own theme-color above -->
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?${fonts}&display=swap">
@@ -39,9 +43,19 @@ export const scripts = () => `
 </html>
 `;
 
-export function nav(cls = '') {
-  return `<header class="nav ${cls}" id="nav">
-  <a class="wm" href="#top" aria-label="SocialStream">Social<em>Stream</em></a>
+// The header logo: files from the logo kit (scrollcraft/brand/socialstream-logo/kit), copied unchanged into assets/.
+// The small-cut horizontal lockup from 480 px wide; below that the phone alone, because the kit's floor for the
+// lockup is 140 px wide and a phone's bar has less room than that. Light files on light grounds, dark files on dark
+// ones, and the corner mark (the kit's mark for video) while the bar lies on the film. They share one cell and
+// base.css shows one at a time, from the bar's data-ground and its on-dark and on-film states.
+// ground: the page's own ground, 'light' or 'dark'; dark: the dark files too, for a light page with dark parts;
+// film: the corner mark too, for a page whose first screen puts the film under the bar
+const LG = (f, cls, w, h) => `<img class="lg ${cls}" src="assets/socialstream-${f}.svg" alt="" width="${w}" height="${h}">`;
+const LGSET = g => LG(`logo-horizontal-small-${g}`, `lg-full lg-${g}`, 172, 30) + LG(`symbol-${g}`, `lg-mark lg-${g}`, 38, 38);
+export function nav(cls = '', { ground = 'light', dark = false, film = false } = {}) {
+  const logo = LGSET(ground) + (dark && ground !== 'dark' ? LGSET('dark') : '') + (film ? LG('symbol-corner', 'lg-film', 35, 35) : '');
+  return `<header class="nav ${cls}" id="nav" data-ground="${ground}">
+  <a class="wm" href="#top" aria-label="SocialStream">${logo}</a>
   <nav class="links" aria-label="Fő menü" data-en-aria="Main menu">
     ${C.nav.map(l => `<a href="${l.href}" data-en="${esc(l.en)}">${esc(l.hu)}</a>`).join('\n    ')}
   </nav>

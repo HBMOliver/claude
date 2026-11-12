@@ -129,6 +129,9 @@
     if (was.dark !== dark) {
       was.dark = dark;
       nav.classList.toggle('on-dark', dark);
+      // on Cinema and Capsule the dark first screen is the film: the logo shows the kit's corner mark for video
+      // there (daylight.css); Glow's dark stage takes the dark lockup
+      nav.classList.toggle('on-film', dark && kind !== 'glow');
       SS.themeColor(dark ? (kind === 'glow' ? '#120c14' : '#0c0b0d') : '#ffffff');
     }
   }

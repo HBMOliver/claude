@@ -27,7 +27,7 @@ export function page() {
     title: 'SocialStream Aurora Mix',
     fonts: 'family=Sora:wght@500..800&family=Inter:wght@400..700&family=Instrument+Serif:ital@1&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400',
     css: 'mix.css', theme: '#05070f',
-  }) + nav('mx-nav') + `
+  }) + nav('mx-nav', { ground: 'dark', film: true }) + `
 <main>
   <!-- the opening: the film alone fills the first screen (it carries the claim itself, a few seconds in). Scrolling
        on, where the screen has room to pin, the film settles into its card beside the claim while the panel, the claim
@@ -52,7 +52,7 @@ export function page() {
         <div class="mx-post" data-seq-to>
           ${film('mx-film', 'v', false, `
   <div class="progress" aria-hidden="true"></div>
-  <p class="mx-acct" aria-hidden="true"><i>S</i>SocialStream</p>
+  <p class="mx-acct" aria-hidden="true"><img src="assets/socialstream-symbol-corner.svg" alt="" width="34" height="34">SocialStream</p>
   <p class="mx-fcap" aria-hidden="true" data-en="${esc(L.film.en)}">${esc(L.film.hu)}</p>`)}
         </div>
       </div>

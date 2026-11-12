@@ -11,7 +11,7 @@ export function page() {
     title: 'SocialStream Premiere',
     fonts: 'family=Inter+Tight:wght@500..800&family=Inter:wght@400..700&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,300..500',
     css: 'premiere.css', theme: '#070708',
-  }) + nav('pr-nav') + `
+  }) + nav('pr-nav', { ground: 'dark' }) + `
 <main>
   <!-- the claim's first sentence, the film in a wide band, the second sentence with the button beside it; a light
        follows the cursor over the black -->

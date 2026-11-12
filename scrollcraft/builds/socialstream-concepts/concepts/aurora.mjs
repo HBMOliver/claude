@@ -12,7 +12,7 @@ export function page() {
     title: 'SocialStream Aurora',
     fonts: 'family=Sora:wght@500..800&family=Inter:wght@400..700&family=Instrument+Serif:ital@1&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400',
     css: 'aurora.css', theme: '#060914',
-  }) + nav('au-nav') + `
+  }) + nav('au-nav', { ground: 'dark' }) + `
 <main>
   <!-- the claim on the left; three real results float on glass on the right and lean toward the cursor; the aurora
        moves behind -->

@@ -12,7 +12,7 @@ export function page() {
     title: 'SocialStream Studio',
     fonts: 'family=Manrope:wght@500..800&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400',
     css: 'studio.css', theme: '#efede9',
-  }) + nav('st-nav') + `
+  }) + nav('st-nav', { ground: 'light' }) + `
 <main>
   <!-- the claim on a white card; the vertical film plays beside it like a story, with its own progress line; two
        more of their reels peek out behind it and lean toward the cursor -->
@@ -35,7 +35,7 @@ export function page() {
         </div>
         ${film('st-film', 'v', false, `
   <div class="progress" aria-hidden="true"></div>
-  <p class="st-tag" aria-hidden="true"><i>S</i>SocialStream</p>`)}
+  <p class="st-tag" aria-hidden="true"><img src="assets/socialstream-symbol-corner.svg" alt="" width="34" height="34">SocialStream</p>`)}
       </div>
     </div>
     <ul class="wrap st-trust" data-r>

@@ -22,8 +22,7 @@
 .p-nav { top: 0; left: 0; right: 0; height: 72px; padding: 0 max(var(--gut), env(safe-area-inset-right, 0px)) 0 max(var(--gut), env(safe-area-inset-left, 0px)); transition: background-color 300ms, box-shadow 300ms, color 300ms; }
 .p-nav.is-scrolled { background: rgba(255, 255, 255, 0.86); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); box-shadow: 0 1px 0 var(--line); }
 .p-nav.on-dark { background: rgba(12, 12, 15, 0.84); color: #fff; box-shadow: none; }
-.p-nav .wm em, .p-foot .wm em { color: var(--accent-ink); }
-.p-nav.on-dark .wm em { color: #ff7aa2; }
+.p-foot .wm em { color: var(--accent-ink); }
 .p-nav.on-dark .nav-cta { background: #fff; color: var(--fg); }
 @media (hover: hover) { .p-nav .links a:hover { background: var(--soft); } .p-nav.on-dark .links a:hover { background: rgba(255, 255, 255, 0.08); } }
 

@@ -58,6 +58,24 @@ three pages next to `index.html`, and `node tools/artifact.mjs hero-<name>` pack
 `dist/<name>/`. `lab/heroes.mjs` runs 87 checks on them (`BASE=` for another address), and
 `URL=http://localhost:4553/hero-<name>.html node lab/func.mjs` runs the page's own 33.
 
+## Logo (2026-11-12)
+
+The approved logo (direction G2) comes from the kit in `../../brand/socialstream-logo/kit/`. Its files are
+copied unchanged: the header files into `assets/`, and the favicon set from `kit/web/` to this folder's root,
+where the head's root paths (`/favicon.ico` and the rest) find it. The page keeps its own `theme-color` instead
+of the snippet's.
+
+- **Header:** the bar in `index.html` (copied into the three first-screen pages) stacks the files in one cell;
+  `daylight.css` shows one at a time.
+  - From 480 px wide: the small-cut horizontal lockup, 172 x 30 px.
+  - Narrower: the phone alone. The kit's floor for the lockup is 140 px, more than a phone's bar has room for.
+  - The light files on the white bar, the dark ones over Glow's dark stage.
+  - While Cinema's or Capsule's film lies under the bar, the kit's corner mark for video (`on-film` in
+    `heroes.js`).
+- **Still typed in Fraunces:** the footer's small wordmark, and the brand film's own title.
+- **Published links:** they still show the old logo until republished. The host sets its own tab icon, so the
+  favicon shows only when the folder is served.
+
 ## Pictures
 
 - `i-*` (services), `o-*` (result objects), `a-*` (who it is for), `silk-*`,

@@ -23,7 +23,6 @@
 /* ---------- menu ---------- */
 .pr-nav { top: 0; left: 0; right: 0; height: 74px; padding: 0 max(var(--gut), env(safe-area-inset-right, 0px)) 0 max(var(--gut), env(safe-area-inset-left, 0px)); color: var(--fg); transition: background-color 300ms, box-shadow 300ms; }
 .pr-nav.is-scrolled { background: rgba(7, 7, 8, 0.78); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 1px 0 var(--line); }
-.pr-nav .wm em { color: var(--accent); }
 .pr-nav .links a { color: rgba(242, 238, 230, 0.74); }
 @media (hover: hover) { .pr-nav .links a:hover { color: var(--fg); background: rgba(242, 238, 230, 0.07); } }
 

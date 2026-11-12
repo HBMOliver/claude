@@ -15,7 +15,7 @@ export function page() {
     title: 'SocialStream Pulse',
     fonts: 'family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400..700&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400',
     css: 'pulse.css', theme: '#ffffff',
-  }) + nav('p-nav') + `
+  }) + nav('p-nav', { ground: 'light', dark: true }) + `
 <main>
   <!-- the claim in the middle; reel cards from their own client videos float around it, one of them the brand film -->
   <section class="p-hero" id="top" aria-labelledby="hero-h" data-drift>
