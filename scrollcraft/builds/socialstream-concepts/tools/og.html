@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<title>SocialStream share image</title>
+<!-- The share image for socialstream.hu (og:image), 1200 x 630: the logo, the claim and three of their reels on
+     Aurora Mix's night blue. tools/og.mjs renders it to assets/og-image.jpg. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@700&family=Inter:wght@500;700&family=Instrument+Serif:ital@1&display=swap">
+<style>
+  html, body { margin: 0; }
+  body { position: relative; width: 1200px; height: 630px; overflow: hidden; background: #05070f; font-family: Inter, system-ui, sans-serif; }
+  .panel { position: absolute; inset: 16px; overflow: hidden; border-radius: 30px; background: #0b1024; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); }
+  .sky { position: absolute; inset: 0; background:
+    radial-gradient(55% 75% at 6% 108%, rgba(255, 92, 138, 0.5), transparent 62%),
+    radial-gradient(45% 65% at 58% -14%, rgba(47, 214, 195, 0.26), transparent 60%),
+    radial-gradient(44% 72% at 102% 72%, rgba(122, 92, 255, 0.42), transparent 62%),
+    radial-gradient(30% 40% at 40% 62%, rgba(255, 154, 184, 0.1), transparent 70%); }
+  .copy { position: absolute; left: 56px; top: 54px; width: 660px; }
+  .logo { display: block; width: 300px; height: auto; }
+  .eyebrow { margin: 64px 0 18px; font: 700 15px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #ff9ab8; }
+  h1 { margin: 0; font: 700 56px/1.06 Sora, sans-serif; letter-spacing: -0.04em; color: #eef1f8; }
+  h1 .ln { display: block; }
+  h1 em { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; font-size: 1.12em; letter-spacing: 0; color: #ffd1df; }
+  .strike { position: relative; white-space: nowrap; }
+  .strike::after { content: ""; position: absolute; left: -2%; right: -2%; top: 0.56em; height: 0.085em; border-radius: 99px; background: #ff5c8a; }
+  .site { position: absolute; left: 56px; bottom: 42px; font: 500 18px/1 Inter, sans-serif; color: #b9c1d6; }
+  .reel { position: absolute; width: 190px; aspect-ratio: 9 / 16; overflow: hidden; border-radius: 22px; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.75), inset 0 0 0 1px rgba(255, 255, 255, 0.18); }
+  .reel img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .r1 { left: 742px; top: 168px; rotate: -9deg; }
+  .r2 { left: 868px; top: 52px; rotate: 3deg; z-index: 2; }
+  .r3 { left: 996px; top: 196px; rotate: 11deg; }
+</style>
+</head>
+<body>
+<div class="panel">
+  <div class="sky"></div>
+  <div class="copy">
+    <img class="logo" src="../../../brand/socialstream-logo/kit/source/socialstream-logo-horizontal-dark.svg" alt="">
+    <div class="eyebrow">Interest media ügynökség</div>
+    <h1><span class="ln">A <span class="strike">social media</span> meghalt.</span><span class="ln">Az <em>érdeklődés</em> vette át</span><span class="ln">a helyét.</span></h1>
+  </div>
+  <div class="site">socialstream.hu</div>
+  <div class="reel r1"><img src="../assets/p05.jpg" alt=""></div>
+  <div class="reel r2"><img src="../assets/p06.jpg" alt=""></div>
+  <div class="reel r3"><img src="../assets/p11.jpg" alt=""></div>
+</div>
+</body>
+</html>
