@@ -1,12 +1,54 @@
-# SocialStream logo concepts, round 1
+# SocialStream logo concepts
 
-Four directions, shown before any logo kit is built. Start with `concepts.png` (greyscale on purpose) and
-`colour-hint.png` (the recommendation in the brand film's palette). The brief, clichés and longlist are in
-`brief.md`.
+Two rounds so far, both shown before any logo kit is built. The brief, clichés and longlist are in `brief.md`.
+
+## Round 2: the shirt wordmark and the phone S (`round-2/`)
+
+After round 1 the founder shared the team's shirt wordmark (SOCIAL in heavy Montserrat caps with a sliced A,
+STREAM in a light weight), said they liked B (the S on a reel that reads as a phone), and that the shirt was
+imagined as "a kind of Social Chain logo". Start with `round-2/concepts.png` and `round-2/colour-hint.png`.
 
 | | Concept | Structure | One-line idea |
 |---|---|---|---|
-| **A** | Italic i (recommended) | wordmark only; the i is the proposed avatar | The i of interest turns italic inside Social: interest has literally taken its place. |
+| **E** | Your shirt, refined | wordmark only (stacked form shown small) | The shirt's bold/light caps cleaned up: the A sliced once at a clean 15°, weights and spacing balanced. |
+| **F** | The weight moves | wordmark only (stacked form shown small) | Flipped: SOCIAL light, STREAM bold, so the weight lands where the claim does; the sliced A moves into STREAM. |
+| **G** | S on the phone (recommended) | phone symbol + E's wordmark | B in the shirt's bold style: the S on a 9:16 phone, its foot sliced off like the shirt's A. |
+| **H** | Leaning in | tilted phone symbol + SOCIAL upright, STREAM italic | The same phone tilted 15°, with STREAM in italic: the brand leaning in. |
+
+**Social Chain.** Its logotype ("SocialChain", a heavy grotesk) swaps the a in "Social" for an italic serif
+a. Round 1's A makes the same move with the i, so A is withdrawn as a recommendation: it would read as
+borrowed. The shirt's special A in SOCIAL sits in the same spot; F moves it into STREAM. (Also worth knowing:
+the brand film's opening, a centred white wordmark over a tilted mosaic of reels, is close to the hero on
+socialchain.com.)
+
+**Tests (round 2).** Audit: G and H symbols 100; the wordmarks 90, flagged only for Montserrat's own M
+diagonals (59.5° instead of 60°), which get snapped when letters are redrawn in the kit. The phone symbols
+read at 16 px on cream and night blue; the stacked wordmarks do not, which is why G or H should carry the
+avatar. Familiarity (`round-2/renders/familiarity-shelf.png`): a white S on a dark tile is a common app-icon
+formula (Storybook, Shopify's bag); G's 9:16 phone and its slice, and H's tilt, keep them apart.
+
+**Risks, one per concept.**
+- **E:** apart from the A it is unmodified Montserrat, one of the most used free fonts, and the special A in
+  SOCIAL echoes Social Chain's special a.
+- **F:** SOCIAL, the first word of the name, becomes the quiet one and gets thin at small sizes.
+- **G:** the phone reading is intended (you like it), but phones are a category cliché, so it has to stay
+  this plain; the S alone on a tile is a common app-icon formula.
+- **H:** a tilted mark sits less calmly in square and round avatars, and Montserrat's italic is a slanted
+  roman rather than a true italic.
+
+Files: `round-2/concepts/` (masters), `round-2/test/` (cream and night versions), `round-2/colour/` (G in
+the film palette), `round-2/renders/` (512 px renders, lockups, `test-dark-light.png`, `audit.txt`,
+familiarity shelf), `round-2/preview/` (the skill's test sheet). Built by `tools/build_r2.py` with
+`tools/caps.py`; Montserrat outlines in `tools/set3_out.json` (Montserrat is SIL OFL 1.1, logo use allowed).
+
+## Round 1: four directions from the film's wordmark
+
+Start with `concepts.png` (greyscale on purpose) and `colour-hint.png` (the recommendation at the time, in
+the brand film's palette).
+
+| | Concept | Structure | One-line idea |
+|---|---|---|---|
+| **A** | Italic i (withdrawn, see Social Chain above) | wordmark only; the i is the proposed avatar | The i of interest turns italic inside Social: interest has literally taken its place. |
 | **B** | Through the reel | monogram symbol + the film wordmark | The S of Stream passes through a 9:16 reel and turns it inside out. |
 | **C** | One S | stacked lockup sharing one S | One S starts both words: upright for Social, leaning into italic for Stream. |
 | **D** | The one that leans | abstract symbol + sans wordmark | In a grid of reels, interest is the one that leans out (on the site, toward the cursor). |

@@ -91,6 +91,14 @@ both words; a feed in which one item leans out.
 | 11 | One tile takes over four places in a 3×3 grid | 3/2/5/3/4 | no: a generic layout icon |
 | 12 | The point of interest on the thirds of a 9:16 frame | 3/2/5/3/3 | no: reads as a phone with a camera |
 
+## Round 2 inputs (from the founder)
+
+- The team shirt carries an earlier wordmark: SOCIAL in heavy Montserrat caps (the A's crossbar replaced by a
+  slanted slice), STREAM in a light weight. It is one shirt, so it can be improved freely.
+- They like round 1's B (the S on a reel, read as a phone).
+- The shirt was imagined as "a kind of Social Chain logo". Social Chain's current logotype is a heavy
+  grotesk "SocialChain" whose a in "Social" is an italic serif a; take its confidence, not that device.
+
 ## Assumptions
 
 - The name stays "SocialStream", one word, two capitals.

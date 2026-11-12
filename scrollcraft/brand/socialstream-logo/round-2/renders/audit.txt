@@ -1,0 +1,68 @@
+
+=== e-lockup.svg  (7555 bytes)
+viewBox 0 0 2140 256 · aspect 8.359 (extra-wide)
+colours 1: #111111 · gradients 0 · anchors 244
+margins L35.8 R36.1 T35.8 B35.8 · bbox fill 0.696
+▲ WARN [near-miss-angle] 3 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 59.6° (→60°) len 160.4 at (1935,39); 120.3° (→120°) len 146.6 at (2090,68); 59.5° (→60°) len 146.9 at (2007,194). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [complexity] 244 anchor points (library median 75.0, p75 155.0). Check every point earns its place.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 90/100 (heuristic)
+
+=== e-symbol.svg  (7110 bytes)
+viewBox 0 0 256 256 · aspect 1.0 (square)
+colours 1: #000000 · gradients 0 · anchors 244
+margins L30.7 R30.7 T89.2 B89.2 · bbox fill 0.23
+▲ WARN [near-miss-angle] 3 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 59.7° (→60°) len 29.5 at (194,134); 120.3° (→120°) len 26.9 at (223,139); 59.5° (→60°) len 27.0 at (208,162). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [complexity] 244 anchor points (library median 53.0, p75 95.5). Check every point earns its place.
+· INFO [small-in-canvas] The mark occupies little of its square canvas; tighten the viewBox or scale up.
+production-readiness score: 90/100 (heuristic)
+
+=== f-lockup.svg  (7499 bytes)
+viewBox 0 0 2141 256 · aspect 8.363 (extra-wide)
+colours 1: #111111 · gradients 0 · anchors 244
+margins L35.8 R36.0 T35.8 B35.8 · bbox fill 0.696
+▲ WARN [near-miss-angle] 4 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 58.7° (→60°) len 141.1 at (1940,39); 120.7° (→120°) len 140.3 at (1992,160); 120.8° (→120°) len 104.3 at (2066,110); 58.4° (→60°) len 105.1 at (1991,199). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [complexity] 244 anchor points (library median 75.0, p75 155.0). Check every point earns its place.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 90/100 (heuristic)
+
+=== f-symbol.svg  (7127 bytes)
+viewBox 0 0 256 256 · aspect 1.0 (square)
+colours 1: #000000 · gradients 0 · anchors 244
+margins L30.7 R30.7 T90.7 B90.7 · bbox fill 0.221
+▲ WARN [near-miss-angle] 4 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 58.7° (→60°) len 25.3 at (196,133); 120.7° (→120°) len 25.2 at (205,154); 120.8° (→120°) len 18.7 at (218,145); 58.4° (→60°) len 18.9 at (205,162). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [complexity] 244 anchor points (library median 53.0, p75 95.5). Check every point earns its place.
+· INFO [small-in-canvas] The mark occupies little of its square canvas; tighten the viewBox or scale up.
+production-readiness score: 90/100 (heuristic)
+
+=== g-lockup.svg  (9310 bytes)
+viewBox 0 0 1613 256 · aspect 6.301 (extra-wide)
+colours 1: #111111 · gradients 0 · anchors 295
+margins L35.8 R36.6 T35.8 B35.8 · bbox fill 0.688
+▲ WARN [near-miss-angle] 3 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 59.6° (→60°) len 107.6 at (1463,69); 120.4° (→120°) len 98.3 at (1567,87); 59.5° (→60°) len 98.5 at (1512,172). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [complexity] 295 anchor points (library median 75.0, p75 155.0). Check every point earns its place.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 90/100 (heuristic)
+
+=== g-symbol.svg  (2061 bytes)
+viewBox 0 0 256 256 · aspect 1.0 (square)
+colours 1: #000000 · gradients 0 · anchors 51
+margins L70.4 R70.4 T25.6 B25.6 · bbox fill 0.36
+✔ no issues found
+production-readiness score: 100/100 (heuristic)
+
+=== h-lockup.svg  (9206 bytes)
+viewBox 0 0 1489 256 · aspect 5.816 (extra-wide)
+colours 1: #111111 · gradients 0 · anchors 290
+margins L35.8 R35.9 T35.8 B35.8 · bbox fill 0.685
+▲ WARN [near-miss-angle] 3 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 75.6° (→75°) len 108.7 at (1277,75); 76.1° (→75°) len 102.1 at (1293,181); 122.9° (→120°) len 118.0 at (1272,82). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [complexity] 290 anchor points (library median 75.0, p75 155.0). Check every point earns its place.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 90/100 (heuristic)
+
+=== h-symbol.svg  (1887 bytes)
+viewBox 0 0 256 256 · aspect 1.0 (square)
+colours 1: #000000 · gradients 0 · anchors 46
+margins L55.5 R55.5 T25.6 B25.6 · bbox fill 0.453
+✔ no issues found
+production-readiness score: 100/100 (heuristic)

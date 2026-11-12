@@ -1,7 +1,7 @@
 import sys, os, re, subprocess
 # the logo-design skill's renderer; override with LOGO_SKILL_SCRIPTS=/path/to/scripts
 RENDER = os.path.join(os.environ.get("LOGO_SKILL_SCRIPTS", os.path.expanduser("~/.claude/skills/logo-design/scripts")), "render_png.py")
-out = sys.argv[1]; dst = sys.argv[2]
+out = sys.argv[1]; dst = sys.argv[2]; KEYS = sys.argv[3] if len(sys.argv) > 3 else "abcd"
 def inner(path):
     s = open(path).read()
     vb = re.search(r'viewBox="([^"]+)"', s).group(1)
@@ -9,7 +9,7 @@ def inner(path):
     return vb, body
 """Review strip: each lockup and symbol (160/64/32/16 px) on cream and on night blue."""
 rows = []; Y = 10
-for k in "abcd":
+for k in KEYS:
     for scheme, bg, f in (("light", "#f6f4ef", f"concepts/{k}-lockup.svg"), ("night", "#05070f", f"test/{k}-lockup-night.svg")):
         vb, body = inner(os.path.join(out, f))
         w, h = [float(v) for v in vb.split()[2:]]
