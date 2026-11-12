@@ -1,4 +1,6 @@
 import sys, os, re, subprocess
+# the logo-design skill's renderer; override with LOGO_SKILL_SCRIPTS=/path/to/scripts
+RENDER = os.path.join(os.environ.get("LOGO_SKILL_SCRIPTS", os.path.expanduser("~/.claude/skills/logo-design/scripts")), "render_png.py")
 out = sys.argv[1]; dst = sys.argv[2]
 def inner(path):
     s = open(path).read()
@@ -26,4 +28,4 @@ for k in "abcd":
             x += s + 24
         Y += H + 30
 open(dst + ".svg", "w").write(f'<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="{Y}" viewBox="0 0 1200 {Y}"><rect width="100%" height="100%" fill="#888"/>{"".join(rows)}</svg>')
-subprocess.run(["python3", "/Users/oliver/.claude/skills/logo-design/scripts/render_png.py", dst + ".svg", "-o", dst + ".png", "--width", "1200", "--height", str(Y)])
+subprocess.run(["python3", RENDER, dst + ".svg", "-o", dst + ".png", "--width", "1200", "--height", str(Y)])

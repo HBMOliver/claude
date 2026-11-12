@@ -4,11 +4,11 @@ Four directions, shown before any logo kit is built. Start with `concepts.png` (
 `colour-hint.png` (the recommendation in the brand film's palette). The brief, clichés and longlist are in
 `brief.md`.
 
-| | Concept | Type | One-line idea |
+| | Concept | Structure | One-line idea |
 |---|---|---|---|
-| **A** | Italic i (recommended) | wordmark evolution | The i of interest turns italic inside Social: interest has literally taken its place. |
-| **B** | Through the reel | letterform / monogram | The S of Stream passes through a 9:16 reel and turns it inside out. |
-| **C** | One S | letterform + stacked lockup | One S starts both words: upright for Social, leaning into italic for Stream. |
+| **A** | Italic i (recommended) | wordmark only; the i is the proposed avatar | The i of interest turns italic inside Social: interest has literally taken its place. |
+| **B** | Through the reel | monogram symbol + the film wordmark | The S of Stream passes through a 9:16 reel and turns it inside out. |
+| **C** | One S | stacked lockup sharing one S | One S starts both words: upright for Social, leaning into italic for Stream. |
 | **D** | The one that leans | abstract symbol + sans wordmark | In a grid of reels, interest is the one that leans out (on the site, toward the cursor). |
 
 ## Files
@@ -35,10 +35,25 @@ Four directions, shown before any logo kit is built. Start with `concepts.png` (
 - **Grounds.** All marks work black on cream and cream on night blue (`renders/test-dark-light.png`).
   The film blue #7fa1c4 has 7.5:1 contrast on night blue but only 2.3:1 on cream; light grounds need a
   deeper blue (about #45698c, 5:1). Deciding that is part of the kit.
-- **Readings.** Mirrored and rotated views show no unintended shapes. A's i turned 180° looks like "!", which
-  is harmless. No concept puts two S's side by side (see the cultural check in `brief.md`).
+- **Readings.** The mirrored and 180° views of all four show no unintended shapes (B never reads as a dollar
+  sign). A's i turned 180° looks like "!", which is harmless. No concept puts two S's side by side (see the
+  cultural check in `brief.md`).
 - **Shelf.** Next to social-category logos (speech bubbles, birds, app glyphs) all four stand apart; D is
   the closest to a generic "grid" icon.
+- **Familiarity.** Compared at equal size with the reference library's nearest marks: the grids of
+  Microsoft, SendGrid, WP Engine and mParticle, Svelte's S, and the italics of PayPal and Forest Admin
+  (`renders/familiarity-shelf.png`). None is close. The library is mostly tech brands, so this does not
+  replace a trademark search.
+
+## Risks, one per concept
+
+- **A:** a lone i on an avatar can read as the "information" sign, it is an unmodified Fraunces glyph, and
+  it is not the name's initial. C's S could serve as A's avatar instead.
+- **B:** below about 32 px it becomes an S in a rounded tile, the container device that 41 % of the social
+  category already uses, and a tall rounded tile can read as a phone.
+- **C:** on its own the S passes for an ordinary serif S; the idea only shows in the stacked lockup.
+- **D:** the closest to a stock grid icon, and its sans wordmark would no longer match the Fraunces title
+  card in the brand film.
 
 ## How it was made
 
