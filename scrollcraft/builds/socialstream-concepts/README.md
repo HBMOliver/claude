@@ -97,6 +97,35 @@ this folder's root, where the head's root paths (`/favicon.ico` and the rest) fi
 - **Published links:** they still show the old logo until republished. The host sets its own tab icon, so the
   favicon shows only when the folder is served.
 
+## socialstream.hu (2026-11-12)
+
+Aurora Mix is the page going live on https://socialstream.hu, hosted by Pulse CRM. Pulse serves an uploaded
+folder exactly as it is, at the domain root: an agency admin uploads it as a ZIP for the domain under
+Settings → Domains, and a new upload replaces the old version in one step. `node tools/site.mjs` writes that
+folder to `dist/site/`:
+
+- `index.html`: `mix.html` with the domain's head: the title "SocialStream · Interest media ügynökség", the
+  canonical address, share tags with `assets/og-image.jpg` (1200 × 630) and the organisation's details as JSON-LD.
+- The page's own files (`base.css`, `mix.css`, `ss.js`, `kit.js`) and only the assets it uses, plus the three cuts
+  of the brand film that `kit.js` picks between.
+- The logo kit's web icons at the root, where the page's head and the manifest ask for them.
+- `404.html` (every link in it starts at the root, so it works at any depth), `robots.txt` and `sitemap.xml`.
+
+It writes real files only (no symlinks), and stops if a file the page names is missing or the folder breaks
+Pulse's limits (60 MB, 1,500 files). On 2026-11-12 it was 59 files and 19.0 MB. `tools/og.mjs` renders the share
+image from `tools/og.html`: the logo, the claim and three of their reels on the night blue.
+
+To update the live site: change the page, `node build.mjs mix`, `node tools/site.mjs`, run the last three commands
+under Run, then zip `dist/site/` and upload it for the domain in Pulse.
+
+Open before launch (2026-11-12):
+
+- **Mail.** The audit form and the contact link write to hello@socialstream.hu, but socialstream.hu has no MX
+  records, so mail to it bounces until a mailbox is set up there or the address changes.
+- **Fonts.** The page loads Sora, Inter, Instrument Serif and Fraunces from Google Fonts, which sends each
+  visitor's IP address to Google. Serving them from the site is waiting for the user's decision.
+- **Film.** The brand film's title card still shows the old wordmark.
+
 ## Run
 
 ```bash
@@ -105,10 +134,16 @@ node ../../../.claude/skills/scroll-craft/scripts/serve.mjs --root . --port 4560
 node lab/check.mjs
 node tools/artifact.mjs
 BASE=http://localhost:4560/dist/ node lab/check.mjs
+node tools/site.mjs
+node ../../../.claude/skills/scroll-craft/scripts/serve.mjs --root dist/site --port 4565
+BASE=http://localhost:4565/ node lab/check.mjs index
+node lab/sitecheck.mjs dist/site http://localhost:4565/
 ```
 
 The checks need `playwright-core` and Google Chrome. The fourth command packages the pages, and the
-last one runs the same checks on the packaged pages.
+fifth runs the same checks on the packaged pages. The last four build the socialstream.hu folder, serve it
+as a domain root, run the page's checks on it and then `lab/sitecheck.mjs`: every file answers 200, the head,
+no failed requests, console errors or other hosts besides Google Fonts, English, and the 404 page.
 
 ## Measured (2026-11-11)
 
