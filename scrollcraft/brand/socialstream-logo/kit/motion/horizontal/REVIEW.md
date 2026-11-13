@@ -13,10 +13,14 @@
 ## Measured
 
 - `npx hyperframes check`: passes, no errors or warnings (one note: no sound).
-- Last frame against the kit master, both rendered through the HyperFrames pipeline: identical apart from 32
-  isolated edge pixels that differ by one anti-aliasing sample (mean difference 0.002 levels).
-- The delivery MP4 against the lossless last frame: mean difference 1 level, largest 12; Night, Cream and
-  Stream Blue within 2 levels in flat areas. H.264, BT.709 tags, 138 frames.
+- Last frame of this project (snapshot at 4.55 s) against the kit master placed the same way, both rendered
+  through the HyperFrames pipeline: identical apart from 32 isolated edge pixels that differ by one
+  anti-aliasing sample (mean difference 0.002 levels).
+- The delivery MP4 against the lossless last frame: mean difference 1 level, largest 12. Inside flat areas the
+  median Night, Cream and Stream Blue are within 2 levels of the true colours (single pixels up to 7).
+  H.264, BT.709 tags, 138 frames.
+- The colour variables work: a draft render with `--variables '{"stream":"#FF0000"}'` turned STREAM red and left
+  SOCIAL cream.
 
 ## Looked at, not measured
 
@@ -35,5 +39,9 @@ hit on the phone's cut and an echo on the A's, or a slower A cut.
 - The first frame is empty Night: a sting starts from its ground. Use the last frame as the cover image.
 - No sound: it is a 4.6 s sting; a sound version is an option.
 - The lean's ~1° overshoot: it is the phone leaning in, not a bouncing UI element.
-- At phone width (360 px) the lockup is 216 px wide, below the kit's 250 px minimum for the primary drawing, and
-  the phone's slice gets thin there. Phone feeds should get the vertical and square versions (not made yet).
+## Open: size on an upright phone
+
+A 16:9 video played on an upright phone (YouTube, the website) is only 360–390 px wide, so the lockup is
+216–234 px there, below the kit's 250 px minimum for the primary drawing, and the phone's slice gets thin.
+Either make the lockup bigger (`WIDTH_FRAC` 0.70 gives 252 px at 360 px and stays inside title-safe; a change
+of look, so it waits for the founder) or use the vertical and square versions on phones (not made yet).

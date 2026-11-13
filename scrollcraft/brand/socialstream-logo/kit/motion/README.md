@@ -5,9 +5,10 @@ itself (it appears, the S swipes up into it like the next reel, it leans in at 1
 it settles into the horizontal lockup while the name streams out from behind it, and the A's cut opens like the
 phone's. The last frame is `../source/socialstream-logo-horizontal-dark.svg`.
 
-Use it as a sting or end card on 16:9 video (YouTube, presentations, the website). For phone feeds (Reels,
-TikTok, Stories) a vertical and a square version still need making: at phone width the horizontal lockup is
-below its minimum size.
+Use it as a sting or end card on 16:9 video (YouTube, presentations, the website). On an upright phone a 16:9
+video is only 360–390 px wide, which puts the lockup at 216–234 px, below the kit's 250 px minimum; phone feeds
+(Reels, TikTok, Stories) need the vertical and square versions, which are not made yet, and a larger lockup is
+an option for this one (see `horizontal/REVIEW.md`).
 
 ## Edit or render again
 
