@@ -9,7 +9,9 @@ clichés and longlist are in `brief.md`.
 Masters for every lockup in light and dark versions, one-colour files, PNGs, web icons and favicons, social
 profile pictures, vector print PDFs, the final presentation board and a one-page usage guide. Built by
 `tools/build_kit.py`, `tools/kitmark.py` and `tools/refine.py` (letter refinements), `tools/make_guide.py`,
-`tools/pdf_export.py` and `tools/render_page.py`.
+`tools/pdf_export.py` and `tools/render_page.py`. The logo animation (`kit/motion/`, a 4.6 s 1920 × 1080
+MP4 in which the phone builds itself and the name streams out of it) comes from `tools/make_motion.py` and
+HyperFrames.
 
 ## Round 3: G with H's tilt (`round-3/`)
 
