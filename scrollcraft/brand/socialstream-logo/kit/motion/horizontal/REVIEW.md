@@ -31,7 +31,7 @@
 
 ## Weakest shot
 
-The A's cut (2.32 s) is about 3 px wide at 1080p, so it reads as a detail, not a beat. With more time: a sound
+The A's cut (2.32 s) is about 6 px wide at 1080p, so it reads as a detail, not a beat. With more time: a sound
 hit on the phone's cut and an echo on the A's, or a slower A cut.
 
 ## Kept on purpose
@@ -43,5 +43,6 @@ hit on the phone's cut and an echo on the A's, or a slower A cut.
 
 A 16:9 video played on an upright phone (YouTube, the website) is only 360–390 px wide, so the lockup is
 216–234 px there, below the kit's 250 px minimum for the primary drawing, and the phone's slice gets thin.
-Either make the lockup bigger (`WIDTH_FRAC` 0.70 gives 252 px at 360 px and stays inside title-safe; a change
-of look, so it waits for the founder) or use the vertical and square versions on phones (not made yet).
+Phone feeds now have the vertical and square versions (`../vertical/`, `../square/`, 2026-11-13). For this
+file on upright phones, the lockup could still be made bigger (`width_frac` 0.70 in `make_motion.py` gives
+252 px at 360 px and stays inside title-safe; a change of look, so it waits for the founder).

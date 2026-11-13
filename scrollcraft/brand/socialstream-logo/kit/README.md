@@ -15,7 +15,7 @@ don'ts, which file) and `presentation/board.html` (slides as PNGs in `presentati
 | Instagram, TikTok, Facebook profile picture | `social/socialstream-avatar-night-1080.png` (or `-cream-`) |
 | Corner mark on reels | `source/socialstream-symbol-corner.svg` or `digital/socialstream-symbol-corner-256.png` (cream phone, night S: readable on bright frames too) |
 | End card on reels | `social/socialstream-stacked-night-1080.png` |
-| Logo animation (sting or end card on 16:9 video) | `motion/socialstream-logo-horizontal.mp4` (4.6 s; its HyperFrames project is `motion/horizontal/`) |
+| Logo animation (4.6 s sting or end card) | `motion/socialstream-logo-horizontal.mp4` on 16:9 video, `motion/socialstream-logo-vertical.mp4` on Reels, TikTok and Stories, `motion/socialstream-logo-square.mp4` in feed posts (HyperFrames projects in `motion/`) |
 | Shirts, merch | stacked or symbol, one colour: `print/socialstream-logo-stacked-white.pdf` on dark fabric |
 | Embroidery under 40 mm | `source/socialstream-symbol-small-*.svg` (its slice stays above 1.5 mm) |
 | Printer (cards, signs) | `print/*.pdf` (vector) + the colour table below |
@@ -36,8 +36,8 @@ don'ts, which file) and `presentation/board.html` (slides as PNGs in `presentati
   black and white. They are RGB: the printer converts or assigns CMYK/spot colours.
 - `presentation/` the final board (`board.html`, `spec.json`, `slides/`).
 - `guide/` the one-page guide as HTML, PNG and A4 PDF.
-- `motion/` the logo animation (1920 × 1080 MP4) and the HyperFrames project it is rendered from; see
-  `motion/README.md`.
+- `motion/` the logo animation as MP4s (horizontal 1920 × 1080, vertical 1080 × 1920, square 1080 × 1080)
+  and the HyperFrames projects they are rendered from; see `motion/README.md`.
 - `tests/` the audit report and the preview test sheet of the final symbol and its small cut.
 
 ## Colour
@@ -107,7 +107,7 @@ cd ../tools
 python3 build_kit.py ../kit          # masters in kit/source
 python3 make_guide.py ../kit         # guide HTML; render with render_page.py
 python3 pdf_export.py ../kit/print 180 ../kit/source/socialstream-logo-horizontal-light.svg
-python3 make_motion.py ../kit/motion/horizontal   # the animation's HyperFrames project; render it per motion/README.md
+python3 make_motion.py all          # the animation's HyperFrames projects; render them per motion/README.md
 ```
 One-colour files, PNGs and web icons come from the logo-design skill's `export_variants.py` and
 `render_png.py`; the board from its `presentation_board.py` (run with neutral placeholder names).
