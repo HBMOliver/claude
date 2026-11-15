@@ -50,7 +50,7 @@
   </div>
   <script>
   (() => {
-    const FPS = 25, W = 1920, H = 1080, START = 15.36, AT = (t) => t - START;
+    const FPS = 25, W = 1920, H = 1080, START = 15.88, AT = (t) => t - START;
     const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
     const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
     const tl = gsap.timeline({ paused: true });
@@ -77,8 +77,8 @@
         ds.forEach((d, k) => tl.set(d, { textContent: s[k] === " " ? "" : s[k] }, Math.max(0, AT(tt) - 0.01)));
       }
     };
-    wipeIn(15.36); drift("#ms-l0", 15.36, 1.76, -60, -40); drift("#ms-l1", 15.36, 1.76, 60, 40);
-    words("#ms-t .w", 15.72, 0.09); out("#ms-t", 16.78);
+    wipeIn(15.88); drift("#ms-l0", 15.88, 2.28, -60, -40); drift("#ms-l1", 15.88, 2.28, 60, 40);
+    words("#ms-t .w", 16.24, 0.09); out("#ms-t", 17.82);
     window.__timelines["measure"] = tl;
   })();
   </script>

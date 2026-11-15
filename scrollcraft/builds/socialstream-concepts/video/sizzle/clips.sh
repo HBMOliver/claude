@@ -15,4 +15,16 @@ v flyx-turn 6.0 "$C/FlyX Reels.mp4" 4.0       # the same reel: the boat trip (th
 v andras-pod 0.0 "$C/5. rész intro.mp4" 4.2   # Gyenis András's podcast reel, its title card
 v andras-reel 0.0 "$C/elso reel.mp4" 4.2      # his first reel, its opening (the studio, no stock insert)
 mkdir -p assets/tiles && cp ../film-v6/assets/tiles/t*.jpg assets/tiles/
-echo done
+echo clips done
+# the music and the effects (Mixkit, free licence; not in git, the licence does not allow handing the files on)
+A="$C/top tenerife assets"
+mkdir -p assets/audio
+cp "$A/music/What About Action - Mixkit.mp3" assets/audio/what-about-action.mp3
+cp "$A/sfx/impact_whoosh_deep_1143.mp3" assets/audio/whoosh-deep.mp3
+cp "$A/sfx/wind_woosh_1168.mp3" assets/audio/wind-woosh.mp3
+cp "$A/sfx/pop_bubble_2357.mp3" assets/audio/pop-bubble.mp3
+cp "$A/sfx/pop_soap_bubble_2925.mp3" assets/audio/pop-soap.mp3
+cp "$A/sfx/camera_shutter_digital_1432.mp3" assets/audio/shutter.mp3
+cp "$A/sfx/rumble_bass_2297.mp3" assets/audio/rumble-bass.mp3
+cp "$A/sfx/impact_big_cine_788.mp3" assets/audio/impact-cine.mp3
+echo audio done

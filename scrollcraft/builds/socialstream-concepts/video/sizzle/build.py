@@ -17,23 +17,29 @@ FPS, W, H = 25, 1920, 1080
 WIPE = 0.32                                   # each scene comes in over the last with a diagonal wipe
 
 # ---- the scenes: id, start, end (seconds of the film) ----
+# ---- the music: "What About Action" (Mixkit, free licence; in their CapCut folder), 121 bpm. The film starts 55.975 s
+# into it, near the end of its breakdown, so the drop (63.255 s) lands on the turn at 7.28 s; after it, every scene
+# lands on a beat (BEAT apart, counted from the drop, never added up) ----
+MUSIC, MUSIC_AT = "what-about-action", 55.975
+DROP, BEAT = 7.28, 0.4952
+
+
+def b(k):
+    return round((DROP + k * BEAT) * FPS) / FPS
+
+
+# ---- the scenes: id, start, end (seconds of the film); a scene's content lands when its wipe ends, on a beat ----
+LAND = {"make": b(4), "ads": b(10), "measure": b(18), "w1": b(22), "w2": b(30), "w3": b(36), "w4": b(44),
+        "voices": b(52), "close": b(60)}
+ORDER = ["make", "ads", "measure", "w1", "w2", "w3", "w4", "voices", "close"]
+TOTAL = round(b(67) + 2.12, 2)                # the logo's line lands on beat 67 and holds over 2 s
 SC = [
     ("open", 0.00, 3.04),       # the reel wall flies in, the logo builds itself
     ("logo", 0.00, 3.04),       # the logo's build (the kit's film-end format), over the opening's wall, under the next wipe
-    ("problem", 2.72, 9.44),    # Posztolsz. Hirdetsz. Mégsem jönnek a vevők? / the claim; the phones turn to colour
-    ("make", 9.12, 12.32),      # Mi gyártjuk a videót. (Gyenis András: podcast reels, behind the scenes)
-    ("ads", 12.00, 15.68),      # Mi futtatjuk a hirdetést. (FlyX Tenerife: reels, views, comments)
-    ("measure", 15.36, 17.12),  # És mi mérjük, mit hozott.
-    ("w1", 16.80, 20.48),       # 79 M Ft
-    ("w2", 20.16, 23.84),       # 81× ROAS
-    ("w3", 23.52, 27.20),       # 23× ROAS
-    ("w4", 26.88, 30.56),       # 105 Ft a sign-up, about 5 700 sign-ups
-    ("voices", 30.24, 34.24),   # the clients' words pile up; 300M+ Ft; Prof Enzo's reach
-    ("close", 33.92, 39.04),    # the promise over the reel wall; the logo
-]
-TOTAL = 39.04
-for n, a, b in SC:
-    for x in (a, b):
+    ("problem", 2.72, LAND["make"]),   # Posztolsz. Hirdetsz. Mégsem jönnek a vevők? / the claim; the turn on the drop
+] + [(n, round(LAND[n] - WIPE, 2), LAND[ORDER[i + 1]] if i + 1 < len(ORDER) else TOTAL) for i, n in enumerate(ORDER)]
+for n, a, z in SC:                            # (not b: that is the beat)
+    for x in (a, z):
         assert abs(x * FPS - round(x * FPS)) < 1e-6, (n, x)
 
 # ---- helpers for every scene's script ----
@@ -255,11 +261,12 @@ def scene_ads(s, e):
     t0 = s + WIPE
     ex = ('<div class="pill" id="ad-pill" style="left:1530px;top:938px"><i></i>'
           + digits(2, "ad-cnt") + 'K megtekintés egy reelen</div>'
-          + bubble("ad-b0", 110, 520, "Komment · FlyX Tenerife", "It was brilliant fun… highly recommended it")
-          + bubble("ad-b1", 170, 728, "Komment · FlyX Tenerife", "A fantastic experience, absolutely loved it.")
-          + bubble("ad-b2", 120, 892, "Komment · FlyX Tenerife", "Where is it please?", width=440))
-    ejs = (f'\n    pop("#ad-pill", {t0 + 0.5:g}, 0.4); count(document.getElementById("ad-cnt"), {t0 + 0.55:g}, 0.9, 69);'
-           + "".join(f'\n    pop("#ad-b{k}", {t0 + 0.75 + 0.42 * k:g});' for k in range(3)))
+          + bubble("ad-b0", 110, 470, "Komment · FlyX Tenerife", "It was brilliant fun… highly recommended it")
+          + bubble("ad-b1", 170, 636, "Komment · FlyX Tenerife", "A fantastic experience, absolutely loved it.")
+          + bubble("ad-b2", 120, 800, "Komment · FlyX Tenerife", "Enjoyable half hour. Friendly staff.")
+          + bubble("ad-b3", 190, 944, "Komment · FlyX Tenerife", "Where is it please?", width=440))
+    ejs = (f'\n    pop("#ad-pill", {t0 + 0.495:g}, 0.4); count(document.getElementById("ad-cnt"), {t0 + 0.55:g}, 0.9, 69);'
+           + "".join(f'\n    pop("#ad-b{k}", {t0 + 0.74 + 0.495 * k:g});' for k in range(4)))
     css = """
     #root .bub { width: 600px; }
     #root .pill .cnt .d { width: 0.6em; }"""
@@ -288,7 +295,7 @@ WINS = {
                ls=[(90, 90, 100, "255, 64, 104, 0.55"), (6, 4, 80, "56, 160, 255, 0.5")], obj="o-hall-mix",
                eb="Csarnoképítő ügyfél · Meta", n=79, nd=2, unit='<span class="it ui">M Ft</span>',
                lab="Bevétel egy hét alatt, egy B2B kampányból.",
-               quote=("Csarnoképítő ügyfél · B2B", "„…egy hét alatt annyi ajánlatkérésünk lett, mint korábban fél év alatt összesen.”")),
+               quote=("Csarnoképítő ügyfél · B2B", "„…annyi ajánlatkérésünk lett, mint korábban fél év alatt összesen.”")),
     "w2": dict(bg="linear-gradient(140deg,#ff3f6c 0%,#a42aa8 55%,#3a1690 100%)",
                ls=[(8, 92, 90, "255, 160, 80, 0.45"), (96, 6, 90, "66, 92, 255, 0.55")], obj="o-door-mix",
                eb="Ajtó webshop · Google Performance Max", n=81, nd=2,
@@ -297,12 +304,12 @@ WINS = {
                ls=[(94, 90, 100, "255, 64, 104, 0.5"), (4, 6, 80, "136, 78, 255, 0.55")], obj="o-watch-mix",
                eb="Karóra webshop · Karácsony", n=23, nd=2,
                unit='<span class="x acc">×</span><span class="u">ROAS</span>', lab="Ünnepi kampány, több mint 8M Ft bevétellel.",
-               quote=("Karóra webshop", "„Idén először éreztük úgy, hogy az ünnepi szezon nekünk dolgozik – nem ellenünk.”")),
+               quote=("Karóra webshop", "„…az ünnepi szezon nekünk dolgozik – nem ellenünk.”")),
     "w4": dict(bg="linear-gradient(140deg,#1d7be0 0%,#3a2fc4 55%,#2a1270 100%)",
                ls=[(92, 8, 90, "255, 64, 104, 0.45"), (6, 94, 90, "136, 78, 255, 0.55")], obj="o-webinar-mix",
                eb="Egészségügyi webinár", n=105, nd=3, unit='<span class="it ui">Ft</span>',
                lab="Ennyibe került egy jelentkező.", pill=5700,
-               quote=("Egészségügyi szolgáltató", "„Amikor a számláló majdnem 5700-nál állt meg, alig hittük el…”")),
+               quote=("Egészségügyi szolgáltató", "„…majdnem 5700-nál állt meg, alig hittük el…”")),
 }
 
 
@@ -389,11 +396,11 @@ def scene_close(s, e, info):
     js = f"""wipeIn({s:g});
     tl.fromTo("#cs-in", {{ scale: 1.5, rotation: 4 }}, {{ scale: 1, rotation: 0, duration: {e - s:g}, ease: "power2.out" }}, AT({s:g}));
     tl.fromTo("#cs-wall", {{ x: 160 }}, {{ x: -40, duration: {e - s:g}, ease: "none" }}, AT({s:g}));
-    words("#cs-t1 .w", {t0 + 0.04:g}, 0.09); out("#cs-t1", {t0 + 1.1:g});
-    words("#cs-t2 .w", {t0 + 1.24:g}, 0.09); out("#cs-t2", {t0 + 2.3:g});
-    tl.fromTo("#cs-glow", {{ opacity: 0.5 }}, {{ opacity: 1, duration: 0.5, ease: "power2.out" }}, AT({t0 + 2.2:g}));
-    tl.fromTo("#cs-logo", {{ opacity: 0, scale: 1.08, filter: "blur(14px)" }}, {{ opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "expo.out" }}, AT({t0 + 2.44:g}));
-    tl.fromTo("#cs-eb", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.3, ease: "power2.out" }}, AT({t0 + 2.7:g}));"""
+    words("#cs-t1 .w", {t0 + 0.04:g}, 0.09); out("#cs-t1", {b(63) - 0.16:g});
+    words("#cs-t2 .w", {b(63):g}, 0.09); out("#cs-t2", {b(66) - 0.36:g});
+    tl.fromTo("#cs-glow", {{ opacity: 0.5 }}, {{ opacity: 1, duration: 0.5, ease: "power2.out" }}, AT({b(66) - 0.3:g}));
+    tl.fromTo("#cs-logo", {{ opacity: 0, scale: 1.08, filter: "blur(14px)" }}, {{ opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "expo.out" }}, AT({b(66):g}));
+    tl.fromTo("#cs-eb", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.3, ease: "power2.out" }}, AT({b(67):g}));"""
     css = WALL_CSS + """
     #root .ct { position: absolute; left: 0; right: 0; top: 330px; text-align: center; }
     #root .c1 { font-size: 150px; white-space: nowrap; }
@@ -424,6 +431,48 @@ def composition(cid, s, html, js, css):
 """
 
 
+X = {  # effect: file in assets/audio, where it hits (s into the file), volume
+    "whoosh": ("whoosh-deep", 0.63, 0.32), "wind": ("wind-woosh", 1.595, 0.26), "pop": ("pop-bubble", 0.241, 0.55),
+    "pop2": ("pop-soap", 0.186, 0.5), "shutter": ("shutter", 0.305, 0.5), "sub": ("rumble-bass", 0.051, 0.55),
+    "impact": ("impact-cine", 2.172, 0.75),
+}
+
+
+def sounds():
+    """The effects, from the scenes' own moments: a whoosh on every wipe (two takes, alternating), a pop on every card
+    that pops, a shutter on the behind-the-scenes cards, a sub hit on the drop, one cinematic impact on the logo."""
+    ev = [("sub", DROP)]
+    for i, n in enumerate(ORDER):
+        ev.append(("whoosh" if i % 2 == 0 else "wind", LAND[n]))
+    t0 = LAND["make"]
+    ev += [("shutter", t0 - WIPE + 1.0 + 0.24 * k + 0.12) for k in range(4)]
+    t0 = LAND["ads"]
+    ev += [("pop2", t0 + 0.495 + 0.12)] + [("pop" if k % 2 == 0 else "pop2", t0 + 0.74 + 0.495 * k + 0.12) for k in range(4)]
+    for w in ["w1", "w2", "w3", "w4"]:
+        t0 = LAND[w]
+        ev.append(("pop2", t0 + 1.04))                       # the number lands
+        if WINS[w].get("quote"):
+            ev.append(("pop", t0 + 0.99 + 0.12))
+        if WINS[w].get("pill"):
+            ev.append(("pop", t0 + 0.3 + 0.12))
+    t0 = LAND["voices"]
+    ev += [("pop" if k % 2 == 0 else "pop2", t0 + 0.1 + 0.38 * k + 0.12) for k in range(3)]
+    ev += [("pop2", t0 + 1.7 + 0.12), ("pop", t0 + 1.92 + 0.12)]
+    ev.append(("impact", b(66)))
+    out = []
+    for k, (name, t) in enumerate(ev):
+        f, hit, vol = X[name]
+        start = round(t + 1 / FPS - hit, 3)
+        media = 0.0
+        if start < 0:
+            media, start = -start, 0.0
+        out.append(f'      <audio id="sfx{k}" class="clip" src="assets/audio/{f}.mp3" data-start="{start:g}" data-media-start="{media:g}" '
+                   f'data-track-index="{30 + k}" data-volume="{vol}"></audio>')
+    out.append(f'      <audio id="music" class="clip" src="assets/audio/{MUSIC}.mp3" data-start="0" data-duration="{TOTAL:g}" '
+               f'data-media-start="{MUSIC_AT:g}" data-track-index="29" data-volume="0.72" data-fade-in="0.3" data-fade-out="1.6"></audio>')
+    return "\n".join(out)
+
+
 def index(lang="hu"):
     hosts = "\n".join(f'''      <div id="{n}" data-composition-id="{n}" data-composition-src="compositions/{n}.html" data-start="{a:g}" data-duration="{round(b - a, 4):g}" data-track-index="{z}" data-track-kind="graphics" data-width="{W}" data-height="{H}" style="z-index: {z}"></div>'''
                       for z, (n, a, b) in enumerate(SC))
@@ -439,6 +488,7 @@ def index(lang="hu"):
   <body>
     <div id="main" data-motion-blur="on" data-motion-blur-shutter="120" data-composition-id="main" data-start="0" data-duration="{TOTAL:g}" data-fps="{FPS}" data-width="{W}" data-height="{H}">
 {hosts}
+{sounds()}
     </div>
     <script>window.__timelines["main"] = gsap.timeline({{ paused: true }});</script>
   </body>

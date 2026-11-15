@@ -48,12 +48,12 @@
   </style>
   <div id="root" data-composition-id="make" data-width="1920" data-height="1080">
     <div class="ff" id="wp">
-    <div class="fld" style="background:linear-gradient(140deg,#3a1aa8 0%,#7a2bd0 55%,#24105e 100%)"><i class="lt" id="mk-l0" data-layout-allow-overflow style="left:92%;top:8%;width:100vmax;height:100vmax;margin:-50.0vmax 0 0 -50.0vmax;background:radial-gradient(closest-side,rgba(255, 64, 104, 0.45),rgba(255, 64, 104,0))"></i><i class="lt" id="mk-l1" data-layout-allow-overflow style="left:4%;top:96%;width:90vmax;height:90vmax;margin:-45.0vmax 0 0 -45.0vmax;background:radial-gradient(closest-side,rgba(56, 160, 255, 0.5),rgba(56, 160, 255,0))"></i></div><div class='cl' id='mk-t'><div class='eb' id='mk-eb'>Gyenis András · Podcast &amp; interjú</div><div class='hd cl1'><span class="w ">Mi</span> <span class="w ">gyártjuk</span></div><div class='hd cl1'><span class="w">a</span> <span class="w it">videót.</span></div></div><div class="phone" id="mk-p0" style="left:1090px;top:170px"><div class="scr"><video id="mk-p0-v" class="clip" src="assets/clips/andras-pod.mp4" data-start="0" data-duration="3.2" data-media-start="0" data-hf-media-start-basis="local" data-track-index="1" muted playsinline></video></div><div class="isl"></div></div><div class="phone" id="mk-p1" style="left:1500px;top:110px"><div class="scr"><video id="mk-p1-v" class="clip" src="assets/clips/andras-reel.mp4" data-start="0" data-duration="3.2" data-media-start="0" data-hf-media-start-basis="local" data-track-index="2" muted playsinline></video></div><div class="isl"></div></div><div class="bts" id="mk-c0" style="left:110px;top:600px"><img src="assets/tiles/t14.jpg" alt=""></div><div class="bts" id="mk-c1" style="left:330px;top:690px"><img src="assets/tiles/t22.jpg" alt=""></div><div class="bts" id="mk-c2" style="left:560px;top:620px"><img src="assets/tiles/t10.jpg" alt=""></div><div class="bts" id="mk-c3" style="left:760px;top:700px"><img src="assets/tiles/t23.jpg" alt=""></div>
+    <div class="fld" style="background:linear-gradient(140deg,#3a1aa8 0%,#7a2bd0 55%,#24105e 100%)"><i class="lt" id="mk-l0" data-layout-allow-overflow style="left:92%;top:8%;width:100vmax;height:100vmax;margin:-50.0vmax 0 0 -50.0vmax;background:radial-gradient(closest-side,rgba(255, 64, 104, 0.45),rgba(255, 64, 104,0))"></i><i class="lt" id="mk-l1" data-layout-allow-overflow style="left:4%;top:96%;width:90vmax;height:90vmax;margin:-45.0vmax 0 0 -45.0vmax;background:radial-gradient(closest-side,rgba(56, 160, 255, 0.5),rgba(56, 160, 255,0))"></i></div><div class='cl' id='mk-t'><div class='eb' id='mk-eb'>Gyenis András · Podcast &amp; interjú</div><div class='hd cl1'><span class="w ">Mi</span> <span class="w ">gyártjuk</span></div><div class='hd cl1'><span class="w">a</span> <span class="w it">videót.</span></div></div><div class="phone" id="mk-p0" style="left:1090px;top:170px"><div class="scr"><video id="mk-p0-v" class="clip" src="assets/clips/andras-pod.mp4" data-start="0" data-duration="3.28" data-media-start="0" data-hf-media-start-basis="local" data-track-index="1" muted playsinline></video></div><div class="isl"></div></div><div class="phone" id="mk-p1" style="left:1500px;top:110px"><div class="scr"><video id="mk-p1-v" class="clip" src="assets/clips/andras-reel.mp4" data-start="0" data-duration="3.28" data-media-start="0" data-hf-media-start-basis="local" data-track-index="2" muted playsinline></video></div><div class="isl"></div></div><div class="bts" id="mk-c0" style="left:110px;top:600px"><img src="assets/tiles/t14.jpg" alt=""></div><div class="bts" id="mk-c1" style="left:330px;top:690px"><img src="assets/tiles/t22.jpg" alt=""></div><div class="bts" id="mk-c2" style="left:560px;top:620px"><img src="assets/tiles/t10.jpg" alt=""></div><div class="bts" id="mk-c3" style="left:760px;top:700px"><img src="assets/tiles/t23.jpg" alt=""></div>
     </div>
   </div>
   <script>
   (() => {
-    const FPS = 25, W = 1920, H = 1080, START = 9.12, AT = (t) => t - START;
+    const FPS = 25, W = 1920, H = 1080, START = 8.96, AT = (t) => t - START;
     const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
     const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
     const tl = gsap.timeline({ paused: true });
@@ -80,18 +80,18 @@
         ds.forEach((d, k) => tl.set(d, { textContent: s[k] === " " ? "" : s[k] }, Math.max(0, AT(tt) - 0.01)));
       }
     };
-    wipeIn(9.12);
-    drift("#mk-l0", 9.12, 3.2, -80, 60);
-    drift("#mk-l1", 9.12, 3.2, 70, -50);
-    rise("#mk-p0", 9.16, -12, -4);
-    rise("#mk-p1", 9.28, 10, 5);
-    tl.fromTo("#mk-eb", { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" }, AT(9.44));
-    words("#mk-t .cl1 .w", 9.5, 0.08);
-    out("#mk-t", 11.98);
-    pop("#mk-c0", 10.12); tl.set("#mk-c0", { rotation: -7 }, 0);
-    pop("#mk-c1", 10.36); tl.set("#mk-c1", { rotation: 5 }, 0);
-    pop("#mk-c2", 10.6); tl.set("#mk-c2", { rotation: -4 }, 0);
-    pop("#mk-c3", 10.84); tl.set("#mk-c3", { rotation: 6 }, 0);
+    wipeIn(8.96);
+    drift("#mk-l0", 8.96, 3.28, -80, 60);
+    drift("#mk-l1", 8.96, 3.28, 70, -50);
+    rise("#mk-p0", 9, -12, -4);
+    rise("#mk-p1", 9.12, 10, 5);
+    tl.fromTo("#mk-eb", { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" }, AT(9.28));
+    words("#mk-t .cl1 .w", 9.34, 0.08);
+    out("#mk-t", 11.9);
+    pop("#mk-c0", 9.96); tl.set("#mk-c0", { rotation: -7 }, 0);
+    pop("#mk-c1", 10.2); tl.set("#mk-c1", { rotation: 5 }, 0);
+    pop("#mk-c2", 10.44); tl.set("#mk-c2", { rotation: -4 }, 0);
+    pop("#mk-c3", 10.68); tl.set("#mk-c3", { rotation: 6 }, 0);
     window.__timelines["make"] = tl;
   })();
   </script>

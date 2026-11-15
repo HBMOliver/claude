@@ -55,7 +55,7 @@
   </div>
   <script>
   (() => {
-    const FPS = 25, W = 1920, H = 1080, START = 20.16, AT = (t) => t - START;
+    const FPS = 25, W = 1920, H = 1080, START = 21.8, AT = (t) => t - START;
     const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
     const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
     const tl = gsap.timeline({ paused: true });
@@ -82,17 +82,17 @@
         ds.forEach((d, k) => tl.set(d, { textContent: s[k] === " " ? "" : s[k] }, Math.max(0, AT(tt) - 0.01)));
       }
     };
-    wipeIn(20.16);
-    drift("#w2-l0", 20.16, 3.68, -80, 60);
-    drift("#w2-l1", 20.16, 3.68, 70, -50);
-    tl.fromTo("#w2-obj", { opacity: 0, y: 90, scale: 0.85 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "expo.out" }, AT(20.42));
-    tl.fromTo("#w2-obj", { rotation: -2 }, { rotation: 2, duration: 3.68, ease: "sine.inOut" }, AT(20.16));
-    tl.fromTo("#w2-eb", { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" }, AT(20.48));
-    tl.fromTo("#w2-num", { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, AT(20.52));
-    count(document.getElementById("w2-cnt"), 20.52, 1.0, 81);
-    tl.fromTo("#w2-num .ui, #w2-num .x, #w2-num .u", { opacity: 0, filter: "blur(12px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "power2.out" }, AT(20.93));
-    words("#w2-lab .w", 21.1, 0.05);
-    out("#w2-t", 23.5);
+    wipeIn(21.8);
+    drift("#w2-l0", 21.8, 3.32, -80, 60);
+    drift("#w2-l1", 21.8, 3.32, 70, -50);
+    tl.fromTo("#w2-obj", { opacity: 0, y: 90, scale: 0.85 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "expo.out" }, AT(22.06));
+    tl.fromTo("#w2-obj", { rotation: -2 }, { rotation: 2, duration: 3.32, ease: "sine.inOut" }, AT(21.8));
+    tl.fromTo("#w2-eb", { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" }, AT(22.12));
+    tl.fromTo("#w2-num", { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, AT(22.16));
+    count(document.getElementById("w2-cnt"), 22.16, 1.0, 81);
+    tl.fromTo("#w2-num .ui, #w2-num .x, #w2-num .u", { opacity: 0, filter: "blur(12px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "power2.out" }, AT(22.57));
+    words("#w2-lab .w", 22.74, 0.05);
+    out("#w2-t", 24.78);
     window.__timelines["w2"] = tl;
   })();
   </script>

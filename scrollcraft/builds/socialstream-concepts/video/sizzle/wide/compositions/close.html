@@ -66,7 +66,7 @@
   </div>
   <script>
   (() => {
-    const FPS = 25, W = 1920, H = 1080, START = 33.92, AT = (t) => t - START;
+    const FPS = 25, W = 1920, H = 1080, START = 36.68, AT = (t) => t - START;
     const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
     const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
     const tl = gsap.timeline({ paused: true });
@@ -93,14 +93,14 @@
         ds.forEach((d, k) => tl.set(d, { textContent: s[k] === " " ? "" : s[k] }, Math.max(0, AT(tt) - 0.01)));
       }
     };
-    wipeIn(33.92);
-    tl.fromTo("#cs-in", { scale: 1.5, rotation: 4 }, { scale: 1, rotation: 0, duration: 5.12, ease: "power2.out" }, AT(33.92));
-    tl.fromTo("#cs-wall", { x: 160 }, { x: -40, duration: 5.12, ease: "none" }, AT(33.92));
-    words("#cs-t1 .w", 34.28, 0.09); out("#cs-t1", 35.34);
-    words("#cs-t2 .w", 35.48, 0.09); out("#cs-t2", 36.54);
-    tl.fromTo("#cs-glow", { opacity: 0.5 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, AT(36.44));
-    tl.fromTo("#cs-logo", { opacity: 0, scale: 1.08, filter: "blur(14px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "expo.out" }, AT(36.68));
-    tl.fromTo("#cs-eb", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, AT(36.94));
+    wipeIn(36.68);
+    tl.fromTo("#cs-in", { scale: 1.5, rotation: 4 }, { scale: 1, rotation: 0, duration: 5.88, ease: "power2.out" }, AT(36.68));
+    tl.fromTo("#cs-wall", { x: 160 }, { x: -40, duration: 5.88, ease: "none" }, AT(36.68));
+    words("#cs-t1 .w", 37.04, 0.09); out("#cs-t1", 38.32);
+    words("#cs-t2 .w", 38.48, 0.09); out("#cs-t2", 39.6);
+    tl.fromTo("#cs-glow", { opacity: 0.5 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, AT(39.66));
+    tl.fromTo("#cs-logo", { opacity: 0, scale: 1.08, filter: "blur(14px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "expo.out" }, AT(39.96));
+    tl.fromTo("#cs-eb", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, AT(40.44));
     window.__timelines["close"] = tl;
   })();
   </script>

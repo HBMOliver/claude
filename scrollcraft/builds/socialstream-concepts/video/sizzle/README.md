@@ -6,7 +6,17 @@ that comes from its motion graphics (phones coming up, comments, texts, counted 
 This film takes that grammar and tells SocialStream's own story with the site's own lines (`../../content.mjs`),
 in SocialStream's type and colours, not Social Chain's look.
 
-## Beats (39.04 s, wide, Hungarian, silent)
+## Draft 2 (42.56 s, with sound)
+
+Cut to "What About Action" (Mixkit, free licence, from their CapCut folder; 121 bpm): the film starts 55.975 s into
+the track, near the end of its breakdown, so the problem plays over the quiet part and the drop lands on the turn to
+colour (7.28 s); every later scene lands on a beat counted from the drop (`b(k)` in build.py). Effects (Mixkit, same
+folder): a whoosh on each wipe (two takes), pops on the cards and numbers, a shutter on the behind-the-scenes cards, a
+sub hit on the drop, one cinematic impact on the logo. Measured, not heard: -14.1 LUFS, true peak -1.1 dBTP. The audio
+files are not in git (the licence does not allow handing them on); `clips.sh` copies them. The FlyX scene has four
+comments now ("Enjoyable half hour. Friendly staff." added) and the quotes are shorter excerpts.
+
+## Beats of draft 1 (39.04 s, wide, Hungarian, silent)
 
 | Time | Beat | On screen |
 |---|---|---|
