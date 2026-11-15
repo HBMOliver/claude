@@ -94,9 +94,9 @@ fs.writeFileSync(OUT + '/404.html', `<!doctype html>
   img { width: 220px; height: auto; }
   h1 { margin: 10px 0 0; font-size: clamp(1.8rem, 6vw, 2.6rem); line-height: 1.1; letter-spacing: -0.02em; }
   p { margin: 0; color: #b9c1d6; }
-  a { color: #ffd1df; }
-  a.btn { display: inline-block; margin-top: 6px; padding: 14px 22px; border-radius: 999px; background: #d6336a; color: #fff; font-weight: 700; text-decoration: none; }
-  a:focus-visible { outline: 2px solid #ffd1df; outline-offset: 3px; }
+  a { color: #d9d6ff; }
+  a.btn { display: inline-block; margin-top: 6px; padding: 14px 22px; border-radius: 999px; background: #6a4dff; color: #fff; font-weight: 700; text-decoration: none; }
+  a:focus-visible { outline: 2px solid #d9d6ff; outline-offset: 3px; }
   .en { font-size: 14px; color: #8a94ad; }
 </style>
 </head>
