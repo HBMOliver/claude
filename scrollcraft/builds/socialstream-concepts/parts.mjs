@@ -1,5 +1,6 @@
 // Shared pieces of markup. They carry structure and words only; every look lives in the concept's own CSS.
 import { C } from './content.mjs';
+import { LOGO_ANIM } from './logo-anim.mjs';
 
 export const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const attrs = a => (a ? ' ' + a : '');
@@ -36,10 +37,11 @@ export function head({ title, fonts, css, theme = '#ffffff', desc }) {
 <body>
 `;
 }
-export const scripts = () => `
+// extra: a page's own scripts after the shared ones (Aurora Mix's footer logo animation)
+export const scripts = (extra = []) => `
 <script src="ss.js"></script>
 <script src="kit.js"></script>
-</body>
+${extra.map(f => `<script src="${f}"></script>\n`).join('')}</body>
 </html>
 `;
 
@@ -126,10 +128,11 @@ ${C.faq.items.map(([q, a], i) => `  <details><summary><span class="qn">${String(
 </div>`;
 
 // kit: the logo kit's files instead of the typed wordmark, for a dark footer (Aurora Mix, the page that goes live):
-// the small-cut dark lockup in the line, and the full dark lockup as the giant sign-off, both unchanged kit files
+// the small-cut dark lockup in the line, and the full dark lockup as the giant sign-off. The giant one is the kit's
+// logo animation in place (logo-anim.mjs, played by logo-anim.js); its markup alone is the kit's dark master
 export function footer(cls = '', big = false, kit = false) {
   const wm = kit ? '<img src="assets/socialstream-logo-horizontal-small-dark.svg" alt="" width="172" height="30">' : 'Social<em>Stream</em>';
-  const giant = kit ? '<p class="giant giant-kit" aria-hidden="true"><img src="assets/socialstream-logo-horizontal-dark.svg" alt="" width="1471" height="256"></p>'
+  const giant = kit ? `<p class="giant giant-kit" aria-hidden="true">${LOGO_ANIM}</p>`
     : '<p class="giant" aria-hidden="true">Social<em>Stream</em></p>';
   return `<footer class="foot ${cls}">
   <div class="wrap">

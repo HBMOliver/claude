@@ -276,12 +276,21 @@
 .mx-foot { color: var(--fg2); }
 /* the logo kit's files in the footer (footer() in parts.mjs), shown as they are: the kit allows no gradient, sheen or
    other effect on the logo. The small-cut dark lockup in the line; the full dark lockup as the giant sign-off, as wide
-   as the content column, with at least the cap height of SOCIAL clear above and below it */
+   as the content column, with at least the cap height of SOCIAL clear above and below it. The giant one moves only
+   the way the kit's own logo animation does (logo-anim.js): it builds itself when the footer comes into view, and the
+   next reel swipes into the phone now and then; its markup is the master, in the kit's colours */
 .mx-foot .wm { display: inline-flex; }
 .mx-foot .wm img { width: 172px; height: 30px; max-width: none; }
 .mx-foot .giant-kit { max-width: var(--max); margin: 0 auto; padding: clamp(12px, 4vw, 60px) max(var(--gut), env(safe-area-inset-right, 0px)) clamp(24px, 5vw, 72px) max(var(--gut), env(safe-area-inset-left, 0px));
   font: inherit; letter-spacing: normal; white-space: normal; overflow: visible; }
-.mx-foot .giant-kit img { width: 100%; height: auto; }
+.mx-foot .giant-anim { position: relative; display: block; width: 100%; }
+.mx-foot .giant-anim > span { position: absolute; inset: 0; }
+.mx-foot .giant-anim svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.mx-foot .giant-anim .ink { fill: #f1eee6; }
+.mx-foot .giant-anim .acc { fill: #7fa1c4; }
+.mx-foot .giant-anim .hole { fill: #05070f; } /* the S, drawn in Night on the phone, as in the kit's animation */
+.mx-foot .giant-anim .fl-word { z-index: 1; }
+.mx-foot .giant-anim .fl-phone { z-index: 2; }
 
 /* ---------- tablets and phones ---------- */
 @media (max-width: 1080px) {
