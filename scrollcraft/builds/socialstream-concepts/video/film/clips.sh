@@ -14,7 +14,7 @@ cut() { # name source start seconds
 # FlyX Tenerife: three phones
 cut flyx-1 "$R" 0.4 3.6      # the owner talking
 cut flyx-2 "$A2" 7.3 3.6     # the 5D flying cinema
-cut flyx-3 "$R" 9.3 3.6      # guests in the seats
+cut flyx-3 "$R" 4.6 3.6      # the flight over the island
 # podcast and interview: three phones
 cut pod-1 "$P" 18.3 3.6      # András at the mic
 cut pod-2 "$I" 26.7 3.6      # the car interview

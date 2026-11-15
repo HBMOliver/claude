@@ -59,8 +59,11 @@ H.264 with BT.709 tags, and the posters `hero-poster.jpg` (1600 × 900) and `her
   the tilted wall reaching past the frame, the wall's repeated stills, and the services' reels starting later
   than 0 inside their scene.
 - Contact sheets of both cuts at 1 and 2 frames a second, full-size frames of six beats, and every clip at
-  4 frames a second (five clips were moved off stock B-roll or a title card, one off a child in the foreground).
+  4 frames a second (five clips were moved off stock B-roll or a title card, two off children in the foreground).
 - The site's encodes against the renders: smooth gradients and clean type at 1.1 Mbps.
 - Aurora Mix with the new film: `lab/check.mjs` 45/45 on the page and on the packaged site, `lab/sitecheck.mjs`
-  passes, and the opening's crossfade from the wide to the tall cut lands on the same moment.
+  passes, and the opening's crossfade from the wide to the tall cut lands on the same moment, also while the logo
+  is still building (both videos held at 1.5 s and 3.0 s through the crossfade: one phone, one logo).
+- The loop: the last frame against the first, in `hero-1080.mp4` and `hero-v-720.mp4`: mean difference 0.2 levels,
+  largest 5 (the close leaves the band and the wall's dimming, exactly as the film starts).
 - Not checked: how it looks on a real phone, and nobody listened (there is no sound).
