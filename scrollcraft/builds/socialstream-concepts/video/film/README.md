@@ -26,9 +26,13 @@ Two cuts on one clock in two languages: 25 fps, 885 frames, 35.4 s, silent (the 
 | 31.75-32.55 | Back out | The frame shrinks and turns into the middle of the reel wall, which flies in around it |
 | 32.55-35.4 | Close | The band and the logo; then the logo and the wall go, leaving the band: the first frame, so the loop has no jump |
 
-English uses the site's own English copy (`../../content.mjs`): "Social media is dead." / "Interest has taken its
-place." ... "In this era, we win." The site picks the language's film (`kit.js`: `-en` when the page is in English,
-and it swaps the film at the same moment when the visitor switches).
+English: the claim is the site's own English (`../../content.mjs`): "Social media is dead." / "Interest has taken
+its place."; "Door webshop" is the site's too. The other lines are translations for the founder to confirm:
+"Experience centre · Social & video", "best result", "B2B Meta campaign", "revenue in one week", "Podcast &
+interview", "Production · Editing · Subtitles", the services "Video, Social, Ads, Website, Automation, Strategy", "ad
+budget managed", "In the new era since 2022" and "In this era, we win." They live in `TEXT` in `build.py`. The site
+picks the language's film (`kit.js`: `-en` when the page is in English, and it swaps the film at the same moment when
+the visitor switches).
 
 ## Files
 
@@ -44,9 +48,10 @@ and it swaps the film at the same moment when the visitor switches).
 
 ## Footage
 
-All of it is the team's own work. No stock B-roll, no other brand as the subject, and nobody recognisable whose age
-or consent isn't known: the Türkiye film was a youth exchange and Bridle Up Hope works with girls, so the people in
-those reels are small in the frame, seen from behind, or the team.
+All of it is the team's own work. No stock B-roll and no other brand as the subject. In the new Photos reels nobody
+is recognisable close up: the Türkiye film was a youth exchange and Bridle Up Hope works with girls, so the rain
+dance, the bazaar and the clean-up crew show people small or from behind, and the founder can still veto them.
+Clients' own reels (FlyX, the interview) show the clients, as before.
 
 | Where | Source |
 |---|---|
@@ -104,7 +109,10 @@ Then `node tools/site.mjs` and the checks in `../../README.md` (Run).
 - Every swipe, four frames into each, in both cuts; the logo's build at 1, 2 and 3 s in all four site files; the
   stream, the dives and the hand-overs in contact sheets of the renders.
 - The loop, last frame against the first, in all six site files: mean difference 0.15-0.2 levels, largest 6-8.
-- The opening's crossfade: both cuts held at the same moment (3.0 s and 16.0 s) while the film shrinks into its card.
+- The opening's crossfade, on the final files: both cuts held at the same moment (3.0, 3.6 and 3.75 s, during the
+  dive too) while the film shrinks into its card: one logo, one phone, never two.
+- The hand-over to the wall at 31.75 s (frames 786-797): the picture continues; the story bars fade out over the last
+  swipe, so nothing blinks when the wall scene takes over.
 - The site: `lab/check.mjs` 49/49 on Mix (with the film following the language: English cuts after switching,
   Hungarian again after switching back) and 186/186 on the other four pages; the packaged socialstream.hu folder:
   49/49 and `lab/sitecheck.mjs` all 62 files (40.8 MB).

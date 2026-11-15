@@ -118,7 +118,8 @@
       const m = lerp(14 * k, 48, phi), top = lerp(13 * k, 30, phi), th = lerp(3 * k, 4, phi), gap = lerp(5 * k, 8, phi);
       put(bars, "x", r2(R.cx - R.w / 2 + m)); put(bars, "y", r2(R.cy - R.h / 2 + top));
       put(bars, "width", r2(Math.max(0, R.w - 2 * m))); put(bars, "gap", `${gap.toFixed(2)}px`);
-      put(bars, "opacity", +a.toFixed(4));
+      // the bars fade with the last swipe, so they are gone when the wall scene takes the frame over
+      put(bars, "opacity", +(a * (1 - clamp01((t - TM.swLast) / TM.sw))).toFixed(4));
       segs.forEach((sg, j) => {
         put(sg, "display", j < g.segs.length ? "block" : "none");
         if (j >= g.segs.length) return;

@@ -48,7 +48,7 @@ BANNED:  the defaults (everything centred, everything fading in, slide-up on eve
 | 31.75-32.55 | Back out | the full frame shrinks and turns -10° into the middle of the reel wall, which flies in around it | it is one reel of the wall |
 | 32.55-35.40 | Close | night band and dimming come up, the logo (kit lockup) fades in on the band, holds, goes; the wall goes | band alone = frame 0 |
 
-English (the site's own English copy): "Social media is dead." / "Interest has taken its place." / Experience centre · Social & video /
+English (the claim and "Door webshop" are the site's own English; the rest are translations to confirm): "Social media is dead." / "Interest has taken its place." / Experience centre · Social & video /
 best result · Door webshop · Google PMax / revenue in one week · B2B Meta campaign / Podcast & interview · Production · Editing ·
 Subtitles / Video, Social, Ads, Website, Automation, Strategy / ad budget managed · In the new era since 2022 / "In this era, we win."
 
