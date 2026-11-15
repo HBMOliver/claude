@@ -6,6 +6,15 @@ that comes from its motion graphics (phones coming up, comments, texts, counted 
 This film takes that grammar and tells SocialStream's own story with the site's own lines (`../../content.mjs`),
 in SocialStream's type and colours, not Social Chain's look.
 
+## Draft 3 (42.56 s): the results, each its own idea
+
+The founder found draft 2 "much better but where the best results are quite boring": four results in one layout.
+Now each has its own picture and move, and its own wipe (diagonal from the right, from the left, up, an iris):
+79 M Ft counts up while the week's days (H K Sze Cs P Szo V) light up one by one ("egy hét alatt"); 81× starts from
+one coin ("1 Ft") and bursts into a 9 x 9 grid of 81 ("81 Ft") with a coins sound; 23× slams into the middle with
+"Ünnepi kampány · több mint 8M Ft bevétel" counting under it; about 5 700 sign-ups count up while dots fill the frame
+and "105 Ft / jelentkező" stamps in. The clients' quotes stay, earlier, so they can be read. -13.8 LUFS, -1.0 dBTP.
+
 ## Draft 2 (42.56 s, with sound)
 
 Cut to "What About Action" (Mixkit, free licence, from their CapCut folder; 121 bpm): the film starts 55.975 s into

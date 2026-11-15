@@ -29,9 +29,9 @@ def b(k):
 
 
 # ---- the scenes: id, start, end (seconds of the film); a scene's content lands when its wipe ends, on a beat ----
-LAND = {"make": b(4), "ads": b(10), "measure": b(18), "w1": b(22), "w2": b(30), "w3": b(36), "w4": b(44),
+LAND = {"make": b(4), "ads": b(10), "measure": b(18), "r1": b(22), "r2": b(30), "r3": b(36), "r4": b(44),
         "voices": b(52), "close": b(60)}
-ORDER = ["make", "ads", "measure", "w1", "w2", "w3", "w4", "voices", "close"]
+ORDER = ["make", "ads", "measure", "r1", "r2", "r3", "r4", "voices", "close"]
 TOTAL = round(b(67) + 2.12, 2)                # the logo's line lands on beat 67 and holds over 2 s
 SC = [
     ("open", 0.00, 3.04),       # the reel wall flies in, the logo builds itself
@@ -48,9 +48,14 @@ JS = r"""
     const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
     const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
     const tl = gsap.timeline({ paused: true });
-    // the scene comes in over the last one with a diagonal wipe (not the first scene)
-    const wipeIn = (t) => tl.fromTo("#wp", { clipPath: "polygon(132% 0%, 132% 0%, 132% 100%, 162% 100%)" },
-      { clipPath: "polygon(-32% 0%, 132% 0%, 132% 100%, -2% 100%)", duration: %WIPE%, ease: "power3.inOut" }, AT(t));
+    // the scene comes in over the last one with a wipe: diagonal from the right or the left, up, or an iris
+    const WIPES = {
+      dr: ["polygon(132% 0%, 132% 0%, 132% 100%, 162% 100%)", "polygon(-32% 0%, 132% 0%, 132% 100%, -2% 100%)"],
+      dl: ["polygon(-32% 0%, -32% 0%, -62% 100%, -32% 100%)", "polygon(-32% 0%, 132% 0%, 102% 100%, -32% 100%)"],
+      up: ["polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)", "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"],
+      iris: ["circle(0% at 50% 50%)", "circle(75% at 50% 50%)"],
+    };
+    const wipeIn = (t, k = "dr") => tl.fromTo("#wp", { clipPath: WIPES[k][0] }, { clipPath: WIPES[k][1], duration: %WIPE%, ease: "power3.inOut" }, AT(t));
     // words land by focus and opacity, a little apart; a line goes out of focus
     const words = (sel, t, st = 0.07) => tl.fromTo(sel, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: st }, AT(t));
     const out = (sel, t) => tl.fromTo(sel, { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in", immediateRender: false }, AT(t));
@@ -350,6 +355,140 @@ def scene_win(s, e, wid):
     return "".join(html), "\n    ".join(js), css
 
 
+RES_CSS = """
+    #root .rn { position: absolute; display: flex; align-items: baseline; white-space: nowrap; }
+    #root .rn .cnt { font-size: 420px; line-height: 0.86; letter-spacing: -0.05em; }
+    #root .rn .ui { font-size: 230px; line-height: 0.86; margin-left: 0.12em; }
+    #root .rn .x { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 260px; line-height: 0.86; margin-left: 0.03em; }
+    #root .rn .u { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 110px; margin-left: 0.18em; letter-spacing: -0.03em; }
+    #root .lab { font: 600 50px/1.2 Inter, sans-serif; letter-spacing: -0.01em; }
+    #root .bub.q { font-size: 40px; }"""
+RLIGHT = lambda rid, a, b2: [(f"{rid}-l0",) + a, (f"{rid}-l1",) + b2]
+
+
+def res_common(rid, s, e, ls, kind):
+    js = [f'wipeIn({s:g}, "{kind}");'] + [f'drift("#{l[0]}", {s:g}, {e - s:g}, {70 if k % 2 else -80}, {-50 if k % 2 else 60});' for k, l in enumerate(ls)]
+    js.append(f'tl.fromTo("#{rid}-eb", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.25, ease: "power2.out" }}, AT({s + WIPE:g}));')
+    return js
+
+
+def scene_r1(s, e):
+    """79 M Ft in one week: the week's days light up one by one while the revenue climbs; then the client's words."""
+    t0, step = s + WIPE, BEAT / 2
+    ls = RLIGHT("r1", (92, 88, 100, "255, 64, 104, 0.5"), (6, 6, 80, "56, 160, 255, 0.5"))
+    days = ["H", "K", "Sze", "Cs", "P", "Szo", "V"]
+    html = (field("linear-gradient(140deg,#1631c0 0%,#3d1fb4 60%,#1a0f5c 100%)", ls)
+            + '<div class="eb" id="r1-eb" style="position:absolute;left:130px;top:140px">Csarnoképítő ügyfél · Meta · B2B</div>'
+            + f'<div class="hd rn" id="r1-n" style="left:122px;top:196px">{digits(2, "r1-cnt")}<span class="it ui">M Ft</span></div>'
+            + f'<div class="lab" id="r1-lab" style="position:absolute;left:130px;top:590px">{wl("bevétel egy hét alatt")}</div>'
+            + '<div class="days" id="r1-days">' + "".join(f'<div class="day" id="r1-d{k}">{d}</div>' for k, d in enumerate(days)) + '</div>'
+            + bubble("r1-q", 1190, 196, "Csarnoképítő ügyfél · B2B", "„…annyi ajánlatkérésünk lett, mint korábban fél év alatt összesen.”", "q", 620))
+    end = t0 + 0.25 + 7 * step
+    js = res_common("r1", s, e, ls, "dr") + [
+        f'tl.fromTo("#r1-n", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.12, ease: "none" }}, AT({t0 + 0.1:g}));',
+        f'tl.fromTo("#r1-n .ui", {{ opacity: 0, filter: "blur(12px)" }}, {{ opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "power2.out" }}, AT({t0 + 0.2:g}));',
+        f'count(document.getElementById("r1-cnt"), {t0 + 0.25:g}, {7 * step:g}, 79, "power1.inOut");']
+    for k in range(7):
+        t = t0 + 0.25 + (k + 1) * step - 0.1
+        js.append(f'tl.fromTo("#r1-d{k}", {{ backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }}, {{ backgroundColor: "#ffffff", color: "#141a4a", duration: 0.12, ease: "power2.out", immediateRender: {"true" if k == 0 else "false"} }}, AT({t:g}));')
+        js.append(f'tl.fromTo("#r1-d{k}", {{ scale: 0.9 }}, {{ scale: 1, duration: 0.3, ease: "back.out(2.2)", immediateRender: false }}, AT({t:g}));')
+    js += [f'words("#r1-lab .w", {end + 0.1:g}, 0.06);', f'pop("#r1-q", {t0 + 1.1:g}, 0.5);',
+           f'out(["#r1-eb", "#r1-n", "#r1-lab", "#r1-days", "#r1-q"], {e - WIPE - 0.02:g});']
+    css = RES_CSS + """
+    #root .days { position: absolute; left: 130px; top: 790px; display: flex; gap: 22px; }
+    #root .day { width: 196px; height: 124px; border-radius: 28px; display: flex; align-items: center; justify-content: center;
+      font: 700 46px/1 Sora, Inter, sans-serif; letter-spacing: -0.02em; background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.5);
+      box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.22); }"""
+    return html, "\n    ".join(js), css
+
+
+def scene_r2(s, e):
+    """81× ROAS: one forint, then eighty-one: a coin, then a 9 x 9 grid of coins bursts out while the number climbs."""
+    t0 = s + WIPE
+    ls = RLIGHT("r2", (8, 92, 90, "255, 160, 80, 0.45"), (96, 6, 90, "66, 92, 255, 0.55"))
+    html = (field("linear-gradient(140deg,#ff3f6c 0%,#b02aa8 55%,#3a1690 100%)", ls)
+            + '<div class="eb" id="r2-eb" style="position:absolute;left:130px;top:140px">Ajtó webshop · Google Performance Max</div>'
+            + f'<div class="hd rn" id="r2-n" style="left:122px;top:196px">{digits(2, "r2-cnt")}<span class="x">×</span><span class="u">ROAS</span></div>'
+            + f'<div class="lab" id="r2-lab" style="position:absolute;left:130px;top:590px">{wl("1 forint hirdetésből 81 forint bevétel.")}</div>'
+            + '<div class="c1" id="r2-c1"><i class="cn"></i><span>1 Ft</span></div>'
+            + '<div class="grid" id="r2-g" data-motion-blur="off">' + '<i class="cn"></i>' * 81 + '</div>'
+            + '<div class="gl" id="r2-gl">81 Ft</div>')
+    js = res_common("r2", s, e, ls, "dl") + [
+        f'pop("#r2-c1", {t0:g}, 0.45);',
+        f'tl.fromTo("#r2-g .cn", {{ opacity: 0, scale: 0 }}, {{ opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", stagger: {{ grid: [9, 9], from: "center", amount: 0.6 }} }}, AT({t0 + 0.5:g}));',
+        f'tl.fromTo("#r2-n", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.12, ease: "none" }}, AT({t0 + 0.45:g}));',
+        f'count(document.getElementById("r2-cnt"), {t0 + 0.5:g}, 0.9, 81, "power2.out");',
+        f'tl.fromTo("#r2-n .x, #r2-n .u", {{ opacity: 0, filter: "blur(12px)" }}, {{ opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "power2.out" }}, AT({t0 + 1.1:g}));',
+        f'tl.fromTo("#r2-gl", {{ opacity: 0, y: 20 }}, {{ opacity: 1, y: 0, duration: 0.4, ease: "expo.out" }}, AT({t0 + 1.1:g}));',
+        f'words("#r2-lab .w", {t0 + 0.9:g}, 0.05);',
+        f'out(["#r2-eb", "#r2-n", "#r2-lab", "#r2-c1", "#r2-g", "#r2-gl"], {e - WIPE - 0.02:g});']
+    css = RES_CSS + """
+    #root .cn { display: block; width: 64px; height: 64px; border-radius: 50%;
+      background: radial-gradient(circle at 34% 30%, #ffffff 0%, #ffe8ef 48%, #ffbfd0 100%);
+      box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.7), 0 10px 20px -8px rgba(40, 0, 40, 0.55); }
+    #root .grid { position: absolute; left: 1150px; top: 150px; display: grid; grid-template-columns: repeat(9, 64px); gap: 12px; }
+    #root .gl { position: absolute; left: 1150px; top: 852px; width: 672px; text-align: center; font: 700 64px/1 Sora, Inter, sans-serif; letter-spacing: -0.03em; }
+    #root .c1 { position: absolute; left: 130px; top: 790px; display: flex; align-items: center; gap: 26px; font: 700 64px/1 Sora, Inter, sans-serif; letter-spacing: -0.03em; transform-origin: 0 50%; }
+    #root .c1 .cn { width: 120px; height: 120px; }"""
+    return html, "\n    ".join(js), css
+
+
+def scene_r3(s, e):
+    """23× ROAS at Christmas: the number slams into the middle, the holiday revenue counts under it, then their words."""
+    t0 = s + WIPE
+    ls = RLIGHT("r3", (94, 90, 100, "255, 64, 104, 0.5"), (4, 6, 80, "136, 78, 255, 0.55"))
+    html = (field("linear-gradient(140deg,#4a1fb8 0%,#2a2fc4 55%,#101a66 100%)", ls)
+            + '<div class="eb" id="r3-eb" style="position:absolute;left:0;right:0;top:130px;text-align:center">Karóra webshop · Karácsony</div>'
+            + f'<div class="hd rn" id="r3-n" style="left:0;right:0;top:180px;justify-content:center">{digits(2, "r3-cnt")}<span class="x acc">×</span><span class="u">ROAS</span></div>'
+            + '<div class="pc"><div class="pill" id="r3-p"><i></i>Ünnepi kampány · több mint&nbsp;' + digits(1, "r3-pc") + 'M Ft bevétel</div></div>'
+            + bubble("r3-q", 530, 760, "Karóra webshop", "„…az ünnepi szezon nekünk dolgozik – nem ellenünk.”", "q", 860))
+    js = res_common("r3", s, e, ls, "up") + [
+        f'tl.fromTo("#r3-n", {{ opacity: 0, scale: 1.35 }}, {{ opacity: 1, scale: 1, duration: 0.45, ease: "expo.out" }}, AT({t0:g}));',
+        f'count(document.getElementById("r3-cnt"), {t0:g}, 0.7, 23, "power2.out");',
+        f'pop("#r3-p", {t0 + 0.7:g}, 0.4);', f'count(document.getElementById("r3-pc"), {t0 + 0.75:g}, 0.5, 8, "power2.out");',
+        f'pop("#r3-q", {t0 + 1.2:g}, 0.5);',
+        f'out(["#r3-eb", "#r3-n", "#r3-p", "#r3-q"], {e - WIPE - 0.02:g});']
+    css = RES_CSS + """
+    #root #r3-n { transform-origin: 50% 60%; }
+    #root #r3-n .cnt { font-size: 460px; }
+    #root .pc { position: absolute; left: 0; right: 0; top: 640px; display: flex; justify-content: center; }
+    #root .pill .cnt .d { width: 0.6em; }"""
+    return html, "\n    ".join(js), css
+
+
+def scene_r4(s, e):
+    """About 5 700 sign-ups at 105 Ft each: a counter races while sign-up dots fill the frame; the price stamps in."""
+    import random
+    t0 = s + WIPE
+    ls = RLIGHT("r4", (92, 8, 90, "255, 64, 104, 0.45"), (6, 94, 90, "136, 78, 255, 0.55"))
+    pts = [(24 + c * 48, 26 + r * 58) for r in range(18) for c in range(40)]
+    random.Random(7).shuffle(pts)                     # a fixed order, the same on every render
+    dots = "".join(f'<i style="left:{x}px;top:{y}px"></i>' for x, y in pts)
+    html = (field("linear-gradient(140deg,#1d7be0 0%,#3a2fc4 55%,#2a1270 100%)", ls)
+            + f'<div class="dots" id="r4-dots" data-motion-blur="off">{dots}</div>'
+            + '<div class="eb" id="r4-eb" style="position:absolute;left:0;right:0;top:130px;text-align:center">Egészségügyi webinár</div>'
+            + f'<div class="hd rn" id="r4-n" style="left:0;right:0;top:180px;justify-content:center"><span class="ap">≈</span>{digits(4, "r4-cnt", gap_after=0)}</div>'
+            + f'<div class="lab" id="r4-lab" style="position:absolute;left:0;right:0;top:560px;text-align:center">{wl("jelentkező 600K Ft-ból")}</div>'
+            + '<div class="pc"><div class="stamp" id="r4-st">105 Ft <span>/ jelentkező</span></div></div>'
+            + bubble("r4-q", 560, 830, "Egészségügyi szolgáltató", "„…majdnem 5700-nál állt meg, alig hittük el…”", "q", 800))
+    js = res_common("r4", s, e, ls, "iris") + [
+        f'tl.fromTo("#r4-dots i", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.12, ease: "none", stagger: {{ amount: 1.4 }} }}, AT({t0 - 0.1:g}));',
+        f'tl.fromTo("#r4-n", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.12, ease: "none" }}, AT({t0:g}));',
+        f'count(document.getElementById("r4-cnt"), {t0 + 0.05:g}, 1.4, 5700, "expo.out");',
+        f'words("#r4-lab .w", {t0 + 1.4:g}, 0.06);',
+        f'tl.fromTo("#r4-st", {{ opacity: 0, scale: 1.7, rotation: -9 }}, {{ opacity: 1, scale: 1, rotation: -4, duration: 0.32, ease: "expo.out" }}, AT({t0 + 1.5:g}));',
+        f'pop("#r4-q", {t0 + 1.9:g}, 0.5);',
+        f'out(["#r4-eb", "#r4-n", "#r4-lab", "#r4-st", "#r4-q", "#r4-dots"], {e - WIPE - 0.02:g});']
+    css = RES_CSS + """
+    #root .dots i { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.28); }
+    #root #r4-n .ap { font-size: 220px; line-height: 0.86; margin-right: 0.12em; opacity: 0.8; }
+    #root .pc { position: absolute; left: 0; right: 0; top: 660px; display: flex; justify-content: center; }
+    #root .stamp { padding: 18px 40px 20px; border-radius: 22px; background: #ff5272; color: #fff; font: 700 84px/1 Sora, Inter, sans-serif;
+      letter-spacing: -0.03em; box-shadow: 0 30px 60px -24px rgba(60, 0, 30, 0.6); }
+    #root .stamp span { font-size: 52px; font-weight: 600; opacity: 0.9; }"""
+    return html, "\n    ".join(js), css
+
+
 def scene_voices(s, e):
     t0 = s + WIPE
     qs = [("Péter · Hoofbútor", "„Már az induláskor is volt vásárlás…”", 110, 300),
@@ -434,7 +573,7 @@ def composition(cid, s, html, js, css):
 X = {  # effect: file in assets/audio, where it hits (s into the file), volume
     "whoosh": ("whoosh-deep", 0.63, 0.32), "wind": ("wind-woosh", 1.595, 0.26), "pop": ("pop-bubble", 0.241, 0.55),
     "pop2": ("pop-soap", 0.186, 0.5), "shutter": ("shutter", 0.305, 0.5), "sub": ("rumble-bass", 0.051, 0.55),
-    "impact": ("impact-cine", 2.172, 0.75),
+    "impact": ("impact-cine", 2.172, 0.75), "coins": ("coins", 0.082, 0.45),
 }
 
 
@@ -448,13 +587,14 @@ def sounds():
     ev += [("shutter", t0 - WIPE + 1.0 + 0.24 * k + 0.12) for k in range(4)]
     t0 = LAND["ads"]
     ev += [("pop2", t0 + 0.495 + 0.12)] + [("pop" if k % 2 == 0 else "pop2", t0 + 0.74 + 0.495 * k + 0.12) for k in range(4)]
-    for w in ["w1", "w2", "w3", "w4"]:
-        t0 = LAND[w]
-        ev.append(("pop2", t0 + 1.04))                       # the number lands
-        if WINS[w].get("quote"):
-            ev.append(("pop", t0 + 0.99 + 0.12))
-        if WINS[w].get("pill"):
-            ev.append(("pop", t0 + 0.3 + 0.12))
+    t0 = LAND["r1"]
+    ev += [("pop", t0 + 1.1 + 0.12), ("pop2", t0 + 0.25 + 7 * BEAT / 2 + 0.04)]
+    t0 = LAND["r2"]
+    ev += [("pop", t0 + 0.12), ("coins", t0 + 0.58), ("pop2", t0 + 1.12)]
+    t0 = LAND["r3"]
+    ev += [("sub", t0), ("pop", t0 + 0.82), ("pop2", t0 + 1.32)]
+    t0 = LAND["r4"]
+    ev += [("pop2", t0 + 1.45), ("sub", t0 + 1.5), ("pop", t0 + 2.02)]
     t0 = LAND["voices"]
     ev += [("pop" if k % 2 == 0 else "pop2", t0 + 0.1 + 0.38 * k + 0.12) for k in range(3)]
     ev += [("pop2", t0 + 1.7 + 0.12), ("pop", t0 + 1.92 + 0.12)]
@@ -503,7 +643,8 @@ def main():
     tmp = os.path.join(HERE, ".logo-wide")
     logo, info = logo_scene(tmp)
     builders = {"open": lambda s, e: scene_open(s, e, info), "problem": scene_problem, "make": scene_make, "ads": scene_ads,
-                "measure": scene_measure, "voices": scene_voices, "close": lambda s, e: scene_close(s, e, info)}
+                "measure": scene_measure, "voices": scene_voices,
+                "r1": scene_r1, "r2": scene_r2, "r3": scene_r3, "r4": scene_r4, "close": lambda s, e: scene_close(s, e, info)}
     for n, s, e in SC:
         if n == "logo":
             src = logo

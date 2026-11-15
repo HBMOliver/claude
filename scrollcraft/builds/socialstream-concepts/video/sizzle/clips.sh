@@ -28,3 +28,4 @@ cp "$A/sfx/camera_shutter_digital_1432.mp3" assets/audio/shutter.mp3
 cp "$A/sfx/rumble_bass_2297.mp3" assets/audio/rumble-bass.mp3
 cp "$A/sfx/impact_big_cine_788.mp3" assets/audio/impact-cine.mp3
 echo audio done
+cp "$A/sfx/coins_clinking_1993.mp3" assets/audio/coins.mp3
