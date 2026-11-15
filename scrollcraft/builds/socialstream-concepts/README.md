@@ -123,7 +123,7 @@ Before launch (2026-11-12):
 
 - **Mail: done.** hello@socialstream.hu, which the audit form and the contact link write to, is a free Google
   Workspace alias of Olivér's account. socialstream.hu is a verified secondary domain with MX and SPF records at
-  Rackhost. Email signing (DKIM) can only be added 24 to 72 hours after Gmail was switched on.
+  Rackhost. Email signing (DKIM) is on since 2026-11-15 (TXT google._domainkey).
 - **Fonts: open.** The page loads Sora, Inter, Instrument Serif and Fraunces from Google Fonts, which sends each
   visitor's IP address to Google. Serving them from the site is waiting for the user's decision.
 - **Film: done.** The title card was re-cut with the new logo (b1ae71e), then made longer, with the logo on a
