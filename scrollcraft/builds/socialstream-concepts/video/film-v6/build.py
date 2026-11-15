@@ -12,7 +12,7 @@ logo, which is also its last frame, so the loop is seamless. SPEC.md has the sho
 
 Run from this folder: python3 build.py [wide wide-en tall tall-en]   (then render; see README.md)
 """
-import json, os, re, subprocess, sys
+import json, math, os, re, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 LOGO_TOOLS = os.path.normpath(os.path.join(HERE, "../../../../brand/socialstream-logo/tools"))
@@ -87,7 +87,7 @@ FOOT = {
     "tall": {"claimB": ("t-crowd", 1080, 1920), "flyx": ("t-screen", 1080, 1920), "win": ("t-sunset", 1080, 1920),
              "win_focus": (0.5, 0.5)},
 }
-SVC_CLIPS = ["ph-svc-stage", "ph-svc-social", "ph-svc-ads2", "ph-svc-web", "ph-svc-auto", "ph-svc-strat"]
+SVC_CLIPS = ["ph-svc-stage", "ph-svc-social", "ph-svc-ads2", "ph-svc-web", "ph-svc-auto2", "ph-svc-strat"]
 FOOT_LANG = {"en": {"ph-svc-web": "ph-svc-web-en"}}   # footage that shows words, in each language's version
 
 # ---- the colour fields: ground, lights (x %, y %, size vmax, rgba, drift px) ----
@@ -105,7 +105,7 @@ NUMBERS = {"roas": ("81", '<span class="x acc">×</span><span class="u">ROAS</sp
 
 # ---- the reel wall (open and close): 7 rows x 9 columns of stills from their footage, tilted ----
 ROWS, COLS, CW, CH, GAP, TILT = 7, 9, 230, 409, 28, -10
-TILES = [f"t{i:02d}" for i in range(1, 23)]
+TILES = [f"t{i:02d}" for i in range(1, 29)]
 WALL_W, WALL_H = COLS * CW + (COLS - 1) * GAP, ROWS * CH + (ROWS - 1) * GAP
 MID_R, MID_C = ROWS // 2, COLS // 2       # the middle card, which the phone becomes at the end
 WALL_CSS = f"""#root .wl-in {{ position: absolute; inset: 0; }}
@@ -117,11 +117,36 @@ WALL_CSS = f"""#root .wl-in {{ position: absolute; inset: 0; }}
     #root .wl-dim {{ position: absolute; inset: 0; background: rgba(5, 7, 15, 0.2); }}"""
 
 
-def wall(cut, skip_middle=False):
-    cards = []
+def visible_cards(W, H):
+    """The wall's cards that show in a W x H frame (with room for the drift), nearest the middle first."""
+    a, out = math.radians(TILT), []
     for r in range(ROWS):
         for c in range(COLS):
-            img = f"tiles/{TILES[(r * 5 + c * 3) % len(TILES)]}.jpg"
+            x0, y0 = c * (CW + GAP) - WALL_W / 2, r * (CH + GAP) - WALL_H / 2
+            pts = [(W / 2 + x * math.cos(a) - y * math.sin(a), H / 2 + x * math.sin(a) + y * math.cos(a))
+                   for x, y in ((x0, y0), (x0 + CW, y0), (x0, y0 + CH), (x0 + CW, y0 + CH))]
+            xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+            if max(xs) > -60 and min(xs) < W + 60 and max(ys) > 0 and min(ys) < H:
+                out.append((r, c))
+    return sorted(out, key=lambda rc: abs(rc[0] - MID_R) * 2 + abs(rc[1] - MID_C))
+
+
+def tile_map(cut):
+    """Which still each card shows: no still twice among the cards in the frame (the founder found v5 repetitive);
+    the cards outside the frame repeat them."""
+    W, H = CUTS[cut][:2]
+    vis = [rc for rc in visible_cards(W, H) if rc != (MID_R, MID_C)]
+    m = {rc: TILES[(k * 11) % len(TILES)] for k, rc in enumerate(vis[:len(TILES)])}   # 11 and 28 share no factor
+    rest = [(r, c) for r in range(ROWS) for c in range(COLS) if (r, c) not in m and (r, c) != (MID_R, MID_C)]
+    m.update({rc: TILES[(k * 5 + 3) % len(TILES)] for k, rc in enumerate(rest)})
+    return m
+
+
+def wall(cut, skip_middle=False):
+    cards, tiles = [], tile_map(cut)
+    for r in range(ROWS):
+        for c in range(COLS):
+            img = f"tiles/{tiles.get((r, c), TILES[0])}.jpg"
             hide = ""
             if (r, c) == (MID_R, MID_C):
                 img = f"tiles/mid-{cut}.jpg"        # the sunset where the close leaves it: the loop's seam
@@ -233,7 +258,7 @@ def feed(cut, lang):
             for k, name in enumerate(X["services"]):
                 a, b = cuts[k], cuts[k + 1]
                 names.append(f'<div class="hd sv-w clip" id="svw-{k}" data-start="{rel(a):g}" data-duration="{round(b - a, 4):g}" '
-                             f'data-track-index="{track}">{name}<span class="acc">.</span></div>')
+                             f'data-track-index="{track}"><span class="svi">{name}<span class="acc">.</span></span></div>')
                 track += 1
                 f = FOOT_LANG.get(lang, {}).get(SVC_CLIPS[k], SVC_CLIPS[k])
                 reels.append(video(f"v-svc{k}", f, a - (LEAD if k == 0 else 0), b, track, cls=""))
@@ -281,6 +306,12 @@ def feed(cut, lang):
             js.append(f'tl.fromTo("#wn .wn1 .w", {{ opacity: 0, filter: "blur(8px)" }}, {{ opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: 0.08 }}, AT({land + 0.02:g}));')
             js.append(f'tl.fromTo("#wn-2", {{ opacity: 0, filter: "blur(12px)", scale: 1.04 }}, {{ opacity: 1, filter: "blur(0px)", scale: 1, duration: 0.3, ease: "power2.out" }}, AT({land + 0.38:g}));')
             js.append('tl.fromTo("#wn .w", { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in", immediateRender: false }, AT(TM.winOut));')
+    # a slide's type goes (focus out, 0.14 s) as the next swipe starts, so no title is smeared by the swipe
+    TYPESEL = {"claimA": "#sl-claimA .ca", "claimB": "#cb", "flyx": "#sl-flyx .fx", "roas": "#sl-roas .nb",
+               "mft": "#sl-mft .nb", "svc": "#svw-5 .svi", "m300": "#sl-m300 .nb"}
+    for i in range(len(SLIDES) - 1):
+        sel, t_next = TYPESEL[SLIDES[i][0]], SLIDES[i + 1][2]
+        js.append(f'tl.fromTo("{sel}", {{ opacity: 1, filter: "blur(0px)" }}, {{ opacity: 0, filter: "blur(8px)", duration: 0.14, ease: "power2.in", immediateRender: false }}, AT({t_next:g}));')
     # the story bars: one segment per slide, filling while it is on screen; they come with the flood and go with
     # the last line
     segs = [(SLIDES[i][2], SLIDES[i + 1][2] if i + 1 < len(SLIDES) else T["back"]) for i in range(len(SLIDES))]

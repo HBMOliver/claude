@@ -4,7 +4,8 @@
 # promo's aerials, volcano, ship and cockpit may be the ride's licensed film, so they stay out), Gyenis András's stage
 # intro, Bálint's showreel (he is on the team), their FlyX ad, and the founder's own footage from Photos (Latvia,
 # Türkiye, Bridle Up Hope). No stock B-roll, no child in the foreground, no other brand as the subject; people whose
-# age or consent is not known only appear small in the wall.
+# age or consent is not known only appear small in the wall. The FlyX guests seen full frame (the cinema laughing)
+# are the ones in the promo FlyX published; the founder was asked to confirm they may appear in SocialStream's film.
 # Run from this folder: sh clips.sh <photos-folder>   (the Photos originals in latvia/, turkiye/, bridleup/)
 # The six service reels (ph-svc-video, -social, -web, -web-en, -auto, -strat) are v5's, copied from ../film/assets/clips.
 set -e
@@ -28,9 +29,11 @@ clip w-screen "$DMC" 25.5 2.4 "scale=1920:1080:flags=lanczos"       # the screen
 # the sun going down over the Baltic (Latvia, 4K60): its last, steady 2.95 s at 0.45x (6.5 s, smooth from 60 fps), a band
 # across sun and horizon for the wide cut
 ffmpeg -v error -y -ss 11.6 -t 2.95 -i "$LV/IMG_1737.MOV" -vf "setpts=PTS/0.45,crop=iw:iw*9/16:0:ih*0.36-iw*9/32,scale=1920:1080:flags=lanczos,fps=25,format=yuv420p" $OUT assets/clips/w-sunset.mp4
-# two service reels of their own (1080 x 1920): the arena (Videó) and their FlyX ad's sunset (Hirdetés)
+# three service reels of their own (1080 x 1920): the arena (Videó), their FlyX ad's sunset (Hirdetés) and Bálint's
+# mixing desk on screen (Automatizáció; v5's screen showed a private chat list, so it is not used)
 clip ph-svc-stage "$INTRO" 1.0 0.9 "crop=608:1080:(iw-608)/2:0,scale=1080:1920:flags=lanczos"
 clip ph-svc-ads2 "$AD1" 8.2 0.9 "scale=1080:1920:flags=lanczos"
+clip ph-svc-auto2 "$B" 14.2 0.9 "crop=608:1080:(iw-608)/2:0,scale=1080:1920:flags=lanczos"
 # the reel wall: 9:16 stills (460 x 818), cut to cover from wide frames at focus x, or from upright ones
 still() { # name source time focus-x [extra filter before]
   pre="${5:+$5,}"
@@ -42,7 +45,7 @@ upst() { # name source time [extra filter before]: an upright source
 }
 still t01 "$DMC" 27.0 0.55          # the screen and the seats
 still t02 "$DMC" 46.5 0.45          # laughing in the seats
-still t03 "$DMC" 35.0 0.62          # laughing in the dark
+still t03 "$INTRO" 0.4 0.5          # a full hall, from behind
 still t04 "$DMC" 44.8 0.42          # waves on the screen
 still t05 "$INTRO" 1.3 0.5          # the arena
 still t06 "$INTRO" 2.2 0.36         # András on stage
@@ -62,4 +65,10 @@ upst t19 "$D2/b216_IMG_6214.MOV" 3.0 "$HLG"   # clouds on the FlyX screen
 upst t20 "$D2/b146_IMG_0472.MOV" 3.0 "$HLG"   # mountains on the FlyX screen, from the back row
 upst t21 "$LV/IMG_1539.MOV" 2.0     # a cobbled street in Liepāja
 still t22 "$B" 17.5 0.5             # the green-screen studio
+still t23 "$B" 2.5 0.62             # at the monitors, in silhouette
+still t24 "$B" 33.0 0.5             # a drawn set: light, camera, screen
+upst t25 "$D2/b280_VID_20260523_141658.mp4" 2.0   # the FlyX screen in blue
+still t26 "$DMC" 43.3 0.5           # guests laughing in the seats
+still t27 "$B" 36.0 0.5             # a hand at the microphone
+upst t28 "$LV/IMG_1705.MOV" 6.0     # sand and the tide
 echo done
