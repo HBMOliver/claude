@@ -1,0 +1,484 @@
+#!/usr/bin/env python3
+"""The SocialStream sizzle (2026-11-15): a brand film built on the grammar of the Social Chain 2026 sizzle the
+founder sent as the reference ("i want it more like that"): every beat says something and shows something happening.
+A problem, the claim, what SocialStream does (their clients' reels rising in phones, real comments popping, views
+counting up), what it brought (each result with its own client's words), the clients' voices piling up, the promise,
+the logo. SocialStream's own type and colours, not Social Chain's look.
+
+Every line is the site's own copy (content.mjs) or a real number or comment (FlyX Tenerife's and Prof Enzo's Facebook
+pages, read on 2026-11-15); comments show their words only, not who wrote them. SPEC.md has the beats; T below is the
+clock. Run from this folder: python3 build.py   (writes wide/; then render, see README.md)
+"""
+import json, math, os, re, subprocess, sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+LOGO_TOOLS = os.path.normpath(os.path.join(HERE, "../../../../brand/socialstream-logo/tools"))
+FPS, W, H = 25, 1920, 1080
+WIPE = 0.32                                   # each scene comes in over the last with a diagonal wipe
+
+# ---- the scenes: id, start, end (seconds of the film) ----
+SC = [
+    ("open", 0.00, 3.04),       # the reel wall flies in, the logo builds itself
+    ("logo", 0.00, 3.04),       # the logo's build (the kit's film-end format), over the opening's wall, under the next wipe
+    ("problem", 2.72, 9.44),    # Posztolsz. Hirdetsz. Mégsem jönnek a vevők? / the claim; the phones turn to colour
+    ("make", 9.12, 12.32),      # Mi gyártjuk a videót. (Gyenis András: podcast reels, behind the scenes)
+    ("ads", 12.00, 15.68),      # Mi futtatjuk a hirdetést. (FlyX Tenerife: reels, views, comments)
+    ("measure", 15.36, 17.12),  # És mi mérjük, mit hozott.
+    ("w1", 16.80, 20.48),       # 79 M Ft
+    ("w2", 20.16, 23.84),       # 81× ROAS
+    ("w3", 23.52, 27.20),       # 23× ROAS
+    ("w4", 26.88, 30.56),       # 105 Ft a sign-up, about 5 700 sign-ups
+    ("voices", 30.24, 34.24),   # the clients' words pile up; 300M+ Ft; Prof Enzo's reach
+    ("close", 33.92, 39.04),    # the promise over the reel wall; the logo
+]
+TOTAL = 39.04
+for n, a, b in SC:
+    for x in (a, b):
+        assert abs(x * FPS - round(x * FPS)) < 1e-6, (n, x)
+
+# ---- helpers for every scene's script ----
+JS = r"""
+    const FPS = 25, W = 1920, H = 1080, START = %START%, AT = (t) => t - START;
+    const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
+    const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
+    const tl = gsap.timeline({ paused: true });
+    // the scene comes in over the last one with a diagonal wipe (not the first scene)
+    const wipeIn = (t) => tl.fromTo("#wp", { clipPath: "polygon(132% 0%, 132% 0%, 132% 100%, 162% 100%)" },
+      { clipPath: "polygon(-32% 0%, 132% 0%, 132% 100%, -2% 100%)", duration: %WIPE%, ease: "power3.inOut" }, AT(t));
+    // words land by focus and opacity, a little apart; a line goes out of focus
+    const words = (sel, t, st = 0.07) => tl.fromTo(sel, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: st }, AT(t));
+    const out = (sel, t) => tl.fromTo(sel, { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in", immediateRender: false }, AT(t));
+    // a card pops: scale with a little overshoot (position may bounce, opacity never)
+    const pop = (sel, t, d = 0.45) => { tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, AT(t));
+      tl.fromTo(sel, { scale: 0.55, y: 30 }, { scale: 1, y: 0, duration: d, ease: "back.out(1.7)" }, AT(t)); };
+    // a phone rises from below the frame, leaning, and settles
+    const rise = (sel, t, r0, r1) => tl.fromTo(sel, { y: 980, rotation: r0 }, { y: 0, rotation: r1, duration: 0.72, ease: "expo.out" }, AT(t));
+    // slow light in a field
+    const drift = (sel, t, d, dx, dy) => tl.fromTo(sel, { x: 0, y: 0 }, { x: dx, y: dy, duration: d, ease: "sine.inOut" }, AT(t));
+    // a counted number: fixed-width digit boxes, written once per frame as the value changes, never smeared
+    const count = (el, t, dur, to, ease = "expo.out") => {
+      const ds = [...el.querySelectorAll(".d")]; let last = null;
+      for (let i = 0; i <= Math.round(dur * FPS); i++) {
+        const tt = t + i / FPS, v = Math.round(to * ez(ease, (tt - t) / dur));
+        if (v === last) continue; last = v;
+        const s = String(v).padStart(ds.length, " ");
+        ds.forEach((d, k) => tl.set(d, { textContent: s[k] === " " ? "" : s[k] }, Math.max(0, AT(tt) - 0.01)));
+      }
+    };"""
+
+
+def lights(ls):
+    return "".join(f'<i class="lt" id="{i}" data-layout-allow-overflow style="left:{x}%;top:{y}%;width:{s}vmax;height:{s}vmax;'
+                   f'margin:-{s / 2}vmax 0 0 -{s / 2}vmax;background:radial-gradient(closest-side,rgba({c}),rgba({c.rsplit(",", 1)[0]},0))"></i>'
+                   for i, x, y, s, c in ls)
+
+
+def field(bg, ls):
+    return f'<div class="fld" style="background:{bg}">{lights(ls)}</div>'
+
+
+def phone(pid, left, top, src, start, dur, track, media=0.0):
+    return (f'<div class="phone" id="{pid}" style="left:{left}px;top:{top}px"><div class="scr">'
+            f'<video id="{pid}-v" class="clip" src="assets/clips/{src}.mp4" data-start="{start:g}" data-duration="{dur:g}" '
+            f'data-media-start="{media:g}" data-hf-media-start-basis="local" data-track-index="{track}" muted playsinline></video>'
+            f'</div><div class="isl"></div></div>')
+
+
+def bubble(bid, left, top, src, text, cls="", width=None):
+    w = f";width:{width}px" if width else ""
+    return (f'<div class="bub {cls}" id="{bid}" style="left:{left}px;top:{top}px{w}"><span class="av"></span>'
+            f'<span class="src">{src}</span>{text}</div>')
+
+
+def digits(n, cid, gap_after=None):
+    gap = ' style="margin-right:0.16em"'
+    ds = "".join(f'<span class="d"{gap if gap_after == k else ""}></span>' for k in range(n))
+    return f'<span class="cnt" id="{cid}" data-motion-blur="off">{ds}</span>'
+
+
+def wl(text, cls=""):
+    return " ".join(f'<span class="w {cls}">{w}</span>' for w in text.split())
+
+
+# ---- the reel wall (open and close): 7 x 9 stills of their footage, tilted, none twice on screen ----
+ROWS, COLS, CW, CH, GAP, TILT = 7, 9, 230, 409, 28, -10
+TILES = [f"t{i:02d}" for i in range(1, 29)]
+WALL_W, WALL_H = COLS * CW + (COLS - 1) * GAP, ROWS * CH + (ROWS - 1) * GAP
+WALL_CSS = f"""#root .wl-in {{ position: absolute; inset: 0; }}
+    #root .wl-tilt {{ position: absolute; left: 50%; top: 50%; width: {WALL_W}px; height: {WALL_H}px; margin: {-WALL_H / 2}px 0 0 {-WALL_W / 2}px; transform: rotate({TILT}deg); }}
+    #root .wl-wall {{ position: absolute; inset: 0; }}
+    #root .wl-card {{ position: absolute; width: {CW}px; height: {CH}px; overflow: hidden; border-radius: 22px; background: #0b1024;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 30px 60px -30px rgba(0, 0, 0, 0.8); }}
+    #root .wl-card img {{ display: block; width: 100%; height: 100%; object-fit: cover; }}
+    #root .wl-dim {{ position: absolute; inset: 0; background: rgba(5, 7, 15, 0.2); }}
+    #root .glow {{ position: absolute; inset: 0; background: radial-gradient(ellipse 30% 44% at 50% 50%, rgba(5, 7, 15, 0.95) 0%, rgba(5, 7, 15, 0.76) 44%, rgba(5, 7, 15, 0) 100%); }}"""
+
+
+def wall():
+    a, vis = math.radians(TILT), []
+    for r in range(ROWS):
+        for c in range(COLS):
+            x0, y0 = c * (CW + GAP) - WALL_W / 2, r * (CH + GAP) - WALL_H / 2
+            pts = [(W / 2 + x * math.cos(a) - y * math.sin(a), H / 2 + x * math.sin(a) + y * math.cos(a))
+                   for x, y in ((x0, y0), (x0 + CW, y0), (x0, y0 + CH), (x0 + CW, y0 + CH))]
+            xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+            if max(xs) > -60 and min(xs) < W + 60 and max(ys) > 0 and min(ys) < H:
+                vis.append((r, c))
+    vis.sort(key=lambda rc: abs(rc[0] - ROWS // 2) * 2 + abs(rc[1] - COLS // 2))
+    m = {rc: TILES[(k * 11) % len(TILES)] for k, rc in enumerate(vis[:len(TILES)])}
+    rest = [(r, c) for r in range(ROWS) for c in range(COLS) if (r, c) not in m]
+    m.update({rc: TILES[(k * 5 + 3) % len(TILES)] for k, rc in enumerate(rest)})
+    return "".join(f'<div class="wl-card" style="left:{c * (CW + GAP)}px;top:{r * (CH + GAP)}px">'
+                   f'<img src="assets/tiles/{m[(r, c)]}.jpg" alt=""></div>' for r in range(ROWS) for c in range(COLS))
+
+
+def logo_scene(tmp):
+    out = subprocess.run([sys.executable, "make_motion.py", "film-end-wide", "--out", tmp], cwd=LOGO_TOOLS, check=True,
+                         capture_output=True, text=True).stdout
+    info = json.loads(out[out.index("{"):out.rindex("}") + 1])
+    return open(os.path.join(tmp, "compositions", "logo.html")).read(), info
+
+
+def logo_box(info):
+    (x0, y0), (x1, y1) = info["lockup_px"]
+    svg = open(os.path.join(HERE, "assets", "logo", "socialstream-logo-stacked-dark.svg")).read()
+    wk, hk = [float(v) for v in svg.split('viewBox="')[1].split('"')[0].split()[2:4]]
+    f = (y1 - y0) / (hk * 0.8)
+    left, top = x0 - (wk - (x1 - x0) / f) / 2 * f, y0 - hk * 0.10 * f
+    return f"left:{left:.3f}px;top:{top:.3f}px;width:{wk * f:.3f}px;height:{hk * f:.3f}px"
+
+
+# ---- the scenes ----
+def scene_open(s, e, info):
+    html = f"""<div class="wl-in ff" data-layout-allow-overflow id="op-in">
+      <div class="wl-tilt"><div class="wl-wall" id="op-wall">{wall()}</div></div>
+      <div class="wl-dim"></div></div>
+    <div class="glow" id="op-glow"></div>"""
+    js = """
+    // frame 0 is the thumbnail: the wall is already there, faint and large, and settles
+    tl.fromTo("#op-wall .wl-card", { opacity: 0.3, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.8, ease: "expo.out", stagger: { grid: [7, 9], from: "center", amount: 0.6 } }, 0);
+    tl.fromTo("#op-wall", { x: 40 }, { x: -20, duration: 3.04, ease: "none" }, 0);
+    tl.fromTo("#op-glow", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, 0.1);"""
+    return html, js, WALL_CSS
+
+
+def scene_problem(s, e):
+    t_turn = 7.28
+    feed = "".join('<div class="sk"><i class="sa"></i><i class="sl1"></i><i class="sl2"></i><i class="sm"></i></div>' for _ in range(8))
+    html = f"""<div class="fld" style="background:#05070f">{lights([("pb-l0", 15, 10, 90, "66, 92, 255, 0.28"), ("pb-l1", 90, 95, 80, "136, 78, 255, 0.25")])}</div>
+    <div class="fld" id="pb-flood" style="background:linear-gradient(140deg,#2a1690 0%,#5a24c8 55%,#1b0f55 100%)">{lights([("pb-l2", 85, 15, 100, "255, 64, 104, 0.45"), ("pb-l3", 5, 95, 90, "56, 160, 255, 0.5")])}</div>
+    <div class="phone" id="pb-p0" style="left:1080px;top:160px"><div class="scr"><div class="skf" id="pb-f0">{feed}</div>
+      <video id="pb-v0" class="clip" src="assets/clips/flyx-turn.mp4" data-start="{t_turn - s - 0.1:g}" data-duration="{e - t_turn + 0.1:g}" data-media-start="0" data-hf-media-start-basis="local" data-track-index="1" muted playsinline></video></div><div class="isl"></div></div>
+    <div class="phone" id="pb-p1" style="left:1480px;top:110px"><div class="scr"><div class="skf" id="pb-f1">{feed}</div>
+      <video id="pb-v1" class="clip" src="assets/clips/andras-pod.mp4" data-start="{t_turn - s - 0.1:g}" data-duration="{e - t_turn + 0.1:g}" data-media-start="0.6" data-hf-media-start-basis="local" data-track-index="2" muted playsinline></video></div><div class="isl"></div></div>
+    <div class="tx" id="pb-a"><div class="hd l1">{wl("Posztolsz.")}</div><div class="hd l1">{wl("Hirdetsz.")}</div>
+      <div class="hd l2">{wl("Mégsem jönnek")}</div><div class="hd l2"><span class="w">a</span> <span class="w acc">vevők?</span></div></div>
+    <div class="tx" id="pb-b"><div class="hd l3"><span class="w">A</span> <span class="ss"><span class="w">social</span> <span class="w">media</span><i class="stk" id="pb-stk"></i></span></div>
+      <div class="it l4" id="pb-m">meghalt.</div></div>
+    <div class="tx" id="pb-c"><div class="hd l3"><span class="w">Az</span> <span class="w it big">érdeklődés</span></div>
+      <div class="hd l3">{wl("vette át")}</div><div class="hd l3"><span class="w">a</span> <span class="w">helyét<span class="acc">.</span></span></div></div>"""
+    css = """
+    #root .tx { position: absolute; left: 120px; top: 200px; width: 940px; }
+    #root .l1 { font-size: 150px; margin-bottom: 6px; }
+    #root .l2 { font-size: 118px; }
+    #root .l3 { font-size: 120px; white-space: nowrap; }
+    #root .l3 .big { font-size: 150px; }
+    #root .l4 { font-size: 240px; line-height: 0.95; margin-left: 160px; }
+    #root .ss { position: relative; display: inline-block; }
+    #root .stk { position: absolute; left: -0.03em; right: -0.03em; top: 0.5em; height: 0.08em; border-radius: 0.04em; background: #ff5272; transform-origin: 0 50%; }
+    #root .skf { position: absolute; left: 0; top: 0; width: 100%; padding: 70px 18px 0; }
+    #root .sk { height: 300px; margin-bottom: 18px; border-radius: 22px; background: #1a1f2d; position: relative; }
+    #root .sk i { position: absolute; display: block; border-radius: 8px; background: #2a3042; }
+    #root .sk .sa { left: 18px; top: 18px; width: 44px; height: 44px; border-radius: 50%; }
+    #root .sk .sl1 { left: 76px; top: 24px; width: 150px; height: 14px; }
+    #root .sk .sl2 { left: 76px; top: 46px; width: 100px; height: 12px; }
+    #root .sk .sm { left: 18px; right: 18px; top: 80px; bottom: 18px; border-radius: 14px; }
+    #root .phone .scr video { opacity: 0; }"""
+    js = f"""
+    wipeIn({s:g});
+    drift("#pb-l0", {s:g}, {e - s:g}, 80, 40); drift("#pb-l1", {s:g}, {e - s:g}, -60, -40);
+    rise("#pb-p0", {s + 0.1:g}, -12, -4); rise("#pb-p1", {s + 0.22:g}, 10, 5);
+    // the grey feed scrolls on and on, nothing in it
+    tl.fromTo(["#pb-f0", "#pb-f1"], {{ y: 0 }}, {{ y: -1500, duration: {t_turn - s:g}, ease: "none" }}, AT({s:g}));
+    words("#pb-a .l1:nth-child(1) .w", 3.08); words("#pb-a .l1:nth-child(2) .w", 3.56); words("#pb-a .l2 .w", 4.04, 0.08);
+    out("#pb-a", 5.56);
+    words("#pb-b .l3 .w", 5.72);
+    tl.fromTo("#pb-stk", {{ scaleX: 0 }}, {{ scaleX: 1, duration: 0.26, ease: "power3.out" }}, AT(6.2));
+    tl.fromTo("#pb-b .ss .w", {{ opacity: 1 }}, {{ opacity: 0.4, duration: 0.3, ease: "power2.out", immediateRender: false }}, AT(6.32));
+    tl.fromTo("#pb-m", {{ opacity: 0, filter: "blur(12px)", scale: 1.04 }}, {{ opacity: 1, filter: "blur(0px)", scale: 1, duration: 0.3, ease: "power2.out" }}, AT(6.44));
+    out("#pb-b", 7.12);
+    // the turn: the ground floods with colour and the phones play their real reels
+    tl.fromTo("#pb-flood", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.4, ease: "power2.inOut" }}, AT({t_turn:g}));
+    tl.fromTo(["#pb-v0", "#pb-v1"], {{ opacity: 0, clipPath: "inset(100% 0% 0% 0%)" }}, {{ opacity: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 0.4, ease: "power3.out" }}, AT({t_turn:g}));
+    tl.fromTo(["#pb-p0", "#pb-p1"], {{ scale: 1 }}, {{ scale: 1.06, duration: 0.5, ease: "back.out(1.6)", immediateRender: false }}, AT({t_turn:g}));
+    words("#pb-c .w", {t_turn + 0.08:g}, 0.08);
+    drift("#pb-l2", {t_turn:g}, {e - t_turn:g}, -80, 50); drift("#pb-l3", {t_turn:g}, {e - t_turn:g}, 70, -40);"""
+    return html, js, css
+
+
+def scene_case(s, e, cid, bg, ls, eyebrow, line1, line2, phones, extras_html, extras_js, css_extra=""):
+    t0 = s + WIPE
+    html = (f"{field(bg, ls)}<div class='cl' id='{cid}-t'><div class='eb' id='{cid}-eb'>{eyebrow}</div>"
+            f"<div class='hd cl1'>{wl(line1)}</div><div class='hd cl1'>{line2}</div></div>")
+    js = [f"wipeIn({s:g});"]
+    for i, l in enumerate(ls):
+        js.append(f'drift("#{l[0]}", {s:g}, {e - s:g}, {70 if i % 2 else -80}, {-50 if i % 2 else 60});')
+    for k, (left, top, src, r0, r1, media) in enumerate(phones):
+        html += phone(f"{cid}-p{k}", left, top, src, 0, round(e - s, 4), k + 1, media)
+        js.append(f'rise("#{cid}-p{k}", {s + 0.04 + 0.12 * k:g}, {r0}, {r1});')
+    js.append(f'tl.fromTo("#{cid}-eb", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.25, ease: "power2.out" }}, AT({t0:g}));')
+    js.append(f'words("#{cid}-t .cl1 .w", {t0 + 0.06:g}, 0.08);')
+    js.append(f'out("#{cid}-t", {e - WIPE - 0.02:g});')
+    css = """
+    #root .cl { position: absolute; left: 120px; top: 110px; width: 900px; }
+    #root .cl .cl1 { font-size: 112px; white-space: nowrap; }
+    #root .cl .cl1 .it { font-size: 132px; }""" + css_extra
+    return html + extras_html, "\n    ".join(js) + extras_js, css
+
+
+def scene_make(s, e):
+    bts = [("t14", 110, 600, -7), ("t22", 330, 690, 5), ("t10", 560, 620, -4), ("t23", 760, 700, 6)]
+    ex = "".join(f'<div class="bts" id="mk-c{k}" style="left:{x}px;top:{y}px"><img src="assets/tiles/{t}.jpg" alt=""></div>'
+                 for k, (t, x, y, r) in enumerate(bts))
+    ejs = "".join(f'\n    pop("#mk-c{k}", {s + 1.0 + 0.24 * k:g}); tl.set("#mk-c{k}", {{ rotation: {r} }}, 0);' for k, (t, x, y, r) in enumerate(bts))
+    css = """
+    #root .bts { position: absolute; width: 190px; height: 338px; border-radius: 22px; overflow: hidden; background: #0b1024;
+      box-shadow: 0 0 0 4px #fff, 0 30px 60px -24px rgba(0, 0, 0, 0.6); transform-origin: 50% 100%; }
+    #root .bts img { width: 100%; height: 100%; object-fit: cover; }"""
+    return scene_case(s, e, "mk", "linear-gradient(140deg,#3a1aa8 0%,#7a2bd0 55%,#24105e 100%)",
+                      [("mk-l0", 92, 8, 100, "255, 64, 104, 0.45"), ("mk-l1", 4, 96, 90, "56, 160, 255, 0.5")],
+                      "Gyenis András · Podcast &amp; interjú", "Mi gyártjuk", '<span class="w">a</span> <span class="w it">videót.</span>',
+                      [(1090, 170, "andras-pod", -12, -4, 0.0), (1500, 110, "andras-reel", 10, 5, 0.0)], ex, ejs, css)
+
+
+def scene_ads(s, e):
+    t0 = s + WIPE
+    ex = ('<div class="pill" id="ad-pill" style="left:1530px;top:938px"><i></i>'
+          + digits(2, "ad-cnt") + 'K megtekintés egy reelen</div>'
+          + bubble("ad-b0", 110, 520, "Komment · FlyX Tenerife", "It was brilliant fun… highly recommended it")
+          + bubble("ad-b1", 170, 728, "Komment · FlyX Tenerife", "A fantastic experience, absolutely loved it.")
+          + bubble("ad-b2", 120, 892, "Komment · FlyX Tenerife", "Where is it please?", width=440))
+    ejs = (f'\n    pop("#ad-pill", {t0 + 0.5:g}, 0.4); count(document.getElementById("ad-cnt"), {t0 + 0.55:g}, 0.9, 69);'
+           + "".join(f'\n    pop("#ad-b{k}", {t0 + 0.75 + 0.42 * k:g});' for k in range(3)))
+    css = """
+    #root .bub { width: 600px; }
+    #root .pill .cnt .d { width: 0.6em; }"""
+    return scene_case(s, e, "ad", "linear-gradient(135deg,#f2561f 0%,#ff3f6c 58%,#b82a92 100%)",
+                      [("ad-l0", 12, 96, 90, "255, 206, 92, 0.5"), ("ad-l1", 96, 4, 80, "110, 64, 255, 0.5")],
+                      "FlyX Tenerife · Élményközpont", "Mi futtatjuk", '<span class="w">a</span> <span class="w it">hirdetést.</span>',
+                      [(1090, 170, "flyx-ad", -12, -4, 0.0), (1500, 110, "flyx-reel", 10, 5, 0.0)], ex, ejs, css)
+
+
+def scene_measure(s, e):
+    t0 = s + WIPE
+    html = (field("#05070f", [("ms-l0", 80, 80, 90, "255, 64, 104, 0.4"), ("ms-l1", 10, 10, 80, "66, 92, 255, 0.4")])
+            + f'<div class="mt" id="ms-t"><div class="hd m1">{wl("És mi mérjük,")}</div>'
+              f'<div class="hd m1"><span class="w">mit</span> <span class="w it">hozott.</span></div></div>')
+    js = f"""wipeIn({s:g}); drift("#ms-l0", {s:g}, {e - s:g}, -60, -40); drift("#ms-l1", {s:g}, {e - s:g}, 60, 40);
+    words("#ms-t .w", {t0 + 0.04:g}, 0.09); out("#ms-t", {e - WIPE - 0.02:g});"""
+    css = """
+    #root .mt { position: absolute; left: 160px; top: 300px; }
+    #root .m1 { font-size: 170px; white-space: nowrap; }
+    #root .m1 .it { font-size: 210px; }"""
+    return html, js, css
+
+
+WINS = {
+    "w1": dict(bg="linear-gradient(140deg,#1b34c4 0%,#4a20b8 58%,#1d1060 100%)",
+               ls=[(90, 90, 100, "255, 64, 104, 0.55"), (6, 4, 80, "56, 160, 255, 0.5")], obj="o-hall-mix",
+               eb="Csarnoképítő ügyfél · Meta", n=79, nd=2, unit='<span class="it ui">M Ft</span>',
+               lab="Bevétel egy hét alatt, egy B2B kampányból.",
+               quote=("Csarnoképítő ügyfél · B2B", "„…egy hét alatt annyi ajánlatkérésünk lett, mint korábban fél év alatt összesen.”")),
+    "w2": dict(bg="linear-gradient(140deg,#ff3f6c 0%,#a42aa8 55%,#3a1690 100%)",
+               ls=[(8, 92, 90, "255, 160, 80, 0.45"), (96, 6, 90, "66, 92, 255, 0.55")], obj="o-door-mix",
+               eb="Ajtó webshop · Google Performance Max", n=81, nd=2,
+               unit='<span class="x">×</span><span class="u">ROAS</span>', lab="1 forint hirdetésből 81 forint bevétel.", quote=None),
+    "w3": dict(bg="linear-gradient(140deg,#4a1fb8 0%,#2a2fc4 55%,#101a66 100%)",
+               ls=[(94, 90, 100, "255, 64, 104, 0.5"), (4, 6, 80, "136, 78, 255, 0.55")], obj="o-watch-mix",
+               eb="Karóra webshop · Karácsony", n=23, nd=2,
+               unit='<span class="x acc">×</span><span class="u">ROAS</span>', lab="Ünnepi kampány, több mint 8M Ft bevétellel.",
+               quote=("Karóra webshop", "„Idén először éreztük úgy, hogy az ünnepi szezon nekünk dolgozik – nem ellenünk.”")),
+    "w4": dict(bg="linear-gradient(140deg,#1d7be0 0%,#3a2fc4 55%,#2a1270 100%)",
+               ls=[(92, 8, 90, "255, 64, 104, 0.45"), (6, 94, 90, "136, 78, 255, 0.55")], obj="o-webinar-mix",
+               eb="Egészségügyi webinár", n=105, nd=3, unit='<span class="it ui">Ft</span>',
+               lab="Ennyibe került egy jelentkező.", pill=5700,
+               quote=("Egészségügyi szolgáltató", "„Amikor a számláló majdnem 5700-nál állt meg, alig hittük el…”")),
+}
+
+
+def scene_win(s, e, wid):
+    d, t0 = WINS[wid], s + WIPE
+    ls = [(f"{wid}-l{k}",) + l for k, l in enumerate(d["ls"])]
+    html = (field(d["bg"], ls)
+            + f'<img id="{wid}-obj" src="assets/img/{d["obj"]}.webp" alt="" style="position:absolute;left:1240px;top:90px;width:540px;height:540px">'
+            + f'<div class="wn" id="{wid}-t"><div class="eb" id="{wid}-eb">{d["eb"]}</div>'
+              f'<div class="hd num" id="{wid}-num">{digits(d["nd"], wid + "-cnt")}{d["unit"]}</div>'
+              f'<div class="lab" id="{wid}-lab">{wl(d["lab"])}</div></div>')
+    js = [f"wipeIn({s:g});"] + [f'drift("#{l[0]}", {s:g}, {e - s:g}, {70 if k % 2 else -80}, {-50 if k % 2 else 60});' for k, l in enumerate(ls)]
+    js += [f'tl.fromTo("#{wid}-obj", {{ opacity: 0, y: 90, scale: 0.85 }}, {{ opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "expo.out" }}, AT({t0 - 0.06:g}));',
+           f'tl.fromTo("#{wid}-obj", {{ rotation: -2 }}, {{ rotation: 2, duration: {e - s:g}, ease: "sine.inOut" }}, AT({s:g}));',
+           f'tl.fromTo("#{wid}-eb", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.25, ease: "power2.out" }}, AT({t0:g}));',
+           f'tl.fromTo("#{wid}-num", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.12, ease: "none" }}, AT({t0 + 0.04:g}));',
+           f'count(document.getElementById("{wid}-cnt"), {t0 + 0.04:g}, 1.0, {d["n"]});',
+           f'tl.fromTo("#{wid}-num .ui, #{wid}-num .x, #{wid}-num .u", {{ opacity: 0, filter: "blur(12px)" }}, {{ opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "power2.out" }}, AT({t0 + 0.45:g}));',
+           f'words("#{wid}-lab .w", {t0 + 0.62:g}, 0.05);',
+           f'out("#{wid}-t", {e - WIPE - 0.02:g});']
+    if d.get("pill"):
+        html += (f'<div class="pill" id="{wid}-pill" style="left:1290px;top:640px">≈&nbsp;' + digits(4, wid + "-pc", gap_after=0)
+                 + '&nbsp;jelentkező</div>')
+        js += [f'pop("#{wid}-pill", {t0 + 0.3:g}, 0.4);', f'count(document.getElementById("{wid}-pc"), {t0 + 0.35:g}, 1.2, {d["pill"]});']
+    if d.get("quote"):
+        src, q = d["quote"]
+        html += bubble(f"{wid}-q", 960, 780, src, q, "q", 820)
+        js.append(f'pop("#{wid}-q", {t0 + 1.0:g}, 0.5);')
+    css = """
+    #root .wn { position: absolute; left: 130px; top: 190px; }
+    #root .num { display: flex; align-items: baseline; margin-top: 10px; white-space: nowrap; }
+    #root .num .cnt { font-size: 400px; line-height: 0.86; letter-spacing: -0.05em; }
+    #root .num .ui { font-size: 220px; line-height: 0.86; margin-left: 0.14em; }
+    #root .num .x { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 250px; line-height: 0.86; margin-left: 0.04em; }
+    #root .num .u { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 110px; margin-left: 0.2em; letter-spacing: -0.03em; }
+    #root .lab { margin-top: 26px; font: 600 48px/1.2 Inter, sans-serif; letter-spacing: -0.01em; max-width: 1080px; }
+    #root .bub.q { font-size: 40px; }"""
+    return "".join(html), "\n    ".join(js), css
+
+
+def scene_voices(s, e):
+    t0 = s + WIPE
+    qs = [("Péter · Hoofbútor", "„Már az induláskor is volt vásárlás…”", 110, 300),
+          ("Rita · Rita’s Beauty Corner", "„Rövid időn belül jöttek az eredmények…”", 170, 540),
+          ("János · EJ Massage Therapies", "„Csak ajánlani tudom őket.”", 120, 780)]
+    html = field("linear-gradient(135deg,#ff3f6c 0%,#9a2ab0 50%,#2f1690 100%)",
+                 [("vc-l0", 10, 10, 90, "255, 160, 80, 0.4"), ("vc-l1", 96, 96, 100, "56, 160, 255, 0.45")])
+    html += '<div class="eb" id="vc-eb" style="position:absolute;left:120px;top:150px">Ügyfeleink szavaival</div>'
+    html += "".join(bubble(f"vc-q{k}", x, y, who, q, "q", 820) for k, (who, q, x, y) in enumerate(qs))
+    html += (f'<div class="vr" id="vc-r"><div class="hd vn" id="vc-n">{digits(3, "vc-cnt")}<span class="u">M+ Ft</span></div>'
+             f'<div class="lab" id="vc-lab">{wl("kezelt hirdetési büdzsé 2022 óta")}</div>'
+             f'<div class="pill" id="vc-p0" style="position:relative;margin-top:44px"><i></i>149K megtekintés egy reelen · Prof Enzo</div>'
+             f'<div class="pill" id="vc-p1" style="position:relative;margin-top:18px"><i></i>33K követő · Prof Enzo</div></div>')
+    js = [f"wipeIn({s:g});", f'drift("#vc-l0", {s:g}, {e - s:g}, 70, 50); drift("#vc-l1", {s:g}, {e - s:g}, -70, -50);',
+          f'tl.fromTo("#vc-eb", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.25, ease: "power2.out" }}, AT({t0:g}));']
+    js += [f'pop("#vc-q{k}", {t0 + 0.1 + 0.38 * k:g}, 0.5);' for k in range(3)]
+    js += [f'tl.fromTo("#vc-n", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.12, ease: "none" }}, AT({t0 + 0.9:g}));',
+           f'count(document.getElementById("vc-cnt"), {t0 + 0.9:g}, 1.0, 300);',
+           f'words("#vc-lab .w", {t0 + 1.4:g}, 0.05);',
+           f'pop("#vc-p0", {t0 + 1.7:g}, 0.4); pop("#vc-p1", {t0 + 1.92:g}, 0.4);',
+           f'out(["#vc-eb", "#vc-q0", "#vc-q1", "#vc-q2", "#vc-r"], {e - WIPE - 0.02:g});']
+    css = """
+    #root .vr { position: absolute; left: 1000px; top: 240px; width: 820px; }
+    #root .vn { display: flex; align-items: baseline; white-space: nowrap; }
+    #root .vn .cnt { font-size: 250px; line-height: 0.86; letter-spacing: -0.05em; }
+    #root .vn .u { font-size: 104px; margin-left: 0.1em; letter-spacing: -0.03em; }
+    #root .lab { margin-top: 20px; font: 600 46px/1.2 Inter, sans-serif; }
+    #root .bub.q { font-size: 38px; }
+    #root .pill { display: inline-flex; }"""
+    return "".join(html), "\n    ".join(js), css
+
+
+def scene_close(s, e, info):
+    t0 = s + WIPE
+    html = f"""<div class="fld" style="background:#05070f"></div>
+    <div class="wl-in ff" data-layout-allow-overflow id="cs-in">
+      <div class="wl-tilt"><div class="wl-wall" id="cs-wall">{wall()}</div></div>
+      <div class="wl-dim" style="background:rgba(5,7,15,0.62)"></div></div>
+    <div class="glow" id="cs-glow"></div>
+    <div class="ct" id="cs-t1"><div class="hd c1">{wl("Videók, amiket")}</div><div class="hd c1"><span class="w it">végignéznek.</span></div></div>
+    <div class="ct" id="cs-t2"><div class="hd c1">{wl("Hirdetések, amik")}</div><div class="hd c1"><span class="w it">megtérülnek<span class="acc">.</span></span></div></div>
+    <img id="cs-logo" src="assets/logo/socialstream-logo-stacked-dark.svg" alt="SocialStream" style="position:absolute;{logo_box(info)}">
+    <div class="eb" id="cs-eb" style="position:absolute;left:0;right:0;top:790px;text-align:center">Interest media ügynökség</div>"""
+    js = f"""wipeIn({s:g});
+    tl.fromTo("#cs-in", {{ scale: 1.5, rotation: 4 }}, {{ scale: 1, rotation: 0, duration: {e - s:g}, ease: "power2.out" }}, AT({s:g}));
+    tl.fromTo("#cs-wall", {{ x: 160 }}, {{ x: -40, duration: {e - s:g}, ease: "none" }}, AT({s:g}));
+    words("#cs-t1 .w", {t0 + 0.04:g}, 0.09); out("#cs-t1", {t0 + 1.1:g});
+    words("#cs-t2 .w", {t0 + 1.24:g}, 0.09); out("#cs-t2", {t0 + 2.3:g});
+    tl.fromTo("#cs-glow", {{ opacity: 0.5 }}, {{ opacity: 1, duration: 0.5, ease: "power2.out" }}, AT({t0 + 2.2:g}));
+    tl.fromTo("#cs-logo", {{ opacity: 0, scale: 1.08, filter: "blur(14px)" }}, {{ opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "expo.out" }}, AT({t0 + 2.44:g}));
+    tl.fromTo("#cs-eb", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.3, ease: "power2.out" }}, AT({t0 + 2.7:g}));"""
+    css = WALL_CSS + """
+    #root .ct { position: absolute; left: 0; right: 0; top: 330px; text-align: center; }
+    #root .c1 { font-size: 150px; white-space: nowrap; }
+    #root .c1 .it { font-size: 190px; }
+    #root #cs-logo { transform-origin: 50% 50%; }"""
+    return html, js, css
+
+
+def composition(cid, s, html, js, css):
+    common = open(os.path.join(HERE, "common.css")).read()
+    return f"""<template>
+  <style>
+    {common}
+    {css}
+  </style>
+  <div id="root" data-composition-id="{cid}" data-width="{W}" data-height="{H}">
+    <div class="ff" id="wp">
+    {html}
+    </div>
+  </div>
+  <script>
+  (() => {{{JS.replace("%START%", f"{s:g}").replace("%WIPE%", f"{WIPE:g}")}
+    {js}
+    window.__timelines["{cid}"] = tl;
+  }})();
+  </script>
+</template>
+"""
+
+
+def index(lang="hu"):
+    hosts = "\n".join(f'''      <div id="{n}" data-composition-id="{n}" data-composition-src="compositions/{n}.html" data-start="{a:g}" data-duration="{round(b - a, 4):g}" data-track-index="{z}" data-track-kind="graphics" data-width="{W}" data-height="{H}" style="z-index: {z}"></div>'''
+                      for z, (n, a, b) in enumerate(SC))
+    return f"""<!doctype html>
+<html lang="{lang}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width={W}, height={H}" />
+    <title>SocialStream sizzle ({W}x{H}, {lang})</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>* {{ margin: 0; padding: 0; box-sizing: border-box; }} html, body {{ width: {W}px; height: {H}px; overflow: hidden; background: #05070f; }} #main {{ position: relative; width: 100%; height: 100%; }}</style>
+  </head>
+  <body>
+    <div id="main" data-motion-blur="on" data-motion-blur-shutter="120" data-composition-id="main" data-start="0" data-duration="{TOTAL:g}" data-fps="{FPS}" data-width="{W}" data-height="{H}">
+{hosts}
+    </div>
+    <script>window.__timelines["main"] = gsap.timeline({{ paused: true }});</script>
+  </body>
+</html>
+"""
+
+
+def main():
+    out = os.path.join(HERE, "wide")
+    comp = os.path.join(out, "compositions")
+    os.makedirs(comp, exist_ok=True)
+    tmp = os.path.join(HERE, ".logo-wide")
+    logo, info = logo_scene(tmp)
+    builders = {"open": lambda s, e: scene_open(s, e, info), "problem": scene_problem, "make": scene_make, "ads": scene_ads,
+                "measure": scene_measure, "voices": scene_voices, "close": lambda s, e: scene_close(s, e, info)}
+    for n, s, e in SC:
+        if n == "logo":
+            src = logo
+        else:
+            html, js, css = (builders[n](s, e) if n in builders else scene_win(s, e, n))
+            src = composition(n, s, html, js, css)
+        open(os.path.join(comp, f"{n}.html"), "w").write(src)
+    open(os.path.join(out, "index.html"), "w").write(index())
+    cli = "npx --yes hyperframes@0.9.40"
+    files = {"hyperframes.json": json.dumps({"$schema": "https://hyperframes.heygen.com/schema/hyperframes.json",
+                                             "registry": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry",
+                                             "paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"},
+                                             "media": {"autoProxy": True}}, indent=2) + "\n",
+             "meta.json": json.dumps({"id": "socialstream-sizzle-wide", "name": "SocialStream sizzle (wide)", "createdAt": "2026-11-15T00:00:00.000Z"}, indent=2) + "\n",
+             "package.json": json.dumps({"name": "socialstream-sizzle-wide", "private": True, "type": "module",
+                                         "scripts": {"dev": f"{cli} preview", "check": f"{cli} check", "render": f"{cli} render"}}, indent=2) + "\n",
+             ".gitignore": "renders/\n.hyperframes/\n.thumbnails/\nsnapshots/\nnode_modules/\n"}
+    for f, t in files.items():
+        open(os.path.join(out, f), "w").write(t)
+    link = os.path.join(out, "assets")
+    if not os.path.islink(link):
+        os.symlink("../assets", link)
+    subprocess.run(["rm", "-rf", tmp], check=True)
+    print("wide", TOTAL)
+
+
+if __name__ == "__main__":
+    main()

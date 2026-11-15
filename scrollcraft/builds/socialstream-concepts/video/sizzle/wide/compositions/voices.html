@@ -1,0 +1,98 @@
+<template>
+  <style>
+    /* Shared by every scene of the SocialStream sizzle (build.py puts it into each scene's style block): the site's type
+   and palette (Sora, Instrument Serif italic, Inter; blue-violet with red-pink as the accent) and the sizzle's
+   devices: colour fields, phones, comment bubbles, counters. */
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
+/* no ground on the root: a scene wipes in over the one before it (its own field is inside the wipe) */
+#root { position: absolute; inset: 0; overflow: hidden; color: #fff; font-family: Inter, sans-serif; }
+#root .ff { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+#root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.0; }
+#root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+#root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.86); }
+#root .acc { color: #ff5272; }
+#root .w { display: inline-block; }
+/* a colour field with slow lights */
+#root .fld { position: absolute; inset: 0; overflow: hidden; }
+#root .fld .lt { position: absolute; border-radius: 50%; }
+/* a phone playing a reel */
+#root .phone { position: absolute; width: 380px; height: 790px; border-radius: 58px; background: #0a0b10;
+  box-shadow: 0 50px 90px -30px rgba(0, 0, 0, 0.6), inset 0 0 0 2px rgba(255, 255, 255, 0.14); }
+#root .phone .scr { position: absolute; inset: 12px; border-radius: 47px; overflow: hidden; background: #000; }
+#root .phone .scr video, #root .phone .scr img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#root .phone .isl { position: absolute; top: 26px; left: 50%; width: 112px; margin-left: -56px; height: 32px; border-radius: 16px; background: #000; }
+/* a pill on a phone: views */
+#root .pill { position: absolute; display: flex; align-items: center; gap: 12px; padding: 14px 22px 14px 18px; border-radius: 40px;
+  background: rgba(5, 7, 15, 0.72); font: 700 30px/1 Inter, sans-serif; letter-spacing: -0.01em; white-space: nowrap;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.18); }
+#root .pill i { display: block; width: 0; height: 0; border-left: 18px solid #fff; border-top: 11px solid transparent; border-bottom: 11px solid transparent; }
+/* a comment or a client's words: a white card */
+#root .bub { position: absolute; width: 600px; padding: 24px 30px 26px 96px; border-radius: 30px; background: #fff; color: #11152a;
+  font: 600 30px/1.32 Inter, sans-serif; letter-spacing: -0.01em; box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.5); transform-origin: 0 100%; }
+#root .bub .av { position: absolute; left: 26px; top: 26px; width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(160deg, #d9def0, #a9b2cf); }
+#root .bub .src { display: block; margin-bottom: 8px; font: 700 22px/1.2 Inter, sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: #6c7493; }
+#root .bub.q { font: italic 400 40px/1.18 "Instrument Serif", Georgia, serif; letter-spacing: 0; }
+/* a counted number: fixed-width digits, never smeared */
+#root .cnt { display: inline-flex; align-items: baseline; }
+#root .cnt .d { display: inline-block; width: 0.62em; text-align: center; }
+
+    
+    #root .vr { position: absolute; left: 1000px; top: 240px; width: 820px; }
+    #root .vn { display: flex; align-items: baseline; white-space: nowrap; }
+    #root .vn .cnt { font-size: 250px; line-height: 0.86; letter-spacing: -0.05em; }
+    #root .vn .u { font-size: 104px; margin-left: 0.1em; letter-spacing: -0.03em; }
+    #root .lab { margin-top: 20px; font: 600 46px/1.2 Inter, sans-serif; }
+    #root .bub.q { font-size: 38px; }
+    #root .pill { display: inline-flex; }
+  </style>
+  <div id="root" data-composition-id="voices" data-width="1920" data-height="1080">
+    <div class="ff" id="wp">
+    <div class="fld" style="background:linear-gradient(135deg,#ff3f6c 0%,#9a2ab0 50%,#2f1690 100%)"><i class="lt" id="vc-l0" data-layout-allow-overflow style="left:10%;top:10%;width:90vmax;height:90vmax;margin:-45.0vmax 0 0 -45.0vmax;background:radial-gradient(closest-side,rgba(255, 160, 80, 0.4),rgba(255, 160, 80,0))"></i><i class="lt" id="vc-l1" data-layout-allow-overflow style="left:96%;top:96%;width:100vmax;height:100vmax;margin:-50.0vmax 0 0 -50.0vmax;background:radial-gradient(closest-side,rgba(56, 160, 255, 0.45),rgba(56, 160, 255,0))"></i></div><div class="eb" id="vc-eb" style="position:absolute;left:120px;top:150px">Ügyfeleink szavaival</div><div class="bub q" id="vc-q0" style="left:110px;top:300px;width:820px"><span class="av"></span><span class="src">Péter · Hoofbútor</span>„Már az induláskor is volt vásárlás…”</div><div class="bub q" id="vc-q1" style="left:170px;top:540px;width:820px"><span class="av"></span><span class="src">Rita · Rita’s Beauty Corner</span>„Rövid időn belül jöttek az eredmények…”</div><div class="bub q" id="vc-q2" style="left:120px;top:780px;width:820px"><span class="av"></span><span class="src">János · EJ Massage Therapies</span>„Csak ajánlani tudom őket.”</div><div class="vr" id="vc-r"><div class="hd vn" id="vc-n"><span class="cnt" id="vc-cnt" data-motion-blur="off"><span class="d"></span><span class="d"></span><span class="d"></span></span><span class="u">M+ Ft</span></div><div class="lab" id="vc-lab"><span class="w ">kezelt</span> <span class="w ">hirdetési</span> <span class="w ">büdzsé</span> <span class="w ">2022</span> <span class="w ">óta</span></div><div class="pill" id="vc-p0" style="position:relative;margin-top:44px"><i></i>149K megtekintés egy reelen · Prof Enzo</div><div class="pill" id="vc-p1" style="position:relative;margin-top:18px"><i></i>33K követő · Prof Enzo</div></div>
+    </div>
+  </div>
+  <script>
+  (() => {
+    const FPS = 25, W = 1920, H = 1080, START = 30.24, AT = (t) => t - START;
+    const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
+    const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
+    const tl = gsap.timeline({ paused: true });
+    // the scene comes in over the last one with a diagonal wipe (not the first scene)
+    const wipeIn = (t) => tl.fromTo("#wp", { clipPath: "polygon(132% 0%, 132% 0%, 132% 100%, 162% 100%)" },
+      { clipPath: "polygon(-32% 0%, 132% 0%, 132% 100%, -2% 100%)", duration: 0.32, ease: "power3.inOut" }, AT(t));
+    // words land by focus and opacity, a little apart; a line goes out of focus
+    const words = (sel, t, st = 0.07) => tl.fromTo(sel, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: st }, AT(t));
+    const out = (sel, t) => tl.fromTo(sel, { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in", immediateRender: false }, AT(t));
+    // a card pops: scale with a little overshoot (position may bounce, opacity never)
+    const pop = (sel, t, d = 0.45) => { tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, AT(t));
+      tl.fromTo(sel, { scale: 0.55, y: 30 }, { scale: 1, y: 0, duration: d, ease: "back.out(1.7)" }, AT(t)); };
+    // a phone rises from below the frame, leaning, and settles
+    const rise = (sel, t, r0, r1) => tl.fromTo(sel, { y: 980, rotation: r0 }, { y: 0, rotation: r1, duration: 0.72, ease: "expo.out" }, AT(t));
+    // slow light in a field
+    const drift = (sel, t, d, dx, dy) => tl.fromTo(sel, { x: 0, y: 0 }, { x: dx, y: dy, duration: d, ease: "sine.inOut" }, AT(t));
+    // a counted number: fixed-width digit boxes, written once per frame as the value changes, never smeared
+    const count = (el, t, dur, to, ease = "expo.out") => {
+      const ds = [...el.querySelectorAll(".d")]; let last = null;
+      for (let i = 0; i <= Math.round(dur * FPS); i++) {
+        const tt = t + i / FPS, v = Math.round(to * ez(ease, (tt - t) / dur));
+        if (v === last) continue; last = v;
+        const s = String(v).padStart(ds.length, " ");
+        ds.forEach((d, k) => tl.set(d, { textContent: s[k] === " " ? "" : s[k] }, Math.max(0, AT(tt) - 0.01)));
+      }
+    };
+    wipeIn(30.24);
+    drift("#vc-l0", 30.24, 4, 70, 50); drift("#vc-l1", 30.24, 4, -70, -50);
+    tl.fromTo("#vc-eb", { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" }, AT(30.56));
+    pop("#vc-q0", 30.66, 0.5);
+    pop("#vc-q1", 31.04, 0.5);
+    pop("#vc-q2", 31.42, 0.5);
+    tl.fromTo("#vc-n", { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, AT(31.46));
+    count(document.getElementById("vc-cnt"), 31.46, 1.0, 300);
+    words("#vc-lab .w", 31.96, 0.05);
+    pop("#vc-p0", 32.26, 0.4); pop("#vc-p1", 32.48, 0.4);
+    out(["#vc-eb", "#vc-q0", "#vc-q1", "#vc-q2", "#vc-r"], 33.9);
+    window.__timelines["voices"] = tl;
+  })();
+  </script>
+</template>

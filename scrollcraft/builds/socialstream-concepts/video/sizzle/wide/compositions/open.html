@@ -1,0 +1,95 @@
+<template>
+  <style>
+    /* Shared by every scene of the SocialStream sizzle (build.py puts it into each scene's style block): the site's type
+   and palette (Sora, Instrument Serif italic, Inter; blue-violet with red-pink as the accent) and the sizzle's
+   devices: colour fields, phones, comment bubbles, counters. */
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
+/* no ground on the root: a scene wipes in over the one before it (its own field is inside the wipe) */
+#root { position: absolute; inset: 0; overflow: hidden; color: #fff; font-family: Inter, sans-serif; }
+#root .ff { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+#root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.0; }
+#root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+#root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.86); }
+#root .acc { color: #ff5272; }
+#root .w { display: inline-block; }
+/* a colour field with slow lights */
+#root .fld { position: absolute; inset: 0; overflow: hidden; }
+#root .fld .lt { position: absolute; border-radius: 50%; }
+/* a phone playing a reel */
+#root .phone { position: absolute; width: 380px; height: 790px; border-radius: 58px; background: #0a0b10;
+  box-shadow: 0 50px 90px -30px rgba(0, 0, 0, 0.6), inset 0 0 0 2px rgba(255, 255, 255, 0.14); }
+#root .phone .scr { position: absolute; inset: 12px; border-radius: 47px; overflow: hidden; background: #000; }
+#root .phone .scr video, #root .phone .scr img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#root .phone .isl { position: absolute; top: 26px; left: 50%; width: 112px; margin-left: -56px; height: 32px; border-radius: 16px; background: #000; }
+/* a pill on a phone: views */
+#root .pill { position: absolute; display: flex; align-items: center; gap: 12px; padding: 14px 22px 14px 18px; border-radius: 40px;
+  background: rgba(5, 7, 15, 0.72); font: 700 30px/1 Inter, sans-serif; letter-spacing: -0.01em; white-space: nowrap;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.18); }
+#root .pill i { display: block; width: 0; height: 0; border-left: 18px solid #fff; border-top: 11px solid transparent; border-bottom: 11px solid transparent; }
+/* a comment or a client's words: a white card */
+#root .bub { position: absolute; width: 600px; padding: 24px 30px 26px 96px; border-radius: 30px; background: #fff; color: #11152a;
+  font: 600 30px/1.32 Inter, sans-serif; letter-spacing: -0.01em; box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.5); transform-origin: 0 100%; }
+#root .bub .av { position: absolute; left: 26px; top: 26px; width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(160deg, #d9def0, #a9b2cf); }
+#root .bub .src { display: block; margin-bottom: 8px; font: 700 22px/1.2 Inter, sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: #6c7493; }
+#root .bub.q { font: italic 400 40px/1.18 "Instrument Serif", Georgia, serif; letter-spacing: 0; }
+/* a counted number: fixed-width digits, never smeared */
+#root .cnt { display: inline-flex; align-items: baseline; }
+#root .cnt .d { display: inline-block; width: 0.62em; text-align: center; }
+
+    #root .wl-in { position: absolute; inset: 0; }
+    #root .wl-tilt { position: absolute; left: 50%; top: 50%; width: 2294px; height: 3031px; margin: -1515.5px 0 0 -1147.0px; transform: rotate(-10deg); }
+    #root .wl-wall { position: absolute; inset: 0; }
+    #root .wl-card { position: absolute; width: 230px; height: 409px; overflow: hidden; border-radius: 22px; background: #0b1024;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 30px 60px -30px rgba(0, 0, 0, 0.8); }
+    #root .wl-card img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    #root .wl-dim { position: absolute; inset: 0; background: rgba(5, 7, 15, 0.2); }
+    #root .glow { position: absolute; inset: 0; background: radial-gradient(ellipse 30% 44% at 50% 50%, rgba(5, 7, 15, 0.95) 0%, rgba(5, 7, 15, 0.76) 44%, rgba(5, 7, 15, 0) 100%); }
+  </style>
+  <div id="root" data-composition-id="open" data-width="1920" data-height="1080">
+    <div class="ff" id="wp">
+    <div class="wl-in ff" data-layout-allow-overflow id="op-in">
+      <div class="wl-tilt"><div class="wl-wall" id="op-wall"><div class="wl-card" style="left:0px;top:0px"><img src="assets/tiles/t04.jpg" alt=""></div><div class="wl-card" style="left:258px;top:0px"><img src="assets/tiles/t09.jpg" alt=""></div><div class="wl-card" style="left:516px;top:0px"><img src="assets/tiles/t14.jpg" alt=""></div><div class="wl-card" style="left:774px;top:0px"><img src="assets/tiles/t19.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:0px"><img src="assets/tiles/t24.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:0px"><img src="assets/tiles/t01.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:0px"><img src="assets/tiles/t06.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:0px"><img src="assets/tiles/t11.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:0px"><img src="assets/tiles/t16.jpg" alt=""></div><div class="wl-card" style="left:0px;top:437px"><img src="assets/tiles/t21.jpg" alt=""></div><div class="wl-card" style="left:258px;top:437px"><img src="assets/tiles/t18.jpg" alt=""></div><div class="wl-card" style="left:516px;top:437px"><img src="assets/tiles/t26.jpg" alt=""></div><div class="wl-card" style="left:774px;top:437px"><img src="assets/tiles/t03.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:437px"><img src="assets/tiles/t08.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:437px"><img src="assets/tiles/t13.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:437px"><img src="assets/tiles/t18.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:437px"><img src="assets/tiles/t23.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:437px"><img src="assets/tiles/t28.jpg" alt=""></div><div class="wl-card" style="left:0px;top:874px"><img src="assets/tiles/t02.jpg" alt=""></div><div class="wl-card" style="left:258px;top:874px"><img src="assets/tiles/t14.jpg" alt=""></div><div class="wl-card" style="left:516px;top:874px"><img src="assets/tiles/t04.jpg" alt=""></div><div class="wl-card" style="left:774px;top:874px"><img src="assets/tiles/t22.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:874px"><img src="assets/tiles/t06.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:874px"><img src="assets/tiles/t05.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:874px"><img src="assets/tiles/t15.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:874px"><img src="assets/tiles/t25.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:874px"><img src="assets/tiles/t13.jpg" alt=""></div><div class="wl-card" style="left:0px;top:1311px"><img src="assets/tiles/t26.jpg" alt=""></div><div class="wl-card" style="left:258px;top:1311px"><img src="assets/tiles/t16.jpg" alt=""></div><div class="wl-card" style="left:516px;top:1311px"><img src="assets/tiles/t17.jpg" alt=""></div><div class="wl-card" style="left:774px;top:1311px"><img src="assets/tiles/t12.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:1311px"><img src="assets/tiles/t01.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:1311px"><img src="assets/tiles/t23.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:1311px"><img src="assets/tiles/t28.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:1311px"><img src="assets/tiles/t27.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:1311px"><img src="assets/tiles/t09.jpg" alt=""></div><div class="wl-card" style="left:0px;top:1748px"><img src="assets/tiles/t24.jpg" alt=""></div><div class="wl-card" style="left:258px;top:1748px"><img src="assets/tiles/t08.jpg" alt=""></div><div class="wl-card" style="left:516px;top:1748px"><img src="assets/tiles/t20.jpg" alt=""></div><div class="wl-card" style="left:774px;top:1748px"><img src="assets/tiles/t10.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:1748px"><img src="assets/tiles/t11.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:1748px"><img src="assets/tiles/t21.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:1748px"><img src="assets/tiles/t03.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:1748px"><img src="assets/tiles/t19.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:1748px"><img src="assets/tiles/t07.jpg" alt=""></div><div class="wl-card" style="left:0px;top:2185px"><img src="assets/tiles/t05.jpg" alt=""></div><div class="wl-card" style="left:258px;top:2185px"><img src="assets/tiles/t10.jpg" alt=""></div><div class="wl-card" style="left:516px;top:2185px"><img src="assets/tiles/t15.jpg" alt=""></div><div class="wl-card" style="left:774px;top:2185px"><img src="assets/tiles/t20.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:2185px"><img src="assets/tiles/t25.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:2185px"><img src="assets/tiles/t02.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:2185px"><img src="assets/tiles/t07.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:2185px"><img src="assets/tiles/t12.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:2185px"><img src="assets/tiles/t17.jpg" alt=""></div><div class="wl-card" style="left:0px;top:2622px"><img src="assets/tiles/t22.jpg" alt=""></div><div class="wl-card" style="left:258px;top:2622px"><img src="assets/tiles/t27.jpg" alt=""></div><div class="wl-card" style="left:516px;top:2622px"><img src="assets/tiles/t04.jpg" alt=""></div><div class="wl-card" style="left:774px;top:2622px"><img src="assets/tiles/t09.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:2622px"><img src="assets/tiles/t14.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:2622px"><img src="assets/tiles/t19.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:2622px"><img src="assets/tiles/t24.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:2622px"><img src="assets/tiles/t01.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:2622px"><img src="assets/tiles/t06.jpg" alt=""></div></div></div>
+      <div class="wl-dim"></div></div>
+    <div class="glow" id="op-glow"></div>
+    </div>
+  </div>
+  <script>
+  (() => {
+    const FPS = 25, W = 1920, H = 1080, START = 0, AT = (t) => t - START;
+    const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
+    const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
+    const tl = gsap.timeline({ paused: true });
+    // the scene comes in over the last one with a diagonal wipe (not the first scene)
+    const wipeIn = (t) => tl.fromTo("#wp", { clipPath: "polygon(132% 0%, 132% 0%, 132% 100%, 162% 100%)" },
+      { clipPath: "polygon(-32% 0%, 132% 0%, 132% 100%, -2% 100%)", duration: 0.32, ease: "power3.inOut" }, AT(t));
+    // words land by focus and opacity, a little apart; a line goes out of focus
+    const words = (sel, t, st = 0.07) => tl.fromTo(sel, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: st }, AT(t));
+    const out = (sel, t) => tl.fromTo(sel, { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in", immediateRender: false }, AT(t));
+    // a card pops: scale with a little overshoot (position may bounce, opacity never)
+    const pop = (sel, t, d = 0.45) => { tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, AT(t));
+      tl.fromTo(sel, { scale: 0.55, y: 30 }, { scale: 1, y: 0, duration: d, ease: "back.out(1.7)" }, AT(t)); };
+    // a phone rises from below the frame, leaning, and settles
+    const rise = (sel, t, r0, r1) => tl.fromTo(sel, { y: 980, rotation: r0 }, { y: 0, rotation: r1, duration: 0.72, ease: "expo.out" }, AT(t));
+    // slow light in a field
+    const drift = (sel, t, d, dx, dy) => tl.fromTo(sel, { x: 0, y: 0 }, { x: dx, y: dy, duration: d, ease: "sine.inOut" }, AT(t));
+    // a counted number: fixed-width digit boxes, written once per frame as the value changes, never smeared
+    const count = (el, t, dur, to, ease = "expo.out") => {
+      const ds = [...el.querySelectorAll(".d")]; let last = null;
+      for (let i = 0; i <= Math.round(dur * FPS); i++) {
+        const tt = t + i / FPS, v = Math.round(to * ez(ease, (tt - t) / dur));
+        if (v === last) continue; last = v;
+        const s = String(v).padStart(ds.length, " ");
+        ds.forEach((d, k) => tl.set(d, { textContent: s[k] === " " ? "" : s[k] }, Math.max(0, AT(tt) - 0.01)));
+      }
+    };
+    
+    // frame 0 is the thumbnail: the wall is already there, faint and large, and settles
+    tl.fromTo("#op-wall .wl-card", { opacity: 0.3, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.8, ease: "expo.out", stagger: { grid: [7, 9], from: "center", amount: 0.6 } }, 0);
+    tl.fromTo("#op-wall", { x: 40 }, { x: -20, duration: 3.04, ease: "none" }, 0);
+    tl.fromTo("#op-glow", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, 0.1);
+    window.__timelines["open"] = tl;
+  })();
+  </script>
+</template>
