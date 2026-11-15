@@ -27,12 +27,12 @@ Two cuts on one clock in two languages: 25 fps, 885 frames, 35.4 s, silent (the 
 | 32.55-35.4 | Close | The band and the logo; then the logo and the wall go, leaving the band: the first frame, so the loop has no jump |
 
 English: the claim is the site's own English (`../../content.mjs`): "Social media is dead." / "Interest has taken
-its place."; "Door webshop" is the site's too. The other lines are translations for the founder to confirm:
-"Experience centre · Social & video", "best result", "B2B Meta campaign", "revenue in one week", "Podcast &
-interview", "Production · Editing · Subtitles", the services "Video, Social, Ads, Website, Automation, Strategy", "ad
-budget managed", "In the new era since 2022" and "In this era, we win." They live in `TEXT` in `build.py`. The site
-picks the language's film (`kit.js`: `-en` when the page is in English, and it swaps the film at the same moment when
-the visitor switches).
+its place."; "Door webshop" is the site's too. The other lines are translations, which the founder approved as
+written on 2026-11-15: "Experience centre · Social & video", "best result", "B2B Meta campaign", "revenue in one
+week", "Podcast & interview", "Production · Editing · Subtitles", the services "Video, Social, Ads, Website,
+Automation, Strategy", "ad budget managed", "In the new era since 2022" and "In this era, we win." They live in
+`TEXT` in `build.py`. The site picks the language's film (`kit.js`: `-en` when the page is in English, and it swaps
+the film at the same moment when the visitor switches).
 
 ## Files
 
