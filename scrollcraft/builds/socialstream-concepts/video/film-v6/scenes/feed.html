@@ -1,0 +1,78 @@
+<template>
+  <style>
+    /*COMMON*/
+    /* inside the phone: every slide fills the frame and swipes up like a reel */
+    #root .sl { position: absolute; left: 0; top: 0; width: %W%px; height: %H%px; overflow: hidden; background: #05070f; }
+    /* claim, first line: "A social media" (struck through) "meghalt." */
+    #root .ca { position: absolute; left: 150px; top: 270px; }
+    #root .ca1 { font-size: 168px; white-space: nowrap; }
+    #root .ca .ss { position: relative; display: inline-block; }
+    #root .ca .stk { position: absolute; left: -0.03em; right: -0.03em; top: 0.5em; height: 0.075em; border-radius: 0.04em; background: #ff5272; transform-origin: 0 50%; }
+    #root .ca2 { font-size: 310px; line-height: 0.88; margin: 0.04em 0 0 470px; white-space: nowrap; }
+    /* claim, second line, over the cinema laughing */
+    #root .cb { position: absolute; left: 150px; bottom: 140px; }
+    #root .cb .hd { font-size: 132px; white-space: nowrap; }
+    #root .cb .it { font-size: 172px; line-height: 0.9; }
+    /* FlyX Tenerife, over the screen and the seats */
+    #root .fx { position: absolute; left: 150px; bottom: 140px; }
+    #root .fx-t { margin-top: 14px; white-space: nowrap; }
+    #root .fx-n { font-size: 230px; }
+    #root .fx-p { font-size: 268px; line-height: 0.9; margin-left: 0.12em; }
+    /* a result: the number fills the field, landed and then still */
+    #root .nb { position: absolute; left: 150px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+    #root .num { display: flex; align-items: baseline; margin-top: 8px; transform-origin: 0 60%; white-space: nowrap; }
+    #root .num .dg { font-size: 520px; line-height: 0.82; letter-spacing: -0.055em; }
+    #root .num .x { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 320px; line-height: 0.82; margin-left: 0.04em; }
+    #root .num .u { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 132px; margin-left: 0.22em; letter-spacing: -0.03em; }
+    #root .num .ui { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-size: 270px; line-height: 0.82; margin-left: 0.16em; }
+    #root .lab { margin-top: 38px; font: 600 52px/1.2 Inter, sans-serif; letter-spacing: -0.01em; }
+    /* the six services: the name on the field, the service's own reel beside it, a hard cut every 0.4 s */
+    #root .sv-w { position: absolute; left: 150px; top: 0; bottom: 0; display: flex; align-items: center; font-size: 124px; white-space: nowrap; }
+    #root .sv-reel { position: absolute; right: 150px; top: 42px; width: 560px; height: 996px; border-radius: 44px; overflow: hidden; background: #0b1024;
+      box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.18), 0 50px 100px -40px rgba(0, 0, 0, 0.6); }
+    #root .sv-reel video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    /* the last line, in night on the bright sky of the sunset */
+    #root .wn { position: absolute; left: 150px; top: 110px; }
+    #root .wn .hd, #root .wn .it { color: #05070f; }
+    #root .wn1 { font-size: 124px; white-space: nowrap; }
+    #root .wn2 { font-size: 250px; line-height: 0.88; margin-left: 380px; white-space: nowrap; }
+    #root br.t { display: none; }
+    @media (orientation: portrait) {
+      #root .ca, #root .cb, #root .fx, #root .nb, #root .sv-w, #root .wn { left: 90px; }
+      #root .ca { top: 420px; }
+      #root .ca1 { font-size: 150px; }
+      #root .ca2 { font-size: 250px; margin-left: 0; }
+      #root .cb { bottom: 260px; }
+      #root .cb .hd { font-size: 116px; }
+      #root .cb .it { font-size: 150px; }
+      #root .fx { bottom: 260px; }
+      #root .fx-n { font-size: 200px; }
+      #root .fx-p { font-size: 220px; margin-left: 0; }
+      #root .num .dg { font-size: 330px; }
+      #root .num .x { font-size: 200px; }
+      #root .num .u { font-size: 92px; }
+      #root .num .ui { font-size: 170px; }
+      #root .lab { font-size: 46px; }
+      #root .sv-w { top: 120px; bottom: auto; height: 300px; font-size: 104px; }
+      #root .sv-reel { left: 90px; right: 90px; top: auto; bottom: 150px; width: auto; height: 1360px; }
+      #root .wn { top: 260px; }
+      #root .wn1 { font-size: 112px; }
+      #root .wn2 { font-size: 220px; margin-left: 0; }
+      #root br.t { display: inline; }
+    }
+  </style>
+  <!-- inside the phone, from claim A's colour field to the sunset: full-frame slides that swipe up like reels, the
+       story bars along the top. The close (compositions/close.html) takes the sunset over and backs out. -->
+  <div id="root" data-composition-id="feed" data-width="%W%" data-height="%H%">
+    %SLIDES%
+    <div class="bars" id="fd-bars">%BARS%</div>
+  </div>
+  <script>
+  (() => {
+    /*COMMONJS*/
+    const tl = gsap.timeline({ paused: true });
+    %SLIDEJS%
+    window.__timelines["feed"] = tl;
+  })();
+  </script>
+</template>

@@ -41,6 +41,12 @@ FORMATS = {
     "film-tall": dict(layout="stacked", size=(1080, 1920), height_frac=0.28125, hero_h=0.38, total=4.0,
                       dive=(3.25, 0.7, 260), ground="transparent", master="socialstream-logo-stacked-dark.svg",
                       pad=0.10),
+    # film v6 (socialstream-concepts/video/film-v6): the same logo built at the END of the film over its reel wall,
+    # with no dive, holding its last frame; the film opens on that frame (the kit's stacked master in its place)
+    "film-end-wide": dict(layout="stacked", size=(1920, 1080), height_frac=0.28125, hero_h=0.38, total=3.0,
+                          ground="transparent", master="socialstream-logo-stacked-dark.svg", pad=0.10),
+    "film-end-tall": dict(layout="stacked", size=(1080, 1920), height_frac=0.28125, hero_h=0.38, total=3.0,
+                          ground="transparent", master="socialstream-logo-stacked-dark.svg", pad=0.10),
 }
 TOTAL = 4.6                # seconds; the last 2 s are a still hold
 KIND = "reversed"          # the drawing made for dark grounds

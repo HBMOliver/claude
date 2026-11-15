@@ -1,0 +1,251 @@
+<template>
+  <style>
+    /* Shared by every scene of brand film v6 (build.py puts it into each scene's style block). The site's type and
+   palette: Sora for headlines, Instrument Serif italic for the accent word, Inter for small type; blue-purple light
+   with red-pink as the accent, turned up into full colour fields. The tall cut's changes are under the portrait
+   query in each scene. */
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
+#root { position: absolute; inset: 0; overflow: hidden; color: #fff; font-family: Inter, sans-serif; }
+/* a full-frame layer: what a camera move scales about its origin */
+#root .ff { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+#root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.0; color: #fff; }
+#root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: #fff; }
+#root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255, 255, 255, 0.84); }
+#root .dot { display: inline-block; width: 12px; height: 12px; margin: 0 16px 4px 0; border-radius: 50%; background: #ff5272; vertical-align: middle; }
+#root .acc { color: #ff5272; }
+#root .w, #root .l { display: inline-block; }
+/* a colour field: the site's ground turned up, with slow lights of its own */
+#root .fld { position: absolute; inset: 0; overflow: hidden; }
+#root .fld .lt { position: absolute; border-radius: 50%; }
+/* footage filling the frame */
+#root video.full { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* a box holding one piece of footage at its own pixel size; the close scales it to cover the shrinking card */
+#root .media { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0; }
+#root .media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* the night glow behind the logo, on the reel wall (open and close) */
+#root .glow { position: absolute; inset: 0;
+  background: radial-gradient(ellipse 30% 44% at 50% 50%, rgba(5, 7, 15, 0.95) 0%, rgba(5, 7, 15, 0.76) 44%, rgba(5, 7, 15, 0) 100%); }
+/* story bars inside the phone */
+#root .bars { position: absolute; left: 48px; right: 48px; top: 30px; display: flex; gap: 8px; }
+#root .bars span { position: relative; flex: 1; height: 4px; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.34); }
+#root .bars i { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; }
+
+    /* inside the phone: every slide fills the frame and swipes up like a reel */
+    #root .sl { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; background: #05070f; }
+    /* claim, first line: "A social media" (struck through) "meghalt." */
+    #root .ca { position: absolute; left: 150px; top: 270px; }
+    #root .ca1 { font-size: 168px; white-space: nowrap; }
+    #root .ca .ss { position: relative; display: inline-block; }
+    #root .ca .stk { position: absolute; left: -0.03em; right: -0.03em; top: 0.5em; height: 0.075em; border-radius: 0.04em; background: #ff5272; transform-origin: 0 50%; }
+    #root .ca2 { font-size: 310px; line-height: 0.88; margin: 0.04em 0 0 470px; white-space: nowrap; }
+    /* claim, second line, over the cinema laughing */
+    #root .cb { position: absolute; left: 150px; bottom: 140px; }
+    #root .cb .hd { font-size: 132px; white-space: nowrap; }
+    #root .cb .it { font-size: 172px; line-height: 0.9; }
+    /* FlyX Tenerife, over the screen and the seats */
+    #root .fx { position: absolute; left: 150px; bottom: 140px; }
+    #root .fx-t { margin-top: 14px; white-space: nowrap; }
+    #root .fx-n { font-size: 230px; }
+    #root .fx-p { font-size: 268px; line-height: 0.9; margin-left: 0.12em; }
+    /* a result: the number fills the field, landed and then still */
+    #root .nb { position: absolute; left: 150px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+    #root .num { display: flex; align-items: baseline; margin-top: 8px; transform-origin: 0 60%; white-space: nowrap; }
+    #root .num .dg { font-size: 520px; line-height: 0.82; letter-spacing: -0.055em; }
+    #root .num .x { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 320px; line-height: 0.82; margin-left: 0.04em; }
+    #root .num .u { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 132px; margin-left: 0.22em; letter-spacing: -0.03em; }
+    #root .num .ui { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-size: 270px; line-height: 0.82; margin-left: 0.16em; }
+    #root .lab { margin-top: 38px; font: 600 52px/1.2 Inter, sans-serif; letter-spacing: -0.01em; }
+    /* the six services: the name on the field, the service's own reel beside it, a hard cut every 0.4 s */
+    #root .sv-w { position: absolute; left: 150px; top: 0; bottom: 0; display: flex; align-items: center; font-size: 124px; white-space: nowrap; }
+    #root .sv-reel { position: absolute; right: 150px; top: 42px; width: 560px; height: 996px; border-radius: 44px; overflow: hidden; background: #0b1024;
+      box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.18), 0 50px 100px -40px rgba(0, 0, 0, 0.6); }
+    #root .sv-reel video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    /* the last line, in night on the bright sky of the sunset */
+    #root .wn { position: absolute; left: 150px; top: 110px; }
+    #root .wn .hd, #root .wn .it { color: #05070f; }
+    #root .wn1 { font-size: 124px; white-space: nowrap; }
+    #root .wn2 { font-size: 250px; line-height: 0.88; margin-left: 380px; white-space: nowrap; }
+    #root br.t { display: none; }
+    @media (orientation: portrait) {
+      #root .ca, #root .cb, #root .fx, #root .nb, #root .sv-w, #root .wn { left: 90px; }
+      #root .ca { top: 420px; }
+      #root .ca1 { font-size: 150px; }
+      #root .ca2 { font-size: 250px; margin-left: 0; }
+      #root .cb { bottom: 260px; }
+      #root .cb .hd { font-size: 116px; }
+      #root .cb .it { font-size: 150px; }
+      #root .fx { bottom: 260px; }
+      #root .fx-n { font-size: 200px; }
+      #root .fx-p { font-size: 220px; margin-left: 0; }
+      #root .num .dg { font-size: 330px; }
+      #root .num .x { font-size: 200px; }
+      #root .num .u { font-size: 92px; }
+      #root .num .ui { font-size: 170px; }
+      #root .lab { font-size: 46px; }
+      #root .sv-w { top: 120px; bottom: auto; height: 300px; font-size: 104px; }
+      #root .sv-reel { left: 90px; right: 90px; top: auto; bottom: 150px; width: auto; height: 1360px; }
+      #root .wn { top: 260px; }
+      #root .wn1 { font-size: 112px; }
+      #root .wn2 { font-size: 220px; margin-left: 0; }
+      #root br.t { display: inline; }
+    }
+  </style>
+  <!-- inside the phone, from claim A's colour field to the sunset: full-frame slides that swipe up like reels, the
+       story bars along the top. The close (compositions/close.html) takes the sunset over and backs out. -->
+  <div id="root" data-composition-id="feed" data-width="1920" data-height="1080">
+    <div class="sl" id="sl-claimA" data-layout-allow-overflow><div class="fld" style="background:#0b1034"><i class="lt" id="lt-claimA-0" data-layout-allow-overflow style="left:84%;top:12%;width:120vmax;height:120vmax;margin:-60.0vmax 0 0 -60.0vmax;background:radial-gradient(closest-side, rgba(136, 78, 255, 0.85), rgba(136, 78, 255, 0))"></i><i class="lt" id="lt-claimA-1" data-layout-allow-overflow style="left:8%;top:96%;width:110vmax;height:110vmax;margin:-55.0vmax 0 0 -55.0vmax;background:radial-gradient(closest-side, rgba(66, 92, 255, 0.8), rgba(66, 92, 255, 0))"></i><i class="lt" id="lt-claimA-2" data-layout-allow-overflow style="left:100%;top:100%;width:50vmax;height:50vmax;margin:-25.0vmax 0 0 -25.0vmax;background:radial-gradient(closest-side, rgba(255, 64, 104, 0.32), rgba(255, 64, 104, 0))"></i></div><div class="ca"><div class="hd ca1"><span class="w">A</span> <span class="ss"><span class="w">social</span><br class="t"> <span class="w">media</span><i class="stk" id="ca-stk"></i></span></div><div class="it ca2" id="ca-m">meghalt.</div></div></div>
+    <div class="sl" id="sl-claimB" data-layout-allow-overflow><video id="v-claimB" class="clip full" src="assets/clips/w-crowd.mp4" data-start="1.94" data-duration="2.58" data-media-start="0" data-hf-media-start-basis="local" data-track-index="1" muted playsinline></video><div class="cb" id="cb"><div class="hd"><span class="w">Az</span> <span class="w it">érdeklődés</span></div><div class="hd"><span class="w">vette</span> <span class="w">át</span><br class="t"> <span class="w">a</span> <span class="w">helyét<span class="acc">.</span></span></div></div></div>
+    <div class="sl" id="sl-flyx" data-layout-allow-overflow><video id="v-flyx" class="clip full" src="assets/clips/w-screen.mp4" data-start="4.02" data-duration="2.34" data-media-start="0" data-hf-media-start-basis="local" data-track-index="2" muted playsinline></video><div class="fx"><div class="eb" id="fx-eb"><span class="dot"></span>Élményközpont · Social &amp; video</div><div class="fx-t"><span class="hd fx-n"><span class="l">F</span><span class="l">l</span><span class="l">y</span><span class="l">X</span></span><br class="t"> <span class="it fx-p" id="fx-p">Tenerife</span></div></div></div>
+    <div class="sl" id="sl-roas" data-layout-allow-overflow><div class="fld" style="background:#26137a"><i class="lt" id="lt-roas-0" data-layout-allow-overflow style="left:92%;top:92%;width:105vmax;height:105vmax;margin:-52.5vmax 0 0 -52.5vmax;background:radial-gradient(closest-side, rgba(255, 64, 104, 0.68), rgba(255, 64, 104, 0))"></i><i class="lt" id="lt-roas-1" data-layout-allow-overflow style="left:4%;top:4%;width:85vmax;height:85vmax;margin:-42.5vmax 0 0 -42.5vmax;background:radial-gradient(closest-side, rgba(56, 160, 255, 0.55), rgba(56, 160, 255, 0))"></i></div><div class="nb"><div class="eb" id="roas-eb">Ajtó webshop · Google PMax</div><div class="num" id="roas-num"><span class="hd dg">81</span><span class="x acc">×</span><span class="u">ROAS</span></div><div class="lab" id="roas-lab"><span class="w">legjobb</span> <span class="w">eredmény</span></div></div></div>
+    <div class="sl" id="sl-mft" data-layout-allow-overflow><div class="fld" style="background:#0e2bb0"><i class="lt" id="lt-mft-0" data-layout-allow-overflow style="left:96%;top:8%;width:100vmax;height:100vmax;margin:-50.0vmax 0 0 -50.0vmax;background:radial-gradient(closest-side, rgba(136, 78, 255, 0.75), rgba(136, 78, 255, 0))"></i><i class="lt" id="lt-mft-1" data-layout-allow-overflow style="left:0%;top:100%;width:95vmax;height:95vmax;margin:-47.5vmax 0 0 -47.5vmax;background:radial-gradient(closest-side, rgba(56, 160, 255, 0.6), rgba(56, 160, 255, 0))"></i></div><div class="nb"><div class="eb" id="mft-eb">B2B Meta kampány</div><div class="num" id="mft-num"><span class="hd dg">79</span><span class="ui">M Ft</span></div><div class="lab" id="mft-lab"><span class="w">bevétel</span> <span class="w">egy</span> <span class="w">hét</span> <span class="w">alatt</span></div></div></div>
+    <div class="sl" id="sl-svc" data-layout-allow-overflow><div class="fld" style="background:#120d3a"><i class="lt" id="lt-svc-0" data-layout-allow-overflow style="left:10%;top:10%;width:100vmax;height:100vmax;margin:-50.0vmax 0 0 -50.0vmax;background:radial-gradient(closest-side, rgba(66, 92, 255, 0.75), rgba(66, 92, 255, 0))"></i><i class="lt" id="lt-svc-1" data-layout-allow-overflow style="left:70%;top:100%;width:90vmax;height:90vmax;margin:-45.0vmax 0 0 -45.0vmax;background:radial-gradient(closest-side, rgba(136, 78, 255, 0.7), rgba(136, 78, 255, 0))"></i></div><div class="hd sv-w clip" id="svw-0" data-start="9.74" data-duration="0.64" data-track-index="3">Videó<span class="acc">.</span></div><div class="hd sv-w clip" id="svw-1" data-start="10.38" data-duration="0.4" data-track-index="5">Social<span class="acc">.</span></div><div class="hd sv-w clip" id="svw-2" data-start="10.78" data-duration="0.4" data-track-index="7">Hirdetés<span class="acc">.</span></div><div class="hd sv-w clip" id="svw-3" data-start="11.18" data-duration="0.4" data-track-index="9">Weboldal<span class="acc">.</span></div><div class="hd sv-w clip" id="svw-4" data-start="11.58" data-duration="0.4" data-track-index="11">Automatizáció<span class="acc">.</span></div><div class="hd sv-w clip" id="svw-5" data-start="11.98" data-duration="0.78" data-track-index="13">Stratégia<span class="acc">.</span></div><div class="sv-reel"><video id="v-svc0" class="clip " src="assets/clips/ph-svc-stage.mp4" data-start="9.62" data-duration="0.76" data-media-start="0" data-hf-media-start-basis="local" data-track-index="4" muted playsinline></video><video id="v-svc1" class="clip " src="assets/clips/ph-svc-social.mp4" data-start="10.38" data-duration="0.4" data-media-start="0" data-hf-media-start-basis="local" data-track-index="6" muted playsinline></video><video id="v-svc2" class="clip " src="assets/clips/ph-svc-ads2.mp4" data-start="10.78" data-duration="0.4" data-media-start="0" data-hf-media-start-basis="local" data-track-index="8" muted playsinline></video><video id="v-svc3" class="clip " src="assets/clips/ph-svc-web.mp4" data-start="11.18" data-duration="0.4" data-media-start="0" data-hf-media-start-basis="local" data-track-index="10" muted playsinline></video><video id="v-svc4" class="clip " src="assets/clips/ph-svc-auto.mp4" data-start="11.58" data-duration="0.4" data-media-start="0" data-hf-media-start-basis="local" data-track-index="12" muted playsinline></video><video id="v-svc5" class="clip " src="assets/clips/ph-svc-strat.mp4" data-start="11.98" data-duration="0.78" data-media-start="0" data-hf-media-start-basis="local" data-track-index="14" muted playsinline></video></div></div>
+    <div class="sl" id="sl-m300" data-layout-allow-overflow><div class="fld" style="background:#3f1596"><i class="lt" id="lt-m300-0" data-layout-allow-overflow style="left:100%;top:0%;width:105vmax;height:105vmax;margin:-52.5vmax 0 0 -52.5vmax;background:radial-gradient(closest-side, rgba(255, 64, 104, 0.62), rgba(255, 64, 104, 0))"></i><i class="lt" id="lt-m300-1" data-layout-allow-overflow style="left:0%;top:100%;width:100vmax;height:100vmax;margin:-50.0vmax 0 0 -50.0vmax;background:radial-gradient(closest-side, rgba(66, 92, 255, 0.75), rgba(66, 92, 255, 0))"></i></div><div class="nb"><div class="eb" id="m300-eb">2022 óta az új korban</div><div class="num" id="m300-num"><span class="hd dg">300</span><span class="ui">M Ft</span></div><div class="lab" id="m300-lab"><span class="w">kezelt</span> <span class="w">hirdetési</span> <span class="w">büdzsé</span></div></div></div>
+    <div class="sl" id="sl-win" data-layout-allow-overflow><video id="v-win" class="clip full" src="assets/clips/w-sunset.mp4" data-start="14.14" data-duration="3.08" data-media-start="0" data-hf-media-start-basis="local" data-track-index="15" muted playsinline></video><div class="wn" id="wn"><div class="hd wn1"><span class="w">Mi</span> <span class="w">ebben</span> <span class="w">a</span> <span class="w">korban</span></div><div class="it wn2"><span class="w" id="wn-2">győzünk<span class="acc">.</span></span></div></div></div>
+    <div class="bars" id="fd-bars"><span><i id="fd-b0"></i></span><span><i id="fd-b1"></i></span><span><i id="fd-b2"></i></span><span><i id="fd-b3"></i></span><span><i id="fd-b4"></i></span><span><i id="fd-b5"></i></span><span><i id="fd-b6"></i></span><span><i id="fd-b7"></i></span></div>
+  </div>
+  <script>
+  (() => {
+        // Shared by every scene (build.py puts it at the top of each scene's script): the film's clock, the frame and
+    // the stream's camera. Every time is in seconds of the whole film; AT(t) turns one into this scene's own time.
+    const TM = {"total": 22.52, "dive": 1.32, "dived": 0.72, "flood": 1.96, "floodd": 0.28, "claimA": 2.16, "strike": 2.64, "meghalt": 2.92, "sw": 0.38, "swB": 3.96, "swF": 6.04, "swR": 7.88, "swM": 9.76, "swS": 11.64, "sw3": 14.28, "swW": 16.16, "svc": [12.28, 12.68, 13.08, 13.48, 13.88], "winOut": 18.96, "back": 19.12, "backd": 0.8, "glow": 19.36, "glowd": 0.48, "logo": 19.52, "wallV": 12};
+    const START = 1.9, AT = (t) => t - START;
+    const W = 1920, H = 1080, TALL = H > W, CX = W / 2, CY = H / 2;
+    const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+    const lerp = (a, b, p) => a + (b - a) * p;
+    const EZ = {};
+    const ez = (name, p) => (EZ[name] || (EZ[name] = gsap.parseEase(name)))(clamp01(p));
+    // the stream's camera: from TM.s0 it flies TM.travel px forward and brakes (power2.out) until TM.land
+    const camZ = (t) => TM.travel * ez("power2.out", (t - TM.s0) / (TM.land - TM.s0));
+    // a card standing at world (X, Y, Z) seen at time t: its centre on screen, its scale and its depth
+    const project = (X, Y, Z, t) => {
+      const D = Z - camZ(t), s = TM.f / D;
+      return { x: CX + X * s, y: CY + Y * s, s, D };
+    };
+    // the scale that makes a bw x bh box cover a rw x rh window (object-fit: cover)
+    const cover = (bw, bh, rw, rh) => Math.max(rw / bw, rh / bh);
+    // footage covering a rect R: its focus (fx, fy, 0-1) as near the rect's centre as the cover allows; dy moves it
+    // down by that much (a swipe). Returns the top-left corner and the scale
+    const coverAt = (bw, bh, R, fx, fy, dy) => {
+      const z = cover(bw, bh, R.w, R.h), sw = bw * z, sh = bh * z, x0 = R.cx - R.w / 2, y0 = R.cy - R.h / 2;
+      const x = Math.min(x0, Math.max(x0 + R.w - sw, R.cx - sw * fx));
+      const y = Math.min(y0, Math.max(y0 + R.h - sh, R.cy - sh * fy));
+      return { x, y: y + dy, z };
+    };
+    // a rect {cx, cy, w, h, r} part of the way to another
+    const mixRect = (a, b, p) => ({ cx: lerp(a.cx, b.cx, p), cy: lerp(a.cy, b.cy, p), w: lerp(a.w, b.w, p),
+      h: lerp(a.h, b.h, p), r: lerp(a.r, b.r, p) });
+    const insetOf = (R) => `inset(${(R.cy - R.h / 2).toFixed(2)}px ${(W - R.cx - R.w / 2).toFixed(2)}px ` +
+      `${(H - R.cy - R.h / 2).toFixed(2)}px ${(R.cx - R.w / 2).toFixed(2)}px round ${Math.max(0, R.r).toFixed(2)}px)`;
+    // Turns a drawing that is a function of time into ordinary tweens, which the player seeks like every other
+    // animation (it re-renders nested timelines its own way, and code run from onUpdate or modifiers does not reliably
+    // run again on each frame). draw(t, put) is called once for every frame of [from, to] while the scene is set up,
+    // and reports with put(el, prop, value) what it would set. Each element's property then becomes a chain of
+    // tweens, one per run of frames where it moves at a steady rate (a held value needs none), so every frame gets
+    // exactly the value drawn for it. Text values (visibility, display) become sets where they change.
+    const FPS = 25;
+    const bake = (tl, from, to, draw) => {
+      const n = Math.round((to - from) * FPS), tracks = new Map();
+      for (let i = 0; i <= n; i++) {
+        draw(from + i / FPS, (el, prop, v) => {
+          let m = tracks.get(el);
+          if (!m) tracks.set(el, (m = new Map()));
+          let a = m.get(prop);
+          if (!a) m.set(prop, (a = new Array(n + 1)));
+          a[i] = v;
+        });
+      }
+      const at = (i) => AT(from) + i / FPS;
+      tracks.forEach((m, el) => m.forEach((a, prop) => {
+        for (let i = 1; i <= n; i++) if (a[i] === undefined) a[i] = a[i - 1];
+        if (a[0] === undefined) a[0] = a.find((v) => v !== undefined);
+        tl.set(el, { [prop]: a[0] }, at(0));
+        if (typeof a[0] !== "number") {          // a text value: set it where it changes
+          // a quarter frame early, so a seek that lands a hair before the frame's time still gets it
+          for (let i = 1; i <= n; i++) if (a[i] !== a[i - 1]) tl.set(el, { [prop]: a[i] }, at(i) - 0.25 / FPS);
+          return;
+        }
+        let i0 = 0;
+        while (i0 < n) {
+          // the longest run from i0 along which the value moves at a steady rate
+          let i1 = i0 + 1;
+          const lin = (j, k) => { for (let q = i0 + 1; q < k; q++) { const e = a[i0] + (a[k] - a[i0]) * (q - i0) / (k - i0); if (Math.abs(a[q] - e) > 0.02) return false; } return true; };
+          while (i1 + 1 <= n && lin(i0, i1 + 1)) i1++;
+          if (a[i1] !== a[i0]) tl.fromTo(el, { [prop]: a[i0] }, { [prop]: a[i1], duration: (i1 - i0) / FPS, ease: "none", immediateRender: false }, at(i0));
+          i0 = i1;
+        }
+      }));
+    };
+
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#sl-claimA", { opacity: 0 }, { opacity: 1, duration: TM.floodd, ease: "power2.inOut" }, AT(TM.flood));
+    tl.fromTo("#lt-claimA-0", { x: 0, y: 0 }, { x: -80, y: 60, duration: 2.38, ease: "sine.inOut" }, AT(1.96));
+    tl.fromTo("#lt-claimA-1", { x: 0, y: 0 }, { x: 90, y: -50, duration: 2.38, ease: "sine.inOut" }, AT(1.96));
+    tl.fromTo("#lt-claimA-2", { x: 0, y: 0 }, { x: -40, y: -30, duration: 2.38, ease: "sine.inOut" }, AT(1.96));
+    tl.fromTo("#sl-claimA .ca1 .w", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: 0.067 }, AT(TM.claimA));
+    tl.fromTo("#ca-stk", { scaleX: 0 }, { scaleX: 1, duration: 0.26, ease: "power3.out" }, AT(TM.strike));
+    tl.fromTo("#sl-claimA .ss .w", { opacity: 1 }, { opacity: 0.45, duration: 0.3, ease: "power2.out", immediateRender: false }, AT(TM.strike + 0.12));
+    tl.fromTo("#ca-m", { opacity: 0, filter: "blur(12px)", scale: 1.04 }, { opacity: 1, filter: "blur(0px)", scale: 1, duration: 0.3, ease: "power2.out" }, AT(TM.meghalt));
+    tl.set("#sl-claimB", { y: H }, 0);
+    tl.fromTo("#sl-claimB", { y: H }, { y: 0, duration: TM.sw, ease: "power3.inOut", immediateRender: false }, AT(3.96));
+    tl.fromTo("#sl-claimA", { y: 0 }, { y: -H, duration: TM.sw, ease: "power3.inOut", immediateRender: false }, AT(3.96));
+    tl.fromTo("#cb .w", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: 0.08 }, AT(4.3));
+    tl.set("#sl-flyx", { y: H }, 0);
+    tl.fromTo("#sl-flyx", { y: H }, { y: 0, duration: TM.sw, ease: "power3.inOut", immediateRender: false }, AT(6.04));
+    tl.fromTo("#sl-claimB", { y: 0 }, { y: -H, duration: TM.sw, ease: "power3.inOut", immediateRender: false }, AT(6.04));
+    tl.fromTo("#fx-eb", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, AT(6.36));
+    tl.fromTo("#sl-flyx .fx-n .l", { opacity: 0.25, filter: "blur(5px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power2.out", stagger: 0.1 }, AT(6.42));
+    tl.fromTo("#fx-p", { opacity: 0, filter: "blur(12px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "power2.out" }, AT(6.84));
+    tl.set("#sl-roas", { y: H }, 0);
+    tl.fromTo("#sl-roas", { y: H }, { y: 0, duration: TM.sw, ease: "power3.inOut", immediateRender: false }, AT(7.88));
+    tl.fromTo("#sl-flyx", { y: 0 }, { y: -H, duration: TM.sw, ease: "power3.inOut", immediateRender: false }, AT(7.88));
+    tl.fromTo("#lt-roas-0", { x: 0, y: 0 }, { x: -70, y: -40, duration: 2.26, ease: "sine.inOut" }, AT(7.88));
+    tl.fromTo("#lt-roas-1", { x: 0, y: 0 }, { x: 60, y: 40, duration: 2.26, ease: "sine.inOut" }, AT(7.88));
+    tl.fromTo("#roas-eb", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, AT(8.18));
+    tl.fromTo("#roas-num", { opacity: 0, scale: 1.05 }, { opacity: 1, scale: 1, duration: 0.55, ease: "expo.out" }, AT(8.22));
+    tl.fromTo("#roas-num", { filter: "blur(16px)" }, { filter: "blur(0px)", duration: 0.3, ease: "power2.out" }, AT(8.22));
+    tl.fromTo("#roas-lab .w", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: 0.06 }, AT(8.46));
+    tl.set("#sl-mft", { y: H }, 0);
+    tl.fromTo("#sl-mft", { y: H }, { y: 0, duration: TM.sw, ease: "power3.inOut", immediateRender: false }, AT(9.76));
+    tl.fromTo("#sl-roas", { y: 0 }, { y: -H, duration: TM.sw, ease: "power3.inOut", immediateRender: false }, AT(9.76));
+    tl.fromTo("#lt-mft-0", { x: 0, y: 0 }, { x: -60, y: 50, duration: 2.26, ease: "sine.inOut" }, AT(9.76));
+    tl.fromTo("#lt-mft-1", { x: 0, y: 0 }, { x: 70, y: -40, duration: 2.26, ease: "sine.inOut" }, AT(9.76));
+    tl.fromTo("#mft-eb", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, AT(10.06));
+    tl.fromTo("#mft-num", { opacity: 0, scale: 1.05 }, { opacity: 1, scale: 1, duration: 0.55, ease: "expo.out" }, AT(10.1));
+    tl.fromTo("#mft-num", { filter: "blur(16px)" }, { filter: "blur(0px)", duration: 0.3, ease: "power2.out" }, AT(10.1));
+    tl.fromTo("#mft-lab .w", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: 0.06 }, AT(10.34));
+    tl.set("#sl-svc", { y: H }, 0);
+    tl.fromTo("#sl-svc", { y: H }, { y: 0, duration: TM.sw, ease: "power3.inOut", immediateRender: false }, AT(11.64));
+    tl.fromTo("#sl-mft", { y: 0 }, { y: -H, duration: TM.sw, ease: "power3.inOut", immediateRender: false }, AT(11.64));
+    tl.fromTo("#lt-svc-0", { x: 0, y: 0 }, { x: 60, y: 40, duration: 3.02, ease: "sine.inOut" }, AT(11.64));
+    tl.fromTo("#lt-svc-1", { x: 0, y: 0 }, { x: -50, y: -40, duration: 3.02, ease: "sine.inOut" }, AT(11.64));
+    tl.set("#sl-m300", { y: H }, 0);
+    tl.fromTo("#sl-m300", { y: H }, { y: 0, duration: TM.sw, ease: "power3.inOut", immediateRender: false }, AT(14.28));
+    tl.fromTo("#sl-svc", { y: 0 }, { y: -H, duration: TM.sw, ease: "power3.inOut", immediateRender: false }, AT(14.28));
+    tl.fromTo("#lt-m300-0", { x: 0, y: 0 }, { x: -70, y: 50, duration: 2.26, ease: "sine.inOut" }, AT(14.28));
+    tl.fromTo("#lt-m300-1", { x: 0, y: 0 }, { x: 60, y: -50, duration: 2.26, ease: "sine.inOut" }, AT(14.28));
+    tl.fromTo("#m300-eb", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, AT(14.58));
+    tl.fromTo("#m300-num", { opacity: 0, scale: 1.05 }, { opacity: 1, scale: 1, duration: 0.55, ease: "expo.out" }, AT(14.62));
+    tl.fromTo("#m300-num", { filter: "blur(16px)" }, { filter: "blur(0px)", duration: 0.3, ease: "power2.out" }, AT(14.62));
+    tl.fromTo("#m300-lab .w", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: 0.06 }, AT(14.86));
+    tl.set("#sl-win", { y: H }, 0);
+    tl.fromTo("#sl-win", { y: H }, { y: 0, duration: TM.sw, ease: "power3.inOut", immediateRender: false }, AT(16.16));
+    tl.fromTo("#sl-m300", { y: 0 }, { y: -H, duration: TM.sw, ease: "power3.inOut", immediateRender: false }, AT(16.16));
+    tl.fromTo("#wn .wn1 .w", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: 0.08 }, AT(16.56));
+    tl.fromTo("#wn-2", { opacity: 0, filter: "blur(12px)", scale: 1.04 }, { opacity: 1, filter: "blur(0px)", scale: 1, duration: 0.3, ease: "power2.out" }, AT(16.92));
+    tl.fromTo("#wn .w", { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in", immediateRender: false }, AT(TM.winOut));
+    tl.fromTo("#fd-bars", { opacity: 0 }, { opacity: 1, duration: TM.floodd, ease: "power2.inOut" }, AT(TM.flood));
+    tl.fromTo("#fd-bars", { opacity: 1 }, { opacity: 0, duration: 0.16, ease: "power2.in", immediateRender: false }, AT(TM.winOut));
+    tl.fromTo("#fd-b0", { scaleX: 0 }, { scaleX: 1, duration: 2.0, ease: "none" }, AT(1.96));
+    tl.fromTo("#fd-b1", { scaleX: 0 }, { scaleX: 1, duration: 2.08, ease: "none" }, AT(3.96));
+    tl.fromTo("#fd-b2", { scaleX: 0 }, { scaleX: 1, duration: 1.84, ease: "none" }, AT(6.04));
+    tl.fromTo("#fd-b3", { scaleX: 0 }, { scaleX: 1, duration: 1.88, ease: "none" }, AT(7.88));
+    tl.fromTo("#fd-b4", { scaleX: 0 }, { scaleX: 1, duration: 1.88, ease: "none" }, AT(9.76));
+    tl.fromTo("#fd-b5", { scaleX: 0 }, { scaleX: 1, duration: 2.64, ease: "none" }, AT(11.64));
+    tl.fromTo("#fd-b6", { scaleX: 0 }, { scaleX: 1, duration: 1.88, ease: "none" }, AT(14.28));
+    tl.fromTo("#fd-b7", { scaleX: 0 }, { scaleX: 1, duration: 2.96, ease: "none" }, AT(16.16));
+    window.__timelines["feed"] = tl;
+  })();
+  </script>
+</template>

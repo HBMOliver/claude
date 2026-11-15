@@ -1,0 +1,41 @@
+<template>
+  <style>
+    /*COMMON*/
+    /*WALLCSS*/
+    #op-logo { position: absolute; }
+  </style>
+  <!-- the opening: the reel wall with the finished logo on its night glow, which is also the film's last frame, so the
+       loop on the site has no jump; then the camera dives into the logo's S, and the first slide comes up through its
+       night (compositions/feed.html, above this one) -->
+  <div id="root" data-composition-id="open" data-width="%W%" data-height="%H%">
+    <div class="wl-in ff" data-layout-allow-overflow id="op-in">
+      <div class="wl-tilt"><div class="wl-wall" id="op-wall"><!--WALL--></div></div>
+      <div class="wl-dim"></div>
+    </div>
+    <div class="ff" id="op-dive" data-layout-allow-overflow>
+      <div class="glow"></div>
+      <img id="op-logo" src="assets/logo/socialstream-logo-stacked-dark.svg" alt="SocialStream" style="%LOGOBOX%">
+    </div>
+  </div>
+  <script>
+  (() => {
+    /*COMMONJS*/
+    const tl = gsap.timeline({ paused: true });
+    const S = %SCENTRE%;                 // the S's centre on screen, which the camera dives into
+    // the wall drifts at the speed the close ends with, so the loop carries on without a jump
+    tl.fromTo("#op-wall", { x: 0 }, { x: -TM.wallV * (TM.dive + TM.dived), duration: TM.dive + TM.dived, ease: "none" }, 0);
+    // the dive: one scale about the S's centre on a log scale (an even push that keeps speeding up, power2.in),
+    // one exact value per film frame; the S is drawn in Night, so the frame ends in night
+    const dive = document.getElementById("op-dive"), K = Math.log(260);
+    tl.set(dive, { transformOrigin: `${S[0]}px ${S[1]}px` }, 0);
+    bake(tl, TM.dive, TM.dive + TM.dived, (t, put) => {
+      put(dive, "scale", +Math.exp(K * ez("power2.in", (t - TM.dive) / TM.dived)).toFixed(5));
+    });
+    // the wall falls behind as the camera pushes in
+    tl.fromTo("#op-in", { scale: 1 }, { scale: 1.2, duration: TM.dived, ease: "power2.in" }, AT(TM.dive));
+    // and goes, so that through the S (drawn as a cut in the phone) there is only night when the first slide comes up
+    tl.fromTo("#op-in", { opacity: 1 }, { opacity: 0, duration: 0.32, ease: "power2.in", immediateRender: false }, AT(TM.dive + TM.dived - 0.32));
+    window.__timelines["open"] = tl;
+  })();
+  </script>
+</template>

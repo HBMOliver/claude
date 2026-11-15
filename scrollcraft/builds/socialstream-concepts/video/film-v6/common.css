@@ -1,0 +1,31 @@
+/* Shared by every scene of brand film v6 (build.py puts it into each scene's style block). The site's type and
+   palette: Sora for headlines, Instrument Serif italic for the accent word, Inter for small type; blue-purple light
+   with red-pink as the accent, turned up into full colour fields. The tall cut's changes are under the portrait
+   query in each scene. */
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
+#root { position: absolute; inset: 0; overflow: hidden; color: #fff; font-family: Inter, sans-serif; }
+/* a full-frame layer: what a camera move scales about its origin */
+#root .ff { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+#root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.0; color: #fff; }
+#root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: #fff; }
+#root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255, 255, 255, 0.84); }
+#root .dot { display: inline-block; width: 12px; height: 12px; margin: 0 16px 4px 0; border-radius: 50%; background: #ff5272; vertical-align: middle; }
+#root .acc { color: #ff5272; }
+#root .w, #root .l { display: inline-block; }
+/* a colour field: the site's ground turned up, with slow lights of its own */
+#root .fld { position: absolute; inset: 0; overflow: hidden; }
+#root .fld .lt { position: absolute; border-radius: 50%; }
+/* footage filling the frame */
+#root video.full { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* a box holding one piece of footage at its own pixel size; the close scales it to cover the shrinking card */
+#root .media { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0; }
+#root .media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* the night glow behind the logo, on the reel wall (open and close) */
+#root .glow { position: absolute; inset: 0;
+  background: radial-gradient(ellipse 30% 44% at 50% 50%, rgba(5, 7, 15, 0.95) 0%, rgba(5, 7, 15, 0.76) 44%, rgba(5, 7, 15, 0) 100%); }
+/* story bars inside the phone */
+#root .bars { position: absolute; left: 48px; right: 48px; top: 30px; display: flex; gap: 8px; }
+#root .bars span { position: relative; flex: 1; height: 4px; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.34); }
+#root .bars i { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; }
