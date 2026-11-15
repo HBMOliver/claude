@@ -40,11 +40,13 @@
     var v = $('video', box), tgl = $('.toggle', box), cut = box.getAttribute('data-cut') || 'auto';
     var f = { paused: reduce || SS.saveData, seen: false, loaded: '', started: false, hidden: false };
     box._f = f;
-    // a vertical cut where the frame stands upright, the full cut where the film is big, the small one elsewhere
+    // a vertical cut where the frame stands upright, the full cut where the film is big, the small one elsewhere;
+    // the film's words are in the page's language (the English cuts end in -en)
     function src() {
-      if (cut === 'v' || (cut === 'auto' && narrow.matches)) return 'assets/hero-v-720.mp4';
-      if (box.hasAttribute('data-big')) return 'assets/hero-1080.mp4';
-      return box.offsetWidth * (window.devicePixelRatio || 1) < 1300 ? 'assets/hero-540.mp4' : 'assets/hero-1080.mp4';
+      var en = SS.L === 'en' ? '-en' : '';
+      if (cut === 'v' || (cut === 'auto' && narrow.matches)) return 'assets/hero-v-720' + en + '.mp4';
+      if (box.hasAttribute('data-big')) return 'assets/hero-1080' + en + '.mp4';
+      return 'assets/hero-' + (box.offsetWidth * (window.devicePixelRatio || 1) < 1300 ? '540' : '1080') + en + '.mp4';
     }
     function load() {
       var s = src(); if (f.loaded === s) return;
@@ -65,6 +67,9 @@
       f.state();
     };
     f.mq = function () { if (!f.paused) f.apply(); else f.loaded = ''; };
+    // a new language: a film that has loaded switches to that language's cut at the same moment (a paused or unseen
+    // one stays paused, so its frame shows the right words); one that has not loaded yet picks it when it starts
+    f.lang = function () { if (!f.loaded) return; if (f.paused || !f.seen) load(); else f.apply(); };
     v.addEventListener('playing', function () { box.classList.add('is-playing'); });
     // a frame may carry a progress line, as a story does; it follows the film
     var bar = $('.progress', box);
@@ -77,7 +82,8 @@
     return f;
   });
   SS.onMQ(narrow, function () { films.forEach(function (f) { f.mq(); }); });
-  SS.onLang(function () { films.forEach(function (f) { f.state(); }); });
+  // a new language: the button's words, and the film in that language from the same moment (or on its next play)
+  SS.onLang(function () { films.forEach(function (f) { f.state(); f.lang(); }); });
   // a media fetch holds the load event, so the film is fetched only once the page has loaded
   function startFilms() { films.forEach(function (f) { f.started = true; f.apply(); }); }
   if (document.readyState === 'complete') setTimeout(startFilms, 60); else addEventListener('load', function () { setTimeout(startFilms, 60); }, { once: true });

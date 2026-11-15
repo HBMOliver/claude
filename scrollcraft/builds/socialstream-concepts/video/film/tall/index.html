@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
-    <title>SocialStream brand film (1080x1920)</title>
+    <title>SocialStream brand film (1080x1920, hu)</title>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -12,13 +12,14 @@
     </style>
   </head>
   <body>
-    <div id="main" data-composition-id="main" data-start="0" data-duration="32.1" data-fps="25" data-width="1080" data-height="1920">
+    <!-- motion blur at render time: fast moves (swipes, the phone growing, the stream) are smeared along their path -->
+    <div id="main" data-motion-blur="on" data-composition-id="main" data-start="0" data-duration="35.4" data-fps="25" data-width="1080" data-height="1920">
       <div
         id="sky"
         data-composition-id="sky"
         data-composition-src="compositions/sky.html"
         data-start="0"
-        data-duration="32.1"
+        data-duration="35.4"
         data-track-index="0"
         data-track-kind="graphics"
         data-width="1080"
@@ -38,11 +39,11 @@
         style="z-index: 1"
       ></div>
       <div
-        id="logo"
-        data-composition-id="logo"
-        data-composition-src="compositions/logo.html"
-        data-start="0"
-        data-duration="4"
+        id="claim"
+        data-composition-id="claim"
+        data-composition-src="compositions/claim.html"
+        data-start="3.8"
+        data-duration="5.55"
         data-track-index="2"
         data-track-kind="graphics"
         data-width="1080"
@@ -50,11 +51,11 @@
         style="z-index: 2"
       ></div>
       <div
-        id="claim"
-        data-composition-id="claim"
-        data-composition-src="compositions/claim.html"
-        data-start="4"
-        data-duration="5"
+        id="flyx"
+        data-composition-id="flyx"
+        data-composition-src="compositions/flyx.html"
+        data-start="11.3"
+        data-duration="3.1"
         data-track-index="3"
         data-track-kind="graphics"
         data-width="1080"
@@ -62,11 +63,11 @@
         style="z-index: 3"
       ></div>
       <div
-        id="flyx"
-        data-composition-id="flyx"
-        data-composition-src="compositions/flyx.html"
-        data-start="9"
-        data-duration="3"
+        id="wall"
+        data-composition-id="wall"
+        data-composition-src="compositions/wall.html"
+        data-start="31.75"
+        data-duration="3.65"
         data-track-index="4"
         data-track-kind="graphics"
         data-width="1080"
@@ -74,11 +75,11 @@
         style="z-index: 4"
       ></div>
       <div
-        id="roas"
-        data-composition-id="roas"
-        data-composition-src="compositions/roas.html"
-        data-start="12"
-        data-duration="2.4"
+        id="feed"
+        data-composition-id="feed"
+        data-composition-src="compositions/feed.html"
+        data-start="8.9"
+        data-duration="22.85"
         data-track-index="5"
         data-track-kind="graphics"
         data-width="1080"
@@ -86,11 +87,11 @@
         style="z-index: 5"
       ></div>
       <div
-        id="mft"
-        data-composition-id="mft"
-        data-composition-src="compositions/mft.html"
-        data-start="14.4"
-        data-duration="2.5"
+        id="stream"
+        data-composition-id="stream"
+        data-composition-src="compositions/stream.html"
+        data-start="8.9"
+        data-duration="2.4"
         data-track-index="6"
         data-track-kind="graphics"
         data-width="1080"
@@ -98,11 +99,11 @@
         style="z-index: 6"
       ></div>
       <div
-        id="pod"
-        data-composition-id="pod"
-        data-composition-src="compositions/pod.html"
-        data-start="16.9"
-        data-duration="3"
+        id="side"
+        data-composition-id="side"
+        data-composition-src="compositions/side.html"
+        data-start="20.1"
+        data-duration="6.35"
         data-track-index="7"
         data-track-kind="graphics"
         data-width="1080"
@@ -110,11 +111,11 @@
         style="z-index: 7"
       ></div>
       <div
-        id="svc"
-        data-composition-id="svc"
-        data-composition-src="compositions/svc.html"
-        data-start="19.9"
-        data-duration="3"
+        id="logo"
+        data-composition-id="logo"
+        data-composition-src="compositions/logo.html"
+        data-start="0"
+        data-duration="4"
         data-track-index="8"
         data-track-kind="graphics"
         data-width="1080"
@@ -122,40 +123,16 @@
         style="z-index: 8"
       ></div>
       <div
-        id="m300"
-        data-composition-id="m300"
-        data-composition-src="compositions/m300.html"
-        data-start="22.9"
-        data-duration="2.7"
+        id="close"
+        data-composition-id="close"
+        data-composition-src="compositions/close.html"
+        data-start="32.55"
+        data-duration="2.85"
         data-track-index="9"
         data-track-kind="graphics"
         data-width="1080"
         data-height="1920"
         style="z-index: 9"
-      ></div>
-      <div
-        id="win"
-        data-composition-id="win"
-        data-composition-src="compositions/win.html"
-        data-start="25.6"
-        data-duration="3.1"
-        data-track-index="10"
-        data-track-kind="graphics"
-        data-width="1080"
-        data-height="1920"
-        style="z-index: 10"
-      ></div>
-      <div
-        id="close"
-        data-composition-id="close"
-        data-composition-src="compositions/close.html"
-        data-start="28.7"
-        data-duration="3.4"
-        data-track-index="11"
-        data-track-kind="graphics"
-        data-width="1080"
-        data-height="1920"
-        style="z-index: 11"
       ></div>
     </div>
     <script>

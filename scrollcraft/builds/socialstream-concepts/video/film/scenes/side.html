@@ -1,0 +1,49 @@
+<template>
+  <style>
+    /*COMMON*/
+    #root .sd-t { position: absolute; left: 192px; top: 0; bottom: 0; width: 1010px; display: flex; flex-direction: column; justify-content: center; }
+    #root .sd-pod .hd { margin-top: 24px; font-size: 150px; white-space: nowrap; }
+    #root .sd-pod .it { font-size: 210px; line-height: 0.9; white-space: nowrap; }
+    #root .sd-k { position: relative; height: 1.25em; overflow: hidden; font-size: %SVCSIZE%px; }
+    #root .sd-k .hd { position: absolute; left: 0; top: 0.1em; white-space: nowrap; font-size: 1em; }
+    @media (orientation: portrait) {
+      #root .sd-t { left: 100px; width: 880px; top: 170px; bottom: auto; justify-content: flex-start; }
+      #root .sd-pod .hd { font-size: 140px; }
+      #root .sd-pod .it { font-size: 190px; }
+      #root .sd-svc { top: 300px; }
+    }
+  </style>
+  <!-- beside the phone: what they make (podcasts and interviews), then the six services, one per swipe -->
+  <div id="root" data-composition-id="side" data-width="%W%" data-height="%H%">
+    <div class="sd-t sd-pod" id="sd-pod">
+      <div class="eb" id="sd-eb"><span class="dot"></span>%PODEB%</div>
+      <div class="hd" id="sd-l1">%POD1%</div>
+      <div class="it" id="sd-l2">%POD2%</div>
+    </div>
+    <div class="sd-t sd-svc" id="sd-svc"><div class="sd-k" id="sd-k">%NAMES%</div></div>
+  </div>
+  <script>
+  (() => {
+    /*COMMONJS*/
+    const tl = gsap.timeline({ paused: true });
+    const N = %NSVC%, step = TM.svcStep, swap = TM.svcSw;
+    // the title comes into focus line by line while the phone settles beside it
+    const t0 = TM.out1 + 0.3;
+    tl.fromTo("#sd-eb", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power2.out" }, AT(t0));
+    tl.fromTo("#sd-l1", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power2.out" }, AT(t0 + 0.12));
+    tl.fromTo("#sd-l2", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power2.out" }, AT(t0 + 0.24));
+    // out just before the first service swipes in, so the two titles never overlap
+    tl.fromTo("#sd-pod", { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in", immediateRender: false }, AT(TM.svc0 - 0.2));
+    // the services: each name rolls up with its swipe, the one before rolls out above
+    for (let i = 0; i < N; i++) tl.fromTo(`#sd-n${i}`, { yPercent: 130 }, { yPercent: 130, duration: 0.01 }, 0);
+    for (let i = 0; i < N; i++) {
+      const at = TM.svc0 + i * step;
+      tl.fromTo(`#sd-n${i}`, { yPercent: 130 }, { yPercent: 0, duration: swap + 0.05, ease: "expo.out", immediateRender: false }, AT(at));
+      if (i > 0) tl.fromTo(`#sd-n${i - 1}`, { yPercent: 0 }, { yPercent: -130, duration: swap, ease: "expo.out", immediateRender: false }, AT(at));
+    }
+    // the camera dives into the phone: the last name goes
+    tl.fromTo("#sd-svc", { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(15px)", duration: 0.3, ease: "power2.in", immediateRender: false }, AT(TM.d2 + 0.05));
+    window.__timelines["side"] = tl;
+  })();
+  </script>
+</template>

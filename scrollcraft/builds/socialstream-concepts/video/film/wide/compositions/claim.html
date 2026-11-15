@@ -7,76 +7,140 @@
 @font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
 @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
 #root { position: absolute; inset: 0; overflow: hidden; color: #eef1f8; font-family: Inter, sans-serif; }
-/* a scene's wrapper fills the frame: its exit moves it, and a moved element becomes what its children are placed in */
-#root [id$="-in"] { position: absolute; inset: 0; }
+/* a full-frame layer: what a camera move scales about the frame's centre */
+#root .ff { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 #root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.02; color: #eef1f8; }
 #root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: 0; color: #d9d6ff; }
-#root .hd .it { font-size: 1.12em; }
 #root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #aab2ff; }
-#root .dot { display: inline-block; width: 12px; height: 12px; margin: 0 16px 4px 0; border-radius: 50%; background: #ff5272; box-shadow: 0 0 14px #ff5272; vertical-align: middle; }
+#root .dot { display: inline-block; width: 12px; height: 12px; margin: 0 16px 4px 0; border-radius: 50%; background: #ff5272; vertical-align: middle; }
 #root .acc { color: #ff5272; }
-/* a revealed line: padded so the clip that wipes it in never cuts an italic overhang or a descender */
-#root .wipe { display: inline-block; padding: 0.14em 0.16em 0.22em; margin: -0.14em -0.16em -0.22em; }
-/* a reel standing like a post, as the film card on the site */
-#root .phone { position: absolute; overflow: hidden; aspect-ratio: 9 / 16; border-radius: 28px; background: #000;
+/* a reel: a 9:16 card playing their footage */
+#root .reel { position: absolute; left: 0; top: 0; overflow: hidden; background: #0b1024; transform-origin: 0 0;
   box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.16), 0 50px 100px -40px rgba(0, 0, 0, 0.85), 0 0 120px -30px rgba(120, 104, 255, 0.55); }
-#root .phone video, #root .panel video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-#root .phone .bar { position: absolute; z-index: 2; left: 14px; right: 14px; top: 13px; height: 3px; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.32); }
-#root .phone .bar i { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; }
-/* footage in a rounded panel, darker at its foot */
-#root .panel { position: absolute; overflow: hidden; border-radius: 30px; background: #0b1024;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 40px 90px -40px rgba(0, 0, 0, 0.85); }
-#root .panel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5, 7, 15, 0) 45%, rgba(5, 7, 15, 0.5)); }
-/* a result: the number counts, its unit and what it was */
-#root .res .n { display: flex; align-items: baseline; gap: 0.06em; }
-#root .res .n b { font: 700 280px/0.9 Sora, Inter, sans-serif; letter-spacing: -0.055em; font-variant-numeric: tabular-nums; color: #eef1f8; }
-#root .res .n small { font: 700 76px/1 Sora, Inter, sans-serif; letter-spacing: -0.04em; color: #c6cbff; }
-#root .res .n small.it { font: italic 400 120px/1 "Instrument Serif", Georgia, serif; letter-spacing: 0; color: #d9d6ff; }
-#root .res .lab { margin-top: 18px; font: 600 40px/1.2 Inter, sans-serif; letter-spacing: -0.01em; color: #eef1f8; }
-#root .res .eb { margin-top: 18px; }
-@media (orientation: portrait) {
-  #root .res .n b { font-size: 250px; }
-  #root .res .n small { font-size: 68px; }
-  #root .res .n small.it { font-size: 108px; }
-  #root .res .lab { font-size: 42px; }
-}
+#root .reel video, #root .reel img, #root .media video, #root .media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* a box holding one piece of footage at its own pixel size; the scene scales it to cover a card */
+#root .media { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0; }
+/* story bars on a reel */
+#root .bars { position: absolute; left: 0; top: 0; display: flex; }
+#root .bars span { position: relative; flex: 1; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.32); }
+#root .bars i { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; }
 
-    #root .cl-g { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-    #root .cl-g .hd { font-size: 132px; }
-    #root .cl-l2 { margin-top: 6px; font-size: 168px; line-height: 1; }
-    #root .cl-s { position: relative; }
-    #cl-strike { position: absolute; left: -0.04em; right: -0.04em; top: 0.53em; height: 0.085em; border-radius: 99px; background: #ff5272; transform-origin: 0 50%; }
-    #root .cl-l4 { margin-top: 10px; }
-    #root .br { display: none; }
+    /* each line is drawn once per word, every copy laid out the same, each copy showing one word: so each word can
+       come from depth on its own, scaling about the frame's centre like something the camera flies towards */
+    #root .cl-txt { position: absolute; left: 192px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+    #root .cl-txt .hd { font-size: 150px; white-space: nowrap; }
+    #root .w { display: inline-block; }
+    #root .w.off { visibility: hidden; }
+    #root .w.ghost { visibility: hidden; }
+    #root .cl-a2 { margin: 6px 0 0 520px; font-size: 280px; line-height: 0.95; white-space: nowrap; }
+    #root .cl-b1 .it { font-size: 1.28em; line-height: 0.9; }
+    #root .cl-b2 { margin-top: 0.12em; }
+    /* the strike: a red-pink bar painted behind "social media", one per line when the words wrap */
+    #root .ss { -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+    #root .strike .ss { background: linear-gradient(#ff5272, #ff5272) no-repeat 0 0.53em / 0% 0.09em; }
+    #root br.t { display: none; }
     @media (orientation: portrait) {
-      #root .cl-g .hd { font-size: 116px; }
-      #root .cl-l2 { font-size: 150px; }
-      #root .br { display: block; }
+      #root .cl-txt { left: 100px; }
+      #root .cl-txt .hd { font-size: 148px; }
+      #root .cl-a2 { margin: 10px 0 0 60px; font-size: 240px; }
+      #root .cl-b1 .it { font-size: 1.22em; }
+      #root br.t { display: inline; }
     }
   </style>
   <!-- the claim, the film's own words: social media is dead, interest took its place -->
   <div id="root" data-composition-id="claim" data-width="1920" data-height="1080">
-    <div class="cl-g" id="cl-a">
-      <div class="hd"><span class="wipe" id="cl-w1">A <span class="cl-s">social media<i id="cl-strike"></i></span></span></div>
-      <div class="it cl-l2"><span class="wipe" id="cl-w2">meghalt.</span></div>
-    </div>
-    <div class="cl-g" id="cl-b">
-      <div class="hd"><span class="wipe" id="cl-w3">Az <span class="it">érdeklődés</span></span></div>
-      <div class="hd cl-l4"><span class="wipe" id="cl-w4">vette át <span class="br"></span>a helyét.</span></div>
-    </div>
+    <div class="ff" id="cl-a"><div class="ff" id="cl-a0"><div class="cl-txt"><div class="hd cl-a1"><span class="w on ">A</span> <span class="ss"><span class="w off ">social</span><br class="t"> <span class="w off ">media</span></span></div><div class="it cl-a2"><span class="w off ">meghalt.</span></div></div></div><div class="ff" id="cl-a1"><div class="cl-txt"><div class="hd cl-a1"><span class="w off ">A</span> <span class="ss"><span class="w on ">social</span><br class="t"> <span class="w off ">media</span></span></div><div class="it cl-a2"><span class="w off ">meghalt.</span></div></div></div><div class="ff" id="cl-a2"><div class="cl-txt"><div class="hd cl-a1"><span class="w off ">A</span> <span class="ss"><span class="w off ">social</span><br class="t"> <span class="w on ">media</span></span></div><div class="it cl-a2"><span class="w off ">meghalt.</span></div></div></div><div class="ff" id="cl-a3"><div class="cl-txt"><div class="hd cl-a1"><span class="w off ">A</span> <span class="ss"><span class="w off ">social</span><br class="t"> <span class="w off ">media</span></span></div><div class="it cl-a2"><span class="w on ">meghalt.</span></div></div></div><div class="ff strike" id="cl-as"><div class="cl-txt"><div class="hd cl-a1"><span class="w ghost ">A</span> <span class="ss"><span class="w ghost ">social</span><br class="t"> <span class="w ghost ">media</span></span></div><div class="it cl-a2"><span class="w ghost ">meghalt.</span></div></div></div></div>
+    <div class="ff" id="cl-b"><div class="ff" id="cl-b0"><div class="cl-txt"><div class="hd cl-b1"><span class="w on ">Az</span><br class="t"> <span class="w off it">érdeklődés</span></div><div class="hd cl-b2"><span class="w off ">vette</span> <span class="w off ">át</span><br class="t"> <span class="w off ">a</span> <span class="w off ">helyét<span class="acc">.</span></span></div></div></div><div class="ff" id="cl-b1"><div class="cl-txt"><div class="hd cl-b1"><span class="w off ">Az</span><br class="t"> <span class="w on it">érdeklődés</span></div><div class="hd cl-b2"><span class="w off ">vette</span> <span class="w off ">át</span><br class="t"> <span class="w off ">a</span> <span class="w off ">helyét<span class="acc">.</span></span></div></div></div><div class="ff" id="cl-b2"><div class="cl-txt"><div class="hd cl-b1"><span class="w off ">Az</span><br class="t"> <span class="w off it">érdeklődés</span></div><div class="hd cl-b2"><span class="w on ">vette</span> <span class="w off ">át</span><br class="t"> <span class="w off ">a</span> <span class="w off ">helyét<span class="acc">.</span></span></div></div></div><div class="ff" id="cl-b3"><div class="cl-txt"><div class="hd cl-b1"><span class="w off ">Az</span><br class="t"> <span class="w off it">érdeklődés</span></div><div class="hd cl-b2"><span class="w off ">vette</span> <span class="w on ">át</span><br class="t"> <span class="w off ">a</span> <span class="w off ">helyét<span class="acc">.</span></span></div></div></div><div class="ff" id="cl-b4"><div class="cl-txt"><div class="hd cl-b1"><span class="w off ">Az</span><br class="t"> <span class="w off it">érdeklődés</span></div><div class="hd cl-b2"><span class="w off ">vette</span> <span class="w off ">át</span><br class="t"> <span class="w on ">a</span> <span class="w off ">helyét<span class="acc">.</span></span></div></div></div><div class="ff" id="cl-b5"><div class="cl-txt"><div class="hd cl-b1"><span class="w off ">Az</span><br class="t"> <span class="w off it">érdeklődés</span></div><div class="hd cl-b2"><span class="w off ">vette</span> <span class="w off ">át</span><br class="t"> <span class="w off ">a</span> <span class="w on ">helyét<span class="acc">.</span></span></div></div></div></div>
   </div>
   <script>
+  (() => {
+        // Shared by every scene (build.py puts it at the top of each scene's script): the film's clock, the frame and
+    // the stream's camera. Every time is in seconds of the whole film; AT(t) turns one into this scene's own time.
+    const TM = {"total": 35.4, "dive0": 3.25, "dive0d": 0.7, "claim": 3.85, "strike": 4.62, "meghalt": 5.0, "claA_out": 6.55, "claB": 6.8, "claB_out": 8.85, "s0": 8.9, "land": 11.3, "f": 1000, "travel": 6000, "flyxT": 11.4, "d1": 13.85, "d1d": 0.55, "sw": 0.38, "swRoas": 14.75, "swMft": 17.15, "swPod": 19.55, "out1": 19.9, "out1d": 0.7, "svc0": 23.05, "svcStep": 0.5, "svcSw": 0.3, "d2": 26.05, "d2d": 0.6, "swWin": 28.85, "swLast": 31.35, "back": 31.75, "backd": 0.8, "closeBand": 32.55, "logoIn": 32.85, "logoOut": 34.45, "wallOut": 34.55};
+    const START = 3.8, AT = (t) => t - START;
+    const W = 1920, H = 1080, TALL = H > W, CX = W / 2, CY = H / 2;
+    const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+    const lerp = (a, b, p) => a + (b - a) * p;
+    const EZ = {};
+    const ez = (name, p) => (EZ[name] || (EZ[name] = gsap.parseEase(name)))(clamp01(p));
+    // the stream's camera: from TM.s0 it flies TM.travel px forward and brakes (power2.out) until TM.land
+    const camZ = (t) => TM.travel * ez("power2.out", (t - TM.s0) / (TM.land - TM.s0));
+    // a card standing at world (X, Y, Z) seen at time t: its centre on screen, its scale and its depth
+    const project = (X, Y, Z, t) => {
+      const D = Z - camZ(t), s = TM.f / D;
+      return { x: CX + X * s, y: CY + Y * s, s, D };
+    };
+    // the scale that makes a bw x bh box cover a rw x rh window (object-fit: cover)
+    const cover = (bw, bh, rw, rh) => Math.max(rw / bw, rh / bh);
+    // footage covering a rect R: its focus (fx, fy, 0-1) as near the rect's centre as the cover allows; dy moves it
+    // down by that much (a swipe). Returns the top-left corner and the scale
+    const coverAt = (bw, bh, R, fx, fy, dy) => {
+      const z = cover(bw, bh, R.w, R.h), sw = bw * z, sh = bh * z, x0 = R.cx - R.w / 2, y0 = R.cy - R.h / 2;
+      const x = Math.min(x0, Math.max(x0 + R.w - sw, R.cx - sw * fx));
+      const y = Math.min(y0, Math.max(y0 + R.h - sh, R.cy - sh * fy));
+      return { x, y: y + dy, z };
+    };
+    // a rect {cx, cy, w, h, r} part of the way to another
+    const mixRect = (a, b, p) => ({ cx: lerp(a.cx, b.cx, p), cy: lerp(a.cy, b.cy, p), w: lerp(a.w, b.w, p),
+      h: lerp(a.h, b.h, p), r: lerp(a.r, b.r, p) });
+    const insetOf = (R) => `inset(${(R.cy - R.h / 2).toFixed(2)}px ${(W - R.cx - R.w / 2).toFixed(2)}px ` +
+      `${(H - R.cy - R.h / 2).toFixed(2)}px ${(R.cx - R.w / 2).toFixed(2)}px round ${Math.max(0, R.r).toFixed(2)}px)`;
+    // Turns a drawing that is a function of time into ordinary tweens, which the player seeks like every other
+    // animation (it re-renders nested timelines its own way, and code run from onUpdate or modifiers does not reliably
+    // run again on each frame). draw(t, put) is called once for every frame of [from, to] while the scene is set up,
+    // and reports with put(el, prop, value) what it would set. Each element's property then becomes a chain of
+    // tweens, one per run of frames where it moves at a steady rate (a held value needs none), so every frame gets
+    // exactly the value drawn for it. Text values (visibility, display) become sets where they change.
+    const FPS = 25;
+    const bake = (tl, from, to, draw) => {
+      const n = Math.round((to - from) * FPS), tracks = new Map();
+      for (let i = 0; i <= n; i++) {
+        draw(from + i / FPS, (el, prop, v) => {
+          let m = tracks.get(el);
+          if (!m) tracks.set(el, (m = new Map()));
+          let a = m.get(prop);
+          if (!a) m.set(prop, (a = new Array(n + 1)));
+          a[i] = v;
+        });
+      }
+      const at = (i) => AT(from) + i / FPS;
+      tracks.forEach((m, el) => m.forEach((a, prop) => {
+        for (let i = 1; i <= n; i++) if (a[i] === undefined) a[i] = a[i - 1];
+        if (a[0] === undefined) a[0] = a.find((v) => v !== undefined);
+        tl.set(el, { [prop]: a[0] }, at(0));
+        if (typeof a[0] !== "number") {          // a text value: set it where it changes
+          // a quarter frame early, so a seek that lands a hair before the frame's time still gets it
+          for (let i = 1; i <= n; i++) if (a[i] !== a[i - 1]) tl.set(el, { [prop]: a[i] }, at(i) - 0.25 / FPS);
+          return;
+        }
+        let i0 = 0;
+        while (i0 < n) {
+          // the longest run from i0 along which the value moves at a steady rate
+          let i1 = i0 + 1;
+          const lin = (j, k) => { for (let q = i0 + 1; q < k; q++) { const e = a[i0] + (a[k] - a[i0]) * (q - i0) / (k - i0); if (Math.abs(a[q] - e) > 0.02) return false; } return true; };
+          while (i1 + 1 <= n && lin(i0, i1 + 1)) i1++;
+          if (a[i1] !== a[i0]) tl.fromTo(el, { [prop]: a[i0] }, { [prop]: a[i1], duration: (i1 - i0) / FPS, ease: "none", immediateRender: false }, at(i0));
+          i0 = i1;
+        }
+      }));
+    };
+
     const tl = gsap.timeline({ paused: true });
-    const wipe = (sel, at) => tl.fromTo(sel, { clipPath: "inset(0% 100% 0% 0%)", x: -24 }, { clipPath: "inset(0% 0% 0% 0%)", x: 0, duration: 0.6, ease: "power3.out" }, at);
-    // "A social media", struck through, "meghalt."
-    wipe("#cl-w1", 0.05);
-    tl.fromTo("#cl-strike", { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: "power2.inOut" }, 0.85);
-    tl.fromTo("#cl-w2", { opacity: 0, y: 22, filter: "blur(14px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }, 1.35);
-    tl.fromTo("#cl-a", { opacity: 1, y: 0, filter: "blur(0px)" }, { opacity: 0, y: -18, filter: "blur(8px)", duration: 0.22, ease: "power2.in" }, 2.75);
-    // "Az érdeklődés vette át a helyét."
-    wipe("#cl-w3", 3.0);
-    wipe("#cl-w4", 3.42);
-    tl.fromTo("#cl-b", { opacity: 1, y: 0, filter: "blur(0px)" }, { opacity: 0, y: -18, filter: "blur(8px)", duration: 0.22, ease: "power2.in", immediateRender: false }, 4.78);
+    // a word arrives from depth: it grows from 42 % about the frame's centre while it sharpens
+    const arrive = (sel, at) => tl.fromTo(sel, { scale: 0.42, opacity: 0, filter: "blur(12px)" },
+      { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.65, ease: "expo.out" }, AT(at));
+    // a line flies past the camera
+    const past = (sel, at) => tl.fromTo(sel, { scale: 1, opacity: 1, filter: "blur(0px)" },
+      { scale: 3.2, opacity: 0, filter: "blur(18px)", duration: 0.4, ease: "power3.in", immediateRender: false }, AT(at));
+    // "A social media", struck through, "meghalt." (English: "Social media", struck through, "is dead.")
+    for (let k = 0; k < 3; k++) arrive(`#cl-a${k}`, TM.claim + k * 0.07);
+    tl.fromTo("#cl-as .ss", { backgroundSize: "0% 0.09em" }, { backgroundSize: "100% 0.09em", duration: 0.36, ease: "expo.inOut" }, AT(TM.strike));
+    tl.fromTo("#cl-a3", { y: -60, opacity: 0, filter: "blur(14px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }, AT(TM.meghalt));
+    past("#cl-a", TM.claA_out);
+    // "Az érdeklődés vette át a helyét." (English: "Interest has taken its place.")
+    for (let k = 0; k < 6; k++) arrive(`#cl-b${k}`, TM.claB + k * 0.07);
+    past("#cl-b", TM.claB_out);
     window.__timelines["claim"] = tl;
+  })();
   </script>
 </template>

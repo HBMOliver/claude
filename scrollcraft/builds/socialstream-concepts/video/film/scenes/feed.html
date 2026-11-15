@@ -1,0 +1,136 @@
+<template>
+  <style>
+    /*COMMON*/
+    /* the phone: one card from the moment it lands in the stream until it hands over to the closing wall. The card
+       is a full-frame layer cut to the phone's shape (clip-path), so it can grow into the frame and shrink back;
+       its slides swipe up inside it like reels */
+    #fd-card { position: absolute; inset: 0; overflow: hidden; }
+    #fd-shadow, #fd-ring { position: absolute; left: 0; top: 0; pointer-events: none; }
+    #fd-shadow { background: #0b1024; box-shadow: 0 50px 100px -40px rgba(0, 0, 0, 0.85), 0 0 120px -30px rgba(120, 104, 255, 0.55); }
+    #fd-ring { box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.16); z-index: 3; }
+    #fd-bars { z-index: 4; }
+    #root .slw { position: absolute; left: 0; top: 0; width: %W%px; height: %H%px; visibility: hidden; }
+    /* a slide made of type: the site's ground with two lights of its own */
+    #root .sl-t { position: absolute; left: 0; top: 0; width: %W%px; height: %H%px; overflow: hidden; background: #05070f; }
+    #root .sl-t .lt { position: absolute; border-radius: 50%; }
+    #root .nb { position: absolute; left: 192px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+    #root .num { display: flex; align-items: baseline; margin-top: 10px; font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.05em; }
+    #root .num .dg { position: relative; display: inline-block; flex: none; height: 0.82em; overflow: hidden; font-size: 470px; line-height: 0.82; }
+    #root .num .ds { display: block; text-align: left; }
+    #root .num .ds b { display: block; height: 0.82em; font-weight: 700; }
+    #root .num .x { font-size: 300px; line-height: 0.82; margin-left: 0.02em; }
+    #root .num .u { font-size: 118px; line-height: 1; margin-left: 0.18em; color: #c6cbff; letter-spacing: -0.03em; }
+    #root .num .ui { font: italic 400 240px/0.82 "Instrument Serif", Georgia, serif; letter-spacing: 0; margin-left: 0.14em; color: #d9d6ff; }
+    #root .lab { margin-top: 34px; font: 600 50px/1.2 Inter, sans-serif; letter-spacing: -0.01em; color: #eef1f8; }
+    #root .lab span { display: inline-block; }
+    #root .wn { position: absolute; left: 192px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+    #root .wn .hd { font-size: 168px; white-space: nowrap; }
+    #root .wn .it { font-size: 290px; line-height: 0.9; margin-left: 560px; white-space: nowrap; }
+    #root .wn span { display: inline-block; }
+    #root br.t { display: none; }
+    @media (orientation: portrait) {
+      #root .nb, #root .wn { left: 100px; }
+      #root .num .dg { font-size: 300px; }
+      #root .num .x { font-size: 190px; }
+      #root .num .u { font-size: 84px; }
+      #root .num .ui { font-size: 150px; }
+      #root .lab { font-size: 46px; }
+      #root .wn .hd { font-size: 150px; }
+      #root .wn .it { font-size: 250px; margin-left: 0; }
+      #root br.t { display: inline; }
+    }
+  </style>
+  <div id="root" data-composition-id="feed" data-width="%W%" data-height="%H%">
+    <div id="fd-shadow"></div>
+    <div id="fd-card">%SLIDES%</div>
+    <div id="fd-ring"></div>
+    <div class="bars" id="fd-bars">%BARS%</div>
+  </div>
+  <script>
+  (() => {
+    /*COMMONJS*/
+    const tl = gsap.timeline({ paused: true });
+    const SLIDES = %SLIDEDATA%;          // id, kind (m: footage, t: type), box size, when it swipes in
+    const PH = %PHONE%;                  // the phone's size and where it stands for FlyX and for the podcast
+    const GROUPS = %BARGROUPS%;          // the story bars: which segments show when
+    const full = { cx: CX, cy: CY, w: W, h: H, r: 0 };
+    const atFlyx = { cx: PH.flyx[0], cy: PH.flyx[1], w: PH.w, h: PH.h, r: PH.r };
+    const atPod = { cx: PH.pod[0], cy: PH.pod[1], w: PH.w, h: PH.h, r: PH.r };
+    const HERO_Z = TM.f + TM.travel;    // the FlyX reel stands where the camera stops one focal length short of it
+    const span = (t, t0, d, e) => ez(e, (t - t0) / d);
+    // where the card is at time t
+    const rectAt = (t) => {
+      if (t < TM.land) {
+        const P = project(atFlyx.cx - CX, atFlyx.cy - CY, HERO_Z, t);
+        return { cx: P.x, cy: P.y, w: PH.w * P.s, h: PH.h * P.s, r: PH.r * P.s, a: clamp01((t - TM.s0) / 0.35) };
+      }
+      if (t < TM.d1) return atFlyx;
+      if (t < TM.out1) return mixRect(atFlyx, full, span(t, TM.d1, TM.d1d, "power3.inOut"));
+      if (t < TM.d2) return mixRect(full, atPod, span(t, TM.out1, TM.out1d, "power3.inOut"));
+      return mixRect(atPod, full, span(t, TM.d2, TM.d2d, "power3.inOut"));
+    };
+    // which slides show at time t, each with its offset in card heights (0: in place, -1: swiped out above)
+    const slidesAt = (t) => {
+      let c = 0;
+      for (let i = 1; i < SLIDES.length; i++) if (SLIDES[i].tin <= t) c = i;
+      const s = SLIDES[c];
+      if (c > 0 && t < s.tin + s.din) {
+        const p = ez(s.ease, (t - s.tin) / s.din);
+        return [[c - 1, -p], [c, 1 - p]];
+      }
+      return [[c, 0]];
+    };
+    const card = document.getElementById("fd-card"), shadow = document.getElementById("fd-shadow");
+    const ring = document.getElementById("fd-ring"), bars = document.getElementById("fd-bars");
+    const segs = [...bars.children], fills = segs.map((s) => s.firstElementChild);
+    const els = SLIDES.map((s) => document.getElementById(s.id)), wins = SLIDES.map((s) => document.getElementById(s.win));
+    const r2 = (v) => +v.toFixed(2);
+    const place = (put, el, R) => {
+      put(el, "x", r2(R.cx - R.w / 2)); put(el, "y", r2(R.cy - R.h / 2));
+      put(el, "width", r2(R.w)); put(el, "height", r2(R.h)); put(el, "borderRadius", r2(Math.max(0, R.r)));
+    };
+    const draw = (t, put) => {
+      const R = rectAt(t), a = R.a === undefined ? 1 : R.a;
+      const phi = clamp01((R.w - PH.w) / (W - PH.w));          // 0: a phone, 1: the whole frame
+      const k = Math.min(1, R.w / PH.w);                        // the phone's own scale while it is far
+      put(card, "clipPath", insetOf(R));
+      put(card, "opacity", +a.toFixed(4));
+      place(put, shadow, R); place(put, ring, R);
+      put(shadow, "opacity", +(a * (1 - phi)).toFixed(4)); put(ring, "opacity", +(a * (1 - phi)).toFixed(4));
+      // the slides
+      const on = new Map(slidesAt(t));
+      SLIDES.forEach((s, i) => {
+        const el = els[i], win = wins[i];
+        put(win, "visibility", on.has(i) ? "visible" : "hidden");
+        if (!on.has(i)) return;
+        const off = on.get(i) * R.h;
+        // while it is swiped, the slide shows only through a card-shaped window where it is
+        put(win, "clipPath", off === 0 ? "none" : insetOf({ cx: R.cx, cy: R.cy + off, w: R.w, h: R.h, r: 0 }));
+        if (s.kind === "t") {
+          put(el, "x", r2(R.cx - CX)); put(el, "y", r2(R.cy - CY + off));
+        } else {
+          const c = coverAt(s.bw, s.bh, R, s.fx, s.fy, off);
+          put(el, "x", r2(c.x)); put(el, "y", r2(c.y)); put(el, "scale", +c.z.toFixed(5));
+        }
+      });
+      // the story bars along the card's top edge
+      const g = GROUPS.find((g) => t >= g.from && t < g.to) || GROUPS[GROUPS.length - 1];
+      const m = lerp(14 * k, 48, phi), top = lerp(13 * k, 30, phi), th = lerp(3 * k, 4, phi), gap = lerp(5 * k, 8, phi);
+      put(bars, "x", r2(R.cx - R.w / 2 + m)); put(bars, "y", r2(R.cy - R.h / 2 + top));
+      put(bars, "width", r2(Math.max(0, R.w - 2 * m))); put(bars, "gap", `${gap.toFixed(2)}px`);
+      put(bars, "opacity", +a.toFixed(4));
+      segs.forEach((sg, j) => {
+        put(sg, "display", j < g.segs.length ? "block" : "none");
+        if (j >= g.segs.length) return;
+        put(sg, "height", r2(th));
+        const [s0, s1] = g.segs[j];
+        put(fills[j], "scaleX", +clamp01((t - s0) / (s1 - s0)).toFixed(4));
+      });
+    };
+    bake(tl, TM.s0, TM.back, draw);
+    // inside the type slides: the numbers roll like an odometer, then what they were comes in word by word
+    %SLIDEJS%
+    window.__timelines["feed"] = tl;
+  })();
+  </script>
+</template>

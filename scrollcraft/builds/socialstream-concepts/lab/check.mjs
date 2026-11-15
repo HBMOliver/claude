@@ -120,7 +120,13 @@ for (const name of names) {
     await p.locator('[data-set-lang="en"]').first().click(); await p.waitForTimeout(400);
     const en = await p.evaluate(() => ({ h1: document.querySelector('#hero-h [data-l="en"]').textContent.replace(/\s+/g, ' ').trim(), nav: document.querySelector('.nav .links a').textContent.trim(), cta: document.querySelector('#top a.btn[href="#audit"]').textContent.trim(), hu: [...document.querySelectorAll('[data-l="hu"]')].filter(e => e.offsetParent !== null).length }));
     ok(`${dev}: English`, en.h1 === CLAIM_EN && en.nav === 'Results' && en.cta === 'Get my free audit' && en.hu === 0, JSON.stringify(en));
+    // the film follows the language: every film that has a source has the English one, then the Hungarian one again
+    const filmSrcs = () => p.evaluate(() => [...document.querySelectorAll('[data-film] video')].map(v => v.getAttribute('src') || '').filter(Boolean));
+    const enFilms = await filmSrcs();
+    ok(`${dev}: the film in English`, enFilms.every(s => /-en\.mp4$/.test(s)), JSON.stringify(enFilms));
     await p.locator('[data-set-lang="hu"]').first().click(); await p.waitForTimeout(300);
+    const huFilms = await filmSrcs();
+    ok(`${dev}: the film back in Hungarian`, huFilms.every(s => !/-en\.mp4$/.test(s)), JSON.stringify(huFilms));
     ok(`${dev}: eight questions`, (await p.evaluate(() => document.querySelectorAll('.faq-list details').length)) === 8);
     ok(`${dev}: no page errors`, !errs.length, errs.join(' | '));
     await ctx.close();

@@ -1,42 +1,52 @@
 <template>
   <style>
     /*COMMON*/
-    #root .cl-g { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-    #root .cl-g .hd { font-size: 132px; }
-    #root .cl-l2 { margin-top: 6px; font-size: 168px; line-height: 1; }
-    #root .cl-s { position: relative; }
-    #cl-strike { position: absolute; left: -0.04em; right: -0.04em; top: 0.53em; height: 0.085em; border-radius: 99px; background: #ff5272; transform-origin: 0 50%; }
-    #root .cl-l4 { margin-top: 10px; }
-    #root .br { display: none; }
+    /* each line is drawn once per word, every copy laid out the same, each copy showing one word: so each word can
+       come from depth on its own, scaling about the frame's centre like something the camera flies towards */
+    #root .cl-txt { position: absolute; left: 192px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+    #root .cl-txt .hd { font-size: 150px; white-space: nowrap; }
+    #root .w { display: inline-block; }
+    #root .w.off { visibility: hidden; }
+    #root .w.ghost { visibility: hidden; }
+    #root .cl-a2 { margin: 6px 0 0 520px; font-size: 280px; line-height: 0.95; white-space: nowrap; }
+    #root .cl-b1 .it { font-size: 1.28em; line-height: 0.9; }
+    #root .cl-b2 { margin-top: 0.12em; }
+    /* the strike: a red-pink bar painted behind "social media", one per line when the words wrap */
+    #root .ss { -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+    #root .strike .ss { background: linear-gradient(#ff5272, #ff5272) no-repeat 0 0.53em / 0% 0.09em; }
+    #root br.t { display: none; }
     @media (orientation: portrait) {
-      #root .cl-g .hd { font-size: 116px; }
-      #root .cl-l2 { font-size: 150px; }
-      #root .br { display: block; }
+      #root .cl-txt { left: 100px; }
+      #root .cl-txt .hd { font-size: 148px; }
+      #root .cl-a2 { margin: 10px 0 0 60px; font-size: 240px; }
+      #root .cl-b1 .it { font-size: 1.22em; }
+      #root br.t { display: inline; }
     }
   </style>
   <!-- the claim, the film's own words: social media is dead, interest took its place -->
   <div id="root" data-composition-id="claim" data-width="%W%" data-height="%H%">
-    <div class="cl-g" id="cl-a">
-      <div class="hd"><span class="wipe" id="cl-w1">A <span class="cl-s">social media<i id="cl-strike"></i></span></span></div>
-      <div class="it cl-l2"><span class="wipe" id="cl-w2">meghalt.</span></div>
-    </div>
-    <div class="cl-g" id="cl-b">
-      <div class="hd"><span class="wipe" id="cl-w3">Az <span class="it">érdeklődés</span></span></div>
-      <div class="hd cl-l4"><span class="wipe" id="cl-w4">vette át <span class="br"></span>a helyét.</span></div>
-    </div>
+    <div class="ff" id="cl-a">%LINEA%</div>
+    <div class="ff" id="cl-b">%LINEB%</div>
   </div>
   <script>
+  (() => {
+    /*COMMONJS*/
     const tl = gsap.timeline({ paused: true });
-    const wipe = (sel, at) => tl.fromTo(sel, { clipPath: "inset(0% 100% 0% 0%)", x: -24 }, { clipPath: "inset(0% 0% 0% 0%)", x: 0, duration: 0.6, ease: "power3.out" }, at);
-    // "A social media", struck through, "meghalt."
-    wipe("#cl-w1", 0.05);
-    tl.fromTo("#cl-strike", { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: "power2.inOut" }, 0.85);
-    tl.fromTo("#cl-w2", { opacity: 0, y: 22, filter: "blur(14px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }, 1.35);
-    tl.fromTo("#cl-a", { opacity: 1, y: 0, filter: "blur(0px)" }, { opacity: 0, y: -18, filter: "blur(8px)", duration: 0.22, ease: "power2.in" }, 2.75);
-    // "Az érdeklődés vette át a helyét."
-    wipe("#cl-w3", 3.0);
-    wipe("#cl-w4", 3.42);
-    tl.fromTo("#cl-b", { opacity: 1, y: 0, filter: "blur(0px)" }, { opacity: 0, y: -18, filter: "blur(8px)", duration: 0.22, ease: "power2.in", immediateRender: false }, 4.78);
+    // a word arrives from depth: it grows from 42 % about the frame's centre while it sharpens
+    const arrive = (sel, at) => tl.fromTo(sel, { scale: 0.42, opacity: 0, filter: "blur(12px)" },
+      { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.65, ease: "expo.out" }, AT(at));
+    // a line flies past the camera
+    const past = (sel, at) => tl.fromTo(sel, { scale: 1, opacity: 1, filter: "blur(0px)" },
+      { scale: 3.2, opacity: 0, filter: "blur(18px)", duration: 0.4, ease: "power3.in", immediateRender: false }, AT(at));
+    // "A social media", struck through, "meghalt." (English: "Social media", struck through, "is dead.")
+    for (let k = 0; k < %NA%; k++) arrive(`#cl-a${k}`, TM.claim + k * 0.07);
+    tl.fromTo("#cl-as .ss", { backgroundSize: "0% 0.09em" }, { backgroundSize: "100% 0.09em", duration: 0.36, ease: "expo.inOut" }, AT(TM.strike));
+    tl.fromTo("#cl-a%NA%", { y: -60, opacity: 0, filter: "blur(14px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }, AT(TM.meghalt));
+    past("#cl-a", TM.claA_out);
+    // "Az érdeklődés vette át a helyét." (English: "Interest has taken its place.")
+    for (let k = 0; k < %NB%; k++) arrive(`#cl-b${k}`, TM.claB + k * 0.07);
+    past("#cl-b", TM.claB_out);
     window.__timelines["claim"] = tl;
+  })();
   </script>
 </template>

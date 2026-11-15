@@ -1,0 +1,35 @@
+<template>
+  <style>
+    /*COMMON*/
+  </style>
+  <!-- interest took its place: the camera flies through their work. Their reels stand in depth and rush past on all
+       sides while the camera brakes; the FlyX reel, furthest away, lands in front of it (that reel is in the feed
+       scene, compositions/feed.html, which carries it on) -->
+  <div id="root" data-composition-id="stream" data-width="%W%" data-height="%H%">
+    %REELS%
+  </div>
+  <script>
+  (() => {
+    /*COMMONJS*/
+    const tl = gsap.timeline({ paused: true });
+    const REELS = %REELDATA%;              // world position (X, Y, Z) and size of each reel, from build.py
+    const els = REELS.map((r, i) => document.getElementById(`st-r${i}`));
+    const draw = (t, put) => {
+      REELS.forEach((r, i) => {
+        const el = els[i], P = project(r.X, r.Y, r.Z, t);
+        // it comes out of the dark far away (and as the stream begins); by the time it is close it has left the frame
+        const a = P.D <= TM.f * 0.2 ? 0 : clamp01((TM.f * 7.2 - P.D) / (TM.f * 1.2)) * clamp01((t - TM.s0) / 0.35);
+        put(el, "visibility", a > 0 ? "visible" : "hidden");
+        if (a <= 0) return;
+        put(el, "opacity", +a.toFixed(4));
+        put(el, "zIndex", Math.round(20000 - P.D));
+        put(el, "x", +(P.x - r.w * P.s / 2).toFixed(2));
+        put(el, "y", +(P.y - r.h * P.s / 2).toFixed(2));
+        put(el, "scale", +P.s.toFixed(5));
+      });
+    };
+    bake(tl, TM.s0, TM.land, draw);
+    window.__timelines["stream"] = tl;
+  })();
+  </script>
+</template>

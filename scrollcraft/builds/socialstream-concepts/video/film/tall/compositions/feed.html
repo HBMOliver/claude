@@ -1,0 +1,244 @@
+<template>
+  <style>
+    /* Shared by every scene of the brand film (build.py puts it into each scene's style block). The site's own type and
+   palette: Sora for headlines, Instrument Serif italic for the accent word, Inter for small type; blue-purple light,
+   red-pink as the accent. One file serves both cuts: the tall cut's changes are under the portrait query. */
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
+#root { position: absolute; inset: 0; overflow: hidden; color: #eef1f8; font-family: Inter, sans-serif; }
+/* a full-frame layer: what a camera move scales about the frame's centre */
+#root .ff { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+#root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.02; color: #eef1f8; }
+#root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: 0; color: #d9d6ff; }
+#root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #aab2ff; }
+#root .dot { display: inline-block; width: 12px; height: 12px; margin: 0 16px 4px 0; border-radius: 50%; background: #ff5272; vertical-align: middle; }
+#root .acc { color: #ff5272; }
+/* a reel: a 9:16 card playing their footage */
+#root .reel { position: absolute; left: 0; top: 0; overflow: hidden; background: #0b1024; transform-origin: 0 0;
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.16), 0 50px 100px -40px rgba(0, 0, 0, 0.85), 0 0 120px -30px rgba(120, 104, 255, 0.55); }
+#root .reel video, #root .reel img, #root .media video, #root .media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* a box holding one piece of footage at its own pixel size; the scene scales it to cover a card */
+#root .media { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0; }
+/* story bars on a reel */
+#root .bars { position: absolute; left: 0; top: 0; display: flex; }
+#root .bars span { position: relative; flex: 1; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.32); }
+#root .bars i { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; }
+
+    /* the phone: one card from the moment it lands in the stream until it hands over to the closing wall. The card
+       is a full-frame layer cut to the phone's shape (clip-path), so it can grow into the frame and shrink back;
+       its slides swipe up inside it like reels */
+    #fd-card { position: absolute; inset: 0; overflow: hidden; }
+    #fd-shadow, #fd-ring { position: absolute; left: 0; top: 0; pointer-events: none; }
+    #fd-shadow { background: #0b1024; box-shadow: 0 50px 100px -40px rgba(0, 0, 0, 0.85), 0 0 120px -30px rgba(120, 104, 255, 0.55); }
+    #fd-ring { box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.16); z-index: 3; }
+    #fd-bars { z-index: 4; }
+    #root .slw { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; visibility: hidden; }
+    /* a slide made of type: the site's ground with two lights of its own */
+    #root .sl-t { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; background: #05070f; }
+    #root .sl-t .lt { position: absolute; border-radius: 50%; }
+    #root .nb { position: absolute; left: 192px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+    #root .num { display: flex; align-items: baseline; margin-top: 10px; font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.05em; }
+    #root .num .dg { position: relative; display: inline-block; flex: none; height: 0.82em; overflow: hidden; font-size: 470px; line-height: 0.82; }
+    #root .num .ds { display: block; text-align: left; }
+    #root .num .ds b { display: block; height: 0.82em; font-weight: 700; }
+    #root .num .x { font-size: 300px; line-height: 0.82; margin-left: 0.02em; }
+    #root .num .u { font-size: 118px; line-height: 1; margin-left: 0.18em; color: #c6cbff; letter-spacing: -0.03em; }
+    #root .num .ui { font: italic 400 240px/0.82 "Instrument Serif", Georgia, serif; letter-spacing: 0; margin-left: 0.14em; color: #d9d6ff; }
+    #root .lab { margin-top: 34px; font: 600 50px/1.2 Inter, sans-serif; letter-spacing: -0.01em; color: #eef1f8; }
+    #root .lab span { display: inline-block; }
+    #root .wn { position: absolute; left: 192px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+    #root .wn .hd { font-size: 168px; white-space: nowrap; }
+    #root .wn .it { font-size: 290px; line-height: 0.9; margin-left: 560px; white-space: nowrap; }
+    #root .wn span { display: inline-block; }
+    #root br.t { display: none; }
+    @media (orientation: portrait) {
+      #root .nb, #root .wn { left: 100px; }
+      #root .num .dg { font-size: 300px; }
+      #root .num .x { font-size: 190px; }
+      #root .num .u { font-size: 84px; }
+      #root .num .ui { font-size: 150px; }
+      #root .lab { font-size: 46px; }
+      #root .wn .hd { font-size: 150px; }
+      #root .wn .it { font-size: 250px; margin-left: 0; }
+      #root br.t { display: inline; }
+    }
+  </style>
+  <div id="root" data-composition-id="feed" data-width="1080" data-height="1920">
+    <div id="fd-shadow"></div>
+    <div id="fd-card"><div class="slw" id="slw-flyx"><div class="sl media" id="sl-flyx" style="width:1080px;height:1920px"><video id="sl-v-flyx" class="clip" src="assets/clips/ph-flyx.mp4" data-start="0.00" data-duration="6.35" data-media-start="0.00" data-hf-media-start-basis="local" data-track-index="1" muted playsinline></video></div></div><div class="slw" id="slw-roas"><div class="sl sl-t" id="sl-roas"><i class="lt" style="left:86%;top:78%;width:70vmax;height:70vmax;margin:-35.0vmax 0 0 -35.0vmax;background:radial-gradient(closest-side, rgba(136, 78, 255, 0.5), rgba(136, 78, 255, 0))"></i><i class="lt" style="left:78%;top:8%;width:34vmax;height:34vmax;margin:-17.0vmax 0 0 -17.0vmax;background:radial-gradient(closest-side, rgba(255, 64, 104, 0.32), rgba(255, 64, 104, 0))"></i><div class="nb"><div class="eb" id="roas-eb"><span class="dot"></span>Ajtó webshop · Google PMax</div><div class="num"><span class="dg" style="width:0.617em"><span class="ds" id="roas-c0"><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span><span class="dg" style="width:0.378em"><span class="ds" id="roas-c1"><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span><span class="x acc">×</span><span class="u">ROAS</span></div><div class="lab" id="roas-lab"><span>legjobb</span> <span>eredmény</span></div></div></div></div><div class="slw" id="slw-mft"><div class="sl sl-t" id="sl-mft"><i class="lt" style="left:90%;top:30%;width:66vmax;height:66vmax;margin:-33.0vmax 0 0 -33.0vmax;background:radial-gradient(closest-side, rgba(66, 92, 255, 0.5), rgba(66, 92, 255, 0))"></i><i class="lt" style="left:60%;top:100%;width:40vmax;height:40vmax;margin:-20.0vmax 0 0 -20.0vmax;background:radial-gradient(closest-side, rgba(255, 64, 104, 0.3), rgba(255, 64, 104, 0))"></i><div class="nb"><div class="eb" id="mft-eb"><span class="dot"></span>B2B Meta kampány</div><div class="num"><span class="dg" style="width:0.557em"><span class="ds" id="mft-c0"><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span><span class="dg" style="width:0.637em"><span class="ds" id="mft-c1"><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span><span class="ui">M Ft</span></div><div class="lab" id="mft-lab"><span>bevétel</span> <span>egy</span> <span>hét</span> <span>alatt</span></div></div></div></div><div class="slw" id="slw-pod"><div class="sl media" id="sl-pod" style="width:1080px;height:1920px"><video id="sl-v-pod" class="clip" src="assets/clips/ph-pod.mp4" data-start="10.53" data-duration="4.04" data-media-start="0.00" data-hf-media-start-basis="local" data-track-index="4" muted playsinline></video></div></div><div class="slw" id="slw-svc0"><div class="sl media" id="sl-svc0" style="width:1080px;height:1920px"><video id="sl-v-svc0" class="clip" src="assets/clips/ph-svc-video.mp4" data-start="14.03" data-duration="1.04" data-media-start="0.00" data-hf-media-start-basis="local" data-track-index="5" muted playsinline></video></div></div><div class="slw" id="slw-svc1"><div class="sl media" id="sl-svc1" style="width:1080px;height:1920px"><video id="sl-v-svc1" class="clip" src="assets/clips/ph-svc-social.mp4" data-start="14.53" data-duration="1.04" data-media-start="0.00" data-hf-media-start-basis="local" data-track-index="6" muted playsinline></video></div></div><div class="slw" id="slw-svc2"><div class="sl media" id="sl-svc2" style="width:1080px;height:1920px"><video id="sl-v-svc2" class="clip" src="assets/clips/ph-svc-ads.mp4" data-start="15.03" data-duration="1.04" data-media-start="0.00" data-hf-media-start-basis="local" data-track-index="7" muted playsinline></video></div></div><div class="slw" id="slw-svc3"><div class="sl media" id="sl-svc3" style="width:1080px;height:1920px"><video id="sl-v-svc3" class="clip" src="assets/clips/ph-svc-web.mp4" data-start="15.53" data-duration="1.04" data-media-start="0.00" data-hf-media-start-basis="local" data-track-index="8" muted playsinline></video></div></div><div class="slw" id="slw-svc4"><div class="sl media" id="sl-svc4" style="width:1080px;height:1920px"><video id="sl-v-svc4" class="clip" src="assets/clips/ph-svc-auto.mp4" data-start="16.03" data-duration="1.04" data-media-start="0.00" data-hf-media-start-basis="local" data-track-index="9" muted playsinline></video></div></div><div class="slw" id="slw-svc5"><div class="sl media" id="sl-svc5" style="width:1080px;height:1920px"><video id="sl-v-svc5" class="clip" src="assets/clips/ph-svc-strat.mp4" data-start="16.53" data-duration="1.34" data-media-start="0.00" data-hf-media-start-basis="local" data-track-index="10" muted playsinline></video></div></div><div class="slw" id="slw-m300"><div class="sl sl-t" id="sl-m300"><i class="lt" style="left:84%;top:86%;width:70vmax;height:70vmax;margin:-35.0vmax 0 0 -35.0vmax;background:radial-gradient(closest-side, rgba(120, 104, 255, 0.5), rgba(120, 104, 255, 0))"></i><i class="lt" style="left:96%;top:10%;width:38vmax;height:38vmax;margin:-19.0vmax 0 0 -19.0vmax;background:radial-gradient(closest-side, rgba(56, 160, 255, 0.34), rgba(56, 160, 255, 0))"></i><div class="nb"><div class="eb" id="m300-eb"><span class="dot"></span>2022 óta az új korban</div><div class="num"><span class="dg" style="width:0.582em"><span class="ds" id="m300-c0"><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span><span class="dg" style="width:0.713em"><span class="ds" id="m300-c1"><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span><span class="dg" style="width:0.713em"><span class="ds" id="m300-c2"><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span><span class="ui">M Ft</span></div><div class="lab" id="m300-lab"><span>kezelt</span> <span>hirdetési</span> <span>büdzsé</span></div></div></div></div><div class="slw" id="slw-win"><div class="sl sl-t" id="sl-win"><i class="lt" style="left:80%;top:85%;width:72vmax;height:72vmax;margin:-36.0vmax 0 0 -36.0vmax;background:radial-gradient(closest-side, rgba(255, 64, 104, 0.34), rgba(255, 64, 104, 0))"></i><i class="lt" style="left:10%;top:0%;width:60vmax;height:60vmax;margin:-30.0vmax 0 0 -30.0vmax;background:radial-gradient(closest-side, rgba(136, 78, 255, 0.45), rgba(136, 78, 255, 0))"></i><div class="wn"><div class="hd" id="wn-1"><span>Mi</span> <span>ebben</span><br class="t"> <span>a</span> <span>korban</span></div><div class="it" id="wn-2"><span>győzünk<span class="acc">.</span></span></div></div></div></div><div class="slw" id="slw-last"><div class="sl media" id="sl-last" style="width:1080px;height:1920px"><video id="sl-v-last" class="clip" src="assets/clips/ph-last-tall.mp4" data-start="22.33" data-duration="0.52" data-media-start="0.00" data-hf-media-start-basis="local" data-track-index="13" muted playsinline></video></div></div></div>
+    <div id="fd-ring"></div>
+    <div class="bars" id="fd-bars"><span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span></div>
+  </div>
+  <script>
+  (() => {
+        // Shared by every scene (build.py puts it at the top of each scene's script): the film's clock, the frame and
+    // the stream's camera. Every time is in seconds of the whole film; AT(t) turns one into this scene's own time.
+    const TM = {"total": 35.4, "dive0": 3.25, "dive0d": 0.7, "claim": 3.85, "strike": 4.62, "meghalt": 5.0, "claA_out": 6.55, "claB": 6.8, "claB_out": 8.85, "s0": 8.9, "land": 11.3, "f": 1000, "travel": 6000, "flyxT": 11.4, "d1": 13.85, "d1d": 0.55, "sw": 0.38, "swRoas": 14.75, "swMft": 17.15, "swPod": 19.55, "out1": 19.9, "out1d": 0.7, "svc0": 23.05, "svcStep": 0.5, "svcSw": 0.3, "d2": 26.05, "d2d": 0.6, "swWin": 28.85, "swLast": 31.35, "back": 31.75, "backd": 0.8, "closeBand": 32.55, "logoIn": 32.85, "logoOut": 34.45, "wallOut": 34.55};
+    const START = 8.9, AT = (t) => t - START;
+    const W = 1080, H = 1920, TALL = H > W, CX = W / 2, CY = H / 2;
+    const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+    const lerp = (a, b, p) => a + (b - a) * p;
+    const EZ = {};
+    const ez = (name, p) => (EZ[name] || (EZ[name] = gsap.parseEase(name)))(clamp01(p));
+    // the stream's camera: from TM.s0 it flies TM.travel px forward and brakes (power2.out) until TM.land
+    const camZ = (t) => TM.travel * ez("power2.out", (t - TM.s0) / (TM.land - TM.s0));
+    // a card standing at world (X, Y, Z) seen at time t: its centre on screen, its scale and its depth
+    const project = (X, Y, Z, t) => {
+      const D = Z - camZ(t), s = TM.f / D;
+      return { x: CX + X * s, y: CY + Y * s, s, D };
+    };
+    // the scale that makes a bw x bh box cover a rw x rh window (object-fit: cover)
+    const cover = (bw, bh, rw, rh) => Math.max(rw / bw, rh / bh);
+    // footage covering a rect R: its focus (fx, fy, 0-1) as near the rect's centre as the cover allows; dy moves it
+    // down by that much (a swipe). Returns the top-left corner and the scale
+    const coverAt = (bw, bh, R, fx, fy, dy) => {
+      const z = cover(bw, bh, R.w, R.h), sw = bw * z, sh = bh * z, x0 = R.cx - R.w / 2, y0 = R.cy - R.h / 2;
+      const x = Math.min(x0, Math.max(x0 + R.w - sw, R.cx - sw * fx));
+      const y = Math.min(y0, Math.max(y0 + R.h - sh, R.cy - sh * fy));
+      return { x, y: y + dy, z };
+    };
+    // a rect {cx, cy, w, h, r} part of the way to another
+    const mixRect = (a, b, p) => ({ cx: lerp(a.cx, b.cx, p), cy: lerp(a.cy, b.cy, p), w: lerp(a.w, b.w, p),
+      h: lerp(a.h, b.h, p), r: lerp(a.r, b.r, p) });
+    const insetOf = (R) => `inset(${(R.cy - R.h / 2).toFixed(2)}px ${(W - R.cx - R.w / 2).toFixed(2)}px ` +
+      `${(H - R.cy - R.h / 2).toFixed(2)}px ${(R.cx - R.w / 2).toFixed(2)}px round ${Math.max(0, R.r).toFixed(2)}px)`;
+    // Turns a drawing that is a function of time into ordinary tweens, which the player seeks like every other
+    // animation (it re-renders nested timelines its own way, and code run from onUpdate or modifiers does not reliably
+    // run again on each frame). draw(t, put) is called once for every frame of [from, to] while the scene is set up,
+    // and reports with put(el, prop, value) what it would set. Each element's property then becomes a chain of
+    // tweens, one per run of frames where it moves at a steady rate (a held value needs none), so every frame gets
+    // exactly the value drawn for it. Text values (visibility, display) become sets where they change.
+    const FPS = 25;
+    const bake = (tl, from, to, draw) => {
+      const n = Math.round((to - from) * FPS), tracks = new Map();
+      for (let i = 0; i <= n; i++) {
+        draw(from + i / FPS, (el, prop, v) => {
+          let m = tracks.get(el);
+          if (!m) tracks.set(el, (m = new Map()));
+          let a = m.get(prop);
+          if (!a) m.set(prop, (a = new Array(n + 1)));
+          a[i] = v;
+        });
+      }
+      const at = (i) => AT(from) + i / FPS;
+      tracks.forEach((m, el) => m.forEach((a, prop) => {
+        for (let i = 1; i <= n; i++) if (a[i] === undefined) a[i] = a[i - 1];
+        if (a[0] === undefined) a[0] = a.find((v) => v !== undefined);
+        tl.set(el, { [prop]: a[0] }, at(0));
+        if (typeof a[0] !== "number") {          // a text value: set it where it changes
+          // a quarter frame early, so a seek that lands a hair before the frame's time still gets it
+          for (let i = 1; i <= n; i++) if (a[i] !== a[i - 1]) tl.set(el, { [prop]: a[i] }, at(i) - 0.25 / FPS);
+          return;
+        }
+        let i0 = 0;
+        while (i0 < n) {
+          // the longest run from i0 along which the value moves at a steady rate
+          let i1 = i0 + 1;
+          const lin = (j, k) => { for (let q = i0 + 1; q < k; q++) { const e = a[i0] + (a[k] - a[i0]) * (q - i0) / (k - i0); if (Math.abs(a[q] - e) > 0.02) return false; } return true; };
+          while (i1 + 1 <= n && lin(i0, i1 + 1)) i1++;
+          if (a[i1] !== a[i0]) tl.fromTo(el, { [prop]: a[i0] }, { [prop]: a[i1], duration: (i1 - i0) / FPS, ease: "none", immediateRender: false }, at(i0));
+          i0 = i1;
+        }
+      }));
+    };
+
+    const tl = gsap.timeline({ paused: true });
+    const SLIDES = [{"id": "sl-flyx", "win": "slw-flyx", "kind": "m", "bw": 1080, "bh": 1920, "fx": 0.5, "fy": 0.5, "tin": 8.9, "din": 0, "ease": "none"}, {"id": "sl-roas", "win": "slw-roas", "kind": "t", "tin": 14.75, "din": 0.38, "ease": "power3.inOut"}, {"id": "sl-mft", "win": "slw-mft", "kind": "t", "tin": 17.15, "din": 0.38, "ease": "power3.inOut"}, {"id": "sl-pod", "win": "slw-pod", "kind": "m", "bw": 1080, "bh": 1920, "fx": 0.5, "fy": 0.62, "tin": 19.55, "din": 0.38, "ease": "power3.inOut"}, {"id": "sl-svc0", "win": "slw-svc0", "kind": "m", "bw": 1080, "bh": 1920, "fx": 0.5, "fy": 0.5, "tin": 23.05, "din": 0.3, "ease": "power3.inOut"}, {"id": "sl-svc1", "win": "slw-svc1", "kind": "m", "bw": 1080, "bh": 1920, "fx": 0.5, "fy": 0.5, "tin": 23.55, "din": 0.3, "ease": "power3.inOut"}, {"id": "sl-svc2", "win": "slw-svc2", "kind": "m", "bw": 1080, "bh": 1920, "fx": 0.5, "fy": 0.5, "tin": 24.05, "din": 0.3, "ease": "power3.inOut"}, {"id": "sl-svc3", "win": "slw-svc3", "kind": "m", "bw": 1080, "bh": 1920, "fx": 0.5, "fy": 0.5, "tin": 24.55, "din": 0.3, "ease": "power3.inOut"}, {"id": "sl-svc4", "win": "slw-svc4", "kind": "m", "bw": 1080, "bh": 1920, "fx": 0.5, "fy": 0.5, "tin": 25.05, "din": 0.3, "ease": "power3.inOut"}, {"id": "sl-svc5", "win": "slw-svc5", "kind": "m", "bw": 1080, "bh": 1920, "fx": 0.5, "fy": 0.5, "tin": 25.55, "din": 0.3, "ease": "power3.inOut"}, {"id": "sl-m300", "win": "slw-m300", "kind": "t", "tin": 26.05, "din": 0.6, "ease": "power3.inOut"}, {"id": "sl-win", "win": "slw-win", "kind": "t", "tin": 28.85, "din": 0.38, "ease": "power3.inOut"}, {"id": "sl-last", "win": "slw-last", "kind": "m", "bw": 1080, "bh": 1920, "fx": 0.5, "fy": 0.5, "tin": 31.35, "din": 0.38, "ease": "power3.inOut"}];          // id, kind (m: footage, t: type), box size, when it swipes in
+    const PH = {"w": 560, "h": 995.56, "r": 36, "flyx": [540, 1210], "pod": [540, 1210]};                  // the phone's size and where it stands for FlyX and for the podcast
+    const GROUPS = [{"from": 8.9, "to": 19.740000000000002, "segs": [[11.3, 14.75], [14.75, 17.15], [17.15, 19.55]]}, {"from": 19.740000000000002, "to": 23.2, "segs": [[19.55, 23.05]]}, {"from": 23.2, "to": 26.35, "segs": [[23.05, 23.55], [23.55, 24.05], [24.05, 24.55], [24.55, 25.05], [25.05, 25.55], [25.55, 26.05]]}, {"from": 26.35, "to": 32.75, "segs": [[26.05, 28.85], [28.85, 31.35], [31.35, 31.75]]}];          // the story bars: which segments show when
+    const full = { cx: CX, cy: CY, w: W, h: H, r: 0 };
+    const atFlyx = { cx: PH.flyx[0], cy: PH.flyx[1], w: PH.w, h: PH.h, r: PH.r };
+    const atPod = { cx: PH.pod[0], cy: PH.pod[1], w: PH.w, h: PH.h, r: PH.r };
+    const HERO_Z = TM.f + TM.travel;    // the FlyX reel stands where the camera stops one focal length short of it
+    const span = (t, t0, d, e) => ez(e, (t - t0) / d);
+    // where the card is at time t
+    const rectAt = (t) => {
+      if (t < TM.land) {
+        const P = project(atFlyx.cx - CX, atFlyx.cy - CY, HERO_Z, t);
+        return { cx: P.x, cy: P.y, w: PH.w * P.s, h: PH.h * P.s, r: PH.r * P.s, a: clamp01((t - TM.s0) / 0.35) };
+      }
+      if (t < TM.d1) return atFlyx;
+      if (t < TM.out1) return mixRect(atFlyx, full, span(t, TM.d1, TM.d1d, "power3.inOut"));
+      if (t < TM.d2) return mixRect(full, atPod, span(t, TM.out1, TM.out1d, "power3.inOut"));
+      return mixRect(atPod, full, span(t, TM.d2, TM.d2d, "power3.inOut"));
+    };
+    // which slides show at time t, each with its offset in card heights (0: in place, -1: swiped out above)
+    const slidesAt = (t) => {
+      let c = 0;
+      for (let i = 1; i < SLIDES.length; i++) if (SLIDES[i].tin <= t) c = i;
+      const s = SLIDES[c];
+      if (c > 0 && t < s.tin + s.din) {
+        const p = ez(s.ease, (t - s.tin) / s.din);
+        return [[c - 1, -p], [c, 1 - p]];
+      }
+      return [[c, 0]];
+    };
+    const card = document.getElementById("fd-card"), shadow = document.getElementById("fd-shadow");
+    const ring = document.getElementById("fd-ring"), bars = document.getElementById("fd-bars");
+    const segs = [...bars.children], fills = segs.map((s) => s.firstElementChild);
+    const els = SLIDES.map((s) => document.getElementById(s.id)), wins = SLIDES.map((s) => document.getElementById(s.win));
+    const r2 = (v) => +v.toFixed(2);
+    const place = (put, el, R) => {
+      put(el, "x", r2(R.cx - R.w / 2)); put(el, "y", r2(R.cy - R.h / 2));
+      put(el, "width", r2(R.w)); put(el, "height", r2(R.h)); put(el, "borderRadius", r2(Math.max(0, R.r)));
+    };
+    const draw = (t, put) => {
+      const R = rectAt(t), a = R.a === undefined ? 1 : R.a;
+      const phi = clamp01((R.w - PH.w) / (W - PH.w));          // 0: a phone, 1: the whole frame
+      const k = Math.min(1, R.w / PH.w);                        // the phone's own scale while it is far
+      put(card, "clipPath", insetOf(R));
+      put(card, "opacity", +a.toFixed(4));
+      place(put, shadow, R); place(put, ring, R);
+      put(shadow, "opacity", +(a * (1 - phi)).toFixed(4)); put(ring, "opacity", +(a * (1 - phi)).toFixed(4));
+      // the slides
+      const on = new Map(slidesAt(t));
+      SLIDES.forEach((s, i) => {
+        const el = els[i], win = wins[i];
+        put(win, "visibility", on.has(i) ? "visible" : "hidden");
+        if (!on.has(i)) return;
+        const off = on.get(i) * R.h;
+        // while it is swiped, the slide shows only through a card-shaped window where it is
+        put(win, "clipPath", off === 0 ? "none" : insetOf({ cx: R.cx, cy: R.cy + off, w: R.w, h: R.h, r: 0 }));
+        if (s.kind === "t") {
+          put(el, "x", r2(R.cx - CX)); put(el, "y", r2(R.cy - CY + off));
+        } else {
+          const c = coverAt(s.bw, s.bh, R, s.fx, s.fy, off);
+          put(el, "x", r2(c.x)); put(el, "y", r2(c.y)); put(el, "scale", +c.z.toFixed(5));
+        }
+      });
+      // the story bars along the card's top edge
+      const g = GROUPS.find((g) => t >= g.from && t < g.to) || GROUPS[GROUPS.length - 1];
+      const m = lerp(14 * k, 48, phi), top = lerp(13 * k, 30, phi), th = lerp(3 * k, 4, phi), gap = lerp(5 * k, 8, phi);
+      put(bars, "x", r2(R.cx - R.w / 2 + m)); put(bars, "y", r2(R.cy - R.h / 2 + top));
+      put(bars, "width", r2(Math.max(0, R.w - 2 * m))); put(bars, "gap", `${gap.toFixed(2)}px`);
+      put(bars, "opacity", +a.toFixed(4));
+      segs.forEach((sg, j) => {
+        put(sg, "display", j < g.segs.length ? "block" : "none");
+        if (j >= g.segs.length) return;
+        put(sg, "height", r2(th));
+        const [s0, s1] = g.segs[j];
+        put(fills[j], "scaleX", +clamp01((t - s0) / (s1 - s0)).toFixed(4));
+      });
+    };
+    bake(tl, TM.s0, TM.back, draw);
+    // inside the type slides: the numbers roll like an odometer, then what they were comes in word by word
+    tl.fromTo("#roas-eb", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, AT(14.859));
+    tl.fromTo("#roas-c0", { yPercent: -6.6667 }, { yPercent: -93.3333, duration: 1.15, ease: "expo.out" }, AT(14.909));
+    tl.fromTo("#roas-c1", { yPercent: -26.6667 }, { yPercent: -70.0000, duration: 1.15, ease: "expo.out" }, AT(14.999));
+    tl.fromTo("#roas-lab span", { opacity: 0.12 }, { opacity: 1, duration: 0.25, ease: "power1.out", stagger: 0.08 }, AT(15.509));
+    tl.fromTo("#mft-eb", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, AT(17.259));
+    tl.fromTo("#mft-c0", { yPercent: -3.3333 }, { yPercent: -90.0000, duration: 1.15, ease: "expo.out" }, AT(17.309));
+    tl.fromTo("#mft-c1", { yPercent: -20.0000 }, { yPercent: -96.6667, duration: 1.15, ease: "expo.out" }, AT(17.399));
+    tl.fromTo("#mft-lab span", { opacity: 0.12 }, { opacity: 1, duration: 0.25, ease: "power1.out", stagger: 0.08 }, AT(17.909));
+    tl.fromTo("#m300-eb", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, AT(26.280));
+    tl.fromTo("#m300-c0", { yPercent: -23.3333 }, { yPercent: -76.6667, duration: 1.15, ease: "expo.out" }, AT(26.330));
+    tl.fromTo("#m300-c1", { yPercent: -23.3333 }, { yPercent: -66.6667, duration: 1.15, ease: "expo.out" }, AT(26.420));
+    tl.fromTo("#m300-c2", { yPercent: 0.0000 }, { yPercent: -66.6667, duration: 1.15, ease: "expo.out" }, AT(26.510));
+    tl.fromTo("#m300-lab span", { opacity: 0.12 }, { opacity: 1, duration: 0.25, ease: "power1.out", stagger: 0.08 }, AT(26.930));
+    tl.fromTo("#wn-1 span", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: 0.067 }, AT(29.040));
+    tl.fromTo("#wn-2 > span", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "power2.out" }, AT(29.400));
+    window.__timelines["feed"] = tl;
+  })();
+  </script>
+</template>

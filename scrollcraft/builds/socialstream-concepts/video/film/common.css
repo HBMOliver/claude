@@ -5,36 +5,20 @@
 @font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
 @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
 #root { position: absolute; inset: 0; overflow: hidden; color: #eef1f8; font-family: Inter, sans-serif; }
-/* a scene's wrapper fills the frame: its exit moves it, and a moved element becomes what its children are placed in */
-#root [id$="-in"] { position: absolute; inset: 0; }
+/* a full-frame layer: what a camera move scales about the frame's centre */
+#root .ff { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 #root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.02; color: #eef1f8; }
 #root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: 0; color: #d9d6ff; }
-#root .hd .it { font-size: 1.12em; }
 #root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #aab2ff; }
-#root .dot { display: inline-block; width: 12px; height: 12px; margin: 0 16px 4px 0; border-radius: 50%; background: #ff5272; box-shadow: 0 0 14px #ff5272; vertical-align: middle; }
+#root .dot { display: inline-block; width: 12px; height: 12px; margin: 0 16px 4px 0; border-radius: 50%; background: #ff5272; vertical-align: middle; }
 #root .acc { color: #ff5272; }
-/* a revealed line: padded so the clip that wipes it in never cuts an italic overhang or a descender */
-#root .wipe { display: inline-block; padding: 0.14em 0.16em 0.22em; margin: -0.14em -0.16em -0.22em; }
-/* a reel standing like a post, as the film card on the site */
-#root .phone { position: absolute; overflow: hidden; aspect-ratio: 9 / 16; border-radius: 28px; background: #000;
+/* a reel: a 9:16 card playing their footage */
+#root .reel { position: absolute; left: 0; top: 0; overflow: hidden; background: #0b1024; transform-origin: 0 0;
   box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.16), 0 50px 100px -40px rgba(0, 0, 0, 0.85), 0 0 120px -30px rgba(120, 104, 255, 0.55); }
-#root .phone video, #root .panel video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-#root .phone .bar { position: absolute; z-index: 2; left: 14px; right: 14px; top: 13px; height: 3px; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.32); }
-#root .phone .bar i { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; }
-/* footage in a rounded panel, darker at its foot */
-#root .panel { position: absolute; overflow: hidden; border-radius: 30px; background: #0b1024;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 40px 90px -40px rgba(0, 0, 0, 0.85); }
-#root .panel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5, 7, 15, 0) 45%, rgba(5, 7, 15, 0.5)); }
-/* a result: the number counts, its unit and what it was */
-#root .res .n { display: flex; align-items: baseline; gap: 0.06em; }
-#root .res .n b { font: 700 280px/0.9 Sora, Inter, sans-serif; letter-spacing: -0.055em; font-variant-numeric: tabular-nums; color: #eef1f8; }
-#root .res .n small { font: 700 76px/1 Sora, Inter, sans-serif; letter-spacing: -0.04em; color: #c6cbff; }
-#root .res .n small.it { font: italic 400 120px/1 "Instrument Serif", Georgia, serif; letter-spacing: 0; color: #d9d6ff; }
-#root .res .lab { margin-top: 18px; font: 600 40px/1.2 Inter, sans-serif; letter-spacing: -0.01em; color: #eef1f8; }
-#root .res .eb { margin-top: 18px; }
-@media (orientation: portrait) {
-  #root .res .n b { font-size: 250px; }
-  #root .res .n small { font-size: 68px; }
-  #root .res .n small.it { font-size: 108px; }
-  #root .res .lab { font-size: 42px; }
-}
+#root .reel video, #root .reel img, #root .media video, #root .media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* a box holding one piece of footage at its own pixel size; the scene scales it to cover a card */
+#root .media { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0; }
+/* story bars on a reel */
+#root .bars { position: absolute; left: 0; top: 0; display: flex; }
+#root .bars span { position: relative; flex: 1; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.32); }
+#root .bars i { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; }

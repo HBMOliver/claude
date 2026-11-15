@@ -10,7 +10,7 @@
 import fs from 'node:fs';
 const all = ['pulse', 'premiere', 'aurora', 'studio', 'mix'];
 const names = process.argv[2] ? process.argv[2].split(',') : all;
-const FILM = ['assets/hero-540.mp4', 'assets/hero-1080.mp4', 'assets/hero-v-720.mp4'];
+const FILM = ['hero-540', 'hero-1080', 'hero-v-720'].flatMap(n => [`assets/${n}.mp4`, `assets/${n}-en.mp4`]); // the film in Hungarian and English
 fs.mkdirSync('dist', { recursive: true });
 if (!fs.existsSync('dist/assets')) fs.symlinkSync('../assets', 'dist/assets');
 for (const n of names) {

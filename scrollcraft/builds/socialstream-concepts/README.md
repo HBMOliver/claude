@@ -108,7 +108,7 @@ folder to `dist/site/`:
 - `index.html`: `mix.html` with the domain's head: the title "SocialStream · Interest media ügynökség", the
   canonical address, share tags with `assets/og-image.jpg` (1200 × 630) and the organisation's details as JSON-LD.
 - The page's own files (`base.css`, `mix.css`, `ss.js`, `kit.js`) and only the assets it uses, plus the three cuts
-  of the brand film that `kit.js` picks between.
+  of the brand film that `kit.js` picks between, in Hungarian and in English (`-en`: the page in English plays it).
 - The logo kit's web icons at the root, where the page's head and the manifest ask for them.
 - `404.html` (every link in it starts at the root, so it works at any depth), `robots.txt` and `sitemap.xml`.
 
@@ -126,7 +126,9 @@ Before launch (2026-11-12):
   Rackhost. Email signing (DKIM) is on since 2026-11-15 (TXT google._domainkey).
 - **Fonts: open.** The page loads Sora, Inter, Instrument Serif and Fraunces from Google Fonts, which sends each
   visitor's IP address to Google. Serving them from the site is waiting for the user's decision.
-- **Film: remade (2026-11-15).** The site now plays the remake in `video/film/` (32.12 s, the logo animation first). Before that, the title card was re-cut with the new logo (b1ae71e), then made longer, with the logo on a
+- **Film: v5, "Through the phone" (2026-11-15).** The site plays `video/film/` v5: one moving camera through the
+  logo's S, the claim, a stream of their reels and into the phone (35.4 s), in Hungarian and in English; the page's
+  language picks the film. Before it, the remake in the site's look (32.12 s, the logo animation first). Before that, the title card was re-cut with the new logo (b1ae71e), then made longer, with the logo on a
   soft night band over the moving reel wall (ef0dd7e), and its opening shortened to 4.56 s (877347d: 774 frames,
   30.96 s, the same timeline in both cuts). The
   opening's shrink now ends at 0.56 of the scroll, so the two cuts line up while they crossfade (66918b5).

@@ -7,77 +7,125 @@
 @font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
 @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
 #root { position: absolute; inset: 0; overflow: hidden; color: #eef1f8; font-family: Inter, sans-serif; }
-/* a scene's wrapper fills the frame: its exit moves it, and a moved element becomes what its children are placed in */
-#root [id$="-in"] { position: absolute; inset: 0; }
+/* a full-frame layer: what a camera move scales about the frame's centre */
+#root .ff { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 #root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.02; color: #eef1f8; }
 #root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: 0; color: #d9d6ff; }
-#root .hd .it { font-size: 1.12em; }
 #root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #aab2ff; }
-#root .dot { display: inline-block; width: 12px; height: 12px; margin: 0 16px 4px 0; border-radius: 50%; background: #ff5272; box-shadow: 0 0 14px #ff5272; vertical-align: middle; }
+#root .dot { display: inline-block; width: 12px; height: 12px; margin: 0 16px 4px 0; border-radius: 50%; background: #ff5272; vertical-align: middle; }
 #root .acc { color: #ff5272; }
-/* a revealed line: padded so the clip that wipes it in never cuts an italic overhang or a descender */
-#root .wipe { display: inline-block; padding: 0.14em 0.16em 0.22em; margin: -0.14em -0.16em -0.22em; }
-/* a reel standing like a post, as the film card on the site */
-#root .phone { position: absolute; overflow: hidden; aspect-ratio: 9 / 16; border-radius: 28px; background: #000;
+/* a reel: a 9:16 card playing their footage */
+#root .reel { position: absolute; left: 0; top: 0; overflow: hidden; background: #0b1024; transform-origin: 0 0;
   box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.16), 0 50px 100px -40px rgba(0, 0, 0, 0.85), 0 0 120px -30px rgba(120, 104, 255, 0.55); }
-#root .phone video, #root .panel video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-#root .phone .bar { position: absolute; z-index: 2; left: 14px; right: 14px; top: 13px; height: 3px; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.32); }
-#root .phone .bar i { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; }
-/* footage in a rounded panel, darker at its foot */
-#root .panel { position: absolute; overflow: hidden; border-radius: 30px; background: #0b1024;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 40px 90px -40px rgba(0, 0, 0, 0.85); }
-#root .panel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5, 7, 15, 0) 45%, rgba(5, 7, 15, 0.5)); }
-/* a result: the number counts, its unit and what it was */
-#root .res .n { display: flex; align-items: baseline; gap: 0.06em; }
-#root .res .n b { font: 700 280px/0.9 Sora, Inter, sans-serif; letter-spacing: -0.055em; font-variant-numeric: tabular-nums; color: #eef1f8; }
-#root .res .n small { font: 700 76px/1 Sora, Inter, sans-serif; letter-spacing: -0.04em; color: #c6cbff; }
-#root .res .n small.it { font: italic 400 120px/1 "Instrument Serif", Georgia, serif; letter-spacing: 0; color: #d9d6ff; }
-#root .res .lab { margin-top: 18px; font: 600 40px/1.2 Inter, sans-serif; letter-spacing: -0.01em; color: #eef1f8; }
-#root .res .eb { margin-top: 18px; }
-@media (orientation: portrait) {
-  #root .res .n b { font-size: 250px; }
-  #root .res .n small { font-size: 68px; }
-  #root .res .n small.it { font-size: 108px; }
-  #root .res .lab { font-size: 42px; }
-}
+#root .reel video, #root .reel img, #root .media video, #root .media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* a box holding one piece of footage at its own pixel size; the scene scales it to cover a card */
+#root .media { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0; }
+/* story bars on a reel */
+#root .bars { position: absolute; left: 0; top: 0; display: flex; }
+#root .bars span { position: relative; flex: 1; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.32); }
+#root .bars i { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; }
 
-    #root .fx-t { position: absolute; left: 150px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
-    #root .fx-t .hd { margin-top: 22px; font-size: 96px; }
-    #fx-p1 { left: 940px; top: 300px; width: 270px; }
-    #fx-p2 { left: 1230px; top: 262px; width: 270px; z-index: 2; }
-    #fx-p3 { left: 1520px; top: 300px; width: 270px; }
+    #root .fx-t { position: absolute; left: 940px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+    #root .fx-n { margin-top: 26px; font-size: 230px; line-height: 0.9; white-space: nowrap; }
+    #root .fx-n span { display: inline-block; }
+    #root .fx-p { font-size: 250px; line-height: 0.95; margin-top: -0.02em; white-space: nowrap; }
     @media (orientation: portrait) {
-      #root .fx-t { left: 0; right: 0; top: 230px; bottom: auto; align-items: center; text-align: center; }
-      #root .fx-t .hd { font-size: 104px; }
-      #fx-p1 { left: 70px; top: 880px; width: 330px; }
-      #fx-p2 { left: 325px; top: 780px; width: 430px; }
-      #fx-p3 { left: 680px; top: 880px; width: 330px; }
+      #root .fx-t { left: 100px; top: 170px; bottom: auto; justify-content: flex-start; }
+      #root .fx-n { font-size: 200px; margin-top: 22px; }
+      #root .fx-p { font-size: 200px; }
     }
   </style>
-  <!-- a client: FlyX Tenerife, three of the reels made for them, playing -->
+  <!-- a client: FlyX Tenerife, beside the reel made for them (the reel itself is in the feed scene) -->
   <div id="root" data-composition-id="flyx" data-width="1080" data-height="1920">
-    <div id="fx-in">
+    <div class="ff" id="fx-in">
       <div class="fx-t">
         <div class="eb" id="fx-eb"><span class="dot"></span>Élményközpont · Social &amp; video</div>
-        <div class="hd"><span class="wipe" id="fx-title">FlyX Tenerife</span></div>
+        <div class="hd fx-n" id="fx-n"><span>F</span><span>l</span><span>y</span><span>X</span></div>
+        <div class="it fx-p" id="fx-p">Tenerife</div>
       </div>
-      <div class="phone" id="fx-p1"><video id="fx-v1" class="clip" src="assets/clips/flyx-1.mp4" data-start="0" data-duration="3" data-track-index="1" muted playsinline></video><div class="bar"><i id="fx-b1"></i></div></div>
-      <div class="phone" id="fx-p2"><video id="fx-v2" class="clip" src="assets/clips/flyx-2.mp4" data-start="0" data-duration="3" data-track-index="2" muted playsinline></video><div class="bar"><i id="fx-b2"></i></div></div>
-      <div class="phone" id="fx-p3"><video id="fx-v3" class="clip" src="assets/clips/flyx-3.mp4" data-start="0" data-duration="3" data-track-index="3" muted playsinline></video><div class="bar"><i id="fx-b3"></i></div></div>
     </div>
   </div>
   <script>
+  (() => {
+        // Shared by every scene (build.py puts it at the top of each scene's script): the film's clock, the frame and
+    // the stream's camera. Every time is in seconds of the whole film; AT(t) turns one into this scene's own time.
+    const TM = {"total": 35.4, "dive0": 3.25, "dive0d": 0.7, "claim": 3.85, "strike": 4.62, "meghalt": 5.0, "claA_out": 6.55, "claB": 6.8, "claB_out": 8.85, "s0": 8.9, "land": 11.3, "f": 1000, "travel": 6000, "flyxT": 11.4, "d1": 13.85, "d1d": 0.55, "sw": 0.38, "swRoas": 14.75, "swMft": 17.15, "swPod": 19.55, "out1": 19.9, "out1d": 0.7, "svc0": 23.05, "svcStep": 0.5, "svcSw": 0.3, "d2": 26.05, "d2d": 0.6, "swWin": 28.85, "swLast": 31.35, "back": 31.75, "backd": 0.8, "closeBand": 32.55, "logoIn": 32.85, "logoOut": 34.45, "wallOut": 34.55};
+    const START = 11.3, AT = (t) => t - START;
+    const W = 1080, H = 1920, TALL = H > W, CX = W / 2, CY = H / 2;
+    const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+    const lerp = (a, b, p) => a + (b - a) * p;
+    const EZ = {};
+    const ez = (name, p) => (EZ[name] || (EZ[name] = gsap.parseEase(name)))(clamp01(p));
+    // the stream's camera: from TM.s0 it flies TM.travel px forward and brakes (power2.out) until TM.land
+    const camZ = (t) => TM.travel * ez("power2.out", (t - TM.s0) / (TM.land - TM.s0));
+    // a card standing at world (X, Y, Z) seen at time t: its centre on screen, its scale and its depth
+    const project = (X, Y, Z, t) => {
+      const D = Z - camZ(t), s = TM.f / D;
+      return { x: CX + X * s, y: CY + Y * s, s, D };
+    };
+    // the scale that makes a bw x bh box cover a rw x rh window (object-fit: cover)
+    const cover = (bw, bh, rw, rh) => Math.max(rw / bw, rh / bh);
+    // footage covering a rect R: its focus (fx, fy, 0-1) as near the rect's centre as the cover allows; dy moves it
+    // down by that much (a swipe). Returns the top-left corner and the scale
+    const coverAt = (bw, bh, R, fx, fy, dy) => {
+      const z = cover(bw, bh, R.w, R.h), sw = bw * z, sh = bh * z, x0 = R.cx - R.w / 2, y0 = R.cy - R.h / 2;
+      const x = Math.min(x0, Math.max(x0 + R.w - sw, R.cx - sw * fx));
+      const y = Math.min(y0, Math.max(y0 + R.h - sh, R.cy - sh * fy));
+      return { x, y: y + dy, z };
+    };
+    // a rect {cx, cy, w, h, r} part of the way to another
+    const mixRect = (a, b, p) => ({ cx: lerp(a.cx, b.cx, p), cy: lerp(a.cy, b.cy, p), w: lerp(a.w, b.w, p),
+      h: lerp(a.h, b.h, p), r: lerp(a.r, b.r, p) });
+    const insetOf = (R) => `inset(${(R.cy - R.h / 2).toFixed(2)}px ${(W - R.cx - R.w / 2).toFixed(2)}px ` +
+      `${(H - R.cy - R.h / 2).toFixed(2)}px ${(R.cx - R.w / 2).toFixed(2)}px round ${Math.max(0, R.r).toFixed(2)}px)`;
+    // Turns a drawing that is a function of time into ordinary tweens, which the player seeks like every other
+    // animation (it re-renders nested timelines its own way, and code run from onUpdate or modifiers does not reliably
+    // run again on each frame). draw(t, put) is called once for every frame of [from, to] while the scene is set up,
+    // and reports with put(el, prop, value) what it would set. Each element's property then becomes a chain of
+    // tweens, one per run of frames where it moves at a steady rate (a held value needs none), so every frame gets
+    // exactly the value drawn for it. Text values (visibility, display) become sets where they change.
+    const FPS = 25;
+    const bake = (tl, from, to, draw) => {
+      const n = Math.round((to - from) * FPS), tracks = new Map();
+      for (let i = 0; i <= n; i++) {
+        draw(from + i / FPS, (el, prop, v) => {
+          let m = tracks.get(el);
+          if (!m) tracks.set(el, (m = new Map()));
+          let a = m.get(prop);
+          if (!a) m.set(prop, (a = new Array(n + 1)));
+          a[i] = v;
+        });
+      }
+      const at = (i) => AT(from) + i / FPS;
+      tracks.forEach((m, el) => m.forEach((a, prop) => {
+        for (let i = 1; i <= n; i++) if (a[i] === undefined) a[i] = a[i - 1];
+        if (a[0] === undefined) a[0] = a.find((v) => v !== undefined);
+        tl.set(el, { [prop]: a[0] }, at(0));
+        if (typeof a[0] !== "number") {          // a text value: set it where it changes
+          // a quarter frame early, so a seek that lands a hair before the frame's time still gets it
+          for (let i = 1; i <= n; i++) if (a[i] !== a[i - 1]) tl.set(el, { [prop]: a[i] }, at(i) - 0.25 / FPS);
+          return;
+        }
+        let i0 = 0;
+        while (i0 < n) {
+          // the longest run from i0 along which the value moves at a steady rate
+          let i1 = i0 + 1;
+          const lin = (j, k) => { for (let q = i0 + 1; q < k; q++) { const e = a[i0] + (a[k] - a[i0]) * (q - i0) / (k - i0); if (Math.abs(a[q] - e) > 0.02) return false; } return true; };
+          while (i1 + 1 <= n && lin(i0, i1 + 1)) i1++;
+          if (a[i1] !== a[i0]) tl.fromTo(el, { [prop]: a[i0] }, { [prop]: a[i1], duration: (i1 - i0) / FPS, ease: "none", immediateRender: false }, at(i0));
+          i0 = i1;
+        }
+      }));
+    };
+
     const tl = gsap.timeline({ paused: true });
-    const tall = window.innerHeight > window.innerWidth;
-    tl.fromTo("#fx-title", { clipPath: "inset(0% 100% 0% 0%)", x: -24 }, { clipPath: "inset(0% 0% 0% 0%)", x: 0, duration: 0.6, ease: "power3.out" }, 0.05);
-    tl.fromTo("#fx-eb", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, 0.18);
-    const rot = tall ? [-6, 0, 6] : [0, 0, 0];
-    ["#fx-p1", "#fx-p2", "#fx-p3"].forEach((p, i) => {
-      const from = tall ? { y: 420, x: 0, rotation: rot[i] * 2, opacity: 0 } : { x: 260, y: 0, rotation: 5, opacity: 0 };
-      tl.fromTo(p, from, { x: 0, y: 0, rotation: rot[i], opacity: 1, duration: 0.8, ease: "expo.out" }, 0.1 + (tall ? [0.08, 0, 0.16][i] : i * 0.09));
-    });
-    ["#fx-b1", "#fx-b2", "#fx-b3"].forEach(b => tl.fromTo(b, { scaleX: 0 }, { scaleX: 1, duration: 2.8, ease: "none" }, 0.1));
-    tl.fromTo("#fx-in", { opacity: 1, x: 0, y: 0 }, { opacity: 0, x: tall ? 0 : -40, y: tall ? -40 : 0, duration: 0.22, ease: "power2.in" }, 2.78);
+    // the name letter by letter, the place as one line coming into focus, then the small line
+    tl.fromTo("#fx-n span", { opacity: 0.0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.32, ease: "power2.out", stagger: 0.08 }, AT(TM.flyxT));
+    tl.fromTo("#fx-p", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.35, ease: "power2.out" }, AT(TM.flyxT + 0.36));
+    tl.fromTo("#fx-eb", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "power2.out" }, AT(TM.flyxT + 0.6));
+    // the camera dives into the reel: what is around it blurs and goes
+    tl.fromTo("#fx-in", { opacity: 1, filter: "blur(0px)", scale: 1 }, { opacity: 0, filter: "blur(15px)", scale: 1.12, duration: 0.3, ease: "power2.in", immediateRender: false }, AT(TM.d1 + 0.05));
     window.__timelines["flyx"] = tl;
+  })();
   </script>
 </template>

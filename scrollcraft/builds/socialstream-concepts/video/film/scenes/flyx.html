@@ -1,43 +1,37 @@
 <template>
   <style>
     /*COMMON*/
-    #root .fx-t { position: absolute; left: 150px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
-    #root .fx-t .hd { margin-top: 22px; font-size: 96px; }
-    #fx-p1 { left: 940px; top: 300px; width: 270px; }
-    #fx-p2 { left: 1230px; top: 262px; width: 270px; z-index: 2; }
-    #fx-p3 { left: 1520px; top: 300px; width: 270px; }
+    #root .fx-t { position: absolute; left: 940px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+    #root .fx-n { margin-top: 26px; font-size: 230px; line-height: 0.9; white-space: nowrap; }
+    #root .fx-n span { display: inline-block; }
+    #root .fx-p { font-size: 250px; line-height: 0.95; margin-top: -0.02em; white-space: nowrap; }
     @media (orientation: portrait) {
-      #root .fx-t { left: 0; right: 0; top: 230px; bottom: auto; align-items: center; text-align: center; }
-      #root .fx-t .hd { font-size: 104px; }
-      #fx-p1 { left: 70px; top: 880px; width: 330px; }
-      #fx-p2 { left: 325px; top: 780px; width: 430px; }
-      #fx-p3 { left: 680px; top: 880px; width: 330px; }
+      #root .fx-t { left: 100px; top: 170px; bottom: auto; justify-content: flex-start; }
+      #root .fx-n { font-size: 200px; margin-top: 22px; }
+      #root .fx-p { font-size: 200px; }
     }
   </style>
-  <!-- a client: FlyX Tenerife, three of the reels made for them, playing -->
+  <!-- a client: FlyX Tenerife, beside the reel made for them (the reel itself is in the feed scene) -->
   <div id="root" data-composition-id="flyx" data-width="%W%" data-height="%H%">
-    <div id="fx-in">
+    <div class="ff" id="fx-in">
       <div class="fx-t">
-        <div class="eb" id="fx-eb"><span class="dot"></span>Élményközpont · Social &amp; video</div>
-        <div class="hd"><span class="wipe" id="fx-title">FlyX Tenerife</span></div>
+        <div class="eb" id="fx-eb"><span class="dot"></span>%FXEB%</div>
+        <div class="hd fx-n" id="fx-n"><span>F</span><span>l</span><span>y</span><span>X</span></div>
+        <div class="it fx-p" id="fx-p">Tenerife</div>
       </div>
-      <div class="phone" id="fx-p1"><video id="fx-v1" class="clip" src="assets/clips/flyx-1.mp4" data-start="0" data-duration="3" data-track-index="1" muted playsinline></video><div class="bar"><i id="fx-b1"></i></div></div>
-      <div class="phone" id="fx-p2"><video id="fx-v2" class="clip" src="assets/clips/flyx-2.mp4" data-start="0" data-duration="3" data-track-index="2" muted playsinline></video><div class="bar"><i id="fx-b2"></i></div></div>
-      <div class="phone" id="fx-p3"><video id="fx-v3" class="clip" src="assets/clips/flyx-3.mp4" data-start="0" data-duration="3" data-track-index="3" muted playsinline></video><div class="bar"><i id="fx-b3"></i></div></div>
     </div>
   </div>
   <script>
+  (() => {
+    /*COMMONJS*/
     const tl = gsap.timeline({ paused: true });
-    const tall = window.innerHeight > window.innerWidth;
-    tl.fromTo("#fx-title", { clipPath: "inset(0% 100% 0% 0%)", x: -24 }, { clipPath: "inset(0% 0% 0% 0%)", x: 0, duration: 0.6, ease: "power3.out" }, 0.05);
-    tl.fromTo("#fx-eb", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, 0.18);
-    const rot = tall ? [-6, 0, 6] : [0, 0, 0];
-    ["#fx-p1", "#fx-p2", "#fx-p3"].forEach((p, i) => {
-      const from = tall ? { y: 420, x: 0, rotation: rot[i] * 2, opacity: 0 } : { x: 260, y: 0, rotation: 5, opacity: 0 };
-      tl.fromTo(p, from, { x: 0, y: 0, rotation: rot[i], opacity: 1, duration: 0.8, ease: "expo.out" }, 0.1 + (tall ? [0.08, 0, 0.16][i] : i * 0.09));
-    });
-    ["#fx-b1", "#fx-b2", "#fx-b3"].forEach(b => tl.fromTo(b, { scaleX: 0 }, { scaleX: 1, duration: 2.8, ease: "none" }, 0.1));
-    tl.fromTo("#fx-in", { opacity: 1, x: 0, y: 0 }, { opacity: 0, x: tall ? 0 : -40, y: tall ? -40 : 0, duration: 0.22, ease: "power2.in" }, 2.78);
+    // the name letter by letter, the place as one line coming into focus, then the small line
+    tl.fromTo("#fx-n span", { opacity: 0.0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.32, ease: "power2.out", stagger: 0.08 }, AT(TM.flyxT));
+    tl.fromTo("#fx-p", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.35, ease: "power2.out" }, AT(TM.flyxT + 0.36));
+    tl.fromTo("#fx-eb", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "power2.out" }, AT(TM.flyxT + 0.6));
+    // the camera dives into the reel: what is around it blurs and goes
+    tl.fromTo("#fx-in", { opacity: 1, filter: "blur(0px)", scale: 1 }, { opacity: 0, filter: "blur(15px)", scale: 1.12, duration: 0.3, ease: "power2.in", immediateRender: false }, AT(TM.d1 + 0.05));
     window.__timelines["flyx"] = tl;
+  })();
   </script>
 </template>

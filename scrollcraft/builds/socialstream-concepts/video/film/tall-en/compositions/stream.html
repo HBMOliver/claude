@@ -1,0 +1,142 @@
+<template>
+  <style>
+    /* Shared by every scene of the brand film (build.py puts it into each scene's style block). The site's own type and
+   palette: Sora for headlines, Instrument Serif italic for the accent word, Inter for small type; blue-purple light,
+   red-pink as the accent. One file serves both cuts: the tall cut's changes are under the portrait query. */
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
+#root { position: absolute; inset: 0; overflow: hidden; color: #eef1f8; font-family: Inter, sans-serif; }
+/* a full-frame layer: what a camera move scales about the frame's centre */
+#root .ff { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+#root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.02; color: #eef1f8; }
+#root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: 0; color: #d9d6ff; }
+#root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #aab2ff; }
+#root .dot { display: inline-block; width: 12px; height: 12px; margin: 0 16px 4px 0; border-radius: 50%; background: #ff5272; vertical-align: middle; }
+#root .acc { color: #ff5272; }
+/* a reel: a 9:16 card playing their footage */
+#root .reel { position: absolute; left: 0; top: 0; overflow: hidden; background: #0b1024; transform-origin: 0 0;
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.16), 0 50px 100px -40px rgba(0, 0, 0, 0.85), 0 0 120px -30px rgba(120, 104, 255, 0.55); }
+#root .reel video, #root .reel img, #root .media video, #root .media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* a box holding one piece of footage at its own pixel size; the scene scales it to cover a card */
+#root .media { position: absolute; left: 0; top: 0; overflow: hidden; transform-origin: 0 0; }
+/* story bars on a reel */
+#root .bars { position: absolute; left: 0; top: 0; display: flex; }
+#root .bars span { position: relative; flex: 1; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.32); }
+#root .bars i { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; }
+
+  </style>
+  <!-- interest took its place: the camera flies through their work. Their reels stand in depth and rush past on all
+       sides while the camera brakes; the FlyX reel, furthest away, lands in front of it (that reel is in the feed
+       scene, compositions/feed.html, which carries it on) -->
+  <div id="root" data-composition-id="stream" data-width="1080" data-height="1920">
+    <div class="reel" id="st-r0" style="width:423.0px;height:752.0px;border-radius:29.6px;visibility:hidden"><video id="st-v0" class="clip" src="assets/clips/st-01.mp4" data-start="0" data-duration="2.40" data-track-index="1" muted playsinline></video></div>
+    <div class="reel" id="st-r1" style="width:456.6px;height:811.7px;border-radius:32.0px;visibility:hidden"><video id="st-v1" class="clip" src="assets/clips/st-02.mp4" data-start="0" data-duration="2.40" data-track-index="2" muted playsinline></video></div>
+    <div class="reel" id="st-r2" style="width:490.1px;height:871.4px;border-radius:34.3px;visibility:hidden"><video id="st-v2" class="clip" src="assets/clips/st-03.mp4" data-start="0" data-duration="2.40" data-track-index="3" muted playsinline></video></div>
+    <div class="reel" id="st-r3" style="width:429.7px;height:763.9px;border-radius:30.1px;visibility:hidden"><video id="st-v3" class="clip" src="assets/clips/st-04.mp4" data-start="0" data-duration="2.40" data-track-index="4" muted playsinline></video></div>
+    <div class="reel" id="st-r4" style="width:463.3px;height:823.6px;border-radius:32.4px;visibility:hidden"><video id="st-v4" class="clip" src="assets/clips/st-05.mp4" data-start="0" data-duration="2.40" data-track-index="5" muted playsinline></video></div>
+    <div class="reel" id="st-r5" style="width:496.9px;height:883.3px;border-radius:34.8px;visibility:hidden"><video id="st-v5" class="clip" src="assets/clips/st-06.mp4" data-start="0" data-duration="2.40" data-track-index="6" muted playsinline></video></div>
+    <div class="reel" id="st-r6" style="width:436.4px;height:775.9px;border-radius:30.6px;visibility:hidden"><video id="st-v6" class="clip" src="assets/clips/st-07.mp4" data-start="0" data-duration="2.40" data-track-index="7" muted playsinline></video></div>
+    <div class="reel" id="st-r7" style="width:470.0px;height:835.6px;border-radius:32.9px;visibility:hidden"><video id="st-v7" class="clip" src="assets/clips/st-08.mp4" data-start="0" data-duration="2.40" data-track-index="8" muted playsinline></video></div>
+    <div class="reel" id="st-r8" style="width:503.6px;height:895.2px;border-radius:35.2px;visibility:hidden"><video id="st-v8" class="clip" src="assets/clips/st-09.mp4" data-start="0" data-duration="2.40" data-track-index="9" muted playsinline></video></div>
+    <div class="reel" id="st-r9" style="width:443.1px;height:787.8px;border-radius:31.0px;visibility:hidden"><video id="st-v9" class="clip" src="assets/clips/st-10.mp4" data-start="0" data-duration="2.40" data-track-index="10" muted playsinline></video></div>
+    <div class="reel" id="st-r10" style="width:476.7px;height:847.5px;border-radius:33.4px;visibility:hidden"><video id="st-v10" class="clip" src="assets/clips/st-11.mp4" data-start="0" data-duration="2.40" data-track-index="11" muted playsinline></video></div>
+    <div class="reel" id="st-r11" style="width:510.3px;height:907.2px;border-radius:35.7px;visibility:hidden"><video id="st-v11" class="clip" src="assets/clips/st-12.mp4" data-start="0" data-duration="2.40" data-track-index="12" muted playsinline></video></div>
+    <div class="reel" id="st-r12" style="width:449.9px;height:799.7px;border-radius:31.5px;visibility:hidden"><video id="st-v12" class="clip" src="assets/clips/st-13.mp4" data-start="0" data-duration="2.40" data-track-index="13" muted playsinline></video></div>
+    <div class="reel" id="st-r13" style="width:483.4px;height:859.4px;border-radius:33.8px;visibility:hidden"><video id="st-v13" class="clip" src="assets/clips/st-14.mp4" data-start="0" data-duration="2.40" data-track-index="14" muted playsinline></video></div>
+  </div>
+  <script>
+  (() => {
+        // Shared by every scene (build.py puts it at the top of each scene's script): the film's clock, the frame and
+    // the stream's camera. Every time is in seconds of the whole film; AT(t) turns one into this scene's own time.
+    const TM = {"total": 35.4, "dive0": 3.25, "dive0d": 0.7, "claim": 3.85, "strike": 4.62, "meghalt": 5.0, "claA_out": 6.55, "claB": 6.8, "claB_out": 8.85, "s0": 8.9, "land": 11.3, "f": 1000, "travel": 6000, "flyxT": 11.4, "d1": 13.85, "d1d": 0.55, "sw": 0.38, "swRoas": 14.75, "swMft": 17.15, "swPod": 19.55, "out1": 19.9, "out1d": 0.7, "svc0": 23.05, "svcStep": 0.5, "svcSw": 0.3, "d2": 26.05, "d2d": 0.6, "swWin": 28.85, "swLast": 31.35, "back": 31.75, "backd": 0.8, "closeBand": 32.55, "logoIn": 32.85, "logoOut": 34.45, "wallOut": 34.55};
+    const START = 8.9, AT = (t) => t - START;
+    const W = 1080, H = 1920, TALL = H > W, CX = W / 2, CY = H / 2;
+    const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+    const lerp = (a, b, p) => a + (b - a) * p;
+    const EZ = {};
+    const ez = (name, p) => (EZ[name] || (EZ[name] = gsap.parseEase(name)))(clamp01(p));
+    // the stream's camera: from TM.s0 it flies TM.travel px forward and brakes (power2.out) until TM.land
+    const camZ = (t) => TM.travel * ez("power2.out", (t - TM.s0) / (TM.land - TM.s0));
+    // a card standing at world (X, Y, Z) seen at time t: its centre on screen, its scale and its depth
+    const project = (X, Y, Z, t) => {
+      const D = Z - camZ(t), s = TM.f / D;
+      return { x: CX + X * s, y: CY + Y * s, s, D };
+    };
+    // the scale that makes a bw x bh box cover a rw x rh window (object-fit: cover)
+    const cover = (bw, bh, rw, rh) => Math.max(rw / bw, rh / bh);
+    // footage covering a rect R: its focus (fx, fy, 0-1) as near the rect's centre as the cover allows; dy moves it
+    // down by that much (a swipe). Returns the top-left corner and the scale
+    const coverAt = (bw, bh, R, fx, fy, dy) => {
+      const z = cover(bw, bh, R.w, R.h), sw = bw * z, sh = bh * z, x0 = R.cx - R.w / 2, y0 = R.cy - R.h / 2;
+      const x = Math.min(x0, Math.max(x0 + R.w - sw, R.cx - sw * fx));
+      const y = Math.min(y0, Math.max(y0 + R.h - sh, R.cy - sh * fy));
+      return { x, y: y + dy, z };
+    };
+    // a rect {cx, cy, w, h, r} part of the way to another
+    const mixRect = (a, b, p) => ({ cx: lerp(a.cx, b.cx, p), cy: lerp(a.cy, b.cy, p), w: lerp(a.w, b.w, p),
+      h: lerp(a.h, b.h, p), r: lerp(a.r, b.r, p) });
+    const insetOf = (R) => `inset(${(R.cy - R.h / 2).toFixed(2)}px ${(W - R.cx - R.w / 2).toFixed(2)}px ` +
+      `${(H - R.cy - R.h / 2).toFixed(2)}px ${(R.cx - R.w / 2).toFixed(2)}px round ${Math.max(0, R.r).toFixed(2)}px)`;
+    // Turns a drawing that is a function of time into ordinary tweens, which the player seeks like every other
+    // animation (it re-renders nested timelines its own way, and code run from onUpdate or modifiers does not reliably
+    // run again on each frame). draw(t, put) is called once for every frame of [from, to] while the scene is set up,
+    // and reports with put(el, prop, value) what it would set. Each element's property then becomes a chain of
+    // tweens, one per run of frames where it moves at a steady rate (a held value needs none), so every frame gets
+    // exactly the value drawn for it. Text values (visibility, display) become sets where they change.
+    const FPS = 25;
+    const bake = (tl, from, to, draw) => {
+      const n = Math.round((to - from) * FPS), tracks = new Map();
+      for (let i = 0; i <= n; i++) {
+        draw(from + i / FPS, (el, prop, v) => {
+          let m = tracks.get(el);
+          if (!m) tracks.set(el, (m = new Map()));
+          let a = m.get(prop);
+          if (!a) m.set(prop, (a = new Array(n + 1)));
+          a[i] = v;
+        });
+      }
+      const at = (i) => AT(from) + i / FPS;
+      tracks.forEach((m, el) => m.forEach((a, prop) => {
+        for (let i = 1; i <= n; i++) if (a[i] === undefined) a[i] = a[i - 1];
+        if (a[0] === undefined) a[0] = a.find((v) => v !== undefined);
+        tl.set(el, { [prop]: a[0] }, at(0));
+        if (typeof a[0] !== "number") {          // a text value: set it where it changes
+          // a quarter frame early, so a seek that lands a hair before the frame's time still gets it
+          for (let i = 1; i <= n; i++) if (a[i] !== a[i - 1]) tl.set(el, { [prop]: a[i] }, at(i) - 0.25 / FPS);
+          return;
+        }
+        let i0 = 0;
+        while (i0 < n) {
+          // the longest run from i0 along which the value moves at a steady rate
+          let i1 = i0 + 1;
+          const lin = (j, k) => { for (let q = i0 + 1; q < k; q++) { const e = a[i0] + (a[k] - a[i0]) * (q - i0) / (k - i0); if (Math.abs(a[q] - e) > 0.02) return false; } return true; };
+          while (i1 + 1 <= n && lin(i0, i1 + 1)) i1++;
+          if (a[i1] !== a[i0]) tl.fromTo(el, { [prop]: a[i0] }, { [prop]: a[i1], duration: (i1 - i0) / FPS, ease: "none", immediateRender: false }, at(i0));
+          i0 = i1;
+        }
+      }));
+    };
+
+    const tl = gsap.timeline({ paused: true });
+    const REELS = [{"X": 447.6, "Y": 900.8, "Z": 2400.0, "w": 423.0, "h": 752.0}, {"X": -711.0, "Y": -181.4, "Z": 2707.7, "w": 456.6, "h": 811.7}, {"X": 601.0, "Y": -633.4, "Z": 3015.4, "w": 490.1, "h": 871.4}, {"X": -175.3, "Y": 1115.4, "Z": 3323.1, "w": 429.7, "h": 763.9}, {"X": -342.5, "Y": -1011.6, "Z": 3630.8, "w": 463.3, "h": 823.6}, {"X": 680.3, "Y": 376.4, "Z": 3938.5, "w": 496.9, "h": 883.3}, {"X": -660.8, "Y": 456.5, "Z": 4246.2, "w": 436.4, "h": 775.9}, {"X": 294.2, "Y": -1049.6, "Z": 4553.8, "w": 470.0, "h": 835.6}, {"X": 226.9, "Y": 1091.4, "Z": 4861.5, "w": 503.6, "h": 895.2}, {"X": -628.9, "Y": -559.9, "Z": 5169.2, "w": 443.1, "h": 787.8}, {"X": 700.5, "Y": -265.7, "Z": 5476.9, "w": 476.7, "h": 847.5}, {"X": -404.2, "Y": 951.7, "Z": 5784.6, "w": 510.3, "h": 907.2}, {"X": -104.4, "Y": -1137.8, "Z": 6092.3, "w": 449.9, "h": 799.7}, {"X": 558.2, "Y": 726.3, "Z": 6400.0, "w": 483.4, "h": 859.4}];              // world position (X, Y, Z) and size of each reel, from build.py
+    const els = REELS.map((r, i) => document.getElementById(`st-r${i}`));
+    const draw = (t, put) => {
+      REELS.forEach((r, i) => {
+        const el = els[i], P = project(r.X, r.Y, r.Z, t);
+        // it comes out of the dark far away (and as the stream begins); by the time it is close it has left the frame
+        const a = P.D <= TM.f * 0.2 ? 0 : clamp01((TM.f * 7.2 - P.D) / (TM.f * 1.2)) * clamp01((t - TM.s0) / 0.35);
+        put(el, "visibility", a > 0 ? "visible" : "hidden");
+        if (a <= 0) return;
+        put(el, "opacity", +a.toFixed(4));
+        put(el, "zIndex", Math.round(20000 - P.D));
+        put(el, "x", +(P.x - r.w * P.s / 2).toFixed(2));
+        put(el, "y", +(P.y - r.h * P.s / 2).toFixed(2));
+        put(el, "scale", +P.s.toFixed(5));
+      });
+    };
+    bake(tl, TM.s0, TM.land, draw);
+    window.__timelines["stream"] = tl;
+  })();
+  </script>
+</template>

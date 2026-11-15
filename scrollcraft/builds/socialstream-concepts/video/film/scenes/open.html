@@ -4,22 +4,27 @@
     /*WALLCSS*/
   </style>
   <!-- the opening: their reels fly in as a tilted wall, a night band runs through the middle, and the logo builds
-       itself over it (the logo is its own scene, compositions/logo.html, above this one) -->
+       itself over it (the logo is its own scene, compositions/logo.html, above this one); then the camera dives
+       into the logo's S and the wall falls behind -->
   <div id="root" data-composition-id="open" data-width="%W%" data-height="%H%">
-    <div class="wl-in" data-layout-allow-overflow id="op-in">
+    <div class="wl-in ff" data-layout-allow-overflow id="op-in">
       <div class="wl-tilt"><div class="wl-wall" id="op-wall"><!--WALL--></div></div>
       <div class="wl-dim"></div>
       <div class="wl-band"></div>
     </div>
   </div>
   <script>
+  (() => {
+    /*COMMONJS*/
     const tl = gsap.timeline({ paused: true });
     // the reels fly in from the middle outwards
     tl.fromTo("#op-wall .wl-card", { opacity: 0, scale: 1.3 }, { opacity: 1, scale: 1, duration: 0.8, ease: "expo.out", stagger: { grid: [%ROWS%, %COLS%], from: "center", amount: 0.8 } }, 0.05);
-    // the wall drifts the whole time; the closing scene ends where this one starts, so the film loops cleanly
+    // the wall drifts the whole time; the close ends where this starts, so the film loops cleanly
     tl.fromTo("#op-wall", { x: 0 }, { x: -60, duration: 4, ease: "none" }, 0);
-    // out with the logo
-    tl.fromTo("#op-in", { opacity: 1 }, { opacity: 0, duration: 0.4, ease: "power2.in" }, 3.6);
+    // the dive: the camera pushes into the logo, so the wall behind it grows a little and goes
+    tl.fromTo("#op-in", { scale: 1 }, { scale: 1.25, duration: TM.dive0d, ease: "power2.in" }, AT(TM.dive0));
+    tl.fromTo("#op-in", { opacity: 1 }, { opacity: 0, duration: 0.4, ease: "power2.in", immediateRender: false }, AT(TM.dive0 + TM.dive0d - 0.4));
     window.__timelines["open"] = tl;
+  })();
   </script>
 </template>

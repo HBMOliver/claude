@@ -32,12 +32,15 @@ FORMATS = {
     "square": dict(layout="stacked", size=(1080, 1080), width_frac=0.60, hero_h=0.45,
                    master="socialstream-logo-stacked-dark.svg", pad=0.10),
     # the opening of the site's brand film (socialstream-concepts/video/film): the stacked logo at 28.125 % of the
-    # frame height, as the film's title card had it, on a transparent ground over the film's reel wall, 4 s long
-    # with a 0.4 s fade at the end; only compositions/logo.html is used
-    "film-wide": dict(layout="stacked", size=(1920, 1080), height_frac=0.28125, hero_h=0.38, total=4.0, exit=0.4,
-                      ground="transparent", master="socialstream-logo-stacked-dark.svg", pad=0.10),
-    "film-tall": dict(layout="stacked", size=(1080, 1920), height_frac=0.28125, hero_h=0.38, total=4.0, exit=0.4,
-                      ground="transparent", master="socialstream-logo-stacked-dark.svg", pad=0.10),
+    # frame height, as the film's title card had it, on a transparent ground over the film's reel wall, 4 s long;
+    # at the end the camera dives into the S (start, length, final scale), through the phone's screen into the film;
+    # only compositions/logo.html is used
+    "film-wide": dict(layout="stacked", size=(1920, 1080), height_frac=0.28125, hero_h=0.38, total=4.0,
+                      dive=(3.25, 0.7, 260), ground="transparent", master="socialstream-logo-stacked-dark.svg",
+                      pad=0.10),
+    "film-tall": dict(layout="stacked", size=(1080, 1920), height_frac=0.28125, hero_h=0.38, total=4.0,
+                      dive=(3.25, 0.7, 260), ground="transparent", master="socialstream-logo-stacked-dark.svg",
+                      pad=0.10),
 }
 TOTAL = 4.6                # seconds; the last 2 s are a still hold
 KIND = "reversed"          # the drawing made for dark grounds
@@ -123,6 +126,20 @@ def pts_d(pts):
     return "M" + "L".join(f"{fmt(x)} {fmt(y)}" for x, y in pts) + "Z"
 
 
+def dive_sets(F, fx, fy, num, fps=25):
+    """The dive as one set per frame of the film (25 fps), a quarter frame early: scale 1 -> dive[2] on a log scale."""
+    t0, d, k_end = F["dive"]
+    n = round(d * fps)
+    out = []
+    for i in range(n + 1):
+        p = (i / n) ** 2                                   # power2.in
+        k = k_end ** p
+        m = f"translate({num(fx)} {num(fy)}) scale({k:.5f}) translate({num(-fx)} {num(-fy)})"
+        at = max(0.0, t0 + i / fps - (0.25 / fps if i else 0))
+        out.append(f'      tl.set(["#logo-cam-p", "#logo-cam-w"], {{ attr: {{ transform: "{m}" }} }}, {at:.4f});')
+    return out
+
+
 def build(name, out, ref=None):
     F = FORMATS[name]
     W, H = F["size"]
@@ -163,6 +180,8 @@ def build(name, out, ref=None):
     px = lambda x, y: (sL * x + txL, sL * y + tyL)
     sym_px = lambda x, y: px(k * x + tx, k * y + ty)
     cx_f, cy_f = sym_px(128, 128)                  # phone centre in the last frame
+    _sb = bbox(rotate(P["S"], LEAN, 128, 128))     # the S, leaned like the phone
+    sx_f, sy_f = sym_px((_sb[0] + _sb[2]) / 2, (_sb[1] + _sb[3]) / 2)   # the S's centre (on its spine)
     u = sL * k                                     # px per symbol unit at lockup size
     HERO = F["hero"] if "hero" in F else F["hero_h"] * H / (P["th"] * u)
     HX = (W / 2 - cx_f) / u                        # hero offset, symbol units (parent space of #logo-hero)
@@ -270,10 +289,10 @@ def build(name, out, ref=None):
             f'<svg viewBox="0 0 {W} {H}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
             f'<defs><clipPath id="logo-wipe-clip"><rect id="logo-wipe" transform="skewX(-15)" x="{num(wipe_x)}" '
             f'y="{num(wipe_y0)}" width="0" height="{num(wipe_h)}"/></clipPath></defs>'
-            f'<g transform="{mat(M_lock)}"><g clip-path="url(#logo-wipe-clip)">'
+            f'<g id="logo-cam-w" transform="translate(0 0)"><g transform="{mat(M_lock)}"><g clip-path="url(#logo-wipe-clip)">'
             f'<g id="logo-social" transform="{tr["social"][0]}">{social}{agap}</g>'
             f'<g id="logo-stream" transform="{tr["stream"][0]}">{stream}</g>'
-            f'</g></g></svg>'
+            f'</g></g></g></svg>'
         )
         name_js = [
             '      // 6. the name streams out from behind it: SOCIAL, then STREAM',
@@ -304,10 +323,10 @@ def build(name, out, ref=None):
             f'height="{num(ly1 - y_b + 2 * CAP)}"/></clipPath>'
             f'<clipPath id="logo-below-social"><rect x="{num(x0c)}" y="{num(y_s)}" width="{num(x1c - x0c)}" '
             f'height="{num(ly1 - y_s + 2 * CAP)}"/></clipPath></defs>'
-            f'<g transform="{mat(M_lock)}"><g clip-path="url(#logo-below-phone)">'
+            f'<g id="logo-cam-w" transform="translate(0 0)"><g transform="{mat(M_lock)}"><g clip-path="url(#logo-below-phone)">'
             f'<g id="logo-social" transform="{tr["social"][0]}">{social}{agap}'
             f'<g clip-path="url(#logo-below-social)"><g id="logo-stream" transform="{tr["stream"][0]}">{stream}</g></g>'
-            f'</g></g></g></svg>'
+            f'</g></g></g></g></svg>'
         )
         name_js = [
             '      // 6. the name comes out from under the phone: SOCIAL, then STREAM from under SOCIAL',
@@ -336,10 +355,10 @@ def build(name, out, ref=None):
         f'width="{num(2 * span)}" height="{num(h_up)}"/></clipPath>'
         f'<clipPath id="logo-cut-clip-dn"><rect id="logo-cut-dn" x="{num(128 - span)}" y="{num(yc - EPS)}" '
         f'width="{num(2 * span)}" height="{num(h_dn)}"/></clipPath></defs>'
-        f'<g transform="{mat(M_lock)}"><g transform="{mat(M_sym)}">'
+        f'<g id="logo-cam-p" transform="translate(0 0)"><g transform="{mat(M_lock)}"><g transform="{mat(M_sym)}">'
         f'<g id="logo-hero" transform="{tr["hero"][0]}"><g id="logo-arrive" transform="{tr["arrive"][0]}" opacity="0">'
         f'<g id="logo-lean" transform="{tr["lean"][0]}">{phone}</g></g></g>'
-        f'</g></g></svg>'
+        f'</g></g></g></svg>'
     )
 
     js = "\n".join([
@@ -366,7 +385,14 @@ def build(name, out, ref=None):
     ] + ([
         "      // 8. out, so the film can move on",
         f'      tl.fromTo(["#logo-phone-soft", "#logo-word-soft"], {{ opacity: 1 }}, {{ opacity: 0, duration: {F["exit"]}, ease: "power2.in" }}, {total - F["exit"]});',
-    ] if F.get("exit") else []) + [
+    ] if F.get("exit") else []) + ([
+        "      // 8. the camera dives into the S, through the phone's screen: one scale about the S's centre on a",
+        "      // log scale (an even push that keeps speeding up, power2.in), written out as one exact set per film frame",
+        "      // (the film player seeks nested timelines in a way that skips per-frame code); the S is drawn in Night, so",
+        "      // the last frames hand over to the film's sky by fading the logo out",
+    ] + dive_sets(F, sx_f, sy_f, num) + [
+        f'      tl.fromTo(["#logo-phone-soft", "#logo-word-soft"], {{ opacity: 1 }}, {{ opacity: 0, duration: 0.24, ease: "power1.in" }}, {round(F["dive"][0] + F["dive"][1] - 0.24, 3)});',
+    ] if F.get("dive") else []) + [
         '      window.__timelines["logo"] = tl;',
     ])
 
@@ -507,7 +533,7 @@ def build(name, out, ref=None):
         open(os.path.join(out, fname), "w").write(text)
 
     info = dict(format=name, scale_px_per_unit=sL, lockup_px=[px(lx0, ly0), px(lx1, ly1)],
-                phone_centre_px=(cx_f, cy_f), hero=HERO, hero_offset_units=(HX, HY), swipe_units=swipe_d,
+                phone_centre_px=(cx_f, cy_f), s_centre_px=(sx_f, sy_f), hero=HERO, hero_offset_units=(HX, HY), swipe_units=swipe_d,
                 a_cut_start=acut_start, cap_px=CAP * sL)
     print(json.dumps(info, indent=1, default=lambda v: round(v, 3)))
 
