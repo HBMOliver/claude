@@ -31,3 +31,6 @@ npx --yes hyperframes@0.9.40 render -q delivery -o ../socialstream-logo-vertical
 The colours are variables (`night`, `cream`, `stream`). Timing and geometry come from
 `../../tools/make_motion.py` (the beat clock and the three formats are at the top); `python3 make_motion.py all`
 from `tools/` writes the three projects again and overwrites any edits made to them by hand or in the preview.
+Two more formats, `film-wide` and `film-tall`, make the opening of the site's brand film (the stacked logo on a
+transparent ground, 4 s with a fade at the end); `scrollcraft/builds/socialstream-concepts/video/film/build.py`
+uses them.

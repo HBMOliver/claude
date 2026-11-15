@@ -1,0 +1,84 @@
+<template>
+  <style>
+    /* Shared by every scene of the brand film (build.py puts it into each scene's style block). The site's own type and
+   palette: Sora for headlines, Instrument Serif italic for the accent word, Inter for small type; blue-purple light,
+   red-pink as the accent. One file serves both cuts: the tall cut's changes are under the portrait query. */
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
+#root { position: absolute; inset: 0; overflow: hidden; color: #eef1f8; font-family: Inter, sans-serif; }
+/* a scene's wrapper fills the frame: its exit moves it, and a moved element becomes what its children are placed in */
+#root [id$="-in"] { position: absolute; inset: 0; }
+#root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.02; color: #eef1f8; }
+#root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: 0; color: #d9d6ff; }
+#root .hd .it { font-size: 1.12em; }
+#root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #aab2ff; }
+#root .dot { display: inline-block; width: 12px; height: 12px; margin: 0 16px 4px 0; border-radius: 50%; background: #ff5272; box-shadow: 0 0 14px #ff5272; vertical-align: middle; }
+#root .acc { color: #ff5272; }
+/* a revealed line: padded so the clip that wipes it in never cuts an italic overhang or a descender */
+#root .wipe { display: inline-block; padding: 0.14em 0.16em 0.22em; margin: -0.14em -0.16em -0.22em; }
+/* a reel standing like a post, as the film card on the site */
+#root .phone { position: absolute; overflow: hidden; aspect-ratio: 9 / 16; border-radius: 28px; background: #000;
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.16), 0 50px 100px -40px rgba(0, 0, 0, 0.85), 0 0 120px -30px rgba(120, 104, 255, 0.55); }
+#root .phone video, #root .panel video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#root .phone .bar { position: absolute; z-index: 2; left: 14px; right: 14px; top: 13px; height: 3px; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.32); }
+#root .phone .bar i { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; }
+/* footage in a rounded panel, darker at its foot */
+#root .panel { position: absolute; overflow: hidden; border-radius: 30px; background: #0b1024;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 40px 90px -40px rgba(0, 0, 0, 0.85); }
+#root .panel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5, 7, 15, 0) 45%, rgba(5, 7, 15, 0.5)); }
+/* a result: the number counts, its unit and what it was */
+#root .res .n { display: flex; align-items: baseline; gap: 0.06em; }
+#root .res .n b { font: 700 280px/0.9 Sora, Inter, sans-serif; letter-spacing: -0.055em; font-variant-numeric: tabular-nums; color: #eef1f8; }
+#root .res .n small { font: 700 76px/1 Sora, Inter, sans-serif; letter-spacing: -0.04em; color: #c6cbff; }
+#root .res .n small.it { font: italic 400 120px/1 "Instrument Serif", Georgia, serif; letter-spacing: 0; color: #d9d6ff; }
+#root .res .lab { margin-top: 18px; font: 600 40px/1.2 Inter, sans-serif; letter-spacing: -0.01em; color: #eef1f8; }
+#root .res .eb { margin-top: 18px; }
+@media (orientation: portrait) {
+  #root .res .n b { font-size: 250px; }
+  #root .res .n small { font-size: 68px; }
+  #root .res .n small.it { font-size: 108px; }
+  #root .res .lab { font-size: 42px; }
+}
+
+    /* panels on one side, the result on the other (right: "right" puts the panels on the right) */
+    #roas-r { position: absolute; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+    #roas-q1, #roas-q2, #roas-q3 { width: 280px; height: 498px; }
+    #roas-r { left: 150px; } #roas-q1 { left: 940px; top: 291px; } #roas-q2 { left: 1240px; top: 291px; } #roas-q3 { left: 1540px; top: 291px; }
+    @media (orientation: portrait) {
+      #roas-r { left: 0; right: 0; top: 1250px; bottom: auto; align-items: center; text-align: center; }
+      #roas-r .n { justify-content: center; }
+      #roas-q1 { left: 60px; top: 150px; width: 960px; height: 1020px; }
+      #roas-q2, #roas-q3 { display: none; }
+    }
+  </style>
+  <!-- a result, counted up beside the footage it came with -->
+  <div id="root" data-composition-id="roas" data-width="1920" data-height="1080">
+    <div id="roas-in">
+      <div class="panel" id="roas-q1"><video id="roas-v1" class="clip" src="assets/clips/roas-1.mp4" data-start="0" data-duration="2.4" data-track-index="1" muted playsinline></video></div>
+      <div class="panel" id="roas-q2"><video id="roas-v2" class="clip" src="assets/clips/roas-2.mp4" data-start="0" data-duration="2.4" data-track-index="2" muted playsinline></video></div>
+      <div class="panel" id="roas-q3"><video id="roas-v3" class="clip" src="assets/clips/roas-3.mp4" data-start="0" data-duration="2.4" data-track-index="3" muted playsinline></video></div>
+      <div class="res" id="roas-r">
+        <div class="n" id="roas-n"><b id="roas-num">0</b><small>× ROAS</small></div>
+        <div class="lab"><span class="wipe" id="roas-lab">legjobb eredmény</span></div>
+        <div class="eb" id="roas-eb"><span class="dot"></span>Ajtó webshop · Google PMax</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const tall = window.innerHeight > window.innerWidth;
+    const away = "right" === "right" ? 1 : -1;
+    ["#roas-q1", "#roas-q2", "#roas-q3"].forEach((q, i) => {
+      tl.fromTo(q, { y: tall ? 80 : 60 + i * 20, opacity: 0, scale: 0.96 }, { y: tall ? 0 : [16, -22, 16][i], opacity: 1, scale: 1, duration: 0.7, ease: "expo.out" }, i * 0.07);
+    });
+    tl.fromTo("#roas-n", { opacity: 0, x: tall ? 0 : -30 * away, y: tall ? 30 : 0 }, { opacity: 1, x: 0, y: 0, duration: 0.6, ease: "expo.out" }, 0.05);
+    // the count: 81, in 1.3 s, then it holds
+    const c = { v: 0 }, el = document.getElementById("roas-num");
+    tl.fromTo(c, { v: 0 }, { v: 81, duration: 1.3, ease: "power2.out", onUpdate: () => { el.textContent = Math.round(c.v); } }, 0.1);
+    tl.fromTo("#roas-lab", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.55, ease: "power3.out" }, 0.28);
+    tl.fromTo("#roas-eb", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, 0.38);
+    tl.fromTo("#roas-in", { opacity: 1 }, { opacity: 0, duration: 0.22, ease: "power2.in" }, 2.18);
+    window.__timelines["roas"] = tl;
+  </script>
+</template>

@@ -1,0 +1,52 @@
+<template>
+  <style>
+    /*COMMON*/
+    #root .sv-t { position: absolute; left: 150px; top: 0; bottom: 0; width: 1060px; display: flex; flex-direction: column; justify-content: center; }
+    #root .sv-k { position: relative; height: 1.2em; margin-top: 18px; overflow: hidden; font-size: 112px; }
+    #root .sv-k .hd { position: absolute; left: 0; top: 0.08em; white-space: nowrap; font-size: 1em; }
+    #sv-ph { left: 1330px; top: 247px; width: 330px; }
+    #root .sv-s { position: absolute; inset: 0; overflow: hidden; }
+    #root .sv-bars { position: absolute; z-index: 3; left: 14px; right: 14px; top: 13px; display: flex; gap: 5px; }
+    #root .sv-bars span { position: relative; flex: 1; height: 3px; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.32); }
+    #root .sv-bars i { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; }
+    @media (orientation: portrait) {
+      #root .sv-t { left: 0; right: 0; width: auto; top: 260px; bottom: auto; align-items: center; text-align: center; }
+      #root .sv-k { width: 1000px; font-size: 104px; }
+      #root .sv-k .hd { left: 0; right: 0; text-align: center; }
+      #sv-ph { left: 270px; top: 700px; width: 540px; }
+    }
+  </style>
+  <!-- the six services, one reel each, swiped up like a feed every half second -->
+  <div id="root" data-composition-id="svc" data-width="%W%" data-height="%H%">
+    <div id="sv-in">
+      <div class="sv-t">
+        <div class="eb"><span class="dot"></span><span id="sv-c">01</span> / 06</div>
+        <div class="sv-k" id="sv-k">%NAMES%</div>
+      </div>
+      <div class="phone" id="sv-ph">%SLIDES%<div class="sv-bars">%BARS%</div></div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const tall = window.innerHeight > window.innerWidth;
+    const n = 6, step = 0.5, swap = 0.3;
+    tl.fromTo("#sv-ph", { opacity: 0, x: tall ? 0 : 220, y: tall ? 300 : 0 }, { opacity: 1, x: 0, y: 0, duration: 0.7, ease: "expo.out" }, 0);
+    tl.fromTo("#sv-n0", { yPercent: 130 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 0.05);
+    for (let i = 1; i < n; i++) tl.fromTo(`#sv-n${i}`, { yPercent: 130 }, { yPercent: 130, duration: 0.01 }, 0);
+    for (let i = 1; i < n; i++) tl.fromTo(`#sv-s${i}`, { yPercent: 100 }, { yPercent: 100, duration: 0.01 }, 0);
+    for (let i = 0; i < n; i++) {
+      tl.fromTo(`#sv-b${i}`, { scaleX: 0 }, { scaleX: 1, duration: step, ease: "none" }, i * step);
+      if (i === 0) continue;
+      const at = i * step - 0.08;
+      // the reel before goes up and out, the next one comes up from below, as on a phone
+      tl.fromTo(`#sv-s${i - 1}`, { yPercent: 0 }, { yPercent: -100, duration: swap, ease: "expo.out", immediateRender: false }, at);
+      tl.fromTo(`#sv-s${i}`, { yPercent: 100 }, { yPercent: 0, duration: swap, ease: "expo.out", immediateRender: false }, at);
+      tl.fromTo(`#sv-n${i - 1}`, { yPercent: 0 }, { yPercent: -130, duration: swap, ease: "expo.out", immediateRender: false }, at);
+      tl.fromTo(`#sv-n${i}`, { yPercent: 130 }, { yPercent: 0, duration: swap, ease: "expo.out", immediateRender: false }, at);
+      tl.set("#sv-c", { textContent: String(i + 1).padStart(2, "0") }, at + 0.05);
+    }
+    tl.set("#sv-c", { textContent: "01" }, 0);
+    tl.fromTo("#sv-in", { opacity: 1 }, { opacity: 0, duration: 0.22, ease: "power2.in" }, 2.78);
+    window.__timelines["svc"] = tl;
+  </script>
+</template>

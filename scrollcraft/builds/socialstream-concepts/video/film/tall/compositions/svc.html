@@ -1,0 +1,92 @@
+<template>
+  <style>
+    /* Shared by every scene of the brand film (build.py puts it into each scene's style block). The site's own type and
+   palette: Sora for headlines, Instrument Serif italic for the accent word, Inter for small type; blue-purple light,
+   red-pink as the accent. One file serves both cuts: the tall cut's changes are under the portrait query. */
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
+#root { position: absolute; inset: 0; overflow: hidden; color: #eef1f8; font-family: Inter, sans-serif; }
+/* a scene's wrapper fills the frame: its exit moves it, and a moved element becomes what its children are placed in */
+#root [id$="-in"] { position: absolute; inset: 0; }
+#root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.02; color: #eef1f8; }
+#root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: 0; color: #d9d6ff; }
+#root .hd .it { font-size: 1.12em; }
+#root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #aab2ff; }
+#root .dot { display: inline-block; width: 12px; height: 12px; margin: 0 16px 4px 0; border-radius: 50%; background: #ff5272; box-shadow: 0 0 14px #ff5272; vertical-align: middle; }
+#root .acc { color: #ff5272; }
+/* a revealed line: padded so the clip that wipes it in never cuts an italic overhang or a descender */
+#root .wipe { display: inline-block; padding: 0.14em 0.16em 0.22em; margin: -0.14em -0.16em -0.22em; }
+/* a reel standing like a post, as the film card on the site */
+#root .phone { position: absolute; overflow: hidden; aspect-ratio: 9 / 16; border-radius: 28px; background: #000;
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.16), 0 50px 100px -40px rgba(0, 0, 0, 0.85), 0 0 120px -30px rgba(120, 104, 255, 0.55); }
+#root .phone video, #root .panel video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#root .phone .bar { position: absolute; z-index: 2; left: 14px; right: 14px; top: 13px; height: 3px; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.32); }
+#root .phone .bar i { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; }
+/* footage in a rounded panel, darker at its foot */
+#root .panel { position: absolute; overflow: hidden; border-radius: 30px; background: #0b1024;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 40px 90px -40px rgba(0, 0, 0, 0.85); }
+#root .panel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5, 7, 15, 0) 45%, rgba(5, 7, 15, 0.5)); }
+/* a result: the number counts, its unit and what it was */
+#root .res .n { display: flex; align-items: baseline; gap: 0.06em; }
+#root .res .n b { font: 700 280px/0.9 Sora, Inter, sans-serif; letter-spacing: -0.055em; font-variant-numeric: tabular-nums; color: #eef1f8; }
+#root .res .n small { font: 700 76px/1 Sora, Inter, sans-serif; letter-spacing: -0.04em; color: #c6cbff; }
+#root .res .n small.it { font: italic 400 120px/1 "Instrument Serif", Georgia, serif; letter-spacing: 0; color: #d9d6ff; }
+#root .res .lab { margin-top: 18px; font: 600 40px/1.2 Inter, sans-serif; letter-spacing: -0.01em; color: #eef1f8; }
+#root .res .eb { margin-top: 18px; }
+@media (orientation: portrait) {
+  #root .res .n b { font-size: 250px; }
+  #root .res .n small { font-size: 68px; }
+  #root .res .n small.it { font-size: 108px; }
+  #root .res .lab { font-size: 42px; }
+}
+
+    #root .sv-t { position: absolute; left: 150px; top: 0; bottom: 0; width: 1060px; display: flex; flex-direction: column; justify-content: center; }
+    #root .sv-k { position: relative; height: 1.2em; margin-top: 18px; overflow: hidden; font-size: 112px; }
+    #root .sv-k .hd { position: absolute; left: 0; top: 0.08em; white-space: nowrap; font-size: 1em; }
+    #sv-ph { left: 1330px; top: 247px; width: 330px; }
+    #root .sv-s { position: absolute; inset: 0; overflow: hidden; }
+    #root .sv-bars { position: absolute; z-index: 3; left: 14px; right: 14px; top: 13px; display: flex; gap: 5px; }
+    #root .sv-bars span { position: relative; flex: 1; height: 3px; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.32); }
+    #root .sv-bars i { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; }
+    @media (orientation: portrait) {
+      #root .sv-t { left: 0; right: 0; width: auto; top: 260px; bottom: auto; align-items: center; text-align: center; }
+      #root .sv-k { width: 1000px; font-size: 104px; }
+      #root .sv-k .hd { left: 0; right: 0; text-align: center; }
+      #sv-ph { left: 270px; top: 700px; width: 540px; }
+    }
+  </style>
+  <!-- the six services, one reel each, swiped up like a feed every half second -->
+  <div id="root" data-composition-id="svc" data-width="1080" data-height="1920">
+    <div id="sv-in">
+      <div class="sv-t">
+        <div class="eb"><span class="dot"></span><span id="sv-c">01</span> / 06</div>
+        <div class="sv-k" id="sv-k"><div class="hd" id="sv-n0">Videó<span class="acc">.</span></div><div class="hd" id="sv-n1">Social<span class="acc">.</span></div><div class="hd" id="sv-n2">Hirdetés<span class="acc">.</span></div><div class="hd" id="sv-n3">Weboldal<span class="acc">.</span></div><div class="hd" id="sv-n4">Automatizáció<span class="acc">.</span></div><div class="hd" id="sv-n5">Stratégia<span class="acc">.</span></div></div>
+      </div>
+      <div class="phone" id="sv-ph"><div class="sv-s" id="sv-s0"><video id="sv-v0" class="clip" src="assets/clips/svc-video.mp4" data-start="0" data-duration="0.85" data-track-index="1" muted playsinline></video></div><div class="sv-s" id="sv-s1"><video id="sv-v1" class="clip" src="assets/clips/svc-social.mp4" data-start="0.4" data-duration="0.85" data-track-index="2" muted playsinline></video></div><div class="sv-s" id="sv-s2"><video id="sv-v2" class="clip" src="assets/clips/svc-ads.mp4" data-start="0.9" data-duration="0.85" data-track-index="3" muted playsinline></video></div><div class="sv-s" id="sv-s3"><video id="sv-v3" class="clip" src="assets/clips/svc-web.mp4" data-start="1.4" data-duration="0.85" data-track-index="4" muted playsinline></video></div><div class="sv-s" id="sv-s4"><video id="sv-v4" class="clip" src="assets/clips/svc-auto.mp4" data-start="1.9" data-duration="0.85" data-track-index="5" muted playsinline></video></div><div class="sv-s" id="sv-s5"><video id="sv-v5" class="clip" src="assets/clips/svc-strat.mp4" data-start="2.4" data-duration="0.6" data-track-index="6" muted playsinline></video></div><div class="sv-bars"><span><i id="sv-b0"></i></span><span><i id="sv-b1"></i></span><span><i id="sv-b2"></i></span><span><i id="sv-b3"></i></span><span><i id="sv-b4"></i></span><span><i id="sv-b5"></i></span></div></div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const tall = window.innerHeight > window.innerWidth;
+    const n = 6, step = 0.5, swap = 0.3;
+    tl.fromTo("#sv-ph", { opacity: 0, x: tall ? 0 : 220, y: tall ? 300 : 0 }, { opacity: 1, x: 0, y: 0, duration: 0.7, ease: "expo.out" }, 0);
+    tl.fromTo("#sv-n0", { yPercent: 130 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 0.05);
+    for (let i = 1; i < n; i++) tl.fromTo(`#sv-n${i}`, { yPercent: 130 }, { yPercent: 130, duration: 0.01 }, 0);
+    for (let i = 1; i < n; i++) tl.fromTo(`#sv-s${i}`, { yPercent: 100 }, { yPercent: 100, duration: 0.01 }, 0);
+    for (let i = 0; i < n; i++) {
+      tl.fromTo(`#sv-b${i}`, { scaleX: 0 }, { scaleX: 1, duration: step, ease: "none" }, i * step);
+      if (i === 0) continue;
+      const at = i * step - 0.08;
+      // the reel before goes up and out, the next one comes up from below, as on a phone
+      tl.fromTo(`#sv-s${i - 1}`, { yPercent: 0 }, { yPercent: -100, duration: swap, ease: "expo.out", immediateRender: false }, at);
+      tl.fromTo(`#sv-s${i}`, { yPercent: 100 }, { yPercent: 0, duration: swap, ease: "expo.out", immediateRender: false }, at);
+      tl.fromTo(`#sv-n${i - 1}`, { yPercent: 0 }, { yPercent: -130, duration: swap, ease: "expo.out", immediateRender: false }, at);
+      tl.fromTo(`#sv-n${i}`, { yPercent: 130 }, { yPercent: 0, duration: swap, ease: "expo.out", immediateRender: false }, at);
+      tl.set("#sv-c", { textContent: String(i + 1).padStart(2, "0") }, at + 0.05);
+    }
+    tl.set("#sv-c", { textContent: "01" }, 0);
+    tl.fromTo("#sv-in", { opacity: 1 }, { opacity: 0, duration: 0.22, ease: "power2.in" }, 2.78);
+    window.__timelines["svc"] = tl;
+  </script>
+</template>

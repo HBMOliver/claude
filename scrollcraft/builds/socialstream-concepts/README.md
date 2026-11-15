@@ -12,7 +12,7 @@ Aurora itself is unchanged.
 | Premiere | Talentank (Marketia for the giant running words) | Black and cinematic. The claim's two sentences sit above and below a wide film band. | https://claude.ai/artifact/F4yHZA3CbyoiQ7mN5ckVmT |
 | Aurora | Conversion (Strivai for the horizon light and the glass) | Night blue with a moving aurora. Real results float on glass cards. | https://claude.ai/artifact/PtcSvRhunabu4nDLBXoL82 |
 | Studio | Cutflow | Warm grey with white cards and one coral. The film plays like a story, with reels peeking out behind it. | https://claude.ai/artifact/2GpEg95SqLphnNoG937xu2 |
-| Aurora Mix | Scrolla's layout in Aurora's look | Night blue. The first screen, the services, Kiknek and the last call sit in inset panels with the aurora moving inside. The film stands beside the claim like a post, and the real numbers run along the panel's foot. The reels close in on the statement, the services are big-object cards over two running tag rows, the stat cards come with a running row of reels, the with-us card lies over the elsewhere card, the steps are big numbered cards, the reviews are a row you scroll, and a giant wordmark sits at the end. A light follows the cursor round the first screen. It opens on the film alone (asked for on 2026-11-12). Scrolling on, on wide screens the film shrinks into its card while the panel and the claim come in; on phones and short screens the panel rises over it. | https://claude.ai/artifact/C52b5BBkmGw83WvDFJyZCF |
+| Aurora Mix | Scrolla's layout in Aurora's look | Night blue. The first screen, the services, Kiknek and the last call sit in inset panels with the aurora moving inside. The film stands beside the claim like a post, and the real numbers run along the panel's foot. The reels close in on the statement, the services are big-object cards over two running tag rows, the stat cards come with a running row of reels, the with-us card lies over the elsewhere card, the steps are big numbered cards, the reviews are a row you scroll, and a giant wordmark sits at the end. A light follows the cursor round the first screen. It opens on the film alone (asked for on 2026-11-12). Scrolling on, on wide screens the film shrinks into its card while the panel and the claim come in; on phones and short screens the panel rises over it. Since 2026-11-15 blue-purple leads and red-pink is only the accent ("too pink" before): the colours are variables at the top of `mix.css`, and the 3D objects are recoloured copies for Mix only (`assets/*-mix.webp`). The film it plays is the remake in `video/film/`. | https://claude.ai/artifact/C52b5BBkmGw83WvDFJyZCF |
 
 The published pages are private until they are shared from their Share menu.
 
@@ -113,7 +113,7 @@ folder to `dist/site/`:
 - `404.html` (every link in it starts at the root, so it works at any depth), `robots.txt` and `sitemap.xml`.
 
 It writes real files only (no symlinks), and stops if a file the page names is missing or the folder breaks
-Pulse's limits (60 MB, 1,500 files). On 2026-11-12 it was 59 files and 18.8 MB. `tools/og.mjs` renders the share
+Pulse's limits (60 MB, 1,500 files). On 2026-11-12 it was 59 files and 18.8 MB; on 2026-11-15, with the new palette and the remade film, 59 files and 19.8 MB (`socialstream-site-v4.zip`). `tools/og.mjs` renders the share
 image from `tools/og.html`: the logo, the claim and three of their reels on the night blue.
 
 To update the live site: change the page, `node build.mjs mix`, `node tools/site.mjs`, run the last three commands
@@ -126,7 +126,7 @@ Before launch (2026-11-12):
   Rackhost. Email signing (DKIM) is on since 2026-11-15 (TXT google._domainkey).
 - **Fonts: open.** The page loads Sora, Inter, Instrument Serif and Fraunces from Google Fonts, which sends each
   visitor's IP address to Google. Serving them from the site is waiting for the user's decision.
-- **Film: done.** The title card was re-cut with the new logo (b1ae71e), then made longer, with the logo on a
+- **Film: remade (2026-11-15).** The site now plays the remake in `video/film/` (32.12 s, the logo animation first). Before that, the title card was re-cut with the new logo (b1ae71e), then made longer, with the logo on a
   soft night band over the moving reel wall (ef0dd7e), and its opening shortened to 4.56 s (877347d: 774 frames,
   30.96 s, the same timeline in both cuts). The
   opening's shrink now ends at 0.56 of the scroll, so the two cuts line up while they crossfade (66918b5).

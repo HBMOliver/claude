@@ -86,7 +86,7 @@ export function page() {
           ${tx('p', 'q', pair(it.pain))}
           <span class="mx-pain-line" aria-hidden="true"></span>
           <div class="mx-pain-to">
-            <img class="bob" style="--dur:${5.2 + i * 0.4}s;--delay:-${i * 0.9}s;--amp:-8px" src="assets/${it.icon}.webp" alt="" width="520" height="520" loading="lazy">
+            <img class="bob" style="--dur:${5.2 + i * 0.4}s;--delay:-${i * 0.9}s;--amp:-8px" src="assets/${it.icon}-mix.webp" alt="" width="520" height="520" loading="lazy">
             ${toSvc(it, 'a')}
           </div>
         </li>`).join('\n        ')}
@@ -105,7 +105,7 @@ export function page() {
         </div>
         <div class="mx-svc-grid">
           ${s.items.map((it, i) => `<article class="mx-card mx-svc-card" id="svc-${it.id}" data-r style="--d:${i % 3};--spin:-${(i * 1.3).toFixed(1)}s">
-            <div class="mx-obj"><img class="bob" data-follow data-k="${[0.02, -0.025, 0.03][i % 3]}" style="--dur:${5.6 + i * 0.45}s;--delay:-${i * 0.8}s;--amp:-12px" src="assets/${it.icon}.webp" alt="" width="520" height="520" loading="lazy"></div>
+            <div class="mx-obj"><img class="bob" data-follow data-k="${[0.02, -0.025, 0.03][i % 3]}" style="--dur:${5.6 + i * 0.45}s;--delay:-${i * 0.8}s;--amp:-12px" src="assets/${it.icon}-mix.webp" alt="" width="520" height="520" loading="lazy"></div>
             ${tx('h3', '', pair(it.k))}
             ${tx('p', 'h', pair(it.t))}
             ${tx('p', 'd', pair(it.p))}
@@ -128,7 +128,7 @@ export function page() {
       </div>
       <div class="mx-stats">
         ${r.items.map((it, i) => `<article class="mx-card mx-stat" data-r style="--d:${i}">
-          <img class="bob" style="--dur:${6.2 + i * 0.5}s;--delay:-${i * 1.2}s;--amp:-10px" src="assets/${it.obj}.webp" alt="" width="400" height="400" loading="lazy">
+          <img class="bob" style="--dur:${6.2 + i * 0.5}s;--delay:-${i * 1.2}s;--amp:-10px" src="assets/${it.obj}-mix.webp" alt="" width="400" height="400" loading="lazy">
           <p class="n num">${count(it.n, it.unit)}</p>
           ${tx('p', 'who', pair(it.who))}
           ${tx('p', 'd', pair(it.p))}
@@ -182,7 +182,7 @@ export function page() {
         </div>
         <div class="mx-who-grid">
           ${w.cards.map((c, i) => `<article class="mx-card" data-r style="--d:${i}">
-            <img class="bob" style="--dur:${6 + i * 0.5}s;--delay:-${i}s;--amp:-12px" src="assets/${c.img}.webp" alt="" width="640" height="560" loading="lazy">
+            <img class="bob" style="--dur:${6 + i * 0.5}s;--delay:-${i}s;--amp:-12px" src="assets/${c.img}-mix.webp" alt="" width="640" height="560" loading="lazy">
             <h3 data-en="${esc(c.en[0])}">${esc(c.hu[0])}</h3>
             <p><span data-l="hu">${c.hu[1]}</span><span data-l="en">${c.en[1]}</span></p>
           </article>`).join('\n          ')}

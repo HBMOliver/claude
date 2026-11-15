@@ -89,7 +89,7 @@ fs.writeFileSync(OUT + '/404.html', `<!doctype html>
   :root { color-scheme: dark; }
   html, body { height: 100%; margin: 0; }
   body { display: grid; place-items: center; padding: 24px; box-sizing: border-box; color: #eef1f8; font: 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
-    background: radial-gradient(60% 70% at 8% 110%, rgba(255, 92, 138, 0.32), transparent 60%), radial-gradient(50% 60% at 96% -10%, rgba(47, 214, 195, 0.16), transparent 60%), #05070f; }
+    background: radial-gradient(60% 70% at 8% 110%, rgba(66, 92, 255, 0.34), transparent 60%), radial-gradient(50% 60% at 96% -10%, rgba(136, 78, 255, 0.22), transparent 60%), #05070f; }
   main { display: grid; gap: 18px; justify-items: start; max-width: 34rem; }
   img { width: 220px; height: auto; }
   h1 { margin: 10px 0 0; font-size: clamp(1.8rem, 6vw, 2.6rem); line-height: 1.1; letter-spacing: -0.02em; }

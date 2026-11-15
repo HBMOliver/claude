@@ -31,6 +31,13 @@ FORMATS = {
                      master="socialstream-logo-stacked-dark.svg", pad=0.10),
     "square": dict(layout="stacked", size=(1080, 1080), width_frac=0.60, hero_h=0.45,
                    master="socialstream-logo-stacked-dark.svg", pad=0.10),
+    # the opening of the site's brand film (socialstream-concepts/video/film): the stacked logo at 28.125 % of the
+    # frame height, as the film's title card had it, on a transparent ground over the film's reel wall, 4 s long
+    # with a 0.4 s fade at the end; only compositions/logo.html is used
+    "film-wide": dict(layout="stacked", size=(1920, 1080), height_frac=0.28125, hero_h=0.38, total=4.0, exit=0.4,
+                      ground="transparent", master="socialstream-logo-stacked-dark.svg", pad=0.10),
+    "film-tall": dict(layout="stacked", size=(1080, 1920), height_frac=0.28125, hero_h=0.38, total=4.0, exit=0.4,
+                      ground="transparent", master="socialstream-logo-stacked-dark.svg", pad=0.10),
 }
 TOTAL = 4.6                # seconds; the last 2 s are a still hold
 KIND = "reversed"          # the drawing made for dark grounds
@@ -121,6 +128,7 @@ def build(name, out, ref=None):
     W, H = F["size"]
     layout = F["layout"]
     T_ = dict(T)
+    total = F.get("total", TOTAL)
 
     # --- the phone, untilted, and proof that tilting it gives the kit's symbol exactly
     P = g2_parts(**SYMBOLS[KIND])
@@ -148,7 +156,7 @@ def build(name, out, ref=None):
     sym_l = tf(kit_sym, M_sym)
     lock = [sym_l] + [p for p, c in w]
     lx0, ly0, lx1, ly1 = bbox_many(lock)
-    sL = W * F["width_frac"] / (lx1 - lx0)
+    sL = W * F["width_frac"] / (lx1 - lx0) if "width_frac" in F else H * F["height_frac"] / (ly1 - ly0)
     txL = W / 2 - sL * (lx0 + lx1) / 2
     tyL = H / 2 - sL * (ly0 + ly1) / 2
     M_lock = (sL, 0, 0, sL, txL, tyL)
@@ -355,6 +363,10 @@ def build(name, out, ref=None):
         tw_("#logo-acut-up", f"attr: {{ height: {num(a_mid_up - a_top)} }}", "attr: { height: 0 }", "acut"),
         tw_("#logo-acut-dn", f"attr: {{ y: {num(a_mid_dn)}, height: {num(a_bot - a_mid_dn)} }}",
             f"attr: {{ y: {num(a_bot)}, height: 0 }}", "acut"),
+    ] + ([
+        "      // 8. out, so the film can move on",
+        f'      tl.fromTo(["#logo-phone-soft", "#logo-word-soft"], {{ opacity: 1 }}, {{ opacity: 0, duration: {F["exit"]}, ease: "power2.in" }}, {total - F["exit"]});',
+    ] if F.get("exit") else []) + [
         '      window.__timelines["logo"] = tl;',
     ])
 
@@ -363,7 +375,7 @@ def build(name, out, ref=None):
     #root {{
       position: absolute;
       inset: 0;
-      background: var(--night, {COLOURS["night"]});
+      background: {F.get("ground") or 'var(--night, ' + COLOURS["night"] + ')'};
     }}
     #logo-name,
     #logo-phone,
@@ -397,13 +409,13 @@ def build(name, out, ref=None):
   </style>
   <div id="root" data-composition-id="logo" data-width="{W}" data-height="{H}">
     <!-- SOCIALSTREAM: revealed from behind the phone (layer under the phone) -->
-    <div id="logo-name" class="clip" data-start="0" data-duration="{TOTAL}" data-track-index="1">
+    <div id="logo-name" class="clip" data-start="0" data-duration="{total}" data-track-index="1">
       <div id="logo-word-soft">
         {word_svg}
       </div>
     </div>
     <!-- the phone: arrives, takes its S, leans in, is cut, settles -->
-    <div id="logo-phone" class="clip" data-start="0" data-duration="{TOTAL}" data-track-index="2">
+    <div id="logo-phone" class="clip" data-start="0" data-duration="{total}" data-track-index="2">
       <div id="logo-phone-soft">
         {phone_svg}
       </div>
@@ -450,7 +462,7 @@ def build(name, out, ref=None):
       id="main"
       data-composition-id="main"
       data-start="0"
-      data-duration="{TOTAL}"
+      data-duration="{total}"
       data-width="{W}"
       data-height="{H}"
     >
@@ -459,7 +471,7 @@ def build(name, out, ref=None):
         data-composition-id="logo"
         data-composition-src="compositions/logo.html"
         data-start="0"
-        data-duration="{TOTAL}"
+        data-duration="{total}"
         data-track-index="1"
         data-track-kind="graphics"
         data-width="{W}"

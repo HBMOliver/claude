@@ -1,0 +1,44 @@
+<template>
+  <style>
+    /*COMMON*/
+    /* panels on one side, the result on the other (%SIDE%: "right" puts the panels on the right) */
+    #%ID%-r { position: absolute; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+    #%ID%-q1, #%ID%-q2, #%ID%-q3 { width: 280px; height: 498px; }
+    /*SIDECSS*/
+    @media (orientation: portrait) {
+      #%ID%-r { left: 0; right: 0; top: 1250px; bottom: auto; align-items: center; text-align: center; }
+      #%ID%-r .n { justify-content: center; }
+      #%ID%-q1 { left: 60px; top: 150px; width: 960px; height: 1020px; }
+      #%ID%-q2, #%ID%-q3 { display: none; }
+    }
+  </style>
+  <!-- a result, counted up beside the footage it came with -->
+  <div id="root" data-composition-id="%ID%" data-width="%W%" data-height="%H%">
+    <div id="%ID%-in">
+      <div class="panel" id="%ID%-q1"><video id="%ID%-v1" class="clip" src="assets/clips/%C1%.mp4" data-start="0" data-duration="%DUR%" data-track-index="1" muted playsinline></video></div>
+      <div class="panel" id="%ID%-q2"><video id="%ID%-v2" class="clip" src="assets/clips/%C2%.mp4" data-start="0" data-duration="%DUR%" data-track-index="2" muted playsinline></video></div>
+      <div class="panel" id="%ID%-q3"><video id="%ID%-v3" class="clip" src="assets/clips/%C3%.mp4" data-start="0" data-duration="%DUR%" data-track-index="3" muted playsinline></video></div>
+      <div class="res" id="%ID%-r">
+        <div class="n" id="%ID%-n"><b id="%ID%-num">0</b>%UNIT%</div>
+        <div class="lab"><span class="wipe" id="%ID%-lab">%LABEL%</span></div>
+        <div class="eb" id="%ID%-eb"><span class="dot"></span>%SUB%</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const tall = window.innerHeight > window.innerWidth;
+    const away = "%SIDE%" === "right" ? 1 : -1;
+    ["#%ID%-q1", "#%ID%-q2", "#%ID%-q3"].forEach((q, i) => {
+      tl.fromTo(q, { y: tall ? 80 : 60 + i * 20, opacity: 0, scale: 0.96 }, { y: tall ? 0 : [16, -22, 16][i], opacity: 1, scale: 1, duration: 0.7, ease: "expo.out" }, i * 0.07);
+    });
+    tl.fromTo("#%ID%-n", { opacity: 0, x: tall ? 0 : -30 * away, y: tall ? 30 : 0 }, { opacity: 1, x: 0, y: 0, duration: 0.6, ease: "expo.out" }, 0.05);
+    // the count: %TO%, in %COUNT% s, then it holds
+    const c = { v: 0 }, el = document.getElementById("%ID%-num");
+    tl.fromTo(c, { v: 0 }, { v: %TO%, duration: %COUNT%, ease: "power2.out", onUpdate: () => { el.textContent = Math.round(c.v); } }, 0.1);
+    tl.fromTo("#%ID%-lab", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.55, ease: "power3.out" }, 0.28);
+    tl.fromTo("#%ID%-eb", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, 0.38);
+    tl.fromTo("#%ID%-in", { opacity: 1 }, { opacity: 0, duration: 0.22, ease: "power2.in" }, %OUT%);
+    window.__timelines["%ID%"] = tl;
+  </script>
+</template>

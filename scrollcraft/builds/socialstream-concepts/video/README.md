@@ -1,5 +1,8 @@
 # The brand film's title card, re-cut with the G2 logo (2026-11-12)
 
+**Superseded on 2026-11-15:** the site now plays the remake in `film/` (the client's script and footage rebuilt in
+Aurora Mix's look, opening with the logo animation). This re-cut and `recut.mjs` are kept for the record.
+
 The founder asked for it for Aurora Mix, the page that goes live on socialstream.hu. It took three rounds:
 
 | Commit | Opening | Founder's verdict |

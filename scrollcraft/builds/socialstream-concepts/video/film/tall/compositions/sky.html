@@ -1,0 +1,81 @@
+<template>
+  <style>
+    /* Shared by every scene of the brand film (build.py puts it into each scene's style block). The site's own type and
+   palette: Sora for headlines, Instrument Serif italic for the accent word, Inter for small type; blue-purple light,
+   red-pink as the accent. One file serves both cuts: the tall cut's changes are under the portrait query. */
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
+#root { position: absolute; inset: 0; overflow: hidden; color: #eef1f8; font-family: Inter, sans-serif; }
+/* a scene's wrapper fills the frame: its exit moves it, and a moved element becomes what its children are placed in */
+#root [id$="-in"] { position: absolute; inset: 0; }
+#root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.02; color: #eef1f8; }
+#root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: 0; color: #d9d6ff; }
+#root .hd .it { font-size: 1.12em; }
+#root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #aab2ff; }
+#root .dot { display: inline-block; width: 12px; height: 12px; margin: 0 16px 4px 0; border-radius: 50%; background: #ff5272; box-shadow: 0 0 14px #ff5272; vertical-align: middle; }
+#root .acc { color: #ff5272; }
+/* a revealed line: padded so the clip that wipes it in never cuts an italic overhang or a descender */
+#root .wipe { display: inline-block; padding: 0.14em 0.16em 0.22em; margin: -0.14em -0.16em -0.22em; }
+/* a reel standing like a post, as the film card on the site */
+#root .phone { position: absolute; overflow: hidden; aspect-ratio: 9 / 16; border-radius: 28px; background: #000;
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.16), 0 50px 100px -40px rgba(0, 0, 0, 0.85), 0 0 120px -30px rgba(120, 104, 255, 0.55); }
+#root .phone video, #root .panel video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#root .phone .bar { position: absolute; z-index: 2; left: 14px; right: 14px; top: 13px; height: 3px; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.32); }
+#root .phone .bar i { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; }
+/* footage in a rounded panel, darker at its foot */
+#root .panel { position: absolute; overflow: hidden; border-radius: 30px; background: #0b1024;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 40px 90px -40px rgba(0, 0, 0, 0.85); }
+#root .panel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5, 7, 15, 0) 45%, rgba(5, 7, 15, 0.5)); }
+/* a result: the number counts, its unit and what it was */
+#root .res .n { display: flex; align-items: baseline; gap: 0.06em; }
+#root .res .n b { font: 700 280px/0.9 Sora, Inter, sans-serif; letter-spacing: -0.055em; font-variant-numeric: tabular-nums; color: #eef1f8; }
+#root .res .n small { font: 700 76px/1 Sora, Inter, sans-serif; letter-spacing: -0.04em; color: #c6cbff; }
+#root .res .n small.it { font: italic 400 120px/1 "Instrument Serif", Georgia, serif; letter-spacing: 0; color: #d9d6ff; }
+#root .res .lab { margin-top: 18px; font: 600 40px/1.2 Inter, sans-serif; letter-spacing: -0.01em; color: #eef1f8; }
+#root .res .eb { margin-top: 18px; }
+@media (orientation: portrait) {
+  #root .res .n b { font-size: 250px; }
+  #root .res .n small { font-size: 68px; }
+  #root .res .n small.it { font-size: 108px; }
+  #root .res .lab { font-size: 42px; }
+}
+
+    #root { background: #05070f; }
+    #root .sk-b { position: absolute; border-radius: 50%; }
+    #sk-b1 { width: 70vmax; height: 55vmax; left: -18vmax; bottom: -30vmax; background: radial-gradient(closest-side, rgba(66, 92, 255, 0.58), rgba(66, 92, 255, 0)); }
+    #sk-b2 { width: 62vmax; height: 50vmax; right: -16vmax; bottom: -24vmax; background: radial-gradient(closest-side, rgba(136, 78, 255, 0.58), rgba(136, 78, 255, 0)); }
+    #sk-b3 { width: 46vmax; height: 38vmax; left: 30%; bottom: -27vmax; background: radial-gradient(closest-side, rgba(255, 64, 104, 0.36), rgba(255, 64, 104, 0)); }
+    #sk-b4 { width: 44vmax; height: 38vmax; right: 14%; top: -22vmax; background: radial-gradient(closest-side, rgba(56, 160, 255, 0.3), rgba(56, 160, 255, 0)); }
+    @media (orientation: portrait) {
+      #sk-b1 { bottom: -22vmax; }
+      #sk-b2 { bottom: -14vmax; }
+      #sk-b4 { top: -16vmax; right: -6%; }
+    }
+  </style>
+  <!-- the aurora behind the whole film: four lights drifting on closed paths, so the last frame meets the first -->
+  <div id="root" data-composition-id="sky" data-width="1080" data-height="1920">
+    <i class="sk-b" id="sk-b1"></i>
+    <i class="sk-b" id="sk-b2"></i>
+    <i class="sk-b" id="sk-b3"></i>
+    <i class="sk-b" id="sk-b4"></i>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const D = 32.1, third = D / 3;
+    // each light visits two points and comes home; vmax is 1920 px in both cuts
+    const paths = {
+      "#sk-b1": [[0, 0, 1], [170, -110, 1.14], [-120, 70, 0.94]],
+      "#sk-b2": [[0, 0, 1], [-150, -80, 0.9], [110, 60, 1.12]],
+      "#sk-b3": [[0, 0, 1], [210, -40, 1.2], [-180, 30, 0.9]],
+      "#sk-b4": [[0, 0, 1], [-130, 90, 1.1], [90, -50, 0.92]],
+    };
+    for (const [sel, p] of Object.entries(paths)) {
+      for (let k = 0; k < 3; k++) {
+        const a = p[k], b = p[(k + 1) % 3];
+        tl.fromTo(sel, { x: a[0], y: a[1], scale: a[2] }, { x: b[0], y: b[1], scale: b[2], duration: third, ease: "sine.inOut", immediateRender: k === 0 }, k * third);
+      }
+    }
+    window.__timelines["sky"] = tl;
+  </script>
+</template>

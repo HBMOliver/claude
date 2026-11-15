@@ -1,0 +1,43 @@
+<template>
+  <style>
+    /*COMMON*/
+    #root .fx-t { position: absolute; left: 150px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+    #root .fx-t .hd { margin-top: 22px; font-size: 96px; }
+    #fx-p1 { left: 940px; top: 300px; width: 270px; }
+    #fx-p2 { left: 1230px; top: 262px; width: 270px; z-index: 2; }
+    #fx-p3 { left: 1520px; top: 300px; width: 270px; }
+    @media (orientation: portrait) {
+      #root .fx-t { left: 0; right: 0; top: 230px; bottom: auto; align-items: center; text-align: center; }
+      #root .fx-t .hd { font-size: 104px; }
+      #fx-p1 { left: 70px; top: 880px; width: 330px; }
+      #fx-p2 { left: 325px; top: 780px; width: 430px; }
+      #fx-p3 { left: 680px; top: 880px; width: 330px; }
+    }
+  </style>
+  <!-- a client: FlyX Tenerife, three of the reels made for them, playing -->
+  <div id="root" data-composition-id="flyx" data-width="%W%" data-height="%H%">
+    <div id="fx-in">
+      <div class="fx-t">
+        <div class="eb" id="fx-eb"><span class="dot"></span>Élményközpont · Social &amp; video</div>
+        <div class="hd"><span class="wipe" id="fx-title">FlyX Tenerife</span></div>
+      </div>
+      <div class="phone" id="fx-p1"><video id="fx-v1" class="clip" src="assets/clips/flyx-1.mp4" data-start="0" data-duration="3" data-track-index="1" muted playsinline></video><div class="bar"><i id="fx-b1"></i></div></div>
+      <div class="phone" id="fx-p2"><video id="fx-v2" class="clip" src="assets/clips/flyx-2.mp4" data-start="0" data-duration="3" data-track-index="2" muted playsinline></video><div class="bar"><i id="fx-b2"></i></div></div>
+      <div class="phone" id="fx-p3"><video id="fx-v3" class="clip" src="assets/clips/flyx-3.mp4" data-start="0" data-duration="3" data-track-index="3" muted playsinline></video><div class="bar"><i id="fx-b3"></i></div></div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const tall = window.innerHeight > window.innerWidth;
+    tl.fromTo("#fx-title", { clipPath: "inset(0% 100% 0% 0%)", x: -24 }, { clipPath: "inset(0% 0% 0% 0%)", x: 0, duration: 0.6, ease: "power3.out" }, 0.05);
+    tl.fromTo("#fx-eb", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, 0.18);
+    const rot = tall ? [-6, 0, 6] : [0, 0, 0];
+    ["#fx-p1", "#fx-p2", "#fx-p3"].forEach((p, i) => {
+      const from = tall ? { y: 420, x: 0, rotation: rot[i] * 2, opacity: 0 } : { x: 260, y: 0, rotation: 5, opacity: 0 };
+      tl.fromTo(p, from, { x: 0, y: 0, rotation: rot[i], opacity: 1, duration: 0.8, ease: "expo.out" }, 0.1 + (tall ? [0.08, 0, 0.16][i] : i * 0.09));
+    });
+    ["#fx-b1", "#fx-b2", "#fx-b3"].forEach(b => tl.fromTo(b, { scaleX: 0 }, { scaleX: 1, duration: 2.8, ease: "none" }, 0.1));
+    tl.fromTo("#fx-in", { opacity: 1, x: 0, y: 0 }, { opacity: 0, x: tall ? 0 : -40, y: tall ? -40 : 0, duration: 0.22, ease: "power2.in" }, 2.78);
+    window.__timelines["flyx"] = tl;
+  </script>
+</template>

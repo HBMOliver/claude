@@ -1,0 +1,42 @@
+<template>
+  <style>
+    /*COMMON*/
+    #root .cl-g { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    #root .cl-g .hd { font-size: 132px; }
+    #root .cl-l2 { margin-top: 6px; font-size: 168px; line-height: 1; }
+    #root .cl-s { position: relative; }
+    #cl-strike { position: absolute; left: -0.04em; right: -0.04em; top: 0.53em; height: 0.085em; border-radius: 99px; background: #ff5272; transform-origin: 0 50%; }
+    #root .cl-l4 { margin-top: 10px; }
+    #root .br { display: none; }
+    @media (orientation: portrait) {
+      #root .cl-g .hd { font-size: 116px; }
+      #root .cl-l2 { font-size: 150px; }
+      #root .br { display: block; }
+    }
+  </style>
+  <!-- the claim, the film's own words: social media is dead, interest took its place -->
+  <div id="root" data-composition-id="claim" data-width="%W%" data-height="%H%">
+    <div class="cl-g" id="cl-a">
+      <div class="hd"><span class="wipe" id="cl-w1">A <span class="cl-s">social media<i id="cl-strike"></i></span></span></div>
+      <div class="it cl-l2"><span class="wipe" id="cl-w2">meghalt.</span></div>
+    </div>
+    <div class="cl-g" id="cl-b">
+      <div class="hd"><span class="wipe" id="cl-w3">Az <span class="it">érdeklődés</span></span></div>
+      <div class="hd cl-l4"><span class="wipe" id="cl-w4">vette át <span class="br"></span>a helyét.</span></div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const wipe = (sel, at) => tl.fromTo(sel, { clipPath: "inset(0% 100% 0% 0%)", x: -24 }, { clipPath: "inset(0% 0% 0% 0%)", x: 0, duration: 0.6, ease: "power3.out" }, at);
+    // "A social media", struck through, "meghalt."
+    wipe("#cl-w1", 0.05);
+    tl.fromTo("#cl-strike", { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: "power2.inOut" }, 0.85);
+    tl.fromTo("#cl-w2", { opacity: 0, y: 22, filter: "blur(14px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }, 1.35);
+    tl.fromTo("#cl-a", { opacity: 1, y: 0, filter: "blur(0px)" }, { opacity: 0, y: -18, filter: "blur(8px)", duration: 0.22, ease: "power2.in" }, 2.75);
+    // "Az érdeklődés vette át a helyét."
+    wipe("#cl-w3", 3.0);
+    wipe("#cl-w4", 3.42);
+    tl.fromTo("#cl-b", { opacity: 1, y: 0, filter: "blur(0px)" }, { opacity: 0, y: -18, filter: "blur(8px)", duration: 0.22, ease: "power2.in", immediateRender: false }, 4.78);
+    window.__timelines["claim"] = tl;
+  </script>
+</template>

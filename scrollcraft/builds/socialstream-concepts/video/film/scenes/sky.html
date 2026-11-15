@@ -1,0 +1,41 @@
+<template>
+  <style>
+    /*COMMON*/
+    #root { background: #05070f; }
+    #root .sk-b { position: absolute; border-radius: 50%; }
+    #sk-b1 { width: 70vmax; height: 55vmax; left: -18vmax; bottom: -30vmax; background: radial-gradient(closest-side, rgba(66, 92, 255, 0.58), rgba(66, 92, 255, 0)); }
+    #sk-b2 { width: 62vmax; height: 50vmax; right: -16vmax; bottom: -24vmax; background: radial-gradient(closest-side, rgba(136, 78, 255, 0.58), rgba(136, 78, 255, 0)); }
+    #sk-b3 { width: 46vmax; height: 38vmax; left: 30%; bottom: -27vmax; background: radial-gradient(closest-side, rgba(255, 64, 104, 0.36), rgba(255, 64, 104, 0)); }
+    #sk-b4 { width: 44vmax; height: 38vmax; right: 14%; top: -22vmax; background: radial-gradient(closest-side, rgba(56, 160, 255, 0.3), rgba(56, 160, 255, 0)); }
+    @media (orientation: portrait) {
+      #sk-b1 { bottom: -22vmax; }
+      #sk-b2 { bottom: -14vmax; }
+      #sk-b4 { top: -16vmax; right: -6%; }
+    }
+  </style>
+  <!-- the aurora behind the whole film: four lights drifting on closed paths, so the last frame meets the first -->
+  <div id="root" data-composition-id="sky" data-width="%W%" data-height="%H%">
+    <i class="sk-b" id="sk-b1"></i>
+    <i class="sk-b" id="sk-b2"></i>
+    <i class="sk-b" id="sk-b3"></i>
+    <i class="sk-b" id="sk-b4"></i>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const D = %TOTAL%, third = D / 3;
+    // each light visits two points and comes home; vmax is 1920 px in both cuts
+    const paths = {
+      "#sk-b1": [[0, 0, 1], [170, -110, 1.14], [-120, 70, 0.94]],
+      "#sk-b2": [[0, 0, 1], [-150, -80, 0.9], [110, 60, 1.12]],
+      "#sk-b3": [[0, 0, 1], [210, -40, 1.2], [-180, 30, 0.9]],
+      "#sk-b4": [[0, 0, 1], [-130, 90, 1.1], [90, -50, 0.92]],
+    };
+    for (const [sel, p] of Object.entries(paths)) {
+      for (let k = 0; k < 3; k++) {
+        const a = p[k], b = p[(k + 1) % 3];
+        tl.fromTo(sel, { x: a[0], y: a[1], scale: a[2] }, { x: b[0], y: b[1], scale: b[2], duration: third, ease: "sine.inOut", immediateRender: k === 0 }, k * third);
+      }
+    }
+    window.__timelines["sky"] = tl;
+  </script>
+</template>

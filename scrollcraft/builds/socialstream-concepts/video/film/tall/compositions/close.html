@@ -1,0 +1,77 @@
+<template>
+  <style>
+    /* Shared by every scene of the brand film (build.py puts it into each scene's style block). The site's own type and
+   palette: Sora for headlines, Instrument Serif italic for the accent word, Inter for small type; blue-purple light,
+   red-pink as the accent. One file serves both cuts: the tall cut's changes are under the portrait query. */
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
+#root { position: absolute; inset: 0; overflow: hidden; color: #eef1f8; font-family: Inter, sans-serif; }
+/* a scene's wrapper fills the frame: its exit moves it, and a moved element becomes what its children are placed in */
+#root [id$="-in"] { position: absolute; inset: 0; }
+#root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.02; color: #eef1f8; }
+#root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: 0; color: #d9d6ff; }
+#root .hd .it { font-size: 1.12em; }
+#root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #aab2ff; }
+#root .dot { display: inline-block; width: 12px; height: 12px; margin: 0 16px 4px 0; border-radius: 50%; background: #ff5272; box-shadow: 0 0 14px #ff5272; vertical-align: middle; }
+#root .acc { color: #ff5272; }
+/* a revealed line: padded so the clip that wipes it in never cuts an italic overhang or a descender */
+#root .wipe { display: inline-block; padding: 0.14em 0.16em 0.22em; margin: -0.14em -0.16em -0.22em; }
+/* a reel standing like a post, as the film card on the site */
+#root .phone { position: absolute; overflow: hidden; aspect-ratio: 9 / 16; border-radius: 28px; background: #000;
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.16), 0 50px 100px -40px rgba(0, 0, 0, 0.85), 0 0 120px -30px rgba(120, 104, 255, 0.55); }
+#root .phone video, #root .panel video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#root .phone .bar { position: absolute; z-index: 2; left: 14px; right: 14px; top: 13px; height: 3px; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.32); }
+#root .phone .bar i { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; }
+/* footage in a rounded panel, darker at its foot */
+#root .panel { position: absolute; overflow: hidden; border-radius: 30px; background: #0b1024;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 40px 90px -40px rgba(0, 0, 0, 0.85); }
+#root .panel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5, 7, 15, 0) 45%, rgba(5, 7, 15, 0.5)); }
+/* a result: the number counts, its unit and what it was */
+#root .res .n { display: flex; align-items: baseline; gap: 0.06em; }
+#root .res .n b { font: 700 280px/0.9 Sora, Inter, sans-serif; letter-spacing: -0.055em; font-variant-numeric: tabular-nums; color: #eef1f8; }
+#root .res .n small { font: 700 76px/1 Sora, Inter, sans-serif; letter-spacing: -0.04em; color: #c6cbff; }
+#root .res .n small.it { font: italic 400 120px/1 "Instrument Serif", Georgia, serif; letter-spacing: 0; color: #d9d6ff; }
+#root .res .lab { margin-top: 18px; font: 600 40px/1.2 Inter, sans-serif; letter-spacing: -0.01em; color: #eef1f8; }
+#root .res .eb { margin-top: 18px; }
+@media (orientation: portrait) {
+  #root .res .n b { font-size: 250px; }
+  #root .res .n small { font-size: 68px; }
+  #root .res .n small.it { font-size: 108px; }
+  #root .res .lab { font-size: 42px; }
+}
+
+    #root .wl-in { position: absolute; inset: 0; }
+    #root .wl-tilt { position: absolute; left: 50%; top: 50%; width: 2294px; height: 3031px; margin: -1515.5px 0 0 -1147.0px; transform: rotate(-10deg); }
+    #root .wl-wall { position: absolute; inset: 0; }
+    #root .wl-card { position: absolute; width: 230px; height: 409px; overflow: hidden; border-radius: 22px; background: #0b1024;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 30px 60px -30px rgba(0, 0, 0, 0.8); }
+    #root .wl-card img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    #root .wl-dim { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, rgba(5, 7, 15, 0.45), rgba(5, 7, 15, 0.74)); }
+    #root .wl-band { position: absolute; left: 0; right: 0; top: 21.5%; height: 57%;
+      background: linear-gradient(180deg, rgba(5, 7, 15, 0) 0%, #05070f 17.5%, #05070f 82.5%, rgba(5, 7, 15, 0) 100%); }
+    #cs-logo { position: absolute; }
+  </style>
+  <!-- the close: the wall comes back with the logo on the band; at the end the wall and the logo go, and only the band
+       is left, which is how the film's first frame looks, so the loop on the site has no jump -->
+  <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+    <div class="wl-in" data-layout-allow-overflow id="cs-in">
+      <div class="wl-tilt"><div class="wl-wall" id="cs-wall"><div class="wl-card" style="left:0px;top:0px"><img src="assets/reels/p02.jpg" alt=""></div><div class="wl-card" style="left:258px;top:0px"><img src="assets/reels/p05.jpg" alt=""></div><div class="wl-card" style="left:516px;top:0px"><img src="assets/reels/p08.jpg" alt=""></div><div class="wl-card" style="left:774px;top:0px"><img src="assets/reels/p11.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:0px"><img src="assets/reels/p15.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:0px"><img src="assets/reels/p18.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:0px"><img src="assets/reels/p21.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:0px"><img src="assets/reels/p24.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:0px"><img src="assets/reels/p04.jpg" alt=""></div><div class="wl-card" style="left:0px;top:437px"><img src="assets/reels/p07.jpg" alt=""></div><div class="wl-card" style="left:258px;top:437px"><img src="assets/reels/p10.jpg" alt=""></div><div class="wl-card" style="left:516px;top:437px"><img src="assets/reels/p14.jpg" alt=""></div><div class="wl-card" style="left:774px;top:437px"><img src="assets/reels/p17.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:437px"><img src="assets/reels/p20.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:437px"><img src="assets/reels/p23.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:437px"><img src="assets/reels/p03.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:437px"><img src="assets/reels/p06.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:437px"><img src="assets/reels/p09.jpg" alt=""></div><div class="wl-card" style="left:0px;top:874px"><img src="assets/reels/p13.jpg" alt=""></div><div class="wl-card" style="left:258px;top:874px"><img src="assets/reels/p16.jpg" alt=""></div><div class="wl-card" style="left:516px;top:874px"><img src="assets/reels/p19.jpg" alt=""></div><div class="wl-card" style="left:774px;top:874px"><img src="assets/reels/p22.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:874px"><img src="assets/reels/p02.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:874px"><img src="assets/reels/p05.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:874px"><img src="assets/reels/p08.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:874px"><img src="assets/reels/p11.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:874px"><img src="assets/reels/p15.jpg" alt=""></div><div class="wl-card" style="left:0px;top:1311px"><img src="assets/reels/p18.jpg" alt=""></div><div class="wl-card" style="left:258px;top:1311px"><img src="assets/reels/p21.jpg" alt=""></div><div class="wl-card" style="left:516px;top:1311px"><img src="assets/reels/p24.jpg" alt=""></div><div class="wl-card" style="left:774px;top:1311px"><img src="assets/reels/p04.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:1311px"><img src="assets/reels/p07.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:1311px"><img src="assets/reels/p10.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:1311px"><img src="assets/reels/p14.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:1311px"><img src="assets/reels/p17.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:1311px"><img src="assets/reels/p20.jpg" alt=""></div><div class="wl-card" style="left:0px;top:1748px"><img src="assets/reels/p23.jpg" alt=""></div><div class="wl-card" style="left:258px;top:1748px"><img src="assets/reels/p03.jpg" alt=""></div><div class="wl-card" style="left:516px;top:1748px"><img src="assets/reels/p06.jpg" alt=""></div><div class="wl-card" style="left:774px;top:1748px"><img src="assets/reels/p09.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:1748px"><img src="assets/reels/p13.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:1748px"><img src="assets/reels/p16.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:1748px"><img src="assets/reels/p19.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:1748px"><img src="assets/reels/p22.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:1748px"><img src="assets/reels/p02.jpg" alt=""></div><div class="wl-card" style="left:0px;top:2185px"><img src="assets/reels/p05.jpg" alt=""></div><div class="wl-card" style="left:258px;top:2185px"><img src="assets/reels/p08.jpg" alt=""></div><div class="wl-card" style="left:516px;top:2185px"><img src="assets/reels/p11.jpg" alt=""></div><div class="wl-card" style="left:774px;top:2185px"><img src="assets/reels/p15.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:2185px"><img src="assets/reels/p18.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:2185px"><img src="assets/reels/p21.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:2185px"><img src="assets/reels/p24.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:2185px"><img src="assets/reels/p04.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:2185px"><img src="assets/reels/p07.jpg" alt=""></div><div class="wl-card" style="left:0px;top:2622px"><img src="assets/reels/p10.jpg" alt=""></div><div class="wl-card" style="left:258px;top:2622px"><img src="assets/reels/p14.jpg" alt=""></div><div class="wl-card" style="left:516px;top:2622px"><img src="assets/reels/p17.jpg" alt=""></div><div class="wl-card" style="left:774px;top:2622px"><img src="assets/reels/p20.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:2622px"><img src="assets/reels/p23.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:2622px"><img src="assets/reels/p03.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:2622px"><img src="assets/reels/p06.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:2622px"><img src="assets/reels/p09.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:2622px"><img src="assets/reels/p13.jpg" alt=""></div></div></div>
+      <div class="wl-dim" id="cs-dim"></div>
+    </div>
+    <div class="wl-band" id="cs-band"></div>
+    <img id="cs-logo" src="assets/logo/socialstream-logo-stacked-dark.svg" alt="SocialStream" style="left:158.994px;top:622.500px;width:762.012px;height:675.000px">
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#cs-band", { opacity: 0 }, { opacity: 1, duration: 0.45, ease: "power2.out" }, 0);
+    tl.fromTo("#cs-wall .wl-card", { opacity: 0, scale: 1.3 }, { opacity: 1, scale: 1, duration: 0.8, ease: "expo.out", stagger: { grid: [7, 9], from: "center", amount: 0.8 } }, 0.05);
+    tl.fromTo("#cs-wall", { x: 60 }, { x: 0, duration: 3.4, ease: "none" }, 0);
+    // the logo as one piece, as the kit asks: a fade and a 4 % scale
+    tl.fromTo("#cs-logo", { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.7, ease: "expo.out" }, 0.3);
+    // out to the band alone (the film's first frame)
+    tl.fromTo("#cs-logo", { opacity: 1 }, { opacity: 0, duration: 0.45, ease: "power2.in", immediateRender: false }, 2.75);
+    tl.fromTo("#cs-in", { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.in" }, 2.85);
+    window.__timelines["close"] = tl;
+  </script>
+</template>
