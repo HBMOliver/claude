@@ -109,7 +109,9 @@ BANNED:  numbers on an empty gradient with a small icon; four scenes in one layo
 
 The same film on the same clock: one `build.py`, the same beat constants, the same scripts. Only positions and
 sizes differ, so every scene change, hit and line falls on the same frame as in the wide cut (1485 frames), and
-the sound is the same.
+the sound is the same. Checked on the built projects, in each language: the 59 timed rows of `index.html` (the
+14 scenes and the 45 sounds) are identical, and of the 306 timed animation calls in the scenes the only
+differences are the three more cards that rise in Prof Enzo's upright grid and the name of one selector.
 
 ```text
 WHERE:   the site (Aurora Mix): the card beside the claim on a computer (about 360 px wide, 9:16), where the wide
@@ -117,7 +119,9 @@ WHERE:   the site (Aurora Mix): the card beside the claim on a computer (about 3
          behind the page. The site plays it muted and in a loop.
 SAFE:    the site fits the film with object-fit: cover (base.css), so a phone taller than 9:16 cuts up to 9 % off
          each side and a squatter one up to 9 % off the top and bottom; the site's menu lies over the top. Every
-         word and number stays inside x 100-980, y 230-1750. Footage and grounds bleed.
+         word and number is laid out inside x 100-980, y 230-1750. The results push in 3 % while they hold, which
+         carries their outermost marks (an eyebrow's first letter, the week's first and last day) up to 13 px
+         past that box by the end of a scene. Footage and grounds bleed.
 TYPE:    one phrase a line where the wide cut has one line: "Mégsem jönnek / a vevők?", "Az érdeklődés / vette
          át / a helyét.", "Mi gyártjuk / a videót,". Phrases Sora 700 104-150 px, numbers 252-400 px, labels 30 px
          caps and 58 px, comments 34 px, reviews 48 px (at a phone's 390 px these are 11 px and up).

@@ -855,7 +855,8 @@ def scene_close(s, e, info):
 # ================================ the upright cut (1080 x 1920) ================================
 # The same film on the same clock for a frame that stands upright: the site's card, and phones. The site fits it with
 # object-fit: cover (base.css), so a phone that is taller or squatter than 9:16 cuts up to 9 % off the sides or off
-# the top and bottom: every word and number stays inside x 100-980, y 230-1750; footage and grounds bleed.
+# the top and bottom: every word and number is laid out inside x 100-980, y 230-1750 (the results' slow push
+# carries their outermost marks up to 13 px past it); footage and grounds bleed.
 # Scenes whose script carries no positions (the results) are laid out again below and keep the wide scene's script;
 # the others take their upright positions inside their own function (if TALL). ----
 TALL_TEXT = {

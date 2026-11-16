@@ -79,7 +79,10 @@ live.
   and the sunlit cliff; nobody's face). "300M+ Ft" is too wide for the frame at any size worth having, so "Ft"
   starts the line under it.
 - *Measured.* Both masters: 1080 x 1920, 1485 frames, 59.40 s, and a sound stream byte-identical to the wide
-  masters'. `hyperframes check`: no errors in either. Warnings: the two reading-time lines the wide cut has
+  masters'. The clock, on the built projects: identical timing in `index.html` and in 306 animation calls a
+  language, but for Prof Enzo's three more cards (`SPEC.md`). The safe box holds at each scene's start; the
+  results' 3 % push carries an eyebrow's first letter and the week's outer days up to 13 px past it by the end.
+  `hyperframes check`: no errors in either. Warnings: the two reading-time lines the wide cut has
   (the last review; in English "what they bring in."), the "Komment" labels under the type floor (24 px), and
   three more on those labels ("on screen 0.12 s"), which is the check counting each typed word as a new line:
   the labels stay for as long as their cards.
