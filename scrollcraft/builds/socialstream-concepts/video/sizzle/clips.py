@@ -36,6 +36,9 @@ S = {  # sources
     "lv_sun": PH + "/latvia/IMG_1737.MOV", "horse": PH + "/bridleup/IMG_2767.MOV",
     "uty": HOME + "/Downloads/copy_C6D41801-5C0E-404C-8A06-E036C9BCF8FE.MOV",
     "misk": BAL + "/05 Miskolc Plaza sakk promóció [h2ZJTq3HAO0].mp4",
+    # the two ads they made for the smartwatch brand (ZS&M Smart), which the founder found on 2026-11-16
+    "watch_ugc": HOME + "/Downloads/19b0c63d-6504-42db-82f4-ea4c69db33a3.MP4",   # a creator shows the watch (480 x 848)
+    "watch_val": HOME + "/Downloads/V89_5.MOV",                                  # the Valentine's Day ad for the V89
 }
 # captions for the Latvia clips: the words spoken in them (the site session's transcript), as (from, to, text)
 CAPS = {
@@ -98,11 +101,12 @@ def main():
         os.makedirs(os.path.join(HERE, "assets", d), exist_ok=True)
     tmp = tempfile.mkdtemp()
 
-    # ---- the wall: 14 reels that play (360 x 640, 8.0 s), each with the frame it freezes on (frame 182 = 7.28 s,
+    # ---- the wall: 16 reels that play (360 x 640, 8.0 s), each with the frame it freezes on (frame 182 = 7.28 s,
     # where the film says "meghalt.") ----
     LIVE = [("w01", "rain", 2.4), ("w02", "ad1", 8.0), ("w03", "calima", 11.5), ("w04", "ez1", 1.5), ("w05", "ez2", 4.0),
             ("w06", "ez3", 5.0), ("w07", "lv_yellow", 1.0), ("w08", "lv_hood", 0.8), ("w09", "uty", 2.0), ("w10", "misk", 0.0),
-            ("w11", "horse", 7.2), ("w12", "szolg", 1.0), ("w13", "melodie", 56.0), ("w14", "ez4", 5.5)]
+            ("w11", "horse", 7.2), ("w12", "szolg", 1.0), ("w13", "melodie", 56.0), ("w14", "ez4", 5.5),
+            ("w15", "watch_ugc", 2.0), ("w16", "watch_val", 3.0)]
     for name, key, start in LIVE:
         out = clip(name, key, start, 8.0, 360, 640, 23, tmp, sub="wall")
         f = os.path.join(HERE, "assets", "wall", name + ".jpg")
@@ -131,7 +135,8 @@ def main():
          ("ez1a", "ez1", 2.5, 3.0), ("ez1b", "ez1", 11.0, 3.0), ("ez2a", "ez2", 3.0, 3.0), ("ez2b", "ez2", 12.0, 3.0),
          ("ez3a", "ez3", 6.0, 3.0), ("ez3b", "ez3", 21.0, 3.0),
          ("pr1", "lv_yellow", 1.0, 3.2), ("pr2", "uty", 4.0, 3.2), ("pr3", "szolg", 2.0, 3.2), ("pr4", "misk", 0.5, 3.2),
-         ("pr5", "horse", 11.0, 3.2), ("pr6", "lv_cap", 0.0, 3.2)]
+         ("pr5", "horse", 11.0, 3.2), ("pr6", "lv_cap", 0.0, 3.2),
+         ("pw1", "watch_ugc", 3.0, 3.2), ("pw2", "watch_val", 4.6, 3.2)]
     for name, key, start, dur in P:
         clip(name, key, start, dur, 720, 1280, 20, tmp)
 

@@ -1,4 +1,4 @@
-# Review of draft 4 (2026-11-16)
+# Review of drafts 4 and 5 (2026-11-16)
 
 **The calls I made.** One device carries the claim: the feed (a wall of their reels) dies on "meghalt." and one card
 comes back and takes the frame on the music's drop. Three client worlds in three layouts (phones and comments; a
@@ -30,5 +30,13 @@ the reference; each stays readable for 1-2 s) and on the results' small eyebrows
 `text_below_floor` on the cards' source labels (22-24 px caps) and the captions inside the reels;
 `duplicate_media_discovery_risk` on the wall's repeated stills outside the frame.
 
+**Draft 5.** The founder liked draft 4 ("otherwise i like the video") and asked for three things, all done: the two
+smartwatch ads they found (in the wall, and in the productions row with the V89 ad as its middle card); the
+stack after "Ne nekünk higgy. Nekik." now holds the six clients' reviews only, one a beat, then two seconds to
+read (their note: client reviews were mixed with FlyX comments); the English cut. Both cuts: check without
+errors, 1235 frames, review copies at -14.5 LUFS and -1.0 dBTP. English frames checked at 720 px: every line fits;
+the reels inside the phones keep their Hungarian captions. Not heard, not watched at speed.
+
 **To confirm with the founder.** "1M+" (my sum of Facebook's play counts on Prof Enzo's 30 newest reels); the music
-track; whether the Latvia and Up To Youth speakers may appear.
+track; whether the Latvia and Up To Youth speakers may appear; whether the smartwatch brand is the watch webshop
+of the 23× result (then its ad can stand beside that number).

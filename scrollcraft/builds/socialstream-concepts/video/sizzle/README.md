@@ -1,4 +1,4 @@
-# The SocialStream sizzle (draft 4, 2026-11-16)
+# The SocialStream sizzle (draft 5, 2026-11-16)
 
 After seeing the v6 draft (`../film-v6/`), the founder sent Social Chain's 2026 sizzle as the film they had in mind
 ("i want it more like that"): ours said nothing and did not grab attention. They want the feeling of achievement
@@ -8,15 +8,19 @@ in SocialStream's type and colours, not Social Chain's look.
 
 **Draft 4** was planned first (`SPEC.md`: what the reference does, the film's numbers, the shots, what is honest)
 after the founder's "too much andras at the beginning, i think we can still do better" and "study the socialchain
-video better". `REVIEW.md` is its review. 49.40 s, wide, Hungarian, with sound.
+video better". `REVIEW.md` is its review. 49.40 s, wide, with sound.
+
+**Draft 5**: the founder liked draft 4; it adds the two smartwatch ads they found, makes the "their words" stack
+the clients' reviews only, and adds the English cut (`wide-en/`; every line lives in `TEXT` in `build.py`).
 
 ## Files
 
 - `SPEC.md`, `REVIEW.md`: the plan and the review.
 - `clips.py <photos-exports> <prof-enzo-reels>`: cuts `assets/clips/` (phones, cards, the turn), `assets/wall/`
-  (14 playing reels with their freeze frames, and stills, each with a grey copy), `assets/pol/` (polaroids) and copies
+  (16 playing reels with their freeze frames, and stills, each with a grey copy), `assets/pol/` (polaroids) and copies
   `assets/audio/` (Mixkit music and effects). None of these are in git.
-- `build.py`: writes the HyperFrames project `wide/` (one composition per scene; the logo's build comes from the
+- `build.py`: writes the HyperFrames projects `wide/` (Hungarian) and `wide-en/` (English), or the one named on
+  the command line (one composition per scene; the logo's build comes from the
   logo kit's `make_motion.py`, format `film-open-wide`).
 - `common.css`: the type and the objects (wall, phone, reel card, comment, heart, polaroid, counter).
 
@@ -25,7 +29,7 @@ video better". `REVIEW.md` is its review. 49.40 s, wide, Hungarian, with sound.
 ```sh
 python3 -I clips.py <photos-exports-folder> <prof-enzo-folder>
 python3 build.py
-cd wide && npx --yes hyperframes@0.9.40 check && npx --yes hyperframes@0.9.40 render -q delivery -o ../master-wide.mp4
+for p in wide wide-en; do (cd $p && npx --yes hyperframes@0.9.40 check && npx --yes hyperframes@0.9.40 render -q delivery -o ../master-$p.mp4); done
 ```
 
 Measure the render's sound (`npx hyperframes audio <file> --json`): the mix level changed between renders of this

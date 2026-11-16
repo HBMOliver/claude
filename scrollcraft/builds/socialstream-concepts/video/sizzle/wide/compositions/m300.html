@@ -87,7 +87,7 @@
   </style>
   <div id="root" data-composition-id="m300" data-width="1920" data-height="1080">
     <div class="ff" id="wp">
-    <div class="fld" style="background:#070a1c"><i class="lt" id="m3-l0" data-layout-allow-overflow style="left:12%;top:90%;width:100vmax;height:100vmax;margin:-50.0vmax 0 0 -50.0vmax;background:radial-gradient(closest-side,rgba(66, 92, 255, 0.5),rgba(66, 92, 255,0))"></i><i class="lt" id="m3-l1" data-layout-allow-overflow style="left:90%;top:8%;width:96vmax;height:96vmax;margin:-48.0vmax 0 0 -48.0vmax;background:radial-gradient(closest-side,rgba(136, 78, 255, 0.5),rgba(136, 78, 255,0))"></i><i class="lt" id="m3-l2" data-layout-allow-overflow style="left:60%;top:110%;width:60vmax;height:60vmax;margin:-30.0vmax 0 0 -30.0vmax;background:radial-gradient(closest-side,rgba(255, 64, 104, 0.3),rgba(255, 64, 104,0))"></i></div><div class="eb" id="m3-eb" style="position:absolute;left:0;right:0;top:150px;text-align:center">2022 óta</div><div class="hd rn" id="m3-n" style="left:0;right:0;top:220px;justify-content:center"><span class="cnt" id="m3-cnt" data-motion-blur="off"><span class="d"></span><span class="d"></span><span class="d"></span></span><span class="mp">M+</span><span class="it ui">Ft</span></div><div class="lab" id="m3-lab" style="position:absolute;left:0;right:0;top:720px;text-align:center"><span class="w ">kezelt</span> <span class="w ">büdzsé</span> <span class="w ">2022</span> <span class="w ">óta</span></div>
+    <div class="fld" style="background:#070a1c"><i class="lt" id="m3-l0" data-layout-allow-overflow style="left:12%;top:90%;width:100vmax;height:100vmax;margin:-50.0vmax 0 0 -50.0vmax;background:radial-gradient(closest-side,rgba(66, 92, 255, 0.5),rgba(66, 92, 255,0))"></i><i class="lt" id="m3-l1" data-layout-allow-overflow style="left:90%;top:8%;width:96vmax;height:96vmax;margin:-48.0vmax 0 0 -48.0vmax;background:radial-gradient(closest-side,rgba(136, 78, 255, 0.5),rgba(136, 78, 255,0))"></i><i class="lt" id="m3-l2" data-layout-allow-overflow style="left:60%;top:110%;width:60vmax;height:60vmax;margin:-30.0vmax 0 0 -30.0vmax;background:radial-gradient(closest-side,rgba(255, 64, 104, 0.3),rgba(255, 64, 104,0))"></i></div><div class="eb" id="m3-eb" style="position:absolute;left:0;right:0;top:150px;text-align:center">2022 óta</div><div class="hd rn" id="m3-n" style="left:0;right:0;top:220px;justify-content:center"><span class="cnt" id="m3-cnt" data-motion-blur="off"><span class="d"></span><span class="d"></span><span class="d"></span></span><span class="mp">M+</span><span class="it ui">Ft</span></div><div class="lab" id="m3-lab" style="position:absolute;left:0;right:0;top:720px;text-align:center"><span class="w ">kezelt</span> <span class="w ">büdzsé</span></div>
     </div>
   </div>
   <script>
@@ -137,6 +137,8 @@
         const s = String(v).padStart(ds.length, " ");
         ds.forEach((d, k) => tl.set(d, { textContent: s[k] === " " ? "" : s[k] }, Math.max(0, AT(tt) - 0.01)));
       }
+      const sep = el.querySelector(".sep");                 // a thousands comma: there once there are thousands
+      if (sep) tl.fromTo(sep, { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none" }, AT(t + dur * 0.12));
     };
     wipeIn(34.72, "iris");
     drift("#m3-l0", 34.72, 2.28, -80, 60);

@@ -56,6 +56,73 @@ for _n, _a, _z in SC:
         assert abs(_x * FPS - round(_x * FPS)) < 1e-6, (_n, _x)
 assert abs(TOTAL * FPS - round(TOTAL * FPS)) < 1e-6
 
+# ---- every line of the film in both languages. Hungarian is the site's copy; the English is the site's own English
+# for the same line (../../content.mjs), so nothing is translated twice. Comments on FlyX's reels were written in
+# English and stay as they are ----
+TEXT = {
+    "hu": dict(
+        p1="Posztolsz.", p2="Hirdetsz.", p3='Mégsem jönnek a <span class="acc">vevők?</span>',
+        ca=('<span class="w">A</span> <span class="ss"><span class="w">social</span> <span class="w">media</span>'
+            '<i class="stk" id="op-stk"></i></span>'),
+        ca2="meghalt.",
+        cb=('<div class="hd cb1"><span class="w">Az</span> <span class="w it">érdeklődés</span></div>\n'
+            '      <div class="hd cb1"><span class="w">vette</span> <span class="w">át</span> <span class="w">a</span> '
+            '<span class="w">helyét<span class="acc">.</span></span></div>'),
+        fx_eb="FlyX Tenerife · Élményközpont", fx_lab="megtekintés egy reelen", comment="Komment",
+        ez_eb="Prof Enzo · Facebook-reelek", ez_lab="megtekintés", ez_f="33K követő",
+        pr_eb="Részletek a videóinkból", tags=["Forgatás", "Vágás", "Feliratozás", "Reels", "Podcast &amp; interjú"],
+        how=['Mi gyártjuk a <span class="it">videót</span>,', 'mi futtatjuk a <span class="it">hirdetést</span>,', "és mi mérjük,",
+             'mit <span class="it hz">hozott</span><span class="acc">.</span>'],
+        r1_eb="Csarnoképítő ügyfél · B2B · Meta", r1_lab="bevétel egy hét alatt", days=["H", "K", "Sze", "Cs", "P", "Szo", "V"],
+        r2_eb="Ajtó webshop · Google Performance Max",
+        r3_eb="Karóra webshop · Karácsony", r3_p=("több mint&nbsp;", "M Ft bevétel"),
+        r4_eb="Egészségügyi webinár", r4_lab="jelentkező 600K Ft-ból", r4_st=("105 Ft", "egy jelentkező"), thou="",
+        m3_eb="2022 óta", m3_lab="kezelt büdzsé",        # the year is said once, above the number
+        v0=("big", "Ne nekünk higgy."), v1="Nekik",
+        # their clients' reviews of them, from the site, cut only with "…". (FlyX's viewers' comments are about
+        # FlyX's videos, not about SocialStream: they stay in FlyX's world.)
+        voices=[
+            ("q", "Péter · Hoofbútor", "„Már az induláskor is volt vásárlás…”"),
+            ("q", "Csarnoképítő ügyfél · B2B", "„…annyi ajánlatkérésünk lett, mint korábban fél év alatt összesen.”"),
+            ("q", "Karóra webshop", "„…az ünnepi szezon nekünk dolgozik – nem ellenünk.”"),
+            ("q", "Egészségügyi szolgáltató", "„…majdnem 5700-nál állt meg, alig hittük el…”"),
+            ("q", "Rita · Rita’s Beauty Corner", "„Rövid időn belül jöttek az eredmények…”"),
+            ("q", "János · EJ Massage Therapies", "„Csak ajánlani tudom őket.”"),
+        ], qm=("„", "”"),
+        c1=("Videók, amiket", "végignéznek"), c2=("Hirdetések, amik", "megtérülnek"), cs_eb="Interest media ügynökség",
+    ),
+    "en": dict(
+        p1="You post.", p2="You advertise.", p3='And still no <span class="acc">buyers?</span>',
+        ca='<span class="ss"><span class="w">Social</span> <span class="w">media</span><i class="stk" id="op-stk"></i></span>',
+        ca2="is dead.",
+        cb=('<div class="hd cb1"><span class="w it">Interest</span></div>\n'
+            '      <div class="hd cb1"><span class="w">has</span> <span class="w">taken</span> <span class="w">its</span> '
+            '<span class="w">place<span class="acc">.</span></span></div>'),
+        fx_eb="FlyX Tenerife · Experience centre", fx_lab="views on one reel", comment="Comment",
+        ez_eb="Prof Enzo · Facebook reels", ez_lab="views", ez_f="33K followers",
+        pr_eb="Clips from our videos", tags=["Shooting", "Editing", "Subtitles", "Reels", "Podcast &amp; interview"],
+        how=['We make the <span class="it">video</span>,', 'we run the <span class="it">ads</span>,', "and we measure",
+             'what they <span class="it hz">bring in</span><span class="acc">.</span>'],
+        r1_eb="Industrial hall builder · B2B · Meta", r1_lab="revenue in one week", days=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        r2_eb="Door webshop · Google Performance Max",
+        r3_eb="Watch webshop · Christmas", r3_p=("over&nbsp;", "M Ft in revenue"),
+        r4_eb="Healthcare webinar", r4_lab="registrants from 600K Ft", r4_st=("105 Ft", "per registrant"), thou=",",
+        m3_eb="Since 2022", m3_lab="budget managed",
+        v0=("mid", "Don’t take our word for it."), v1="Take theirs",
+        voices=[
+            ("q", "Péter · Hoofbútor", "“There were purchases from launch day…”"),
+            ("q", "Hall-building client · B2B", "“…as many quote requests as we used to get in half a year.”"),
+            ("q", "Watch webshop", "“…the holiday season felt like it was working for us, not against us.”"),
+            ("q", "Healthcare provider", "“…the counter stopped at almost 5,700, we could hardly believe it…”"),
+            ("q", "Rita · Rita’s Beauty Corner", "“Results came quickly…”"),
+            ("q", "János · EJ Massage Therapies", "“I can only recommend them.”"),
+        ], qm=("“", "”"),
+        c1=("Videos people watch", "to the end"), c2=("Ads that", "pay off"), cs_eb="Interest media agency",
+    ),
+}
+TX = TEXT["hu"]                                             # the language being built (main() switches it)
+OUTS = [("hu", "wide"), ("en", "wide-en")]
+
 # ---- helpers every scene's script starts with ----
 JS = r"""
     const FPS = 25, W = 1920, H = 1080, START = %START%, AT = (t) => t - START;
@@ -103,6 +170,8 @@ JS = r"""
         const s = String(v).padStart(ds.length, " ");
         ds.forEach((d, k) => tl.set(d, { textContent: s[k] === " " ? "" : s[k] }, Math.max(0, AT(tt) - 0.01)));
       }
+      const sep = el.querySelector(".sep");                 // a thousands comma: there once there are thousands
+      if (sep) tl.fromTo(sep, { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none" }, AT(t + dur * 0.12));
     };"""
 
 HEART = ('<svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 '
@@ -152,9 +221,11 @@ def bubble(bid, left, top, src, text, cls="", width=None):
             f'<span class="src">{src}</span>{tw(text)}</div>')
 
 
-def digits(n, cid, gap_after=None):
+def digits(n, cid, gap_after=None, sep=""):
+    """n digit boxes; after box gap_after a thousands gap (Hungarian) or, with sep, a comma (English)."""
     gap = ' style="margin-right:0.16em"'
-    ds = "".join(f'<span class="d"{gap if gap_after == k else ""}></span>' for k in range(n))
+    ds = "".join(f'<span class="d"{gap if gap_after == k and not sep else ""}></span>'
+                 + (f'<span class="sep">{sep}</span>' if gap_after == k and sep else "") for k in range(n))
     return f'<span class="cnt" id="{cid}" data-motion-blur="off">{ds}</span>'
 
 
@@ -181,7 +252,7 @@ WALL_W, WALL_H = COLS * CW + (COLS - 1) * GAP, ROWS * CH + (ROWS - 1) * GAP
 MID = (ROWS // 2, COLS // 2)
 WALL_X0, WALL_V = 80, 16                                    # the drift: where it starts, px a second
 WALL_X1 = WALL_X0 - WALL_V * DEATH - 8                      # where it has stopped after the wall dies
-LIVE = ["w02", "w04", "w07", "w11", "w03", "w09", "w05", "w13", "w10", "w06", "w08", "w01", "w14", "w12"]
+LIVE = ["w02", "w15", "w04", "w07", "w16", "w11", "w03", "w09", "w05", "w13", "w10", "w06", "w08", "w01", "w14", "w12"]
 STILL = ["s02", "s04", "s10", "s06", "s12", "s15", "s01", "s18", "s05", "s20", "s07", "s23", "s03", "s14", "s11", "s13",
          "s16", "s17", "s19", "s21", "s22", "s24", "s25", "s26", "s27", "s09", "s08"]
 WALL_CSS = f"""#root .wl-tilt {{ position: absolute; left: 50%; top: 50%; width: {WALL_W}px; height: {WALL_H}px; margin: {-WALL_H / 2}px 0 0 {-WALL_W / 2}px; transform: rotate({TILT}deg); }}
@@ -255,15 +326,14 @@ def scene_open(s, e, info):
     <div class="ff" id="op-dim" style="background:#05070f"></div>
     <div class="glow" id="op-glow"></div>
     <div class="glow wide" id="op-glow2"></div>
-    <div class="rsv" id="op-p1"><div class="hd big">Posztolsz.</div></div>
-    <div class="rsv" id="op-p2"><div class="hd big">Hirdetsz.</div></div>
-    <div class="rsv" id="op-p3"><div class="hd mid">Mégsem jönnek a <span class="acc">vevők?</span></div></div>
-    <div class="rsv" id="op-ca"><div><div class="hd big"><span class="w">A</span> <span class="ss"><span class="w">social</span> <span class="w">media</span><i class="stk" id="op-stk"></i></span></div>
-      <div class="it huge" id="op-m">meghalt.</div></div></div>
+    <div class="rsv" id="op-p1"><div class="hd big">{TX['p1']}</div></div>
+    <div class="rsv" id="op-p2"><div class="hd big">{TX['p2']}</div></div>
+    <div class="rsv" id="op-p3"><div class="hd mid">{TX['p3']}</div></div>
+    <div class="rsv" id="op-ca"><div><div class="hd big">{TX['ca']}</div>
+      <div class="it huge" id="op-m">{TX['ca2']}</div></div></div>
     <div class="ff" id="op-rot" data-layout-allow-overflow><div class="ff" id="op-hcard">{video("op-hv", "clips/w-turn", SPARK - 0.04, e - SPARK + 0.04, 20, "full")}</div></div>
     <div class="ff" id="op-shade"></div>
-    <div class="cb" id="op-cb"><div class="hd cb1"><span class="w">Az</span> <span class="w it">érdeklődés</span></div>
-      <div class="hd cb1"><span class="w">vette</span> <span class="w">át</span> <span class="w">a</span> <span class="w">helyét<span class="acc">.</span></span></div></div>"""
+    <div class="cb" id="op-cb">{TX['cb']}</div>"""
     css = WALL_CSS + """
     #root video.full { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     #root #op-shade { background: linear-gradient(24deg, rgba(5, 7, 15, 0.86) 0%, rgba(5, 7, 15, 0.4) 36%, rgba(5, 7, 15, 0) 62%); }
@@ -312,11 +382,11 @@ def scene_flyx(s, e):
           ("fx-c2", 110, 896, "Where is it please?", None, b(9))]
     hh, hj = hearts("fx-h", 11, b(5), b(11), (900, 640, 1820, 980), 4)
     html = (field("linear-gradient(135deg,#ff8a1f 0%,#ff5a3c 48%,#e0306f 100%)", ls) + tile("FlyX Tenerife")
-            + f'<div class="fxt"><div class="eb" id="fx-eb">FlyX Tenerife · Élményközpont</div>'
+            + f'<div class="fxt"><div class="eb" id="fx-eb">{TX["fx_eb"]}</div>'
               f'<div class="hd fxn" id="fx-n">{digits(2, "fx-cnt")}<span class="k">K</span></div>'
-              f'<div class="lab" id="fx-lab">{wl("megtekintés egy reelen")}</div></div>'
+              f'<div class="lab" id="fx-lab">{wl(TX["fx_lab"])}</div></div>'
             + f'<div class="ff" id="fx-grp" data-layout-allow-overflow>{phones}</div>'
-            + "".join(bubble(cid, x, y, "Komment · FlyX Tenerife", text, width=w) for cid, x, y, text, w, t in cm) + hh)
+            + "".join(bubble(cid, x, y, TX["comment"] + " · FlyX Tenerife", text, width=w) for cid, x, y, text, w, t in cm) + hh)
     css = """
     #root .fxt { position: absolute; left: 110px; top: 92px; }
     #root .fxn { display: flex; align-items: baseline; margin-top: 14px; white-space: nowrap; font-size: 290px; line-height: 0.86; letter-spacing: -0.05em; }
@@ -345,9 +415,9 @@ def scene_enzo(s, e):
     html = (field("linear-gradient(140deg,#16c172 0%,#0b8f7a 52%,#075e63 100%)", ls) + tile("Prof Enzo") + cards
             + '<div class="ff" id="ez-scrim" style="background:rgba(4,20,22,0.42)"></div>'
             + f'<div class="ezo"><div class="ezrow"><div class="hd ezn" id="ez-n">{digits(3, "ez-cnt")}<span>K</span></div>'
-              f'<div class="hd ezn" id="ez-m" style="opacity:0">1M+</div></div><div class="hd ezl" id="ez-lab">megtekintés</div></div>'
-            + '<div class="pill" id="ez-eb" style="left:200px;top:128px">Prof Enzo · Facebook-reelek</div>'
-            + '<div class="pill" id="ez-f" style="left:1440px;top:128px">33K követő</div>'
+              f'<div class="hd ezn" id="ez-m" style="opacity:0">1M+</div></div><div class="hd ezl" id="ez-lab">{TX["ez_lab"]}</div></div>'
+            + f'<div class="pill" id="ez-eb" style="left:200px;top:128px">{TX["ez_eb"]}</div>'
+            + f'<div class="pill" id="ez-f" style="left:1440px;top:128px">{TX["ez_f"]}</div>'
             + "".join(f'<div class="chip" id="ez-k{k}" style="left:{x}px;top:872px"><i></i>{v}</div>' for k, (v, x, t) in enumerate(chips)) + hh)
     css = """
     #root #ez-scrim, #root .ezo, #root #ez-eb, #root #ez-f, #root .chip { z-index: 4; }
@@ -395,18 +465,18 @@ def scene_prod(s, e):
         pj.append(f'tl.fromTo("#pr-p{i}", {{ x: 0, y: 0, rotation: {rot:.1f} }}, {{ x: {fx * 1.05:.0f}, y: {fy * 1.05:.0f}, rotation: {rot + rnd.uniform(-25, 25):.1f}, duration: 0.45, ease: "power3.in", immediateRender: false }}, AT({t0 + 1.24 + 0.014 * k:.2f}));')
     t_c = t0 + 1.2                                          # the cards come as the polaroids leave
     cl = [("pr-c0", 60, 351, 280, 498, [("pr1", t_c - s, b(26) - t_c), ("pr6", b(26) - s, e - b(26))]),
-          ("pr-c1", 380, 298, 340, 604, [("pr2", t_c - s, e - t_c)]),
-          ("pr-c2", 760, 245, 400, 711, [("pr4", t_c - s, e - t_c)]),
-          ("pr-c3", 1200, 298, 340, 604, [("pr5", t_c - s, e - t_c)]),
+          ("pr-c1", 380, 298, 340, 604, [("pr2", t_c - s, b(26) - t_c), ("pr4", b(26) - s, e - b(26))]),
+          ("pr-c2", 760, 245, 400, 711, [("pw2", t_c - s, e - t_c)]),
+          ("pr-c3", 1200, 298, 340, 604, [("pw1", t_c - s, b(26) - t_c), ("pr5", b(26) - s, e - b(26))]),
           ("pr-c4", 1580, 351, 280, 498, [("pr3", t_c - s, e - t_c)])]
     cards, track = "", 1
     for cid, x, y, w, h, clips in cl:
         cards += card(cid, x, y, w, h, clips, track)
         track += len(clips)
-    tags = ["Forgatás", "Vágás", "Feliratozás", "Reels", "Podcast &amp; interjú"]
+    tags = TX["tags"]
     hh, hj = hearts("pr-h", 8, b(24), b(27.5), (200, 760, 1700, 1000), 13)
     html = (f'<div class="ff" id="pr-g">{field("linear-gradient(140deg,#4a22c8 0%,#3418a0 52%,#1c0d58 100%)", ls)}{tile("SocialStream")}</div>'
-            + '<div class="eb" id="pr-eb" style="position:absolute;left:60px;top:70px">Részletek a videóinkból</div>'
+            + f'<div class="eb" id="pr-eb" style="position:absolute;left:60px;top:70px">{TX["pr_eb"]}</div>'
             + '<div id="pr-tags" data-layout-allow-overflow>' + "".join(f'<div class="tag" id="pr-t{k}">{t}</div>' for k, t in enumerate(tags)) + '</div>'
             + cards + hh + "".join(pols))
     css = """
@@ -431,14 +501,14 @@ def scene_how(s, e):
         return [(W / 2 + rx * math.cos(a0 + i * 2 * math.pi / n) - w / 2, H / 2 + ry * math.sin(a0 + i * 2 * math.pi / n) - h / 2) for i in range(n)]
 
     g0 = "".join(f'<div class="card mini g0" style="left:{x:.0f}px;top:{y:.0f}px;width:170px;height:302px;transform:rotate({(-7, 5, -4, 8, -6, 4)[i]}deg)">'
-                 f'<img src="assets/wall/{t}.jpg" alt=""></div>' for i, ((x, y), t) in enumerate(zip(ring(6, 0.42, 170, 302, 740, 360), ["w02", "w04", "w07", "w11", "w09", "w10"])))
+                 f'<img src="assets/wall/{t}.jpg" alt=""></div>' for i, ((x, y), t) in enumerate(zip(ring(6, 0.42, 170, 302, 740, 360), ["w02", "w04", "w07", "w15", "w09", "w10"])))
     g1 = "".join(f'<div class="tag g1" style="left:{x:.0f}px;top:{y:.0f}px">{t}</div>' for (x, y), t in zip(ring(4, 0.85, 230, 92, 700, 350), ["Meta", "TikTok", "Google", "Reels"]))
     g2 = "".join(f'<div class="chip g2" style="left:{x:.0f}px;top:{y:.0f}px">{t}</div>' for (x, y), t in zip(ring(4, 0.3, 270, 104, 700, 350), ["81×", "79M Ft", "23×", "105 Ft"]))
     html = (field("#05070f", ls) + g0 + g1 + g2
-            + '<div class="rsv" id="hw-0"><div class="hd mid">Mi gyártjuk a <span class="it">videót</span>,</div></div>'
-            + '<div class="rsv" id="hw-1"><div class="hd mid">mi futtatjuk a <span class="it">hirdetést</span>,</div></div>'
-            + '<div class="rsv" id="hw-2"><div class="hd mid">és mi mérjük,</div></div>'
-            + '<div class="rsv" id="hw-3"><div class="hd big" id="hw-3t">mit <span class="it hz">hozott</span><span class="acc">.</span></div></div>')
+            + f'<div class="rsv" id="hw-0"><div class="hd mid">{TX["how"][0]}</div></div>'
+            + f'<div class="rsv" id="hw-1"><div class="hd mid">{TX["how"][1]}</div></div>'
+            + f'<div class="rsv" id="hw-2"><div class="hd mid">{TX["how"][2]}</div></div>'
+            + f'<div class="rsv" id="hw-3"><div class="hd big" id="hw-3t">{TX["how"][3]}</div></div>')
     css = """
     #root .mini { border-radius: 22px; }
     #root .g1 { font-size: 50px; padding: 21px 38px; border-radius: 60px; }
@@ -475,11 +545,11 @@ def scene_r1(s, e):
     """79 M Ft in one week, blue: the week's days light up one by one while the revenue climbs."""
     t0, step = b(36), 0.118
     ls = [("r1-l0", 94, 90, 100, "255, 64, 104, 0.5"), ("r1-l1", 4, 4, 86, "56, 190, 255, 0.5")]
-    days = ["H", "K", "Sze", "Cs", "P", "Szo", "V"]
+    days = TX["days"]
     html = (field("linear-gradient(140deg,#1b3cff 0%,#3a22d8 58%,#1a0f6c 100%)", ls)
-            + '<div class="eb" id="r1-eb" style="position:absolute;left:130px;top:110px">Csarnoképítő ügyfél · B2B · Meta</div>'
+            + f'<div class="eb" id="r1-eb" style="position:absolute;left:130px;top:110px">{TX["r1_eb"]}</div>'
             + f'<div class="hd rn" id="r1-n" style="left:118px;top:168px">{digits(2, "r1-cnt")}<span class="it ui">M Ft</span></div>'
-            + f'<div class="lab" id="r1-lab" style="position:absolute;left:130px;top:650px">{wl("bevétel egy hét alatt")}</div>'
+            + f'<div class="lab" id="r1-lab" style="position:absolute;left:130px;top:650px">{wl(TX["r1_lab"])}</div>'
             + '<div class="days">' + "".join(f'<div class="day" id="r1-d{k}">{d}</div>' for k, d in enumerate(days)) + '</div>'
             + '<img id="r1-obj" src="assets/img/o-hall-mix.webp" alt="" style="position:absolute;left:1340px;top:120px;width:500px;height:500px">')
     css = RES_CSS + """
@@ -504,7 +574,7 @@ def scene_r2(s, e):
     t0 = b(40)
     ls = [("r2-l0", 6, 94, 92, "255, 170, 80, 0.5"), ("r2-l1", 96, 6, 90, "110, 60, 255, 0.5")]
     html = (field("linear-gradient(140deg,#ff2d5f 0%,#d81d74 55%,#7a1690 100%)", ls)
-            + '<div class="eb" id="r2-eb" style="position:absolute;left:130px;top:110px">Ajtó webshop · Google Performance Max</div>'
+            + f'<div class="eb" id="r2-eb" style="position:absolute;left:130px;top:110px">{TX["r2_eb"]}</div>'
             + f'<div class="hd rn" id="r2-n" style="left:118px;top:168px">{digits(2, "r2-cnt")}<span class="x">×</span><span class="u">ROAS</span></div>'
             + '<div class="c1" id="r2-c1"><i class="cn"></i><span>1 Ft</span><b>→</b></div>'
             + '<div class="grid" id="r2-g" data-motion-blur="off">' + '<i class="cn"></i>' * 81 + '</div>'
@@ -536,9 +606,9 @@ def scene_r3(s, e):
     """23x ROAS at Christmas, white: the number slams in ink; the holiday revenue counts under it; the watch drops in."""
     t0 = b(44)
     html = ('<div class="fld" style="background:#f3f5fb"></div>'
-            + '<div class="eb" id="r3-eb" style="position:absolute;left:0;right:0;top:106px;text-align:center;color:#3a4266">Karóra webshop · Karácsony</div>'
+            + f'<div class="eb" id="r3-eb" style="position:absolute;left:0;right:0;top:106px;text-align:center;color:#3a4266">{TX["r3_eb"]}</div>'
             + f'<div class="hd rn" id="r3-n" style="left:0;right:0;top:160px;justify-content:center">{digits(2, "r3-cnt")}<span class="x acc">×</span><span class="u">ROAS</span></div>'
-            + '<div class="pc"><div class="pill" id="r3-p">több mint&nbsp;' + digits(1, "r3-pc") + 'M Ft bevétel</div></div>'
+            + f'<div class="pc"><div class="pill" id="r3-p">{TX["r3_p"][0]}' + digits(1, "r3-pc") + f'{TX["r3_p"][1]}</div></div>'
             + '<img id="r3-obj" src="assets/img/o-watch-mix.webp" alt="" style="position:absolute;left:1390px;top:560px;width:460px;height:460px">')
     css = RES_CSS + """
     #root #r3-n { color: #0b1030; transform-origin: 50% 60%; }
@@ -563,10 +633,10 @@ def scene_r4(s, e):
     dots = "".join(f'<i style="left:{x}px;top:{y}px"></i>' for x, y in pts)
     html = (field("linear-gradient(140deg,#7a35ff 0%,#5020d0 55%,#2a1280 100%)", ls)
             + f'<div class="dots" id="r4-dots" data-motion-blur="off" data-layout-ignore>{dots}</div>'
-            + '<div class="eb" id="r4-eb" style="position:absolute;left:0;right:0;top:106px;text-align:center">Egészségügyi webinár</div>'
-            + f'<div class="hd rn" id="r4-n" style="left:0;right:0;top:170px;justify-content:center"><span class="ap">≈</span>{digits(4, "r4-cnt", gap_after=0)}</div>'
-            + f'<div class="lab" id="r4-lab" style="position:absolute;left:0;right:0;top:590px;text-align:center">{wl("jelentkező 600K Ft-ból")}</div>'
-            + '<div class="pc"><div class="stamp" id="r4-st" style="opacity:0">105 Ft <span>egy jelentkező</span></div></div>')
+            + f'<div class="eb" id="r4-eb" style="position:absolute;left:0;right:0;top:106px;text-align:center">{TX["r4_eb"]}</div>'
+            + f'<div class="hd rn" id="r4-n" style="left:0;right:0;top:170px;justify-content:center"><span class="ap">≈</span>{digits(4, "r4-cnt", gap_after=0, sep=TX["thou"])}</div>'
+            + f'<div class="lab" id="r4-lab" style="position:absolute;left:0;right:0;top:590px;text-align:center">{wl(TX["r4_lab"])}</div>'
+            + f'<div class="pc"><div class="stamp" id="r4-st" style="opacity:0">{TX["r4_st"][0]} <span>{TX["r4_st"][1]}</span></div></div>')
     css = RES_CSS + """
     #root .dots i { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.3); }
     #root .pc { z-index: 3; }
@@ -593,9 +663,9 @@ def scene_m300(s, e):
     t0 = b(52)
     ls = [("m3-l0", 12, 90, 100, "66, 92, 255, 0.5"), ("m3-l1", 90, 8, 96, "136, 78, 255, 0.5"), ("m3-l2", 60, 110, 60, "255, 64, 104, 0.3")]
     html = (field("#070a1c", ls)
-            + '<div class="eb" id="m3-eb" style="position:absolute;left:0;right:0;top:150px;text-align:center">2022 óta</div>'
+            + f'<div class="eb" id="m3-eb" style="position:absolute;left:0;right:0;top:150px;text-align:center">{TX["m3_eb"]}</div>'
             + f'<div class="hd rn" id="m3-n" style="left:0;right:0;top:220px;justify-content:center">{digits(3, "m3-cnt")}<span class="mp">M+</span><span class="it ui">Ft</span></div>'
-            + f'<div class="lab" id="m3-lab" style="position:absolute;left:0;right:0;top:720px;text-align:center">{wl("kezelt büdzsé 2022 óta")}</div>')
+            + f'<div class="lab" id="m3-lab" style="position:absolute;left:0;right:0;top:720px;text-align:center">{wl(TX["m3_lab"])}</div>')
     css = RES_CSS + """
     #root #m3-n .cnt, #root #m3-n .mp { font-size: 440px; line-height: 0.84; letter-spacing: -0.055em; }
     #root #m3-n .ui { font-size: 330px; }
@@ -607,45 +677,34 @@ def scene_m300(s, e):
     return html, "\n    ".join(js), css
 
 
-VOICES = [  # kind, where it comes from, the words (clients' words from the site, cut only with "…"; real comments)
-    ("c", "Komment · FlyX Tenerife", "It was brilliant fun… highly recommended it"),
-    ("q", "Péter · Hoofbútor", "„Már az induláskor is volt vásárlás…”"),
-    ("c", "Komment · FlyX Tenerife", "A fantastic experience, absolutely loved it."),
-    ("q", "Csarnoképítő ügyfél · B2B", "„…annyi ajánlatkérésünk lett, mint korábban fél év alatt összesen.”"),
-    ("q", "Karóra webshop", "„…az ünnepi szezon nekünk dolgozik – nem ellenünk.”"),
-    ("c", "Komment · FlyX Tenerife", "Enjoyable half hour. Friendly staff."),
-    ("q", "Rita · Rita’s Beauty Corner", "„Rövid időn belül jöttek az eredmények…”"),
-    ("q", "János · EJ Massage Therapies", "„Csak ajánlani tudom őket.”"),
-]
-
-
 def scene_voices(s, e):
-    """"Ne nekünk higgy. Nekik." Then their words stack up the frame, one a beat, typing themselves."""
+    """"Ne nekünk higgy. Nekik." Then their clients' reviews stack up the frame, one a beat, typing themselves;
+    the last lands four beats before the wall returns, so the stack can be read."""
     BASE, STEP, CWD = 826, 214, 1060
+    VOICES = TX["voices"]
     t_i = [b(59 + i) for i in range(len(VOICES))]         # the last one lands two beats before the wall returns
     ls = [("vc-l0", 8, 12, 80, "66, 92, 255, 0.3"), ("vc-l1", 94, 90, 84, "255, 64, 104, 0.24")]
     cards = "".join(bubble(f"vc-q{i}", (W - CWD) // 2, BASE + i * STEP, src, text, "q" if kind == "q" else "", CWD)
                     for i, (kind, src, text) in enumerate(VOICES))
     rnd = random.Random(5)
     bubs, bj = [], []
-    for k in range(14):                                     # speech bubbles drift up at the sides
-        size = rnd.choice([70, 90, 110, 140])
-        x = rnd.uniform(40, 390 - size) if k % 2 == 0 else rnd.uniform(1530, 1880 - size)
-        y0 = rnd.uniform(760, 1120)
-        tt = b(59) - 0.3 + rnd.uniform(0, 3.0)
-        bubs.append(f'<div class="sb" id="vc-b{k}" data-layout-ignore style="width:{size}px;height:{size * 0.78:.0f}px"><i></i><i></i><i></i></div>')
+    for k in range(10):                                     # quotation marks drift up at the sides
+        size = rnd.choice([200, 260, 320, 400])
+        x = rnd.uniform(30, 330 - size * 0.4) if k % 2 == 0 else rnd.uniform(1600, 1900 - size * 0.4)
+        y0 = rnd.uniform(700, 1080)
+        tt = b(59) - 0.3 + rnd.uniform(0, 3.4)
+        bubs.append(f'<div class="qm it" id="vc-b{k}" data-layout-ignore style="font-size:{size}px">{TX["qm"][k % 2]}</div>')
         bj.append(f'heart("#vc-b{k}", {tt:.2f}, {x:.0f}, {y0:.0f}, {rnd.uniform(420, 760):.0f}, {rnd.uniform(-30, 30):.0f}, {rnd.uniform(2.2, 3.0):.2f});')
     html = (field("#05070f", ls) + "".join(bubs)
-            + '<div class="rsv" id="vc-0"><div class="hd big">Ne nekünk higgy.</div></div>'
-            + '<div class="rsv" id="vc-1"><div class="it huge">Nekik<span class="acc">.</span></div></div>'
+            + f'<div class="rsv" id="vc-0"><div class="hd {TX["v0"][0]}">{TX["v0"][1]}</div></div>'
+            + f'<div class="rsv" id="vc-1"><div class="it huge">{TX["v1"]}<span class="acc">.</span></div></div>'
             + f'<div class="ff" id="vc-st" data-layout-allow-overflow>{cards}</div>')
     css = """
     #root .bub { padding: 26px 44px 28px 118px; border-radius: 32px; font-size: 38px; }
     #root .bub.q { font-size: 52px; }
     #root .bub .av { left: 32px; top: 28px; width: 60px; height: 60px; }
     #root .bub .src { font-size: 24px; }
-    #root .sb { position: absolute; left: 0; top: 0; border-radius: 42% 42% 42% 12%; background: rgba(255, 255, 255, 0.92); display: flex; align-items: center; justify-content: center; gap: 9%; }
-    #root .sb i { display: block; width: 13%; padding-top: 13%; border-radius: 50%; background: #1a2040; }"""
+    #root .qm { position: absolute; left: 0; top: 0; line-height: 0.7; color: rgba(255, 255, 255, 0.2); }"""
     js = [f'wipeIn({s:g}, "dl");', f'drift("#vc-l0", {s:g}, {e - s:g}, 60, 40); drift("#vc-l1", {s:g}, {e - s:g}, -60, -40);',
           f'say("#vc-0", {b(56):g}, {b(58) - 0.06:g}); say("#vc-1", {b(58):g}, {b(59) - 0.12:g});']
     for i, t in enumerate(t_i):
@@ -666,10 +725,10 @@ def scene_close(s, e, info):
     <div class="ff" id="cs-dim" style="background:rgba(5,7,15,0.52)"></div>
     <div class="glow wide" id="cs-glow2"></div>
     <div class="glow" id="cs-glow"></div>
-    <div class="rsv" id="cs-1"><div><div class="hd big">Videók, amiket</div><div class="it huge">végignéznek<span class="acc">.</span></div></div></div>
-    <div class="rsv" id="cs-2"><div><div class="hd big">Hirdetések, amik</div><div class="it huge">megtérülnek<span class="acc">.</span></div></div></div>
+    <div class="rsv" id="cs-1"><div><div class="hd big">{TX['c1'][0]}</div><div class="it huge">{TX['c1'][1]}<span class="acc">.</span></div></div></div>
+    <div class="rsv" id="cs-2"><div><div class="hd big">{TX['c2'][0]}</div><div class="it huge">{TX['c2'][1]}<span class="acc">.</span></div></div></div>
     <img id="cs-logo" src="assets/logo/socialstream-logo-stacked-dark.svg" alt="SocialStream" style="position:absolute;opacity:0;{logo_box(info)}">
-    <div class="eb" id="cs-eb" style="position:absolute;left:0;right:0;top:790px;text-align:center">Interest media ügynökség</div>"""
+    <div class="eb" id="cs-eb" style="position:absolute;left:0;right:0;top:790px;text-align:center">{TX['cs_eb']}</div>"""
     css = WALL_CSS + """
     #root .huge { font-size: 220px; }
     #root #cs-logo { transform-origin: 50% 50%; }"""
@@ -706,7 +765,7 @@ def sounds():
           ("whoosh", b(36)), ("pop2", b(36) + 0.83), ("coins", b(40) + 0.24), ("pop2", b(40) + 0.8),
           ("sub", b(44)), ("pop", b(44) + 0.5), ("pop2", b(48) + 0.6), ("sub", b(49)), ("whoosh", b(52)), ("pop2", b(52) + 0.9),
           ("wind", b(56))]
-    ev += [("pop2", b(58))] + [("pop" if i % 2 == 0 else "pop2", b(59 + i)) for i in range(len(VOICES))]
+    ev += [("pop2", b(58))] + [("pop" if i % 2 == 0 else "pop2", b(59 + i)) for i in range(len(TX["voices"]))]
     ev += [("whoosh", b(68)), ("impact", b(76))]
     out = []
     for k, (name, t, *rest) in enumerate(ev):
@@ -774,41 +833,47 @@ def index(lang="hu"):
 
 
 def main():
-    out = os.path.join(HERE, "wide")
-    comp = os.path.join(out, "compositions")
-    os.makedirs(comp, exist_ok=True)
-    for old in os.listdir(comp):
-        if old.endswith(".html") and old[:-5] not in [n for n, a, z in SC]:
-            os.remove(os.path.join(comp, old))
-    tmp = os.path.join(HERE, ".logo-wide")
-    logo, info = logo_scene(tmp)
-    builders = {"open": lambda s, e: scene_open(s, e, info), "flyx": scene_flyx, "enzo": scene_enzo, "prod": scene_prod,
-                "how": scene_how, "r1": scene_r1, "r2": scene_r2, "r3": scene_r3, "r4": scene_r4, "m300": scene_m300,
-                "voices": scene_voices, "close": lambda s, e: scene_close(s, e, info)}
-    for n, s, e in SC:
-        if n == "logo":
-            src = logo
-        else:
-            html, js, css = builders[n](s, e)
-            src = composition(n, s, html, js, css)
-        open(os.path.join(comp, f"{n}.html"), "w").write(src)
-    open(os.path.join(out, "index.html"), "w").write(index())
-    cli = "npx --yes hyperframes@0.9.40"
-    files = {"hyperframes.json": json.dumps({"$schema": "https://hyperframes.heygen.com/schema/hyperframes.json",
-                                             "registry": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry",
-                                             "paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"},
-                                             "media": {"autoProxy": True}}, indent=2) + "\n",
-             "meta.json": json.dumps({"id": "socialstream-sizzle-wide", "name": "SocialStream sizzle (wide)", "createdAt": "2026-11-15T00:00:00.000Z"}, indent=2) + "\n",
-             "package.json": json.dumps({"name": "socialstream-sizzle-wide", "private": True, "type": "module",
-                                         "scripts": {"dev": f"{cli} preview", "check": f"{cli} check", "render": f"{cli} render"}}, indent=2) + "\n",
-             ".gitignore": "renders/\n.hyperframes/\n.thumbnails/\nsnapshots/\nnode_modules/\n"}
-    for f, t in files.items():
-        open(os.path.join(out, f), "w").write(t)
-    link = os.path.join(out, "assets")
-    if not os.path.islink(link):
-        os.symlink("../assets", link)
-    subprocess.run(["rm", "-rf", tmp], check=True)
-    print("wide", TOTAL, "s;", "drop", DROP, "; scenes:", ", ".join(f"{n} {a:g}-{z:g}" for n, a, z in SC))
+    global TX
+    only = sys.argv[1:]                                     # e.g. python3 build.py wide-en
+    for lang, folder in OUTS:
+        if only and folder not in only:
+            continue
+        TX = TEXT[lang]
+        out = os.path.join(HERE, folder)
+        comp = os.path.join(out, "compositions")
+        os.makedirs(comp, exist_ok=True)
+        for old in os.listdir(comp):
+            if old.endswith(".html") and old[:-5] not in [n for n, a, z in SC]:
+                os.remove(os.path.join(comp, old))
+        tmp = os.path.join(HERE, ".logo-" + folder)
+        logo, info = logo_scene(tmp)
+        builders = {"open": lambda s, e: scene_open(s, e, info), "flyx": scene_flyx, "enzo": scene_enzo, "prod": scene_prod,
+                    "how": scene_how, "r1": scene_r1, "r2": scene_r2, "r3": scene_r3, "r4": scene_r4, "m300": scene_m300,
+                    "voices": scene_voices, "close": lambda s, e: scene_close(s, e, info)}
+        for n, s, e in SC:
+            if n == "logo":
+                src = logo
+            else:
+                html, js, css = builders[n](s, e)
+                src = composition(n, s, html, js, css)
+            open(os.path.join(comp, f"{n}.html"), "w").write(src)
+        open(os.path.join(out, "index.html"), "w").write(index(lang))
+        cli = "npx --yes hyperframes@0.9.40"
+        files = {"hyperframes.json": json.dumps({"$schema": "https://hyperframes.heygen.com/schema/hyperframes.json",
+                                                 "registry": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry",
+                                                 "paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"},
+                                                 "media": {"autoProxy": True}}, indent=2) + "\n",
+                 "meta.json": json.dumps({"id": f"socialstream-sizzle-{folder}", "name": f"SocialStream sizzle ({folder})", "createdAt": "2026-11-15T00:00:00.000Z"}, indent=2) + "\n",
+                 "package.json": json.dumps({"name": f"socialstream-sizzle-{folder}", "private": True, "type": "module",
+                                             "scripts": {"dev": f"{cli} preview", "check": f"{cli} check", "render": f"{cli} render"}}, indent=2) + "\n",
+                 ".gitignore": "renders/\n.hyperframes/\n.thumbnails/\nsnapshots/\nnode_modules/\n"}
+        for f, t in files.items():
+            open(os.path.join(out, f), "w").write(t)
+        link = os.path.join(out, "assets")
+        if not os.path.islink(link):
+            os.symlink("../assets", link)
+        subprocess.run(["rm", "-rf", tmp], check=True)
+        print(folder, lang, TOTAL, "s; drop", DROP)
 
 
 if __name__ == "__main__":

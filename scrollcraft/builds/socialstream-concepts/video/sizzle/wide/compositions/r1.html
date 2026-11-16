@@ -138,6 +138,8 @@
         const s = String(v).padStart(ds.length, " ");
         ds.forEach((d, k) => tl.set(d, { textContent: s[k] === " " ? "" : s[k] }, Math.max(0, AT(tt) - 0.01)));
       }
+      const sep = el.querySelector(".sep");                 // a thousands comma: there once there are thousands
+      if (sep) tl.fromTo(sep, { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none" }, AT(t + dur * 0.12));
     };
     wipeIn(26.8, "iris");
     drift("#r1-l0", 26.8, 2.28, -80, 60);
