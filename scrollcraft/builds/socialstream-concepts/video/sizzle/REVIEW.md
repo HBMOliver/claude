@@ -118,7 +118,7 @@ edit suite (s21) takes w02's card in the ring. w03 stays: 5-8 % of that card is 
 considered: the Miskolc promo beside the middle (its presenter is already in the ring and in the productions),
 the smartwatch ad there (a black first second beside the logo), a Prof Enzo reel there (two beside each other).
 The wide cut is unchanged and still shows him in those cards: taking him out there means rendering the two wide
-masters again, which nobody has asked for.
+masters again. Asked whether to do that, the founder answered "Leave the wide cut" (2026-11-16).
 
 Measured: both new masters 1080 x 1920, 1485 frames, the same sound stream; against the first upright masters
 the picture differs only where the wall or the ring is on screen. Looked at: 0.0, 0.5, 1.2, 2.4, 3.6, 5.8, 7.9,
