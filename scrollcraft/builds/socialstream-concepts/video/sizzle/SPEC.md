@@ -225,8 +225,11 @@ The upright cut: looked at as stills at 360 and 540 px wide (a phone's width and
 safe box drawn on them: Hungarian 0.5, 2.4, 3.6, 4.6, 5.8, 7.0, 7.9, 9.0, 9.6, 11.5, 14.2, 15.2, 16.8, 18.0, 19.0,
 20.8, 21.5, 21.9, 22.8, 24.6, 25.8, 27.3, 28.8, 30.2, 32.0, 33.6, 35.4, 38.8, 40.9, 43.4, 44.6, 45.7, 48.0, 52.4,
 54.0, 56.0 and 58.8 s; English 23 of the same moments. Which reels the upright frame shows on the wall was
-computed (`wall_map`): the same tiles as the wide frame, the V89 tile whole, and the still of Gyenis András (s08)
-outside the frame in both.
+computed (`wall_map`): the same tiles as the wide frame except the three cards round the middle (the table
+above; changed after these stills, and looked at again), the V89 tile whole, and the still of Gyenis András (s08)
+outside the frame in both. The three stills that stand there are the team's own: s18 and s23 from their phone
+clips of FlyX's screen, s27 from the FlyX promo they made, each filmed in the cinema with the seats in the
+picture (`../film-v6/clips.sh`: t18, t25, t04); the ring's s21 is from Bálint's showreel (t23).
 
 Sound checked on the renders (REVIEW.md): the kick against the picture at the drop and at a late beat, loudness,
 true peak.

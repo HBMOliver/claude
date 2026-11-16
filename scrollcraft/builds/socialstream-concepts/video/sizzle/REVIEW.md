@@ -112,8 +112,8 @@ frame changes is their size.
 
 The site session asked for him to leave the upright wall (he is in a phone at 15 s, and `SPEC.md` bans a face
 in more than one world; the wall and the ring are collages of reels, which is why that ban had not been applied
-to them). Done in the upright cuts only: three stills of FlyX's cinema screen (s18 a sunset, s23 a helicopter,
-s27 a coast; nobody's face) stand where w02, s02 and s01 stood, so that wall plays ten reels, not eleven; and the
+to them). Done in the upright cuts only: three stills of FlyX's cinema screen (s18 a sunset, s23 a helicopter, s27 a coast;
+nobody's face; the team's own phone clips and their FlyX promo, filmed in the cinema, sources in `SPEC.md`) stand where w02, s02 and s01 stood, so that wall plays ten reels, not eleven; and the
 edit suite (s21) takes w02's card in the ring. w03 stays: 5-8 % of that card is in the upright frame. Not
 considered: the Miskolc promo beside the middle (its presenter is already in the ring and in the productions),
 the smartwatch ad there (a black first second beside the logo), a Prof Enzo reel there (two beside each other).
