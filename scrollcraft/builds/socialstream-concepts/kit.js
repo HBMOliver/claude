@@ -8,6 +8,9 @@
   var $ = SS.$, $$ = SS.$$, clamp = SS.clamp, reduce = SS.reduce, esc = SS.esc;
   var root = document.documentElement;
   root.classList.add('js');
+  // where the films are: next to this script (the site's pages sit at any depth and link it from the root), or
+  // relative to the page when the script is inlined (the published Artifacts)
+  var ASSETS = (document.currentScript && document.currentScript.src || '').replace(/[^\/]*$/, '') + 'assets/';
   if (SS.fine) root.classList.add('fine');
   var L = function (hu, en) { return SS.L === 'en' ? en : hu; };
   var vh = innerHeight, lastY = scrollY, boost = 0;
@@ -46,9 +49,9 @@
     // the film's words are in the page's language (the English cuts end in -en)
     function src() {
       var en = SS.L === 'en' ? '-en' : '';
-      if (cut === 'v' || (cut === 'auto' && narrow.matches)) return 'assets/hero-v-720' + en + '.mp4';
-      if (box.hasAttribute('data-big')) return 'assets/hero-1080' + en + '.mp4';
-      return 'assets/hero-' + (box.offsetWidth * (window.devicePixelRatio || 1) < 1300 ? '540' : '1080') + en + '.mp4';
+      if (cut === 'v' || (cut === 'auto' && narrow.matches)) return ASSETS + 'hero-v-720' + en + '.mp4';
+      if (box.hasAttribute('data-big')) return ASSETS + 'hero-1080' + en + '.mp4';
+      return ASSETS + 'hero-' + (box.offsetWidth * (window.devicePixelRatio || 1) < 1300 ? '540' : '1080') + en + '.mp4';
     }
     function load() {
       var s = src(); if (f.loaded === s) return;
@@ -321,8 +324,20 @@
     });
   });
 
+  /* ---------------- the menu: on tablets and phones a button opens the links under the bar (the site's pages) ---------------- */
+  var menuBtn = $('.menu-btn');
+  if (nav && menuBtn) {
+    var setMenu = function (open) { nav.classList.toggle('menu-open', open); menuBtn.setAttribute('aria-expanded', String(open)); };
+    menuBtn.addEventListener('click', function () { setMenu(!nav.classList.contains('menu-open')); });
+    $$('.links a', nav).forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
+    addEventListener('keydown', function (e) { if (e.key === 'Escape' && nav.classList.contains('menu-open')) { setMenu(false); menuBtn.focus(); } });
+    document.addEventListener('click', function (e) { if (nav.classList.contains('menu-open') && !nav.contains(e.target)) setMenu(false); });
+  }
+
   /* ---------------- the audit form (Daylight's, unchanged) ---------------- */
   var form = $('#appform'), pick = $('#pick'), sent = $('#sent'), sending = $('#sending'), chosen = [], lastBody = '';
+  // a page without the form still starts everything else
+  if (!form || !pick) { form = null; pick = document.createElement('div'); }
   function renderPick() { pick.innerHTML = SS.TOPICS.map(function (c) { return '<label><input type="checkbox" value="' + c.id + '"' + (chosen.indexOf(c.id) > -1 ? ' checked' : '') + '><span>' + esc(SS.T(c)) + '</span></label>'; }).join(''); }
   pick.addEventListener('change', function (e) { var id = e.target.value, k = chosen.indexOf(id); if (e.target.checked && k < 0) chosen.push(id); else if (!e.target.checked && k > -1) chosen.splice(k, 1); });
   var ERR = {
@@ -351,7 +366,7 @@
     var cb = $('#copyBody'); cb.addEventListener('click', function () { SS.copy(body, cb, function () { var m = $('#f-msg'); m.value = body; m.focus(); m.select(); }); });
   }
   var sel = function (id) { var s = $('#' + id); return s.value ? s.options[s.selectedIndex].text : ''; };
-  form.addEventListener('submit', function (e) {
+  if (form) form.addEventListener('submit', function (e) {
     e.preventDefault(); if (!check(true)) return;
     var body = SS.compose({ name: $('#f-name').value.trim(), email: $('#f-email').value.trim(), brand: $('#f-brand').value.trim(), web: $('#f-web').value.trim(), budget: sel('f-budget'), goal: sel('f-goal'), interests: chosen, msg: $('#f-msg').value.trim() });
     lastBody = body; sent.hidden = true; sending.hidden = false; $('#stext').textContent = L('Megnyitjuk a leveleződ…', 'Opening your mail app…');
@@ -364,10 +379,14 @@
     var b = $(id); if (!b) return;
     b.addEventListener('click', function () { SS.copy(SS.CONTACT, b, function () { var r = document.createRange(), s = getSelection(); r.selectNodeContents(b.previousElementSibling); s.removeAllRanges(); s.addRange(r); }); });
   });
+  // any other button that copies the address (the site's contact page)
+  $$('[data-copy]').forEach(function (b) {
+    b.addEventListener('click', function () { SS.copy(b.getAttribute('data-copy'), b, function () { var r = document.createRange(), s = getSelection(); r.selectNodeContents(b.previousElementSibling); s.removeAllRanges(); s.addRange(r); }); });
+  });
 
   /* ---------------- start ---------------- */
   renderPick();
-  SS.onLang(function () { renderPick(); if (lastBody && sending.hidden) showSent(lastBody); if ($$('.app .err').some(function (e) { return e.textContent; })) check(false); measureRails(); });
+  SS.onLang(function () { renderPick(); if (form && lastBody && sending.hidden) showSent(lastBody); if (form && $$('.app .err').some(function (e) { return e.textContent; })) check(false); measureRails(); });
   SS.start();
   $$('[data-r]').forEach(arrive);
   measureRails(); frame(); run();

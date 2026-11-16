@@ -21,7 +21,11 @@
                 set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
 
   /* ---------------- language ---------------- */
-  SS.L = 'hu';
+  // A page of the site (socialstream.hu) is in one language, its <html lang>, and its HU / EN switch is a link to the
+  // other language's page. Only a page with switch buttons (the concepts) swaps its words in place and remembers the
+  // choice; on the site a choice remembered from the one-page site of before must not turn a page's language.
+  SS.single = !document.querySelector('[data-set-lang]');
+  SS.L = SS.single && document.documentElement.lang === 'en' ? 'en' : 'hu';
   var onLang = [];
   SS.onLang = function (f) { onLang.push(f); };
   SS.T = function (o) { return SS.L === 'en' ? o.en : o.hu; };
@@ -161,7 +165,7 @@
     htmlEls = SS.$$('[data-en]').filter(function (el) { return el.children.length > 0; });
     htmlHu = htmlEls.map(function (el) { return el.innerHTML; });
     SS.$$('[data-set-lang]').forEach(function (b) { b.addEventListener('click', function () { SS.setLang(b.dataset.setLang, true); }); });
-    var initial = store.get('ss-lang');
+    var initial = SS.single ? SS.L : store.get('ss-lang');
     SS.setLang(initial === 'en' ? 'en' : 'hu', false);
   };
 })();

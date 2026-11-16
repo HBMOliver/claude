@@ -1,4 +1,6 @@
 // node lab/check.mjs [names]   (run from a folder with playwright-core; served on :4560, or BASE=...)
+// The concepts by name (pulse, premiere, aurora, studio, mix: the build folder served as the root); the live site's
+// home page as "index" and its other pages as "site" (BASE: dist/site served as the root, after tools/site.mjs).
 // What each concept page does, checked without looking: the claim and the audit button on the first screen,
 // the line through "social media", the film playing and pausing, the running rows moving when nothing is
 // scrolled, the counters, the audit form (errors, the email it writes, the sent note), English, questions,
@@ -15,7 +17,7 @@ const CLAIM_HU = 'A social media meghalt. Az érdeklődés vette át a helyét.'
 const DESK = { viewport: { width: 1440, height: 900 } }, PHONE = { viewport: { width: 390, height: 664 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 };
 let total = 0, failed = 0;
 
-for (const name of names) {
+for (const name of names.filter(n => n !== 'site')) {
   let pass = 0, fail = 0;
   const ok = (what, cond, info = '') => { if (cond) pass++; else { fail++; console.log(`FAIL ${name}: ${what}`, info); } };
   const open = async opts => {
@@ -116,17 +118,21 @@ for (const name of names) {
     const mail = await p.evaluate(() => window.__mail || '');
     ok(`${dev}: the email carries the fields`, /Teszt Elek/.test(mail) && /teszt@pelda\.hu/.test(mail) && /Havi büdzsé: 300 ezer – 1 millió Ft/.test(mail), mail.slice(0, 160));
     ok(`${dev}: the sent note`, /Az e-mailed kész, már csak el kell küldened\./.test(await p.textContent('#sent')) && await p.evaluate(() => !document.getElementById('sent').hidden));
-    // English
-    await p.locator('[data-set-lang="en"]').first().click(); await p.waitForTimeout(400);
+    // English: on a concept the EN button swaps the page in place; on the site (one language a page) the EN link opens
+    // the English page, whose menu starts with the services
+    const single = await p.evaluate(() => !document.querySelector('[data-set-lang]'));
+    const go = async l => { if (!single) { await p.locator(`[data-set-lang="${l}"]`).first().click(); await p.waitForTimeout(400); return; }
+      await Promise.all([p.waitForURL(l === 'en' ? /\/en\/(index\.html)?$/ : /\/(index\.html)?$/), p.locator(`.lang a[hreflang="${l}"]`).click()]); await p.waitForTimeout(1800); await to(p, '[data-film]', 0.15, 1800); };
+    await go('en');
     const en = await p.evaluate(() => ({ h1: document.querySelector('#hero-h [data-l="en"]').textContent.replace(/\s+/g, ' ').trim(), nav: document.querySelector('.nav .links a').textContent.trim(), cta: document.querySelector('#top a.btn[href="#audit"]').textContent.trim(), hu: [...document.querySelectorAll('[data-l="hu"]')].filter(e => e.offsetParent !== null).length }));
-    ok(`${dev}: English`, en.h1 === CLAIM_EN && en.nav === 'Results' && en.cta === 'Get my free audit' && en.hu === 0, JSON.stringify(en));
+    ok(`${dev}: English`, en.h1 === CLAIM_EN && en.nav === (single ? 'Services' : 'Results') && en.cta === 'Get my free audit' && en.hu === 0, JSON.stringify(en));
     // the film follows the language: every film that has a source has the English one, then the Hungarian one again
     const filmSrcs = () => p.evaluate(() => [...document.querySelectorAll('[data-film] video')].map(v => v.getAttribute('src') || '').filter(Boolean));
     const enFilms = await filmSrcs();
-    ok(`${dev}: the film in English`, enFilms.every(s => /-en\.mp4$/.test(s)), JSON.stringify(enFilms));
-    await p.locator('[data-set-lang="hu"]').first().click(); await p.waitForTimeout(300);
+    ok(`${dev}: the film in English`, enFilms.length > 0 && enFilms.every(s => /-en\.mp4$/.test(s)), JSON.stringify(enFilms));
+    await go('hu');
     const huFilms = await filmSrcs();
-    ok(`${dev}: the film back in Hungarian`, huFilms.every(s => !/-en\.mp4$/.test(s)), JSON.stringify(huFilms));
+    ok(`${dev}: the film back in Hungarian`, huFilms.length > 0 && huFilms.every(s => !/-en\.mp4$/.test(s)), JSON.stringify(huFilms));
     ok(`${dev}: eight questions`, (await p.evaluate(() => document.querySelectorAll('.faq-list details').length)) === 8);
     ok(`${dev}: no page errors`, !errs.length, errs.join(' | '));
     await ctx.close();
@@ -162,6 +168,117 @@ for (const name of names) {
     await ctx.close();
   }
   console.log(`${name}: ${pass} passed, ${fail} failed`);
+  total += pass; failed += fail;
+}
+
+// node lab/check.mjs site   (BASE: the site's folder served as the root, e.g. BASE=http://localhost:4565/)
+// The site's other pages (index covers the home page): each page from the sitemap, in its own language. On a computer:
+// the heading and the audit button on the first screen, the panel's light following the cursor and the page's
+// picture leaning toward it, the row along the panel's foot running at rest, the audit form in the page's language
+// (its errors and the email it writes), and nothing widening the page with a mouse at the screen's edges at 1440 and
+// 1100. On a phone: the menu button opens the links and a link closes it, nothing follows, no sideways scroll at 390
+// and 320. With reduced motion: everything in place, rows still. And the language comes from the page alone: the home
+// page stays Hungarian (with its Hungarian film) for a visitor whose browser remembers English from the one-page site
+// of before, and the English home plays the English film with nothing remembered.
+if (names.includes('site')) {
+  let pass = 0, fail = 0;
+  const ok = (what, cond, info = '') => { if (cond) pass++; else { fail++; console.log(`FAIL site: ${what}`, info); } };
+  const sm = await (await fetch(BASE + 'sitemap.xml')).text();
+  const paths = [...sm.matchAll(/<loc>https:\/\/socialstream\.hu(\/[^<]*)<\/loc>/g)].map(m => m[1]).filter(p => p !== '/' && p !== '/en/');
+  ok('the sitemap lists the pages', paths.length >= 10, paths.length);
+  const T = {
+    hu: { e: ['Írd be a neved, hogy tudjuk, kinek válaszolunk.', 'Írd be az e-mail címed, ide válaszolunk.', 'Írd be a céged vagy a márkád nevét.'], budget: 'Havi büdzsé: 300 ezer – 1 millió Ft' },
+    en: { e: ['Enter your name so we know who to reply to.', 'Enter your email. That’s where we’ll reply.', 'Enter your company or brand name.'], budget: 'Monthly budget: €800–€2,700' },
+  };
+  const page = async (opts, p0) => { const ctx = await b.newContext(opts), p = await ctx.newPage(), errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); }); await p.goto(BASE + p0.slice(1), { waitUntil: 'load' }); await p.waitForTimeout(1200); return { ctx, p, errs }; };
+  const wideAt = async (p, mouse) => { const H = await p.evaluate(() => document.documentElement.scrollHeight), w = await p.evaluate(() => innerWidth), hh = await p.evaluate(() => innerHeight); let worst = 0;
+    for (let y = 0; y < H; y += 800) { await p.evaluate(y => scrollTo({ top: y, behavior: 'instant' }), y);
+      for (const [x, yy] of mouse ? [[w - 6, hh - 6], [6, 6]] : [[0, 0]]) { if (mouse) { await p.mouse.move(x, yy, { steps: 3 }); await p.waitForTimeout(350); } else await p.waitForTimeout(100); worst = Math.max(worst, await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)); } }
+    return worst; };
+  for (const p0 of paths) {
+    const l = p0.startsWith('/en/') ? 'en' : 'hu';
+    // a computer
+    {
+      const { ctx, p, errs } = await page(DESK, p0);
+      // the audit button, or on the free-audit page the form itself, which starts on the first screen
+      const first = await p.evaluate(() => { const on = e => { const r = e && e.getBoundingClientRect(); return !!r && r.width > 0 && r.top >= 0 && r.bottom <= innerHeight; }; const f = document.querySelector('#top #appform'), fr = f && f.getBoundingClientRect(); return { h1: on(document.querySelector('#top h1')), cta: on(document.querySelector('#top a.btn[href="#audit"]')) || (!!fr && fr.top >= 0 && fr.top < innerHeight * 0.4), lang: document.documentElement.lang }; });
+      ok(`${p0} desktop: the heading and the audit on the first screen`, first.h1 && first.cta && first.lang === l, JSON.stringify(first));
+      const fxy = () => p.evaluate(() => [...document.querySelectorAll('#top [data-follow]')].map(e => [parseFloat(e.style.getPropertyValue('--fx')) || 0, parseFloat(e.style.getPropertyValue('--fy')) || 0]));
+      await p.mouse.move(80, 140, { steps: 4 }); await p.waitForTimeout(1200); const f0 = await fxy();
+      await p.mouse.move(1360, 820, { steps: 8 }); await p.waitForTimeout(1200); const f1 = await fxy();
+      const moved = f0.length ? Math.max(...f0.map((v, i) => Math.hypot(f1[i][0] - v[0], f1[i][1] - v[1]))) : 0;
+      ok(`${p0} desktop: the first screen follows the cursor`, f0.length >= 1 && moved >= 10, `${f0.length} followers, moved ${moved.toFixed(1)}px`);
+      await p.mouse.move(2, 2);
+      // a row runs while it is on screen: on a page whose first panel is taller than the screen, bring its foot in
+      await p.evaluate(() => { const r = document.querySelector('#top [data-rail]'), b = r && r.getBoundingClientRect(); if (b && b.bottom > innerHeight) scrollTo({ top: scrollY + b.bottom - innerHeight + 40, behavior: 'instant' }); }); await p.waitForTimeout(700);
+      const x0 = await p.evaluate(() => document.querySelector('#top [data-rail] .track')?.style.transform); await p.waitForTimeout(1000);
+      const x1 = await p.evaluate(() => document.querySelector('#top [data-rail] .track')?.style.transform);
+      ok(`${p0} desktop: the row along the first screen's foot runs at rest`, x0 && x1 && x0 !== x1, x0 + ' -> ' + x1);
+      ok(`${p0} desktop: the menu button stays hidden`, await p.evaluate(() => getComputedStyle(document.querySelector('.menu-btn')).display === 'none'));
+      // the audit form, in the page's language
+      await p.evaluate(() => { const r = document.getElementById('appform').getBoundingClientRect(); scrollTo({ top: scrollY + r.top - innerHeight * 0.1, behavior: 'instant' }); }); await p.waitForTimeout(600);
+      await p.evaluate(() => { window.__mail = null; SS.send = (brand, body) => { window.__mail = body; }; });
+      await p.locator('#appform button[type="submit"]').click(); await p.waitForTimeout(300);
+      const e1 = await p.evaluate(() => ['name', 'email', 'brand'].map(n => document.getElementById('e-' + n).textContent));
+      ok(`${p0} desktop: the form's errors in the page's language`, JSON.stringify(e1) === JSON.stringify(T[l].e), JSON.stringify(e1));
+      await p.fill('#f-name', 'Teszt Elek'); await p.fill('#f-email', 'teszt@pelda.hu'); await p.fill('#f-brand', 'Próba Kft'); await p.selectOption('#f-budget', '300-1m');
+      await p.locator('#appform button[type="submit"]').click(); await p.waitForTimeout(1300);
+      const mail = await p.evaluate(() => window.__mail || '');
+      ok(`${p0} desktop: the form writes the email`, mail.includes('Teszt Elek') && mail.includes(T[l].budget), mail.slice(0, 160));
+      ok(`${p0} desktop: no page errors`, !errs.length, errs.join(' | '));
+      await ctx.close();
+    }
+    for (const w of [1440, 1100]) {
+      const { ctx, p } = await page({ viewport: { width: w, height: 900 } }, p0);
+      const worst = await wideAt(p, true);
+      ok(`${p0} ${w}px, a mouse at the edges: no sideways scroll`, worst <= 0, String(worst));
+      await ctx.close();
+    }
+    // a phone
+    {
+      const { ctx, p, errs } = await page(PHONE, p0);
+      const m0 = await p.evaluate(() => { const b = document.querySelector('.menu-btn'), r = b.getBoundingClientRect(); return { shown: r.width > 0 && r.right <= innerWidth, links: getComputedStyle(document.querySelector('.nav .links')).visibility }; });
+      await p.locator('.menu-btn').click(); await p.waitForTimeout(450);
+      const m1 = await p.evaluate(() => ({ open: document.querySelector('.nav').classList.contains('menu-open'), exp: document.querySelector('.menu-btn').getAttribute('aria-expanded'), vis: getComputedStyle(document.querySelector('.nav .links')).visibility, n: [...document.querySelectorAll('.nav .links a')].filter(a => { const r = a.getBoundingClientRect(); return r.height > 30 && r.bottom <= innerHeight; }).length }));
+      ok(`${p0} phone: the menu button opens the links`, m0.shown && m0.links === 'hidden' && m1.open && m1.exp === 'true' && m1.vis === 'visible' && m1.n === 5, JSON.stringify({ m0, m1 }));
+      await p.keyboard.press('Escape'); await p.waitForTimeout(400);
+      ok(`${p0} phone: Escape closes the menu`, await p.evaluate(() => !document.querySelector('.nav').classList.contains('menu-open') && document.querySelector('.menu-btn').getAttribute('aria-expanded') === 'false'));
+      const still = await p.evaluate(() => [...document.querySelectorAll('[data-follow]')].every(e => !e.style.getPropertyValue('--fx')));
+      ok(`${p0} phone: nothing follows a cursor`, still);
+      ok(`${p0} phone: no page errors`, !errs.length, errs.join(' | '));
+      await ctx.close();
+    }
+    {
+      const { ctx, p } = await page({ ...PHONE, viewport: { width: 320, height: 680 } }, p0);
+      const worst = await wideAt(p, false);
+      ok(`${p0} 320px: no sideways scroll`, worst <= 0, String(worst));
+      await ctx.close();
+    }
+    // reduced motion
+    {
+      const { ctx, p } = await page({ ...DESK, reducedMotion: 'reduce' }, p0);
+      await p.mouse.move(80, 120, { steps: 3 }); await p.mouse.move(1300, 800, { steps: 6 }); await p.waitForTimeout(600);
+      const r = await p.evaluate(() => ({ hidden: [...document.querySelectorAll('[data-r]')].filter(e => getComputedStyle(e).opacity !== '1').length, tracks: [...document.querySelectorAll('[data-rail] .track')].filter(t => t.style.transform).length, follow: [...document.querySelectorAll('[data-follow], a.btn')].filter(e => e.style.getPropertyValue('--fx')).length }));
+      ok(`${p0} reduced motion: all in place, rows still, nothing follows`, r.hidden === 0 && r.tracks === 0 && r.follow === 0, JSON.stringify(r));
+      await ctx.close();
+    }
+  }
+  // the language comes from the page, not from a choice remembered on the one-page site of before
+  {
+    const ctx = await b.newContext(DESK);
+    await ctx.addInitScript(() => { try { localStorage.setItem('ss-lang', 'en'); } catch (e) {} });
+    const p = await ctx.newPage(); await p.goto(BASE, { waitUntil: 'load' }); await p.waitForTimeout(2600);
+    const s = await p.evaluate(() => ({ lang: document.documentElement.lang, L: SS.L, claim: !!document.querySelector('#hero-h [data-l="hu"]'), films: [...document.querySelectorAll('[data-film] video')].map(v => v.getAttribute('src') || '').filter(Boolean) }));
+    ok('the home page stays Hungarian for a browser that remembers English', s.lang === 'hu' && s.L === 'hu' && s.claim && s.films.length > 0 && s.films.every(f => !/-en\.mp4$/.test(f)), JSON.stringify(s));
+    await ctx.close();
+  }
+  {
+    const ctx = await b.newContext(DESK), p = await ctx.newPage(); await p.goto(BASE + 'en/', { waitUntil: 'load' }); await p.waitForTimeout(2600);
+    const s = await p.evaluate(() => ({ lang: document.documentElement.lang, L: SS.L, playing: [...document.querySelectorAll('[data-film] video')].filter(v => !v.paused).map(v => v.currentSrc.split('/').pop()) }));
+    ok('the English home plays the English film', s.lang === 'en' && s.L === 'en' && s.playing.length > 0 && s.playing.every(f => /-en\.mp4$/.test(f)), JSON.stringify(s));
+    await ctx.close();
+  }
+  console.log(`site: ${pass} passed, ${fail} failed`);
   total += pass; failed += fail;
 }
 console.log(`concepts: ${total} passed, ${failed} failed`);

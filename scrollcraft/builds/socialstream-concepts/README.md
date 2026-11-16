@@ -43,8 +43,20 @@ The published pages are private until they are shared from their Share menu.
 ## Files
 
 - `content.mjs`: every word in both languages. Each service carries its `pain`, the problem it answers.
-- `parts.mjs`: shared markup (claim, film, reel, rail, form, questions, footer, `toSvc` link).
-- `concepts/<name>.mjs`: each concept's own page.
+- `parts.mjs`: shared markup (claim, film, reel, rail, form, questions, footer, `toSvc` link). It renders two ways
+  (`render()`): both languages in one page for the concepts (Hungarian in the element, English in `data-en` or a twin
+  span, files linked relatively), or one language per page for the live site (`render({ lang, root: '/' })`: only
+  that language's words, files linked from the root, the HU / EN switch a link to the other language's page, a menu
+  button on tablets and phones, the footer's links). The concepts' output is byte for byte what it was before.
+- `concepts/<name>.mjs`: each concept's own page. `mix.mjs` exports its sections one by one (`heroSec`, `painsSec`,
+  `servicesSec`, `statCards`, `stepsSec`, `whoSec`, `quote`, `teamSec`, `offerSec` and the rest) and `main()`, so the
+  site's pages are built from the same parts.
+- `site/` (since 2026-11-16): the pages of socialstream.hu beyond the home page.
+  - `pages.mjs`: one entry per page (its address in both languages, title, description, heading, answer, and the
+    words only it has), the menu's links. Every word in it is new (COPY.md) but says only what content.mjs says.
+  - `head.mjs`: each page's head lines: canonical, the hu / en / x-default alternates, share tags, structured data.
+  - `templates.mjs`: one template per kind of page (home, services, service, about, audit, faq, contact).
+- `site.css`: the site's additions to Mix's look (subpages, menu, footer links); only the site's pages load it.
 - `base.css`: shared mechanics.
 - `<name>.css`: each concept's look.
 - `ss.js`: language, form helpers. Copied from Daylight.
@@ -83,6 +95,15 @@ The published pages are private until they are shared from their Share menu.
   - running rows, counters, the form, English
   - the problems and their links, cursor followers
   - reduced motion, no sideways scroll
+  - on the site: `index` is the home page (English by its EN link), `site` every other page from the sitemap (the
+    first screen, the cursor followers, the row running at rest, the form in the page's language, the phone menu, no
+    sideways scroll at 1440 and 1100 with a mouse at the edges and at 390 and 320, reduced motion), and that a page's
+    language comes from the page alone, not from a choice the browser remembers from the one-page site of before.
+- `lab/sitecheck.mjs`: the site's folder, served: every file and page answers 200; each page's head (language, one
+  h1, a title and description of its own, its canonical address, the alternates both ways, share tags, structured
+  data with what its kind of page needs); no words of the other language; every link inside the site goes somewhere
+  real; the sitemap, robots.txt, llms.txt and 404 page; and in a browser on every page no failed request, console
+  error or other host, nothing left unarrived, no sideways scroll at 390.
 
 ## Logo (2026-11-12)
 
@@ -116,20 +137,34 @@ this folder's root, where the head's root paths (`/favicon.ico` and the rest) fi
 
 Aurora Mix is the page going live on https://socialstream.hu, hosted by Pulse CRM. Pulse serves an uploaded
 folder exactly as it is, at the domain root: an agency admin uploads it as a ZIP for the domain under
-Settings → Domains, and a new upload replaces the old version in one step. `node tools/site.mjs` writes that
-folder to `dist/site/`:
+Settings → Domains, and a new upload replaces the old version in one step. A folder's `index.html` is served at its
+address with a trailing slash (`/rolunk/`; `/rolunk` redirects there), and Pulse keeps some first path segments for
+itself (`p`, `form`, `book`, `fonts`, `socialstream` and more: `tools/site.mjs` lists them and stops on one).
+`node tools/site.mjs` writes that folder to `dist/site/`:
 
-- `index.html`: `mix.html` with the domain's head: the title "SocialStream · Interest media ügynökség", the
-  canonical address, share tags with `assets/og-image.jpg` (1200 × 630) and the organisation's details as JSON-LD.
-- The page's own files (`base.css`, `mix.css`, `ss.js`, `kit.js`) and only the assets it uses, plus the two cuts
+- Since 2026-11-16 the site has 24 pages (phase 2 of the Claude Docs doc "SocialStream SEO, AEO and subpage plan"),
+  each in one language: Hungarian at the root, English under `/en/`. The home page (`/`, `/en/`) is Aurora Mix itself;
+  the others are the services page and the six services (`/szolgaltatasok/…`, `/en/services/…`), About us
+  (`/rolunk/`), the free audit (`/ingyenes-audit/`), the questions (`/gyik/`, with the FAQPage data) and contact
+  (`/kapcsolat/`), each at `<address>/index.html`. Every page has its own title and description, its canonical
+  address, the hu / en / x-default alternates, share tags with `assets/og-image.jpg` (1200 × 630) and structured
+  data (the organisation and the site; the page with its breadcrumb; the service, the team, the questions, the film as
+  the page shows them). The home page keeps its title "SocialStream · Interest media ügynökség" and its description
+  until the founder approves the doc's drafts. Case studies, the audience pages, `/en/tenerife/` and the legal pages
+  wait for client permissions and the founder's facts (`site/pages.mjs` lists what is left out).
+- `robots.txt` (every crawler allowed, the AI crawlers named), `sitemap.xml` (every page with its alternates) and
+  `llms.txt` (the doc's draft with the pages' addresses; Pulse serves the folder's own instead of its generated one).
+- The pages' own files (`base.css`, `mix.css`, `site.css`, `ss.js`, `kit.js`, `logo-anim.js`, `reels.js`), linked
+  from the root, and only the assets they use, plus the two cuts
   of the brand film that `kit.js` picks between for Mix (`hero-1080` for the opening on a wide screen, `hero-v-720`
   in the card and on phones), in Hungarian and in English (`-en`: the page in English plays it). Mix never asks for
   `hero-540`, so it stays out of the package (since 2026-11-16, when the 59 s sizzle became the film).
 - The logo kit's web icons at the root, where the page's head and the manifest ask for them.
 - `404.html` (every link in it starts at the root, so it works at any depth), `robots.txt` and `sitemap.xml`.
 
-It writes real files only (no symlinks), and stops if a file the page names is missing or the folder breaks
-Pulse's limits (60 MB, 1,500 files). On 2026-11-12 it was 59 files and 18.8 MB; on 2026-11-15, with the new palette and the remade film, 59 files and 19.8 MB (`socialstream-site-v4.zip`). `tools/og.mjs` renders the share
+It writes real files only (no symlinks), and stops if a file a page names is missing, a page carries an em dash or
+the other language's words, a top-level name is one of Pulse's own paths, or the folder breaks Pulse's limits
+(60 MB, 1,500 files). On 2026-11-12 it was 59 files and 18.8 MB; on 2026-11-15, with the new palette and the remade film, 59 files and 19.8 MB (`socialstream-site-v4.zip`); v10 (the sizzle, one page) 87 files and 55.5 MB; on 2026-11-16 with the 24 pages, 112 files and 56.3 MB. The films are about 50 MB of it, so they move to a video host before many pictures go in (the founder's choice). `tools/og.mjs` renders the share
 image from `tools/og.html`: the logo, the claim and three of their reels on the night blue.
 
 To update the live site: change the page, `node build.mjs mix`, `node tools/site.mjs`, run the last three commands
@@ -168,7 +203,7 @@ node tools/artifact.mjs
 BASE=http://localhost:4560/dist/ node lab/check.mjs
 node tools/site.mjs
 node ../../../.claude/skills/scroll-craft/scripts/serve.mjs --root dist/site --port 4565
-BASE=http://localhost:4565/ node lab/check.mjs index
+BASE=http://localhost:4565/ node lab/check.mjs index,site
 node lab/sitecheck.mjs dist/site http://localhost:4565/
 ```
 

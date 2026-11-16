@@ -58,3 +58,66 @@ Heading: Máshol és *nálunk*. / Elsewhere and *with us*.
 - On the film's card, as a story's caption: Márkafilm / Brand film
 - The two arrows beside the reviews (read out by screen readers, not shown): Előző vélemény / Previous review,
   Következő vélemény / Next review
+
+## NEW, to confirm: the site's pages (2026-11-16)
+
+socialstream.hu grows from one page into 24: the home page and eleven more, each in Hungarian and in English
+(`site/pages.mjs` holds every new word; the plan is the Claude Docs doc "SocialStream SEO, AEO and subpage plan").
+The new sentences only restate what the site already says: the same six services, the four results, the steps, the
+team, the reviews (word for word), "2022 óta", "Tenerife és Budapest", "havonta legfeljebb két új partner". English
+pages show the English page's euros (content.mjs), never a new conversion.
+
+Every page has its own title and description, a heading (what the page is, then a line), a two-sentence answer, and
+ends with the audit form. Titles and descriptions:
+
+| Page | Title (HU / EN) |
+|---|---|
+| Home | unchanged: SocialStream · Interest media ügynökség / SocialStream · Interest media agency |
+| Szolgáltatások / Services | Szolgáltatások: videó, social media és hirdetés / Services: video, social media and ads |
+| Videó / Video | Hirdetési videó és reels készítés / Video production for ads and reels |
+| Social | Social media kezelés és tartalomgyártás / Social media management and content |
+| Hirdetés / Ads | Facebook, TikTok és Google hirdetéskezelés / Meta, TikTok and Google ads management |
+| Weboldal / Web | Landing oldal és weboldal készítés / Landing pages and websites that convert |
+| Automatizáció / Automation | E-mail marketing és automatizáció / Email marketing and automation |
+| Stratégia / Strategy | Marketing stratégia és funnel audit / Marketing strategy and funnel audit |
+| Rólunk / About us | Rólunk: interest media ügynökség 2022 óta / About us: an interest media agency since 2022 |
+| Ingyenes audit / Free audit | Ingyenes 30 perces marketing audit / Free 30-minute marketing audit |
+| GYIK / FAQ | Gyakori kérdések / Frequently asked questions |
+| Kapcsolat / Contact | Kapcsolat / Contact |
+
+Each ends in " · SocialStream". The descriptions are in `site/pages.mjs`.
+
+New on every page:
+
+- Menu (header): Szolgáltatások, Eredmények, Rólunk, Kérdések, Kapcsolat / Services, Results, About us, Questions,
+  Contact. On tablets and phones a "Menü" / "Menu" button opens them. The HU / EN switch is a link to the other
+  language's page.
+- Footer: two columns of links (Szolgáltatások: Minden szolgáltatás and the six; SocialStream: Rólunk, Ingyenes
+  audit, Gyakori kérdések, Kapcsolat), and the line "Interest media ügynökség · 2022 óta · Tenerife és Budapest"
+  (before: without "2022 óta").
+- Breadcrumb (subpages): Főoldal / Szolgáltatások / … (read out as "Morzsamenü" / "Breadcrumb").
+
+New sentences worth a look (all in `site/pages.mjs`):
+
+- The services page: "Hat szolgáltatás, *egy csapattól*." / "Six services, *one team*."
+- Each service page's heading line is the service's own line (content.mjs); above it, the search words: "Hirdetési
+  videó és reels készítés", "Social media kezelés", "Facebook, TikTok és Google hirdetéskezelés", "Landing oldal és
+  weboldal készítés", "E-mail marketing és automatizáció", "Marketing stratégia és funnel audit".
+- "Mit kapsz?" / "What you get": a list per service, from the service's own words, the steps' chips and the tags.
+- The video page: "Akik csinálják: David (hookok, forgatás, kreatív irány) és Bálint (forgatás, vágás, hang és fotó)."
+  and under its reels "Az Up To Youth az alapítónk saját szervezete." / "Up To Youth is our founder's own organisation."
+- The web page: "Ezt az oldalt is mi építettük." / "We built this site too."
+- About us: "Interest media ügynökség, *2022 óta*.", the facts as cards (2022 óta dolgozunk · 300M+ Ft kezelt
+  hirdetési büdzsé · 4 ember a csapatban · 2 új partner havonta, legfeljebb), "A nevünk" over the claim and the
+  name's line (content.mjs).
+- Contact: "Írj nekünk, *válaszolunk*." / "Write to us. *We'll reply.*"
+- Questions: the home page's eight (two reworded to stand alone: "Mennyi ideig tart az audit?", "Mi történik, miután
+  elküldöm a jelentkezést?", "Mit kapok az audit végén?") and eleven new ones answered from the site's facts (the six
+  services, B2B on Facebook, the results, the budget managed, landing page or website, what we automate, what comes
+  after the audit, who it is not for, how many new partners, who works on an account, since when). A few of them
+  also sit on the service pages.
+
+Left out until the founder sends them: pricing, the legal notice and privacy policy, a phone number or address,
+profile links, proof for automation, the named clients' numbers (Prof Enzo's 9.8M+ views, FlyX's 69K on one reel:
+the film shows them, but a page naming a client with a number waits for the client's OK), and the doc's title,
+meta and H1-line drafts for the home page.
