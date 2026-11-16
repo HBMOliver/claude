@@ -12,7 +12,7 @@ Aurora itself is unchanged.
 | Premiere | Talentank (Marketia for the giant running words) | Black and cinematic. The claim's two sentences sit above and below a wide film band. | https://claude.ai/artifact/F4yHZA3CbyoiQ7mN5ckVmT |
 | Aurora | Conversion (Strivai for the horizon light and the glass) | Night blue with a moving aurora. Real results float on glass cards. | https://claude.ai/artifact/PtcSvRhunabu4nDLBXoL82 |
 | Studio | Cutflow | Warm grey with white cards and one coral. The film plays like a story, with reels peeking out behind it. | https://claude.ai/artifact/2GpEg95SqLphnNoG937xu2 |
-| Aurora Mix | Scrolla's layout in Aurora's look | Night blue. The first screen, the services, Kiknek and the last call sit in inset panels with the aurora moving inside. The film stands beside the claim like a post, and the real numbers run along the panel's foot. The reels close in on the statement, the services are big-object cards over two running tag rows, the stat cards come with a running row of reels, the with-us card lies over the elsewhere card, the steps are big numbered cards, the reviews are a row you scroll, and a giant wordmark sits at the end. A light follows the cursor round the first screen. It opens on the film alone (asked for on 2026-11-12). Scrolling on, on wide screens the film shrinks into its card while the panel and the claim come in; on phones and short screens the panel rises over it. Since 2026-11-15 blue-purple leads and red-pink is only the accent ("too pink" before): the colours are variables at the top of `mix.css`, and the 3D objects are recoloured copies for Mix only (`assets/*-mix.webp`). The film it plays is the remake in `video/film/`. | https://claude.ai/artifact/C52b5BBkmGw83WvDFJyZCF |
+| Aurora Mix | Scrolla's layout in Aurora's look | Night blue. The first screen, the services, Kiknek and the last call sit in inset panels with the aurora moving inside. The film stands beside the claim like a post, and the real numbers run along the panel's foot. The reels close in on the statement, the services are big-object cards over two running tag rows, the stat cards come with a running row of reels, the with-us card lies over the elsewhere card, the steps are big numbered cards, the reviews are a row you scroll, and a giant wordmark sits at the end. A light follows the cursor round the first screen. It opens on the film alone (asked for on 2026-11-12). Scrolling on, on wide screens the film shrinks into its card while the panel and the claim come in; on phones and short screens the panel rises over it. Since 2026-11-15 blue-purple leads and red-pink is only the accent ("too pink" before): the colours are variables at the top of `mix.css`, and the 3D objects are recoloured copies for Mix only (`assets/*-mix.webp`). The film it plays is the sizzle in `video/sizzle/` (since 2026-11-16; before it, the films in `video/film/`). | https://claude.ai/artifact/C52b5BBkmGw83WvDFJyZCF |
 
 The published pages are private until they are shared from their Share menu.
 
@@ -119,8 +119,10 @@ folder to `dist/site/`:
 
 - `index.html`: `mix.html` with the domain's head: the title "SocialStream · Interest media ügynökség", the
   canonical address, share tags with `assets/og-image.jpg` (1200 × 630) and the organisation's details as JSON-LD.
-- The page's own files (`base.css`, `mix.css`, `ss.js`, `kit.js`) and only the assets it uses, plus the three cuts
-  of the brand film that `kit.js` picks between, in Hungarian and in English (`-en`: the page in English plays it).
+- The page's own files (`base.css`, `mix.css`, `ss.js`, `kit.js`) and only the assets it uses, plus the two cuts
+  of the brand film that `kit.js` picks between for Mix (`hero-1080` for the opening on a wide screen, `hero-v-720`
+  in the card and on phones), in Hungarian and in English (`-en`: the page in English plays it). Mix never asks for
+  `hero-540`, so it stays out of the package (since 2026-11-16, when the 59 s sizzle became the film).
 - The logo kit's web icons at the root, where the page's head and the manifest ask for them.
 - `404.html` (every link in it starts at the root, so it works at any depth), `robots.txt` and `sitemap.xml`.
 
@@ -138,7 +140,16 @@ Before launch (2026-11-12):
   Rackhost. Email signing (DKIM) is on since 2026-11-15 (TXT google._domainkey).
 - **Fonts: open.** The page loads Sora, Inter, Instrument Serif and Fraunces from Google Fonts, which sends each
   visitor's IP address to Google. Serving them from the site is waiting for the user's decision.
-- **Film: v5, "Through the phone" (2026-11-15).** The site plays `video/film/` v5: one moving camera through the
+- **Film: the sizzle (2026-11-16).** The founder sent Prof Enzo's real views for it (9.8M+) and asked to put it live;
+  asked where, they chose to have it replace the film everywhere: the opening, the card and phones, muted. It is
+  `video/sizzle/` (59.4 s, 1485 frames, cut to the music; the video session's handover is in the shared notes).
+  `sh tools/hero.sh <master-wide> <master-tall> [-en] [poster s]` makes the site's cuts from its four masters (wide
+  and upright, Hungarian and English, all on one clock): `hero-1080`, `hero-v-720` and `hero-540` (the other
+  concepts' smaller frames), silent, and the posters at 2.6 s, where the logo stands whole on the wall (no words, so
+  one pair serves both languages). The upright cut is its own layout, not a crop, so in the card the two dissolve into
+  each other. After its first play the film loops from 3.2 s (`data-loop` in `parts.mjs`, `kit.js`): the sizzle opens
+  and ends on the logo, and a loop to 0 showed the logo twice within five seconds.
+- **Film: v5, "Through the phone" (2026-11-15).** Until 2026-11-16 the site played `video/film/` v5: one moving camera through the
   logo's S, the claim, a stream of their reels and into the phone (35.4 s), in Hungarian and in English; the page's
   language picks the film. Before it, the remake in the site's look (32.12 s, the logo animation first). Before that, the title card was re-cut with the new logo (b1ae71e), then made longer, with the logo on a
   soft night band over the moving reel wall (ef0dd7e), and its opening shortened to 4.56 s (877347d: 774 frames,

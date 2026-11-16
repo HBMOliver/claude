@@ -66,7 +66,7 @@ export function page() {
     css: 'mix.css', theme: '#05070f',
   }) + nav('mx-nav', { ground: 'dark', film: true }) + `
 <main>
-  <!-- the opening: the film alone fills the first screen (it carries the claim itself, a few seconds in). Scrolling
+  <!-- the opening: the film alone fills the first screen (it carries the claim itself, about eight seconds in). Scrolling
        on, where the screen has room to pin, the film settles into its card beside the claim while the panel, the claim
        and the numbers come in around it; on phones and short screens the panel rises over the film like a sheet.
        kit.js drives it all from one value, --q; without script or with reduced motion the page opens on the panel.

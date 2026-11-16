@@ -73,6 +73,11 @@ export const claimLine = (i, cls = '') => `<span class="${cls}"><span data-l="hu
 export const promise = (cls = 'promise', a = '') => `<p class="${cls}"${attrs(a)}><span data-l="hu"><span class="ln">${C.promise.hu[0]}</span> <span class="ln">${C.promise.hu[1]}</span></span><span data-l="en"><span class="ln">${C.promise.en[0]}</span> <span class="ln">${C.promise.en[1]}</span></span></p>`;
 export const ticks = (cls = 'ticks') => `<ul class="${cls}">${C.ticks.map(t => tx('li', '', t)).join('')}</ul>`;
 
+// where the film starts again after its first play: the sizzle (the film since 2026-11-16) opens and ends on the logo,
+// so a loop to 0 would show the logo twice within seconds; 3.2 s is the dimmed wall a moment before its first line,
+// as dark as the last frame (the video session's sizzle handover). Both frames of a pair share it
+const FILM_LOOP = 3.2;
+
 // the brand film: cut "v" (vertical), "h" (16:9) or "auto" (vertical on phones); kit.js plays it when seen
 export function film(cls = '', cut = 'auto', big = false, extra = '') {
   const poster = cut === 'v' ? `<img src="assets/hero-v-poster.jpg" alt="" width="720" height="1280">`
@@ -80,7 +85,7 @@ export function film(cls = '', cut = 'auto', big = false, extra = '') {
     : `<picture><source media="(max-width: 760px)" srcset="assets/hero-v-poster.jpg"><img src="assets/hero-poster.jpg" alt="" width="1600" height="900"></picture>`;
   return `<div class="film ${cls}" data-film data-cut="${cut}"${big ? ' data-big' : ''}>
   <div class="poster">${poster}</div>
-  <video muted loop playsinline preload="none" aria-label="${esc(C.film.label.hu)}" data-en-aria="${esc(C.film.label.en)}"></video>
+  <video muted loop playsinline preload="none" data-loop="${FILM_LOOP}" aria-label="${esc(C.film.label.hu)}" data-en-aria="${esc(C.film.label.en)}"></video>
   <button class="toggle" type="button"></button>${extra}
 </div>`;
 }

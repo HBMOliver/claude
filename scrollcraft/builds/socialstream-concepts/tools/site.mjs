@@ -5,8 +5,10 @@
 //   index.html            mix.html as the domain's page: the real title, the canonical address, share tags and image,
 //                         and the organisation's details for search engines; everything else exactly as in mix.html
 //   base.css mix.css ss.js kit.js   the page's own files, linked relatively, as mix.html links them
-//   assets/               only the files the page uses: named in its markup, styles or scripts, plus the three cuts
-//                         of the brand film that kit.js picks between at runtime, in Hungarian and in English (-en)
+//   assets/               only the files the page uses: named in its markup, styles or scripts, plus the two cuts
+//                         of the brand film that kit.js picks between at runtime for Mix's two film frames (the wide
+//                         1080 where the opening fills a wide screen, the upright 720 in the card and on phones), in
+//                         Hungarian and in English (-en). Mix never asks for hero-540 (a smaller frame elsewhere)
 //   favicon.ico favicon.svg apple-touch-icon.png site.webmanifest and the icons the manifest names
 //                         the logo kit's web files, at the root, where the page's head and the manifest ask for them
 //   404.html robots.txt sitemap.xml
@@ -19,7 +21,7 @@ const ORIGIN = 'https://socialstream.hu', OUT = 'dist/site';
 const TITLE = 'SocialStream · Interest media ügynökség';
 const OG = 'assets/og-image.jpg';
 const OG_ALT = 'A SocialStream logója és a mondat: A social media meghalt. Az érdeklődés vette át a helyét.';
-const FILM = ['hero-540', 'hero-1080', 'hero-v-720'].flatMap(n => [`assets/${n}.mp4`, `assets/${n}-en.mp4`]);
+const FILM = ['hero-1080', 'hero-v-720'].flatMap(n => [`assets/${n}.mp4`, `assets/${n}-en.mp4`]);
 const LIMIT_MB = 60, LIMIT_FILES = 1500;
 
 const read = f => fs.readFileSync(f, 'utf8');

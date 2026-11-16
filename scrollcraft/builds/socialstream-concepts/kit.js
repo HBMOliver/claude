@@ -73,6 +73,10 @@
     // one stays paused, so its frame shows the right words); one that has not loaded yet picks it when it starts
     f.lang = function () { if (!f.loaded) return; if (f.paused || !f.seen) load(); else f.apply(); };
     v.addEventListener('playing', function () { box.classList.add('is-playing'); });
+    // after its first play the film starts again from its loop point (data-loop, seconds), not from 0; without this
+    // script the markup's plain loop stays
+    var from = parseFloat(v.getAttribute('data-loop'));
+    if (from > 0) { v.loop = false; v.addEventListener('ended', function () { try { v.currentTime = from; } catch (e) {} f.apply(); }); }
     // a frame may carry a progress line, as a story does; it follows the film
     var bar = $('.progress', box);
     if (bar) v.addEventListener('timeupdate', function () { if (v.duration) bar.style.setProperty('--pr', (v.currentTime / v.duration).toFixed(3)); });
