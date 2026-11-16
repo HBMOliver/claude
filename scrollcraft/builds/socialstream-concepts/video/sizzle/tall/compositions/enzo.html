@@ -1,0 +1,228 @@
+<template>
+  <style>
+    /* Shared by every scene of the SocialStream sizzle (build.py puts it into each scene's style block): the site's type
+   (Sora, Instrument Serif italic, Inter) and the sizzle's objects: the wall, phones, reel cards, comments, hearts,
+   polaroids, counters. SPEC.md has the numbers. */
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
+/* no ground on the root: a scene wipes in over the one before it (its own field is inside the wipe) */
+#root { position: absolute; inset: 0; overflow: hidden; color: #fff; font-family: Inter, sans-serif; }
+#root .ff { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+#root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.0; }
+#root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+#root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.9); white-space: nowrap; }
+#root .acc { color: #ff5272; }
+#root .w { display: inline-block; }
+/* one phrase at a time at the centre of the frame */
+#root .rsv { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; }
+#root .big { font-size: 150px; white-space: nowrap; }
+#root .mid { font-size: 112px; white-space: nowrap; }
+#root .mid .it { font-size: 142px; }
+#root .huge { font-size: 250px; line-height: 0.92; white-space: nowrap; }
+#root .ss { position: relative; display: inline-block; }
+#root .stk { position: absolute; left: -0.03em; right: -0.03em; top: 0.52em; height: 0.08em; border-radius: 0.04em; background: #ff5272; transform-origin: 0 50%; }
+/* a colour field with slow lights, and a client's name tiled faintly over it */
+#root .fld { position: absolute; inset: 0; overflow: hidden; }
+#root .fld .lt { position: absolute; border-radius: 50%; }
+#root .tile { position: absolute; left: -260px; right: -260px; top: -40px; bottom: -40px; display: flex; flex-direction: column; justify-content: space-between;
+  opacity: 0.075; font: 700 78px/1 Sora, Inter, sans-serif; letter-spacing: -0.03em; white-space: nowrap; }
+#root .tile div:nth-child(even) { margin-left: -210px; }
+#root .tile span { margin-right: 76px; }
+/* the wall: a tilted grid of 9:16 cards */
+#root .wl-in { position: absolute; inset: 0; }
+#root .wl-wall { position: absolute; inset: 0; }
+#root .wl-card { position: absolute; overflow: hidden; border-radius: 26px; background: #0b1024;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 30px 60px -30px rgba(0, 0, 0, 0.8); }
+#root .wl-card img, #root .wl-card video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#root .wl-card .g { opacity: 0; }
+#root .glow { position: absolute; inset: 0; background: radial-gradient(ellipse 30% 44% at 50% 50%, rgba(5, 7, 15, 0.95) 0%, rgba(5, 7, 15, 0.76) 44%, rgba(5, 7, 15, 0) 100%); }
+#root .glow.wide { background: radial-gradient(ellipse 60% 46% at 50% 50%, rgba(5, 7, 15, 0.88) 0%, rgba(5, 7, 15, 0.6) 50%, rgba(5, 7, 15, 0) 100%); }
+/* a phone playing a reel */
+#root .phone { position: absolute; width: 380px; height: 790px; border-radius: 58px; background: #0a0b10;
+  box-shadow: 0 50px 90px -30px rgba(0, 0, 0, 0.6), inset 0 0 0 2px rgba(255, 255, 255, 0.14); }
+#root .phone .scr { position: absolute; inset: 12px; border-radius: 47px; overflow: hidden; background: #000; }
+#root .phone .scr video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#root .phone .isl { position: absolute; top: 26px; left: 50%; width: 112px; margin-left: -56px; height: 32px; border-radius: 16px; background: #000; }
+/* a reel card: no body, just the picture */
+#root .card { position: absolute; overflow: hidden; border-radius: 40px; background: #0b1024;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.55), inset 0 0 0 2px rgba(255, 255, 255, 0.14); }
+#root .card video, #root .card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* a pill and a chip: a count beside the work */
+#root .pill { position: absolute; display: flex; align-items: center; gap: 12px; padding: 14px 24px 14px 20px; border-radius: 40px;
+  background: rgba(5, 7, 15, 0.78); font: 700 32px/1 Inter, sans-serif; letter-spacing: -0.01em; white-space: nowrap;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.2); }
+#root .chip { position: absolute; display: flex; align-items: center; gap: 12px; padding: 16px 26px 16px 22px; border-radius: 44px; background: #fff; color: #0b1030;
+  font: 700 38px/1 Sora, Inter, sans-serif; letter-spacing: -0.02em; white-space: nowrap; box-shadow: 0 24px 44px -18px rgba(0, 0, 0, 0.5); }
+#root .chip i, #root .pill i { display: block; width: 0; height: 0; border-left: 17px solid currentColor; border-top: 10px solid transparent; border-bottom: 10px solid transparent; }
+#root .tag { position: absolute; padding: 15px 28px; border-radius: 40px; background: rgba(255, 255, 255, 0.14); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+  font: 700 34px/1 Sora, Inter, sans-serif; letter-spacing: -0.02em; white-space: nowrap; }
+/* a comment or a client's words: a white card whose words type on */
+#root .bub { position: absolute; padding: 22px 30px 24px 100px; border-radius: 28px; background: #fff; color: #11152a;
+  font: 600 32px/1.3 Inter, sans-serif; letter-spacing: -0.01em; box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.5); transform-origin: 0 100%; }
+#root .bub .av { position: absolute; left: 26px; top: 24px; width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(160deg, #d9def0, #a9b2cf); }
+#root .bub .src { display: block; margin-bottom: 6px; font: 700 22px/1.2 Inter, sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: #6c7493; }
+#root .bub.q { font: italic 400 44px/1.14 "Instrument Serif", Georgia, serif; letter-spacing: 0; }
+#root .tw { display: inline-block; white-space: pre; }
+/* a heart rising from the work */
+#root .hrt { position: absolute; left: 0; top: 0; z-index: 6; }
+#root .hrt svg { display: block; width: 100%; height: 100%; }
+/* a polaroid of the team at work */
+#root .pol { position: absolute; width: 400px; height: 500px; padding: 16px 16px 68px; background: #fdfdfb; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.55); }
+#root .pol img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* a counted number: fixed-width digits, never smeared */
+#root .cnt { display: inline-flex; align-items: baseline; }
+#root .cnt .d { display: inline-block; width: 0.62em; text-align: center; }
+#root .lab { font: 600 54px/1.2 Inter, sans-serif; letter-spacing: -0.01em; white-space: nowrap; }
+
+/* the upright cut: larger labels, phrases that break over two lines, a narrower phone, cards with a smaller corner */
+#root .eb { font-size: 30px; white-space: normal; }
+#root .rsv .hd { line-height: 1.05; }
+#root .mid { font-size: 104px; }
+#root .mid .it { font-size: 132px; }
+#root .b2 { font-size: 128px; white-space: nowrap; }
+#root .glow { background: radial-gradient(ellipse 66% 23% at 50% 50%, rgba(5, 7, 15, 0.95) 0%, rgba(5, 7, 15, 0.76) 44%, rgba(5, 7, 15, 0) 100%); }
+#root .glow.wide { background: radial-gradient(ellipse 100% 28% at 50% 50%, rgba(5, 7, 15, 0.88) 0%, rgba(5, 7, 15, 0.6) 50%, rgba(5, 7, 15, 0) 100%); }
+#root .phone { width: 320px; height: 665px; border-radius: 49px; }
+#root .phone .scr { inset: 10px; border-radius: 40px; }
+#root .phone .isl { top: 22px; width: 94px; margin-left: -47px; height: 27px; border-radius: 14px; }
+#root .card { border-radius: 32px; }
+#root .pill { font-size: 34px; }
+#root .chip { font-size: 42px; }
+#root .bub { font-size: 34px; text-wrap: balance; }
+#root .bub .src { font-size: 24px; }
+#root .lab { font-size: 58px; }
+
+    
+    #root #ez-scrim, #root .ezo, #root #ez-eb, #root #ez-f, #root .chip { z-index: 4; }
+    #root .ezo { position: absolute; left: 0; right: 0; top: 262px; text-align: center; }
+    #root .ezrow { position: relative; height: 430px; }     /* room under the number for the Hungarian decimal comma */
+    #root .ezn { position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: center; align-items: baseline; white-space: nowrap;
+      font-size: 440px; line-height: 0.9; letter-spacing: -0.05em; text-shadow: 0 14px 70px rgba(0, 0, 0, 0.5); }
+    #root .ezl { font-size: 108px; text-shadow: 0 10px 50px rgba(0, 0, 0, 0.5); }
+    #root #ez-m { transform-origin: 50% 60%; }
+    #root .ezo { top: 740px; }
+    #root .ezrow { height: 310px; }
+    #root .ezn { font-size: 270px; }
+    #root .ezl { font-size: 92px; }
+  </style>
+  <div id="root" data-composition-id="enzo" data-width="1080" data-height="1920">
+    <div class="ff" id="wp">
+    <div class="fld" style="background:linear-gradient(140deg,#16c172 0%,#0b8f7a 52%,#075e63 100%)"><i class="lt" id="ez-l0" data-layout-allow-overflow style="left:4%;top:6%;width:90vmax;height:90vmax;margin:-45.0vmax 0 0 -45.0vmax;background:radial-gradient(closest-side,rgba(190, 255, 120, 0.4),rgba(190, 255, 120,0))"></i><i class="lt" id="ez-l1" data-layout-allow-overflow style="left:96%;top:96%;width:90vmax;height:90vmax;margin:-45.0vmax 0 0 -45.0vmax;background:radial-gradient(closest-side,rgba(20, 60, 160, 0.45),rgba(20, 60, 160,0))"></i></div><div class="tile" data-layout-allow-overflow data-layout-ignore style="color:#fff"><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div><div><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span><span>Prof Enzo</span></div></div><div class="card" id="ez-c0" style="left:22px;top:420px;width:332px;height:590px;z-index:1"><video id="ez-c0-v0" class="clip " src="assets/clips/ez1a.mp4" data-start="0" data-duration="2.32" data-media-start="0" data-hf-media-start-basis="local" data-track-index="1" muted playsinline></video><video id="ez-c0-v1" class="clip " src="assets/clips/ez1b.mp4" data-start="2.32" data-duration="2.6" data-media-start="0" data-hf-media-start-basis="local" data-track-index="2" muted playsinline></video></div><div class="card" id="ez-c1" style="left:374px;top:420px;width:332px;height:590px;z-index:1"><video id="ez-c1-v0" class="clip " src="assets/clips/ez2a.mp4" data-start="0" data-duration="2.32" data-media-start="0" data-hf-media-start-basis="local" data-track-index="3" muted playsinline></video><video id="ez-c1-v1" class="clip " src="assets/clips/ez2b.mp4" data-start="2.32" data-duration="2.6" data-media-start="0" data-hf-media-start-basis="local" data-track-index="4" muted playsinline></video></div><div class="card" id="ez-c2" style="left:726px;top:420px;width:332px;height:590px;z-index:1"><video id="ez-c2-v0" class="clip " src="assets/clips/ez3a.mp4" data-start="0" data-duration="2.32" data-media-start="0" data-hf-media-start-basis="local" data-track-index="5" muted playsinline></video><video id="ez-c2-v1" class="clip " src="assets/clips/ez3b.mp4" data-start="2.32" data-duration="2.6" data-media-start="0" data-hf-media-start-basis="local" data-track-index="6" muted playsinline></video></div><div class="card" id="ez-c3" style="left:22px;top:1030px;width:332px;height:590px;z-index:1"><video id="ez-c3-v0" class="clip " src="assets/clips/ez2b.mp4" data-start="0" data-duration="2.32" data-media-start="0" data-hf-media-start-basis="local" data-track-index="7" muted playsinline></video><video id="ez-c3-v1" class="clip " src="assets/clips/ez3a.mp4" data-start="2.32" data-duration="2.6" data-media-start="0" data-hf-media-start-basis="local" data-track-index="8" muted playsinline></video></div><div class="card" id="ez-c4" style="left:374px;top:1030px;width:332px;height:590px;z-index:1"><video id="ez-c4-v0" class="clip " src="assets/clips/ez3b.mp4" data-start="0" data-duration="2.32" data-media-start="0" data-hf-media-start-basis="local" data-track-index="9" muted playsinline></video><video id="ez-c4-v1" class="clip " src="assets/clips/ez1a.mp4" data-start="2.32" data-duration="2.6" data-media-start="0" data-hf-media-start-basis="local" data-track-index="10" muted playsinline></video></div><div class="card" id="ez-c5" style="left:726px;top:1030px;width:332px;height:590px;z-index:1"><video id="ez-c5-v0" class="clip " src="assets/clips/ez1b.mp4" data-start="0" data-duration="2.32" data-media-start="0" data-hf-media-start-basis="local" data-track-index="11" muted playsinline></video><video id="ez-c5-v1" class="clip " src="assets/clips/ez2a.mp4" data-start="2.32" data-duration="2.6" data-media-start="0" data-hf-media-start-basis="local" data-track-index="12" muted playsinline></video></div><div class="ff" id="ez-scrim" style="background:rgba(4,20,22,0.42)"></div><div class="ezo"><div class="ezrow"><div class="hd ezn" id="ez-n"><span class="cnt" id="ez-cnt" data-motion-blur="off"><span class="d" id="ez-d0">0</span><span class="dp">,</span><span class="d" id="ez-d1">0</span></span><span>M</span></div><div class="hd ezn" id="ez-m" style="opacity:0">9,8M+</div></div><div class="hd ezl" id="ez-lab">megtekintés</div></div><div class="pill" id="ez-eb" style="left:100px;top:300px">Prof Enzo · Facebook</div><div class="pill" id="ez-f" style="right:100px;top:300px">33K követő</div><div class="chip" id="ez-k0" style="left:100px;top:1654px"><i></i>149K</div><div class="chip" id="ez-k1" style="left:322px;top:1654px"><i></i>122K</div><div class="chip" id="ez-k2" style="left:544px;top:1654px"><i></i>105K</div><div class="chip" id="ez-k3" style="left:766px;top:1654px"><i></i>82K</div><i class="hrt" id="ez-h0" data-layout-ignore style="width:54px;height:54px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="ez-h1" data-layout-ignore style="width:30px;height:30px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="ez-h2" data-layout-ignore style="width:54px;height:54px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="ez-h3" data-layout-ignore style="width:54px;height:54px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="ez-h4" data-layout-ignore style="width:30px;height:30px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="ez-h5" data-layout-ignore style="width:30px;height:30px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="ez-h6" data-layout-ignore style="width:30px;height:30px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="ez-h7" data-layout-ignore style="width:30px;height:30px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="ez-h8" data-layout-ignore style="width:30px;height:30px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="ez-h9" data-layout-ignore style="width:30px;height:30px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="ez-h10" data-layout-ignore style="width:30px;height:30px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="ez-h11" data-layout-ignore style="width:44px;height:44px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i>
+    </div>
+  </div>
+  <script>
+  (() => {
+    const FPS = 25, W = 1080, H = 1920, START = 16.88, AT = (t) => t - START;
+    const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
+    const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
+    const tl = gsap.timeline({ paused: true });
+    // a scene comes in over the last one with a wipe: diagonal from the right or the left, up, or an iris
+    const WIPES = {
+      dr: ["polygon(132% 0%, 132% 0%, 132% 100%, 162% 100%)", "polygon(-32% 0%, 132% 0%, 132% 100%, -2% 100%)"],
+      dl: ["polygon(-32% 0%, -32% 0%, -62% 100%, -32% 100%)", "polygon(-32% 0%, 132% 0%, 102% 100%, -32% 100%)"],
+      up: ["polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)", "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"],
+      iris: ["circle(0% at 50% 50%)", "circle(75% at 50% 50%)"],
+    };
+    const wipeIn = (t, k) => tl.fromTo("#wp", { clipPath: WIPES[k][0] }, { clipPath: WIPES[k][1], duration: 0.32, ease: "power3.inOut" }, AT(t));
+    // one phrase at a time: it comes into focus, and goes when the next one comes
+    const say = (sel, tin, tout) => {
+      tl.fromTo(sel, { opacity: 0, filter: "blur(12px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.13, ease: "power2.out" }, AT(tin));
+      if (tout !== undefined) tl.fromTo(sel, { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(12px)", duration: 0.1, ease: "power2.in", immediateRender: false }, AT(tout));
+    };
+    const words = (sel, t, st = 0.07) => tl.fromTo(sel, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: st }, AT(t));
+    const out = (sel, t) => tl.fromTo(sel, { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in", immediateRender: false }, AT(t));
+    const fade = (sel, t, d = 0.25) => tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: d, ease: "power2.out" }, AT(t));
+    // a card pops: scale and position with a little overshoot (opacity never bounces)
+    const pop = (sel, t, d = 0.45) => {
+      tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "none" }, AT(t));
+      tl.fromTo(sel, { scale: 0.55, y: 30 }, { scale: 1, y: 0, duration: d, ease: "back.out(1.7)" }, AT(t));
+    };
+    // a phone or a card rises from below the frame, turning, and settles
+    const rise = (sel, t, r0, r1, d = 0.72) => tl.fromTo(sel, { y: 1990, rotation: r0 }, { y: 0, rotation: r1, duration: d, ease: "expo.out" }, AT(t));
+    const drift = (sel, t, d, dx, dy) => tl.fromTo(sel, { x: 0, y: 0 }, { x: dx, y: dy, duration: d, ease: "sine.inOut" }, AT(t));
+    // a comment types itself, a word at a time
+    const type = (sel, t, st = 0.045) => tl.fromTo(sel + " .tw", { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none", stagger: st }, AT(t));
+    // a heart rises from the work, sways and goes
+    const heart = (sel, t, x, y, up, sway, d) => {
+      tl.fromTo(sel, { x, y, scale: 0.3 }, { x: x + sway, y: y - up, scale: 1, duration: d, ease: "power1.out" }, AT(t));
+      tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, AT(t));
+      tl.fromTo(sel, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power1.in", immediateRender: false }, AT(t + d - 0.3));
+    };
+    // a counted number: fixed-width digit boxes, written once per frame as the value changes, never smeared
+    const count = (el, t, dur, to, ease = "expo.out") => {
+      const ds = [...el.querySelectorAll(".d")]; let last = null;
+      for (let i = 0; i <= Math.round(dur * FPS); i++) {
+        const tt = t + i / FPS, v = Math.round(to * ez(ease, (tt - t) / dur));
+        if (v === last) continue; last = v;
+        const s = String(v).padStart(ds.length, " ");
+        ds.forEach((d, k) => tl.set(d, { textContent: s[k] === " " ? "" : s[k] }, Math.max(0, AT(tt) - 0.01)));
+      }
+      const sep = el.querySelector(".sep");                 // a thousands comma: there once there are thousands
+      if (sep) tl.fromTo(sep, { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none" }, AT(t + dur * 0.12));
+    };
+    wipeIn(16.88, "dl");
+    drift("#ez-l0", 16.88, 4.92, 70, 50); drift("#ez-l1", 16.88, 4.92, -70, -50);
+    drift("#wp .tile", 16.88, 4.92, 60, 0);
+    rise("#ez-c0", 16.92, -6, 0);
+    rise("#ez-c1", 17, 0, 0);
+    rise("#ez-c2", 17.08, 6, 0);
+    rise("#ez-c3", 17.16, -6, 0);
+    rise("#ez-c4", 17.24, 0, 0);
+    rise("#ez-c5", 17.32, 6, 0);
+    fade("#ez-scrim", 17.08, 0.3);
+    pop("#ez-eb", 17.14, 0.4);
+    tl.fromTo("#ez-n", { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "none" }, AT(17.18));
+    fade("#ez-lab", 17.3);
+    tl.set("#ez-d1", { textContent: "1" }, Math.max(0, AT(17.40) - 0.01));
+    tl.set("#ez-d1", { textContent: "2" }, Math.max(0, AT(17.44) - 0.01));
+    tl.set("#ez-d1", { textContent: "4" }, Math.max(0, AT(17.52) - 0.01));
+    tl.set("#ez-d1", { textContent: "5" }, Math.max(0, AT(17.56) - 0.01));
+    tl.set("#ez-d1", { textContent: "7" }, Math.max(0, AT(17.60) - 0.01));
+    tl.set("#ez-d1", { textContent: "9" }, Math.max(0, AT(17.64) - 0.01));
+    tl.set("#ez-d0", { textContent: "1" }, Math.max(0, AT(17.68) - 0.01));
+    tl.set("#ez-d1", { textContent: "2" }, Math.max(0, AT(17.68) - 0.01));
+    tl.set("#ez-d1", { textContent: "6" }, Math.max(0, AT(17.72) - 0.01));
+    tl.set("#ez-d1", { textContent: "9" }, Math.max(0, AT(17.76) - 0.01));
+    tl.set("#ez-d0", { textContent: "2" }, Math.max(0, AT(17.80) - 0.01));
+    tl.set("#ez-d1", { textContent: "4" }, Math.max(0, AT(17.80) - 0.01));
+    tl.set("#ez-d1", { textContent: "9" }, Math.max(0, AT(17.84) - 0.01));
+    tl.set("#ez-d0", { textContent: "3" }, Math.max(0, AT(17.88) - 0.01));
+    tl.set("#ez-d1", { textContent: "5" }, Math.max(0, AT(17.88) - 0.01));
+    tl.set("#ez-d0", { textContent: "4" }, Math.max(0, AT(17.92) - 0.01));
+    tl.set("#ez-d1", { textContent: "1" }, Math.max(0, AT(17.92) - 0.01));
+    tl.set("#ez-d1", { textContent: "9" }, Math.max(0, AT(17.96) - 0.01));
+    tl.set("#ez-d0", { textContent: "5" }, Math.max(0, AT(18.00) - 0.01));
+    tl.set("#ez-d1", { textContent: "7" }, Math.max(0, AT(18.00) - 0.01));
+    tl.set("#ez-d0", { textContent: "6" }, Math.max(0, AT(18.04) - 0.01));
+    tl.set("#ez-d1", { textContent: "6" }, Math.max(0, AT(18.04) - 0.01));
+    tl.set("#ez-d0", { textContent: "7" }, Math.max(0, AT(18.08) - 0.01));
+    tl.set("#ez-d1", { textContent: "5" }, Math.max(0, AT(18.08) - 0.01));
+    tl.set("#ez-d0", { textContent: "8" }, Math.max(0, AT(18.12) - 0.01));
+    tl.set("#ez-d1", { textContent: "6" }, Math.max(0, AT(18.12) - 0.01));
+    tl.set("#ez-d0", { textContent: "9" }, Math.max(0, AT(18.16) - 0.01));
+    tl.set("#ez-d1", { textContent: "8" }, Math.max(0, AT(18.16) - 0.01));
+    tl.set("#ez-n", { opacity: 0 }, AT(18.2));
+    tl.set("#ez-m", { opacity: 1 }, AT(18.2));
+    tl.fromTo("#ez-m", { scale: 1.28 }, { scale: 1, duration: 0.5, ease: "back.out(2.2)" }, AT(18.2));
+    pop("#ez-f", 18.64, 0.4);
+    pop("#ez-k0", 19.12, 0.4);
+    pop("#ez-k1", 19.22, 0.4);
+    pop("#ez-k2", 20.12, 0.4);
+    pop("#ez-k3", 20.22, 0.4);
+    heart("#ez-h0", 17.75, 631, 1247, 362, -16, 1.58);
+    heart("#ez-h1", 18.10, 407, 1515, 371, -33, 1.87);
+    heart("#ez-h2", 18.27, 266, 1235, 331, 42, 1.65);
+    heart("#ez-h3", 18.67, 772, 1495, 277, -28, 1.78);
+    heart("#ez-h4", 18.85, 758, 1505, 301, -46, 1.73);
+    heart("#ez-h5", 19.11, 843, 1162, 329, -48, 1.55);
+    heart("#ez-h6", 19.44, 911, 1142, 276, 35, 1.50);
+    heart("#ez-h7", 19.67, 247, 1507, 343, 4, 1.42);
+    heart("#ez-h8", 19.87, 459, 1395, 344, -33, 1.67);
+    heart("#ez-h9", 20.22, 183, 1362, 267, -23, 1.90);
+    heart("#ez-h10", 20.54, 237, 1422, 283, 11, 1.33);
+    heart("#ez-h11", 20.74, 817, 1349, 364, 37, 1.37);
+    window.__timelines["enzo"] = tl;
+  })();
+  </script>
+</template>

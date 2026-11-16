@@ -22,6 +22,10 @@ founder chose the current rate ("Use today's rate"). The English cut was rendere
 profenzo views for the video"): 9,828,876. The scene's number is now "9,8M+" / "9.8M+" in place of my own "1M+",
 and its eyebrow says "Prof Enzo · Facebook" (Honesty). Nothing else differs.
 
+**The upright cut** (2026-11-16): the founder chose the sizzle as the site's hero film, which needs it standing
+upright as well (1080 x 1920, `tall/` and `tall-en/`), on the wide cut's exact clock. "The upright cut", below,
+has its layout.
+
 ## What the reference does (Social Chain 2026 sizzle, 67.6 s, 124.5 bpm, read at 5 frames a second)
 
 1. **Footage is the picture.** About 70 % of its screen time is three playing vertical videos at 60-90 % of the frame
@@ -42,8 +46,8 @@ and its eyebrow says "Prof Enzo · Facebook" (Honesty). Nothing else differs.
 ```text
 GOAL:    a business owner who posts and advertises without buyers feels "these people make things people actually
          watch, and it pays", and remembers "social media is dead, interest took its place" and the logo.
-OUTPUT:  HyperFrames, wide 1920 x 1080, 25 fps, with sound, in Hungarian (wide/) and English (wide-en/). (Tall after
-         the verdict.)
+OUTPUT:  HyperFrames, 25 fps, with sound: wide 1920 x 1080 in Hungarian (wide/) and English (wide-en/), and
+         upright 1080 x 1920 (tall/, tall-en/) on the same clock, for the site's card and phones.
 TIME:    59.40 s x 25 = 1485 frames. Music "What About Action" (Mixkit), 121.0 bpm, measured on its kick drum
          (35-140 Hz, 2 ms steps; a line through the 96 kicks leaves 1.5 ms): the first kick after the breakdown
          is 63.479 s into the track and a beat is 0.49587 s = 12.40 frames. The film enters the track at
@@ -100,6 +104,46 @@ BANNED:  numbers on an empty gradient with a small icon; four scenes in one layo
 | 44.00-52.92 | b70-b88 | Their words | "Ne nekünk higgy." (b70) / "Nekik." (b72); six cards stack up the frame, one every two beats from b73 to b83 (the first under "Nekik."), typing themselves: the six clients' reviews from the site; quotation marks drift at the sides; the stack holds 2.2 s | pops |
 | 52.92-56.88 | b88-b96 | Promise | The wall is alive again and pulls back: "Videók, amiket végignéznek." / "Hirdetések, amik megtérülnek.", a bar each; the track's last kick is b95 | whoosh |
 | 56.88-59.40 | b96 | Logo | The logo on the wall where the next kick would be, in the track's ring-out; "Interest media ügynökség" a quarter of a second later | impact |
+
+## The upright cut (1080 x 1920)
+
+The same film on the same clock: one `build.py`, the same beat constants, the same scripts. Only positions and
+sizes differ, so every scene change, hit and line falls on the same frame as in the wide cut (1485 frames), and
+the sound is the same.
+
+```text
+WHERE:   the site (Aurora Mix): the card beside the claim on a computer (about 360 px wide, 9:16), where the wide
+         film shrinks into the card and crossfades into this cut at the same moment; and phones, full screen
+         behind the page. The site plays it muted and in a loop.
+SAFE:    the site fits the film with object-fit: cover (base.css), so a phone taller than 9:16 cuts up to 9 % off
+         each side and a squatter one up to 9 % off the top and bottom; the site's menu lies over the top. Every
+         word and number stays inside x 100-980, y 230-1750. Footage and grounds bleed.
+TYPE:    one phrase a line where the wide cut has one line: "Mégsem jönnek / a vevők?", "Az érdeklődés / vette
+         át / a helyét.", "Mi gyártjuk / a videót,". Phrases Sora 700 104-150 px, numbers 252-400 px, labels 30 px
+         caps and 58 px, comments 34 px, reviews 48 px (at a phone's 390 px these are 11 px and up).
+```
+
+| Scene | Wide | Upright |
+|---|---|---|
+| The feed, the hook | the wall, nine cards across | the same wall and drift, about four cards across; the phrases at 150 and 104 px, the glow a wide ellipse |
+| The turn | the cinema shot, full frame | its own 9:16 window on the 4K shot (`w-turn-t`: the middle head, the sunlit cliff; everyone from behind); the claim in three lines at the foot |
+| FlyX | the count left, three phones right, comments under the count | the count on top, the three phones fanned across the middle, the comments over their feet |
+| Prof Enzo | three reels the height of the frame, the number over them | a profile's grid, three by two (the six clips at once, each tile changing on the bar), the number over it, the four counts in a row under it |
+| Productions | polaroids five by three; five cards in a row | polaroids three by five; a collage, the smartwatch ad in the middle and four cards around it; the tags in two rows |
+| How | each phrase ringed left and right | each phrase in two lines, its ring above and below |
+| 79 M Ft | number left, hall right, days under | hall above, the number, the seven days in one row |
+| 81× | number left, coins right | the number, "1 Ft ↓", the 81 coins under it, "81 Ft" |
+| 23× | number, pill, watch at the side | number, pill, the watch below |
+| ≈5 700 | dots 40 by 18 | dots 22 by 33 behind the count and the stamp |
+| 300M+ Ft | one line | "300M+" on one line, "Ft kezelt büdzsé" under it |
+| Their words | the stack steps out through the top | all six reviews stay in the frame |
+| Promise, logo | the wall, two lines, the logo | the same, the logo's upright build from the kit (`film-open-tall`) |
+
+The loop: the page plays the film in a loop, from the logo back to frame 0. The last frame is the logo on the
+dimmed wall (mean luma 46 of 255 in the wide cut); frame 0 is the bright wall without the logo (94), and the logo
+then builds again until 2.6 s. It reads as a restart, with the logo twice within five seconds. A softer join for
+the site: after the first play, loop back to about 3.2 s (the dimmed wall, luma 36, just before "Posztolsz.")
+instead of 0. The ending was not reworked.
 
 ## Honesty
 
@@ -172,6 +216,13 @@ the sound streams are byte-identical. Looked at, from the project: the count at 
 at 18.28 s, 19.0 and 20.8 s in Hungarian, 19.0 and 20.8 s in English; from the renders: 17.96, 18.2, 18.36 and
 20.8 s in both. The Hungarian decimal comma hangs below the line, so the label under the number sits 40 px lower
 than in draft 6 (in both cuts).
+
+The upright cut: looked at as stills at 360 and 540 px wide (a phone's width and half as much again), with the
+safe box drawn on them: Hungarian 0.5, 2.4, 3.6, 4.6, 5.8, 7.0, 7.9, 9.0, 9.6, 11.5, 14.2, 15.2, 16.8, 18.0, 19.0,
+20.8, 21.5, 21.9, 22.8, 24.6, 25.8, 27.3, 28.8, 30.2, 32.0, 33.6, 35.4, 38.8, 40.9, 43.4, 44.6, 45.7, 48.0, 52.4,
+54.0, 56.0 and 58.8 s; English 23 of the same moments. Which reels the upright frame shows on the wall was
+computed (`wall_map`): the same tiles as the wide frame, the V89 tile whole, and the still of Gyenis András (s08)
+outside the frame in both.
 
 Sound checked on the renders (REVIEW.md): the kick against the picture at the drop and at a late beat, loudness,
 true peak.

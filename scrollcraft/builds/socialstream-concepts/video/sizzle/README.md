@@ -23,15 +23,21 @@ founder chose the ECB rate of 13 November for every figure (€216K, over €21K
 the first render; only those numbers changed. **Draft 6c** (both cuts): Prof Enzo's number is the founder's
 own, from Meta's dashboard for the page: "9,8M+" / "9.8M+" views in place of my "1M+".
 
+**The upright cut** (`tall/`, `tall-en/`, 1080 x 1920): the founder chose the sizzle as the site's hero film; the
+site's card and phones need it upright, on the wide cut's exact clock. One `build.py` builds all four projects:
+the scenes' scripts are shared, their positions differ (`SPEC.md`, "The upright cut").
+
 ## Files
 
 - `SPEC.md`, `REVIEW.md`: the plan and the review.
 - `clips.py <photos-exports> <prof-enzo-reels>`: cuts `assets/clips/` (phones, cards, the turn), `assets/wall/`
   (16 playing reels with their freeze frames, and stills, each with a grey copy), `assets/pol/` (polaroids) and copies
   `assets/audio/` (Mixkit music and effects). None of these are in git.
-- `build.py`: writes the HyperFrames projects `wide/` (Hungarian) and `wide-en/` (English), or the one named on
-  the command line (one composition per scene; the logo's build comes from the
-  logo kit's `make_motion.py`, format `film-open-wide`).
+- `build.py`: writes the HyperFrames projects `wide/` and `wide-en/` (1920 x 1080, Hungarian and English) and
+  `tall/` and `tall-en/` (1080 x 1920), or the ones named on the command line (one composition per scene; the
+  logo's build comes from the logo kit's `make_motion.py`, formats `film-open-wide` and `film-open-tall`).
+- `master-wide-hu.mp4`, `master-wide-en.mp4`, `master-tall-hu.mp4`, `master-tall-en.mp4`: the renders, with
+  sound (not in git). The site's files are encoded from these by the site's own tools, without sound.
 - `common.css`: the type and the objects (wall, phone, reel card, comment, heart, polaroid, counter).
 
 ## Run
@@ -39,7 +45,8 @@ own, from Meta's dashboard for the page: "9,8M+" / "9.8M+" views in place of my 
 ```sh
 python3 -I clips.py <photos-exports-folder> <prof-enzo-folder>
 python3 build.py
-for p in wide wide-en; do (cd $p && npx --yes hyperframes@0.9.40 check && npx --yes hyperframes@0.9.40 render -q delivery -o ../master-$p.mp4); done
+for p in wide wide-en tall tall-en; do (cd $p && npx --yes hyperframes@0.9.40 check && npx --yes hyperframes@0.9.40 render -q delivery -o ../master-$p.mp4); done
+# (the masters handed to the site are named master-wide-hu, master-wide-en, master-tall-hu, master-tall-en)
 ```
 
 Measure the render's sound (`npx hyperframes audio <file> --json`): the mix level changed between renders (see

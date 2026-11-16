@@ -64,6 +64,39 @@ measures their dark type against the film's night ground, not against the white 
 `master-wide-en.mp4` in this folder (not in git); review copies `drafts/sizzle-draft6c-wide-hu.mp4` and
 `-en.mp4`. Not watched at speed and not heard.
 
+**The upright cut (1080 x 1920, Hungarian and English).** Asked for by the site session after the founder chose
+the sizzle as the site's hero film ("Replace the hero film"): the site's card and phones need it upright, on the
+wide cut's exact clock. The founder has not seen this layout; the site session shows it to them when it goes
+live.
+
+- *How it is built.* The same `build.py`, the same beat constants and the same scripts: a scene takes its upright
+  positions inside its own function, and the five results are laid out again and keep the wide scene's script.
+  After the change the wide projects are byte-identical (`git diff` on `wide/` and `wide-en/` is empty).
+- *The calls I made.* A safe box, x 100-980 and y 230-1750, because the site fits the film with `object-fit:
+  cover` and a phone's shape cuts up to 9 % off the sides or off the top and bottom (`SPEC.md`). Prof Enzo is a
+  profile's grid of six reels instead of three tall ones; the productions are a collage round the smartwatch ad;
+  the six reviews all stay in the frame; the turn has its own 9:16 window on the 4K cinema shot (the middle head
+  and the sunlit cliff; nobody's face). "300M+ Ft" is too wide for the frame at any size worth having, so "Ft"
+  starts the line under it.
+- *Measured.* Both masters: 1080 x 1920, 1485 frames, 59.40 s, and a sound stream byte-identical to the wide
+  masters'. `hyperframes check`: no errors in either. Warnings: the two reading-time lines the wide cut has
+  (the last review; in English "what they bring in."), the "Komment" labels under the type floor (24 px), and
+  three more on those labels ("on screen 0.12 s"), which is the check counting each typed word as a new line:
+  the labels stay for as long as their cards.
+- *Looked at.* Stills from the projects at a phone's width (360 px) and at 540 px with the safe box drawn on
+  them, every scene in both languages (`SPEC.md`, QA), and 40 frames from the two renders, with the wipes,
+  the counts in mid-run and the hits. **Not watched at speed, not on a phone, not in the site's card.**
+- *Weakest shots.* (1) The hook's wall is four cards across instead of nine: FlyX's owner stands whole in the
+  card beside the middle one (in the wide frame he is half out of it), and he is in a phone again at 15 s. (2)
+  "How" is quiet: two lines and a small ring in a tall night frame. (3) The numbers are 250-400 px where the
+  wide cut has 440-580: the frame is narrower. (4) In the site's card (about 360 px) the eyebrows, the tags and
+  the "Komment" labels are texture, not text.
+- *The loop.* The page loops the film from the logo to frame 0: the logo on the dimmed wall, then the bright
+  wall without it, then the logo builds again. It reads as a restart, with the logo twice in five seconds; a
+  softer join is to loop back to 3.2 s after the first play (`SPEC.md`). Not changed: that is the site's call.
+- Masters: `master-tall-hu.mp4` and `master-tall-en.mp4` in this folder (not in git); review copies
+  `drafts/sizzle-draft6c-upright-hu.mp4` and `-en.mp4`.
+
 **Weakest shots.** (1) The turn is one shot for four seconds: a breath after the hook, by design; if it reads as
 slow it can go back to one bar and the bar can go to 81× and 300M+. (2) 81× and 300M+ still pass in 2 s each.
 (3) Once five reviews are in, the oldest card is cut by the top of the frame as it leaves. (4) The last review is

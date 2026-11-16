@@ -7,7 +7,8 @@ Gyenis András's podcast reel, the Latvia content challenge, Up To Youth, Miskol
 Bálint's showreel. Left out on purpose: the Nike and RYZE spec ads, the Prof Enzo reel with a film clip and a
 fast-food sign, shots with a child in the foreground.
 
-usage: python3 -I clips.py <photos-exports-folder> <prof-enzo-folder>
+usage: python3 -I clips.py <photos-exports-folder> <prof-enzo-folder>          (everything)
+       python3 -I clips.py <photos-exports-folder> <prof-enzo-folder> turn-tall  (only the upright cut's turn shot)
   <photos-exports-folder>: the founder's Photos originals in latvia/, turkiye/ and bridleup/
   <prof-enzo-folder>: Prof Enzo's five published reels (as the site session downloaded them)
 """
@@ -99,6 +100,16 @@ def grey(path):
     run(["-i", path, "-vf", GREY, "-q:v", "4", path[:-4] + "-g.jpg"])
 
 
+def turn_tall():
+    """The turn's shot for the upright cut (1080 x 1920): a 9:16 window on the 4K frame with the middle head and the
+    sunlit cliff in it (everyone is seen from behind); and the wall's middle card of that cut, a card-sized window
+    on that shot's middle (the card stands at 345, 693 in the upright frame)."""
+    turn = os.path.join(HERE, "assets", "clips", "w-turn-t.mp4")
+    run(["-ss", "25.24", "-t", "4.8", "-i", HOME + "/Downloads/DMC Promo video.mp4", "-vf",
+         "crop=1069:1900:1609:200,scale=1080:1920:flags=lanczos,fps=25,format=yuv420p"] + OUT + ["-crf", "18", turn])
+    grey(still("mid-t", turn, 0.0, 360, 640, "wall", vf_pre="crop=300:533:345:693,"))
+
+
 def main():
     for d in ("clips", "wall", "pol", "audio"):
         os.makedirs(os.path.join(HERE, "assets", d), exist_ok=True)
@@ -132,6 +143,7 @@ def main():
     run(["-ss", "25.24", "-t", "4.8", "-i", HOME + "/Downloads/DMC Promo video.mp4", "-vf", "scale=1920:1080:flags=lanczos,fps=25,format=yuv420p"]
         + OUT + ["-crf", "18", turn])
     grey(still("mid", turn, 0.0, 360, 640, "wall", vf_pre="crop=300:533:765:273,"))
+    turn_tall()
 
     # ---- the phones and cards (720 x 1280) ----
     P = [("fx1a", "rain", 2.4, 3.0), ("fx1b", "ad1", 8.02, 1.66), ("fx2a", "reels", 5.2, 3.0), ("fx2b", "calima", 13.2, 3.0),
@@ -161,4 +173,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    turn_tall() if sys.argv[3:] == ["turn-tall"] else main()

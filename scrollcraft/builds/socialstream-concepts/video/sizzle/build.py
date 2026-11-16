@@ -9,14 +9,16 @@ they work; five results; their clients' and viewers' words; the promise; the log
 
 Every line is the site's own copy (../../content.mjs) or a real number or comment (SPEC.md, Honesty); the English
 cut shows money in euros (the conversions and their rates are in SPEC.md).
-Run from this folder: python3 clips.py <photos> <enzo>, then python3 build.py (writes wide/ and wide-en/; then
-render, README.md).
+Run from this folder: python3 clips.py <photos> <enzo>, then python3 build.py (writes wide/ and wide-en/, 1920 x
+1080, and tall/ and tall-en/, the upright cut on the same clock for the site's card and phones; then render,
+README.md).
 """
 import json, math, os, random, re, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 LOGO_TOOLS = os.path.normpath(os.path.join(HERE, "../../../../brand/socialstream-logo/tools"))
 FPS, W, H = 25, 1920, 1080
+TALL = False                                  # main() sets W, H and TALL for the upright cut (1080 x 1920): same clock
 WIPE = 0.32                                   # a scene comes in over the last one with a wipe this long
 
 # ---- the music: "What About Action" (Mixkit, free licence; in their CapCut folder), 121.0 bpm. Measured on its
@@ -149,11 +151,11 @@ TEXT = {
     ),
 }
 TX = TEXT["hu"]                                             # the language being built (main() switches it)
-OUTS = [("hu", "wide"), ("en", "wide-en")]
+OUTS = [("hu", "wide", False), ("en", "wide-en", False), ("hu", "tall", True), ("en", "tall-en", True)]   # language, folder, upright
 
 # ---- helpers every scene's script starts with ----
 JS = r"""
-    const FPS = 25, W = 1920, H = 1080, START = %START%, AT = (t) => t - START;
+    const FPS = 25, W = %W%, H = %H%, START = %START%, AT = (t) => t - START;
     const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
     const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
     const tl = gsap.timeline({ paused: true });
@@ -179,7 +181,7 @@ JS = r"""
       tl.fromTo(sel, { scale: 0.55, y: 30 }, { scale: 1, y: 0, duration: d, ease: "back.out(1.7)" }, AT(t));
     };
     // a phone or a card rises from below the frame, turning, and settles
-    const rise = (sel, t, r0, r1, d = 0.72) => tl.fromTo(sel, { y: 1150, rotation: r0 }, { y: 0, rotation: r1, duration: d, ease: "expo.out" }, AT(t));
+    const rise = (sel, t, r0, r1, d = 0.72) => tl.fromTo(sel, { y: %RISE%, rotation: r0 }, { y: 0, rotation: r1, duration: d, ease: "expo.out" }, AT(t));
     const drift = (sel, t, d, dx, dy) => tl.fromTo(sel, { x: 0, y: 0 }, { x: dx, y: dy, duration: d, ease: "sine.inOut" }, AT(t));
     // a comment types itself, a word at a time
     const type = (sel, t, st = 0.045) => tl.fromTo(sel + " .tw", { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none", stagger: st }, AT(t));
@@ -219,7 +221,7 @@ def field(bg, ls=()):
 
 def tile(name, color="#fff"):
     row = "".join(f"<span>{name}</span>" for _ in range(9))
-    return f'<div class="tile" data-layout-allow-overflow data-layout-ignore style="color:{color}">' + "".join(f"<div>{row}</div>" for _ in range(9)) + "</div>"
+    return f'<div class="tile" data-layout-allow-overflow data-layout-ignore style="color:{color}">' + "".join(f"<div>{row}</div>" for _ in range(17 if TALL else 9)) + "</div>"
 
 
 def video(vid, path, start, dur, track, cls=""):
@@ -320,6 +322,8 @@ def wall(prefix, dur):
     for r in range(ROWS):
         for c in range(COLS):
             t = m[(r, c)]
+            if t == "mid" and TALL:                         # the upright cut's own window on its own turn shot
+                t = "mid-t"
             vid = ""
             if t.startswith("w"):
                 vid = video(f"{prefix}-v{r}{c}", f"wall/{t}", 0, dur, track)
@@ -330,7 +334,7 @@ def wall(prefix, dur):
 
 
 def logo_scene(tmp):
-    out = subprocess.run([sys.executable, "make_motion.py", "film-open-wide", "--out", tmp], cwd=LOGO_TOOLS, check=True,
+    out = subprocess.run([sys.executable, "make_motion.py", "film-open-tall" if TALL else "film-open-wide", "--out", tmp], cwd=LOGO_TOOLS, check=True,
                          capture_output=True, text=True).stdout
     info = json.loads(out[out.index("{"):out.rindex("}") + 1])
     return open(os.path.join(tmp, "compositions", "logo.html")).read(), info
@@ -352,6 +356,8 @@ def scene_open(s, e, info):
     comes back and grows into the frame: "Az érdeklődés vette át a helyét." """
     cx = W / 2 + WALL_X1
     inset0 = f"inset({H / 2 - CH / 2:.1f}px {W - cx - CW / 2:.1f}px {H / 2 - CH / 2:.1f}px {cx - CW / 2:.1f}px round 26px)"
+    pc = TX.get("p_cls", ("big", "big", "mid", "big"))      # the size of each phrase of the hook (the upright cut has its own)
+    turn = "clips/w-turn-t" if TALL else "clips/w-turn"
     html = f"""<div class="fld" style="background:#05070f"></div>
     <div class="wl-in ff" data-layout-allow-overflow id="op-in">
       <div class="wl-tilt"><div class="wl-wall" id="op-wall">{wall("op", DEATH)}</div></div>
@@ -359,12 +365,12 @@ def scene_open(s, e, info):
     <div class="ff" id="op-dim" style="background:#05070f"></div>
     <div class="glow" id="op-glow"></div>
     <div class="glow wide" id="op-glow2"></div>
-    <div class="rsv" id="op-p1"><div class="hd big">{TX['p1']}</div></div>
-    <div class="rsv" id="op-p2"><div class="hd big">{TX['p2']}</div></div>
-    <div class="rsv" id="op-p3"><div class="hd mid">{TX['p3']}</div></div>
-    <div class="rsv" id="op-ca"><div><div class="hd big">{TX['ca']}</div>
+    <div class="rsv" id="op-p1"><div class="hd {pc[0]}">{TX['p1']}</div></div>
+    <div class="rsv" id="op-p2"><div class="hd {pc[1]}">{TX['p2']}</div></div>
+    <div class="rsv" id="op-p3"><div class="hd {pc[2]}">{TX['p3']}</div></div>
+    <div class="rsv" id="op-ca"><div><div class="hd {pc[3]}">{TX['ca']}</div>
       <div class="it huge" id="op-m">{TX['ca2']}</div></div></div>
-    <div class="ff" id="op-rot" data-layout-allow-overflow><div class="ff" id="op-hcard">{video("op-hv", "clips/w-turn", SPARK - 0.04, e - SPARK + 0.04, 20, "full")}</div></div>
+    <div class="ff" id="op-rot" data-layout-allow-overflow><div class="ff" id="op-hcard">{video("op-hv", turn, SPARK - 0.04, e - SPARK + 0.04, 20, "full")}</div></div>
     <div class="ff" id="op-shade"></div>
     <div class="cb" id="op-cb">{TX['cb']}</div>"""
     css = WALL_CSS + """
@@ -372,7 +378,7 @@ def scene_open(s, e, info):
     #root #op-shade { background: linear-gradient(24deg, rgba(5, 7, 15, 0.86) 0%, rgba(5, 7, 15, 0.4) 36%, rgba(5, 7, 15, 0) 62%); }
     #root .cb { position: absolute; left: 130px; bottom: 120px; }
     #root .cb1 { font-size: 136px; white-space: nowrap; }
-    #root .cb1 .it { font-size: 176px; }"""
+    #root .cb1 .it { font-size: 176px; }""" + (OPEN_TALL if TALL else "")
     js = f"""
     // the wall: whole from the first frame (the thumbnail), settling back a little; it drifts until it dies
     tl.fromTo("#op-in", {{ scale: 1.12 }}, {{ scale: 1, duration: 1.4, ease: "expo.out" }}, 0);
@@ -384,7 +390,7 @@ def scene_open(s, e, info):
     // the problem, one phrase at a time
     say("#op-p1", {P1:g}, {P2 - 0.06:g}); say("#op-p2", {P2:g}, {P3 - 0.06:g}); say("#op-p3", {P3:g}, {P3_OUT:g});
     // the diagnosis: struck through, then "meghalt." and every card freezes and turns grey, from the middle outwards
-    words("#op-ca .big .w", {CA:g});
+    words("#op-ca .{pc[3]} .w", {CA:g});
     tl.fromTo("#op-stk", {{ scaleX: 0 }}, {{ scaleX: 1, duration: 0.2, ease: "power3.out" }}, AT({STRIKE:g}));
     tl.fromTo("#op-ca .ss .w", {{ opacity: 1 }}, {{ opacity: 0.42, duration: 0.25, ease: "power2.out", immediateRender: false }}, AT({STRIKE + 0.1:g}));
     tl.fromTo("#op-m", {{ opacity: 0, filter: "blur(14px)", scale: 1.06 }}, {{ opacity: 1, filter: "blur(0px)", scale: 1, duration: 0.26, ease: "power2.out" }}, AT({DEATH:g}));
@@ -412,12 +418,18 @@ def scene_flyx(s, e):
     t0, cut = b(B_FX), b(B_FX + 4)
     ls = [("fx-l0", 6, 96, 92, "255, 214, 102, 0.55"), ("fx-l1", 97, 5, 86, "150, 60, 255, 0.42")]
     ph = [("fx-p0", 880, 250, -20, -12, "fx1a", "fx1b", 1), ("fx-p2", 1490, 230, 18, 9, "fx3a", "fx3b", 1), ("fx-p1", 1180, 150, -10, -3, "fx2a", "fx2b", 2)]
+    if TALL:                                                # the fan stands across the middle of the upright frame
+        ph = [("fx-p0", 70, 790, -18, -11, "fx1a", "fx1b", 1), ("fx-p2", 690, 770, 16, 9, "fx3a", "fx3b", 1), ("fx-p1", 380, 690, -8, -2, "fx2a", "fx2b", 2)]
     phones = "".join(phone(pid, x, y, [(fa, 0, cut - s), (fb, cut - s, e - cut)], 1 + 2 * k, z)
                      for k, (pid, x, y, r0, r1, fa, fb, z) in enumerate(ph))
     cm = [("fx-c0", 110, 548, "It was brilliant fun… highly recommended it", 640, b(B_FX + 2)),
           ("fx-c1", 150, 722, "A fantastic experience, absolutely loved it.", 640, b(B_FX + 3)),
           ("fx-c2", 110, 896, "Where is it please?", None, b(B_FX + 4))]
-    hh, hj = hearts("fx-h", 11, b(B_FX + 1), b(B_FX + 7), (900, 640, 1820, 980), 4)
+    hbox = (900, 640, 1820, 980)
+    if TALL:                                                # the comments under the phones, over their feet
+        cm = [("fx-c0", 100, 1250, cm[0][3], 590, cm[0][5]), ("fx-c1", 180, 1432, cm[1][3], 610, cm[1][5]), ("fx-c2", 100, 1614, cm[2][3], None, cm[2][5])]
+        hbox = (140, 1000, 940, 1300)
+    hh, hj = hearts("fx-h", 11, b(B_FX + 1), b(B_FX + 7), hbox, 4)
     html = (field("linear-gradient(135deg,#ff8a1f 0%,#ff5a3c 48%,#e0306f 100%)", ls) + tile("FlyX Tenerife")
             + f'<div class="fxt"><div class="eb" id="fx-eb">{TX["fx_eb"]}</div>'
               f'<div class="hd fxn" id="fx-n">{digits(2, "fx-cnt")}<span class="k">K</span></div>'
@@ -428,7 +440,10 @@ def scene_flyx(s, e):
     #root .fxt { position: absolute; left: 110px; top: 92px; }
     #root .fxn { display: flex; align-items: baseline; margin-top: 14px; white-space: nowrap; font-size: 290px; line-height: 0.86; letter-spacing: -0.05em; }
     #root .fxt .lab { margin-top: 20px; }
-    #root #fx-grp { transform-origin: 1370px 545px; }"""
+    #root #fx-grp { transform-origin: 1370px 545px; }""" + ("""
+    #root .fxt { left: 100px; top: 250px; }
+    #root .fxn { font-size: 280px; }
+    #root #fx-grp { transform-origin: 540px 1030px; }""" if TALL else "")
     js = [f'wipeIn({s:g}, "dr");', f'drift("#fx-l0", {s:g}, {e - s:g}, 80, -50); drift("#fx-l1", {s:g}, {e - s:g}, -70, 50);',
           f'drift("#wp .tile", {s:g}, {e - s:g}, -60, 0);']
     js += [f'rise("#{pid}", {s + 0.04 + 0.09 * i:g}, {r0}, {r1});' for i, (pid, x, y, r0, r1, fa, fb, z) in enumerate(reversed(ph))]
@@ -447,19 +462,26 @@ def scene_enzo(s, e):
     t0, cut, hit = b(B_EZ), b(B_EZ + 4), b(B_EZ + 2)
     n_int, n_dec, n_frac = TX["ez_num"]
     ls = [("ez-l0", 4, 6, 90, "190, 255, 120, 0.4"), ("ez-l1", 96, 96, 90, "20, 60, 160, 0.45")]
-    cl = [("ez-c0", 170, "ez1a", "ez1b"), ("ez-c1", 710, "ez2a", "ez2b"), ("ez-c2", 1250, "ez3a", "ez3b")]
-    cards = "".join(card(cid, x, 96, 500, 889, [(fa, 0, cut - s), (fb, cut - s, e - cut)], 1 + 2 * k) for k, (cid, x, fa, fb) in enumerate(cl))
+    cl = [("ez-c0", 170, 96, 500, 889, "ez1a", "ez1b"), ("ez-c1", 710, 96, 500, 889, "ez2a", "ez2b"), ("ez-c2", 1250, 96, 500, 889, "ez3a", "ez3b")]
+    if TALL:                                                # a profile's grid of reels, three by two, the number over it
+        cl = [(f"ez-c{k}", 22 + 352 * (k % 3), 420 + 610 * (k // 3), 332, 590, fa, fb) for k, (fa, fb) in enumerate(
+            [("ez1a", "ez1b"), ("ez2a", "ez2b"), ("ez3a", "ez3b"), ("ez2b", "ez3a"), ("ez3b", "ez1a"), ("ez1b", "ez2a")])]
+    cards = "".join(card(cid, x, y, w, h, [(fa, 0, cut - s), (fb, cut - s, e - cut)], 1 + 2 * k) for k, (cid, x, y, w, h, fa, fb) in enumerate(cl))
     # the best reels' counts come two at a time, two beats apart (draft 5 popped one a beat)
     chips = [("149K", 250, cut), ("122K", 610, cut + 0.1), ("105K", 970, b(B_EZ + 6)), ("82K", 1330, b(B_EZ + 6) + 0.1)]
-    hh, hj = hearts("ez-h", 12, b(B_EZ + 1), b(B_EZ + 7.5), (200, 760, 1720, 1000), 9)
+    chip_y, pills, hbox = 872, ("left:200px;top:128px", "left:1440px;top:128px"), (200, 760, 1720, 1000)
+    if TALL:
+        chips = [(v, 100 + 222 * k, t) for k, (v, x, t) in enumerate(chips)]
+        chip_y, pills, hbox = 1654, ("left:100px;top:300px", "right:100px;top:300px"), (140, 1140, 940, 1540)
+    hh, hj = hearts("ez-h", 12, b(B_EZ + 1), b(B_EZ + 7.5), hbox, 9)
     html = (field("linear-gradient(140deg,#16c172 0%,#0b8f7a 52%,#075e63 100%)", ls) + tile("Prof Enzo") + cards
             + '<div class="ff" id="ez-scrim" style="background:rgba(4,20,22,0.42)"></div>'
             + f'<div class="ezo"><div class="ezrow"><div class="hd ezn" id="ez-n"><span class="cnt" id="ez-cnt" data-motion-blur="off">'
               f'<span class="d" id="ez-d0">0</span><span class="dp">{n_dec}</span><span class="d" id="ez-d1">0</span></span><span>M</span></div>'
               f'<div class="hd ezn" id="ez-m" style="opacity:0">{n_int}{n_dec}{n_frac}M+</div></div><div class="hd ezl" id="ez-lab">{TX["ez_lab"]}</div></div>'
-            + f'<div class="pill" id="ez-eb" style="left:200px;top:128px">{TX["ez_eb"]}</div>'
-            + f'<div class="pill" id="ez-f" style="left:1440px;top:128px">{TX["ez_f"]}</div>'
-            + "".join(f'<div class="chip" id="ez-k{k}" style="left:{x}px;top:872px"><i></i>{v}</div>' for k, (v, x, t) in enumerate(chips)) + hh)
+            + f'<div class="pill" id="ez-eb" style="{pills[0]}">{TX["ez_eb"]}</div>'
+            + f'<div class="pill" id="ez-f" style="{pills[1]}">{TX["ez_f"]}</div>'
+            + "".join(f'<div class="chip" id="ez-k{k}" style="left:{x}px;top:{chip_y}px"><i></i>{v}</div>' for k, (v, x, t) in enumerate(chips)) + hh)
     css = """
     #root #ez-scrim, #root .ezo, #root #ez-eb, #root #ez-f, #root .chip { z-index: 4; }
     #root .ezo { position: absolute; left: 0; right: 0; top: 262px; text-align: center; }
@@ -467,10 +489,14 @@ def scene_enzo(s, e):
     #root .ezn { position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: center; align-items: baseline; white-space: nowrap;
       font-size: 440px; line-height: 0.9; letter-spacing: -0.05em; text-shadow: 0 14px 70px rgba(0, 0, 0, 0.5); }
     #root .ezl { font-size: 108px; text-shadow: 0 10px 50px rgba(0, 0, 0, 0.5); }
-    #root #ez-m { transform-origin: 50% 60%; }"""
+    #root #ez-m { transform-origin: 50% 60%; }""" + ("""
+    #root .ezo { top: 740px; }
+    #root .ezrow { height: 310px; }
+    #root .ezn { font-size: 270px; }
+    #root .ezl { font-size: 92px; }""" if TALL else "")
     js = [f'wipeIn({s:g}, "dl");', f'drift("#ez-l0", {s:g}, {e - s:g}, 70, 50); drift("#ez-l1", {s:g}, {e - s:g}, -70, -50);',
           f'drift("#wp .tile", {s:g}, {e - s:g}, 60, 0);']
-    js += [f'rise("#{cid}", {s + 0.04 + 0.08 * k:g}, {(-6, 0, 6)[k]}, 0);' for k, (cid, x, fa, fb) in enumerate(cl)]
+    js += [f'rise("#{cid}", {s + 0.04 + 0.08 * k:g}, {(-6, 0, 6)[k % 3]}, 0);' for k, (cid, *_r) in enumerate(cl)]
     js += [f'fade("#ez-scrim", {t0 - 0.12:g}, 0.3);', f'pop("#ez-eb", {t0 - 0.06:g}, 0.4);',
            f'tl.fromTo("#ez-n", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.1, ease: "none" }}, AT({t0 - 0.02:g}));',
            f'fade("#ez-lab", {t0 + 0.1:g});']
@@ -498,13 +524,14 @@ def scene_prod(s, e):
     # the pile: five columns, three rows, jittered; each flies in from outside and out again
     pols, pj, order = [], [], list(range(15))
     rnd.shuffle(order)
+    cols, x0, sx, y0, sy, fly = (3, -40, 380, -70, 398, 2300) if TALL else (5, -30, 392, -80, 345, 1700)
     for i in range(15):
-        c, r = i % 5, i // 5
-        x, y = -30 + c * 392 + rnd.uniform(-26, 26), -80 + r * 345 + rnd.uniform(-22, 22)
+        c, r = i % cols, i // cols
+        x, y = x0 + c * sx + rnd.uniform(-26, 26), y0 + r * sy + rnd.uniform(-22, 22)
         rot = rnd.uniform(-11, 11)
         dx, dy = x + 200 - W / 2, y + 250 - H / 2
         n = math.hypot(dx, dy) or 1
-        fx, fy = dx / n * 1700 + rnd.uniform(-100, 100), dy / n * 1700 + rnd.uniform(-100, 100)
+        fx, fy = dx / n * fly + rnd.uniform(-100, 100), dy / n * fly + rnd.uniform(-100, 100)
         k = order.index(i)
         pols.append(f'<div class="pol" id="pr-p{i}" data-layout-ignore style="left:{x:.0f}px;top:{y:.0f}px;z-index:{10 + k}"><img src="assets/pol/p{i % 10 + 1:02d}.jpg" alt=""></div>')
         pj.append(f'tl.fromTo("#pr-p{i}", {{ x: {fx:.0f}, y: {fy:.0f}, rotation: {rot + rnd.uniform(-35, 35):.1f} }}, {{ x: 0, y: 0, rotation: {rot:.1f}, duration: 0.5, ease: "expo.out" }}, AT({t0 - 0.1 + 0.03 * k:.2f}));')
@@ -515,19 +542,26 @@ def scene_prod(s, e):
           ("pr-c2", 760, 245, 400, 711, [("pw2", t_c - s, e - t_c)]),
           ("pr-c3", 1200, 298, 340, 604, [("pw1", t_c - s, cut - t_c), ("pr5", cut - s, e - cut)]),
           ("pr-c4", 1580, 351, 280, 498, [("pr3", t_c - s, e - t_c)])]
+    eb_at, hbox = "left:60px;top:70px", (200, 760, 1700, 1000)
+    if TALL:                                                # a collage: the smartwatch ad in the middle, four around it
+        cl = [("pr-c0", 60, 600, 300, 533, cl[0][5]), ("pr-c1", 720, 560, 300, 533, cl[1][5]), ("pr-c2", 330, 760, 420, 747, cl[2][5]),
+              ("pr-c3", 60, 1190, 300, 533, cl[3][5]), ("pr-c4", 720, 1150, 300, 533, cl[4][5])]
+        eb_at, hbox = "left:100px;top:250px", (140, 1150, 940, 1600)
     cards, track = "", 1
     for cid, x, y, w, h, clips in cl:
-        cards += card(cid, x, y, w, h, clips, track)
+        cards += card(cid, x, y, w, h, clips, track, 3 if TALL and cid == "pr-c2" else 1)
         track += len(clips)
     tags = TX["tags"]
-    hh, hj = hearts("pr-h", 8, b(B_PR + 4), b(B_PR + 7.5), (200, 760, 1700, 1000), 13)
+    hh, hj = hearts("pr-h", 8, b(B_PR + 4), b(B_PR + 7.5), hbox, 13)
     html = (f'<div class="ff" id="pr-g">{field("linear-gradient(140deg,#4a22c8 0%,#3418a0 52%,#1c0d58 100%)", ls)}{tile("SocialStream")}</div>'
-            + f'<div class="eb" id="pr-eb" style="position:absolute;left:60px;top:70px">{TX["pr_eb"]}</div>'
+            + f'<div class="eb" id="pr-eb" style="position:absolute;{eb_at}">{TX["pr_eb"]}</div>'
             + '<div id="pr-tags" data-layout-allow-overflow>' + "".join(f'<div class="tag" id="pr-t{k}">{t}</div>' for k, t in enumerate(tags)) + '</div>'
             + cards + hh + "".join(pols))
     css = """
     #root #pr-tags { position: absolute; left: 60px; top: 124px; display: flex; gap: 18px; }
-    #root #pr-tags .tag { position: relative; font-size: 40px; padding: 17px 30px; }"""
+    #root #pr-tags .tag { position: relative; font-size: 40px; padding: 17px 30px; }""" + ("""
+    #root #pr-tags { left: 100px; top: 320px; width: 900px; flex-wrap: wrap; gap: 16px; }
+    #root #pr-tags .tag { font-size: 38px; padding: 16px 27px; }""" if TALL else "")
     js = pj + [f'fade("#pr-g", {t0 + 0.34:g}, 0.2);',
                f'drift("#pr-l0", {t0:g}, {e - t0:g}, -70, 50); drift("#pr-l1", {t0:g}, {e - t0:g}, 70, -50);',
                f'fade("#pr-eb", {t_c:g});']
@@ -547,10 +581,12 @@ def scene_how(s, e):
     def ring(n, a0, w, h, rx=770, ry=395):
         return [(W / 2 + rx * math.cos(a0 + i * 2 * math.pi / n) - w / 2, H / 2 + ry * math.sin(a0 + i * 2 * math.pi / n) - h / 2) for i in range(n)]
 
+    # each ring's first angle and radii: wide around the phrase, or (upright) above and below it
+    R = ((math.pi / 6, 390, 640), (0.9, 300, 450), (0.9, 290, 450)) if TALL else ((0.42, 740, 360), (0.85, 700, 350), (0.3, 700, 350))
     g0 = "".join(f'<div class="card mini g0" style="left:{x:.0f}px;top:{y:.0f}px;width:170px;height:302px;transform:rotate({(-7, 5, -4, 8, -6, 4)[i]}deg)">'
-                 f'<img src="assets/wall/{t}.jpg" alt=""></div>' for i, ((x, y), t) in enumerate(zip(ring(6, 0.42, 170, 302, 740, 360), ["w02", "w04", "w07", "w15", "w09", "w10"])))
-    g1 = "".join(f'<div class="tag g1" style="left:{x:.0f}px;top:{y:.0f}px">{t}</div>' for (x, y), t in zip(ring(4, 0.85, 230, 92, 700, 350), ["Meta", "TikTok", "Google", "Reels"]))
-    g2 = "".join(f'<div class="chip g2" style="left:{x:.0f}px;top:{y:.0f}px">{t}</div>' for (x, y), t in zip(ring(4, 0.3, 270, 104, 700, 350), TX["how_chips"]))
+                 f'<img src="assets/wall/{t}.jpg" alt=""></div>' for i, ((x, y), t) in enumerate(zip(ring(6, R[0][0], 170, 302, R[0][1], R[0][2]), ["w02", "w04", "w07", "w15", "w09", "w10"])))
+    g1 = "".join(f'<div class="tag g1" style="left:{x:.0f}px;top:{y:.0f}px">{t}</div>' for (x, y), t in zip(ring(4, R[1][0], 230, 92, R[1][1], R[1][2]), ["Meta", "TikTok", "Google", "Reels"]))
+    g2 = "".join(f'<div class="chip g2" style="left:{x:.0f}px;top:{y:.0f}px">{t}</div>' for (x, y), t in zip(ring(4, R[2][0], 270, 104, R[2][1], R[2][2]), TX["how_chips"]))
     html = (field("#05070f", ls) + g0 + g1 + g2
             + f'<div class="rsv" id="hw-0"><div class="hd mid">{TX["how"][0]}</div></div>'
             + f'<div class="rsv" id="hw-1"><div class="hd mid">{TX["how"][1]}</div></div>'
@@ -746,7 +782,9 @@ def scene_voices(s, e):
     """"Ne nekünk higgy. Nekik." Their clients' reviews stack up the frame, one every two beats (a second each, so
     each can be read as it lands), typing themselves; the first lands under "Nekik.", the last five beats before
     the wall returns."""
-    BASE, STEP, CWD = 826, 222, 1060
+    BASE, STEP, CWD = (1400, 226, 880) if TALL else (826, 222, 1060)
+    XL, XR, Y0, Y1 = (-40, 800, 1150, 1900) if TALL else (30, 1600, 700, 1080)   # where the quotation marks start
+    v1s = f' style="font-size:{TX["v1_px"]}px"' if TX.get("v1_px") else ""
     VOICES = TX["voices"]
     t_i = [b(B_VO + 3 + 2 * i) for i in range(len(VOICES))]
     ls = [("vc-l0", 8, 12, 80, "66, 92, 255, 0.3"), ("vc-l1", 94, 90, 84, "255, 64, 104, 0.24")]
@@ -756,21 +794,23 @@ def scene_voices(s, e):
     bubs, bj = [], []
     for k in range(16):                                     # quotation marks drift up at the sides
         size = rnd.choice([200, 260, 320, 400])
-        x = rnd.uniform(30, 330 - size * 0.4) if k % 2 == 0 else rnd.uniform(1600, 1900 - size * 0.4)
-        y0 = rnd.uniform(700, 1080)
+        x = rnd.uniform(XL, XL + 300 - size * 0.4) if k % 2 == 0 else rnd.uniform(XR, XR + 300 - size * 0.4)
+        y0 = rnd.uniform(Y0, Y1)
         tt = t_i[0] - 0.3 + rnd.uniform(0, 5.8)
         bubs.append(f'<div class="qm it" id="vc-b{k}" data-layout-ignore style="font-size:{size}px">{TX["qm"][k % 2]}</div>')
         bj.append(f'heart("#vc-b{k}", {tt:.2f}, {x:.0f}, {y0:.0f}, {rnd.uniform(420, 760):.0f}, {rnd.uniform(-30, 30):.0f}, {rnd.uniform(2.2, 3.0):.2f});')
     html = (field("#05070f", ls) + "".join(bubs)
             + f'<div class="rsv" id="vc-0"><div class="hd {TX["v0"][0]}">{TX["v0"][1]}</div></div>'
-            + f'<div class="rsv" id="vc-1"><div class="it huge">{TX["v1"]}<span class="acc">.</span></div></div>'
+            + f'<div class="rsv" id="vc-1"><div class="it huge"{v1s}>{TX["v1"]}<span class="acc">.</span></div></div>'
             + f'<div class="ff" id="vc-st" data-layout-allow-overflow>{cards}</div>')
     css = """
     #root .bub { padding: 26px 44px 28px 118px; border-radius: 32px; font-size: 38px; }
     #root .bub.q { font-size: 52px; }
     #root .bub .av { left: 32px; top: 28px; width: 60px; height: 60px; }
     #root .bub .src { font-size: 28px; }
-    #root .qm { position: absolute; left: 0; top: 0; line-height: 0.7; color: rgba(255, 255, 255, 0.2); }"""
+    #root .qm { position: absolute; left: 0; top: 0; line-height: 0.7; color: rgba(255, 255, 255, 0.2); }""" + ("""
+    #root .bub { padding: 26px 40px 28px 112px; }
+    #root .bub.q { font-size: 48px; }""" if TALL else "")
     js = [f'wipeIn({s:g}, "dl");', f'drift("#vc-l0", {s:g}, {e - s:g}, 60, 40); drift("#vc-l1", {s:g}, {e - s:g}, -60, -40);',
           f'say("#vc-0", {b(B_VO):g}, {b(B_VO + 2) - 0.06:g}); say("#vc-1", {b(B_VO + 2):g}, {b(B_VO + 4) - 0.12:g});']
     for i, t in enumerate(t_i):
@@ -784,6 +824,7 @@ def scene_voices(s, e):
 def scene_close(s, e, info):
     """The wall is alive again and pulls back; the promise, a line every four beats; the logo."""
     T1, T2, TL = b(B_CL), b(B_CL + 4), b(B_LOGO)
+    eb_top = round(info["lockup_px"][1][1] + 64) if TALL else 790       # the line under the logo
     html = f"""<div class="fld" style="background:#05070f"></div>
     <div class="wl-in ff" data-layout-allow-overflow id="cs-in">
       <div class="wl-tilt"><div class="wl-wall" id="cs-wall">{wall("cs", e - s)}</div></div>
@@ -794,10 +835,10 @@ def scene_close(s, e, info):
     <div class="rsv" id="cs-1"><div><div class="hd big">{TX['c1'][0]}</div><div class="it huge">{TX['c1'][1]}<span class="acc">.</span></div></div></div>
     <div class="rsv" id="cs-2"><div><div class="hd big">{TX['c2'][0]}</div><div class="it huge">{TX['c2'][1]}<span class="acc">.</span></div></div></div>
     <img id="cs-logo" src="assets/logo/socialstream-logo-stacked-dark.svg" alt="SocialStream" style="position:absolute;opacity:0;{logo_box(info)}">
-    <div class="eb" id="cs-eb" style="position:absolute;left:0;right:0;top:790px;text-align:center">{TX['cs_eb']}</div>"""
+    <div class="eb" id="cs-eb" style="position:absolute;left:0;right:0;top:{eb_top}px;text-align:center">{TX['cs_eb']}</div>"""
     css = WALL_CSS + """
     #root .huge { font-size: 220px; }
-    #root #cs-logo { transform-origin: 50% 50%; }"""
+    #root #cs-logo { transform-origin: 50% 50%; }""" + (CLOSE_TALL if TALL else "")
     js = f"""wipeIn({s:g}, "up");
     tl.fromTo("#cs-in", {{ scale: 1.5, rotation: 5 }}, {{ scale: 1, rotation: 0, duration: {e - s:g}, ease: "power2.out" }}, AT({s:g}));
     tl.fromTo("#cs-wall", {{ x: 150 }}, {{ x: -30, duration: {e - s:g}, ease: "none" }}, AT({s:g}));
@@ -808,6 +849,179 @@ def scene_close(s, e, info):
     tl.set("#cs-logo", {{ opacity: 1 }}, AT({TL:g}));
     tl.fromTo("#cs-logo", {{ scale: 1.12, filter: "blur(10px)" }}, {{ scale: 1, filter: "blur(0px)", duration: 0.4, ease: "expo.out" }}, AT({TL:g}));
     fade("#cs-eb", {TL + 0.24:g}, 0.3);"""
+    return html, js, css
+
+
+# ================================ the upright cut (1080 x 1920) ================================
+# The same film on the same clock for a frame that stands upright: the site's card, and phones. The site fits it with
+# object-fit: cover (base.css), so a phone that is taller or squatter than 9:16 cuts up to 9 % off the sides or off
+# the top and bottom: every word and number stays inside x 100-980, y 230-1750; footage and grounds bleed.
+# Scenes whose script carries no positions (the results) are laid out again below and keep the wide scene's script;
+# the others take their upright positions inside their own function (if TALL). ----
+TALL_TEXT = {
+    "hu": dict(
+        p_cls=("big", "big", "mid", "mid"),
+        p3='Mégsem jönnek<br>a <span class="acc">vevők?</span>',
+        cb=('<div class="hd cb1 l1"><span class="w">Az</span> <span class="w it">érdeklődés</span></div>\n'
+            '      <div class="hd cb1 l2"><span class="w">vette</span> <span class="w">át</span><br><span class="w">a</span> '
+            '<span class="w">helyét<span class="acc">.</span></span></div>'),
+        how=['Mi gyártjuk<br>a <span class="it">videót</span>,', 'mi futtatjuk<br>a <span class="it">hirdetést</span>,', "és mi mérjük,",
+             'mit <span class="it hz">hozott</span><span class="acc">.</span>'],
+        v0=("big", "Ne nekünk<br>higgy."),
+        t_r1=(400, 220), t_m3=252,
+    ),
+    "en": dict(
+        p_cls=("big", "mid", "mid", "b2"),
+        p3='And still no<br><span class="acc">buyers?</span>',
+        cb=('<div class="hd cb1 l1"><span class="w it">Interest</span></div>\n'
+            '      <div class="hd cb1 l2"><span class="w">has</span> <span class="w">taken</span><br><span class="w">its</span> '
+            '<span class="w">place<span class="acc">.</span></span></div>'),
+        how=['We make<br>the <span class="it">video</span>,', 'we run<br>the <span class="it">ads</span>,', "and we measure",
+             'what they<br><span class="it hz">bring in</span><span class="acc">.</span>'],
+        v0=("mid", "Don’t take our<br>word for it."), v1_px=200,
+        c1=("Videos people<br>watch", "to the end"),
+        t_r1=(286, 164), t_m3=222,
+    ),
+}
+TALL_CSS = """
+/* the upright cut: larger labels, phrases that break over two lines, a narrower phone, cards with a smaller corner */
+#root .eb { font-size: 30px; white-space: normal; }
+#root .rsv .hd { line-height: 1.05; }
+#root .mid { font-size: 104px; }
+#root .mid .it { font-size: 132px; }
+#root .b2 { font-size: 128px; white-space: nowrap; }
+#root .glow { background: radial-gradient(ellipse 66% 23% at 50% 50%, rgba(5, 7, 15, 0.95) 0%, rgba(5, 7, 15, 0.76) 44%, rgba(5, 7, 15, 0) 100%); }
+#root .glow.wide { background: radial-gradient(ellipse 100% 28% at 50% 50%, rgba(5, 7, 15, 0.88) 0%, rgba(5, 7, 15, 0.6) 50%, rgba(5, 7, 15, 0) 100%); }
+#root .phone { width: 320px; height: 665px; border-radius: 49px; }
+#root .phone .scr { inset: 10px; border-radius: 40px; }
+#root .phone .isl { top: 22px; width: 94px; margin-left: -47px; height: 27px; border-radius: 14px; }
+#root .card { border-radius: 32px; }
+#root .pill { font-size: 34px; }
+#root .chip { font-size: 42px; }
+#root .bub { font-size: 34px; text-wrap: balance; }
+#root .bub .src { font-size: 24px; }
+#root .lab { font-size: 58px; }
+"""
+OPEN_TALL = """
+    #root #op-shade { background: linear-gradient(0deg, rgba(5, 7, 15, 0.92) 0%, rgba(5, 7, 15, 0.56) 26%, rgba(5, 7, 15, 0) 54%); }
+    #root .cb { left: 100px; bottom: 270px; }
+    #root .cb1 { font-size: 126px; line-height: 1.04; }
+    #root .cb1 .it { font-size: 166px; }"""
+CLOSE_TALL = """
+    #root #cs-1 .big, #root #cs-2 .big { font-size: 96px; }
+    #root .huge { font-size: 184px; }"""
+RES_TALL = """
+    #root .rn .x { font-size: 220px; }
+    #root .rn .u { font-size: 84px; }"""
+
+
+def t_r1(s, e):
+    """79 M Ft in one week, upright: the hall above, the number, the week's seven days in one row under it."""
+    _h, js, _c = scene_r1(s, e)
+    pre, n, to, unit, _px, _upx = TX["r1_num"]
+    px, upx = TX["t_r1"]
+    ls = [("r1-l0", 94, 90, 100, "255, 64, 104, 0.5"), ("r1-l1", 4, 4, 86, "56, 190, 255, 0.5")]
+    html = (field("linear-gradient(160deg,#1b3cff 0%,#3a22d8 58%,#1a0f6c 100%)", ls)
+            + f'<div class="eb" id="r1-eb" style="position:absolute;left:100px;right:100px;top:330px">{TX["r1_eb"]}</div>'
+            + '<img id="r1-obj" src="assets/img/o-hall-mix.webp" alt="" style="position:absolute;left:540px;top:390px;width:440px;height:440px">'
+            + f'<div class="hd rn" id="r1-n" style="left:90px;top:{810 + round((400 - px) * 0.5)}px">{cur(pre)}{digits(n, "r1-cnt")}<span class="it ui">{unit}</span></div>'
+            + f'<div class="lab" id="r1-lab" style="position:absolute;left:100px;top:1200px">{wl(TX["r1_lab"])}</div>'
+            + '<div class="days">' + "".join(f'<div class="day" id="r1-d{k}">{d}</div>' for k, d in enumerate(TX["days"])) + '</div>')
+    css = RES_CSS + f"""
+    #root #r1-n .cnt, #root #r1-n .cur {{ font-size: {px}px; }}
+    #root #r1-n .ui {{ font-size: {upx}px; }}""" + """
+    #root .days { position: absolute; left: 100px; top: 1340px; display: flex; gap: 16px; }
+    #root .day { width: 112px; height: 104px; border-radius: 26px; display: flex; align-items: center; justify-content: center;
+      font: 700 38px/1 Sora, Inter, sans-serif; letter-spacing: -0.02em; background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.5);
+      box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.22); }"""
+    return html, js, css
+
+
+def t_r2(s, e):
+    """81x ROAS, upright: the number, one coin, and under it the eighty-one."""
+    _h, js, _c = scene_r2(s, e)
+    ls = [("r2-l0", 6, 94, 92, "255, 170, 80, 0.5"), ("r2-l1", 96, 6, 90, "110, 60, 255, 0.5")]
+    html = (field("linear-gradient(160deg,#ff2d5f 0%,#d81d74 55%,#7a1690 100%)", ls)
+            + f'<div class="eb" id="r2-eb" style="position:absolute;left:100px;right:100px;top:290px">{TX["r2_eb"].replace(" · ", "<br>")}</div>'
+            + f'<div class="hd rn" id="r2-n" style="left:90px;top:410px">{digits(2, "r2-cnt")}<span class="x">×</span><span class="u">ROAS</span></div>'
+            + f'<div class="c1" id="r2-c1"><i class="cn"></i><span>{TX["r2_c1"]}</span><b>↓</b></div>'
+            + '<div class="grid" id="r2-g" data-motion-blur="off">' + '<i class="cn"></i>' * 81 + '</div>'
+            + f'<div class="gl" id="r2-gl">{TX["r2_gl"]}</div>')
+    css = RES_CSS + RES_TALL + """
+    #root .cn { display: block; width: 62px; height: 62px; border-radius: 50%;
+      background: radial-gradient(circle at 34% 30%, #ffffff 0%, #ffe8ef 48%, #ffbfd0 100%);
+      box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.7), 0 10px 20px -8px rgba(40, 0, 40, 0.55); }
+    #root #r2-n .cnt { font-size: 360px; }
+    #root .grid .cn { width: 54px; height: 54px; }
+    #root .grid { position: absolute; left: 257px; top: 1020px; display: grid; grid-template-columns: repeat(9, 54px); gap: 10px; }
+    #root .gl { position: absolute; left: 0; right: 0; top: 1620px; text-align: center; font: 700 84px/1 Sora, Inter, sans-serif; letter-spacing: -0.03em; }
+    #root .c1 { position: absolute; left: 100px; top: 800px; display: flex; align-items: center; gap: 26px; font: 700 92px/1 Sora, Inter, sans-serif; letter-spacing: -0.03em; transform-origin: 0 50%; }
+    #root .c1 .cn { width: 140px; height: 140px; }
+    #root .c1 b { font-weight: 700; margin-left: 18px; opacity: 0.85; }"""
+    return html, js, css
+
+
+def t_r3(s, e):
+    """23x ROAS at Christmas, upright and white: the number, the holiday revenue under it, the watch below."""
+    _h, js, _c = scene_r3(s, e)
+    pn, pto = TX["r3_n"]
+    html = ('<div class="fld" style="background:#f3f5fb"></div>'
+            + f'<div class="eb" id="r3-eb" style="position:absolute;left:100px;right:100px;top:330px;text-align:center;color:#3a4266">{TX["r3_eb"]}</div>'
+            + f'<div class="hd rn" id="r3-n" style="left:0;right:0;top:420px;justify-content:center">{digits(2, "r3-cnt")}<span class="x acc">×</span><span class="u">ROAS</span></div>'
+            + f'<div class="pc"><div class="pill" id="r3-p">{TX["r3_p"][0]}' + digits(pn, "r3-pc") + f'{TX["r3_p"][1]}</div></div>'
+            + '<img id="r3-obj" src="assets/img/o-watch-mix.webp" alt="" style="position:absolute;left:280px;top:990px;width:520px;height:520px">')
+    css = RES_CSS + RES_TALL + """
+    #root #r3-n { color: #0b1030; transform-origin: 50% 60%; }
+    #root #r3-n .cnt { font-size: 360px; }
+    #root .pc { position: absolute; left: 0; right: 0; top: 810px; display: flex; justify-content: center; }
+    #root #r3-p { position: relative; background: #0b1030; color: #fff; font: 700 54px/1 Sora, Inter, sans-serif; letter-spacing: -0.02em; padding: 24px 40px; box-shadow: none; }
+    #root #r3-p .cnt .d { width: 0.6em; }
+    #root #r3-p .eu { margin: 0 -13px 0 -12px; }
+    #root #r3-p .kk { margin-left: -11px; }"""
+    return html, js, css
+
+
+def t_r4(s, e):
+    """About 5 700 sign-ups at 105 Ft each, upright: the dots fill the tall frame behind the count and the stamp."""
+    _h, js, _c = scene_r4(s, e)
+    ls = [("r4-l0", 94, 8, 92, "255, 64, 104, 0.45"), ("r4-l1", 6, 94, 92, "56, 190, 255, 0.5")]
+    pts = [(26 + c * 48, 30 + r * 57) for r in range(33) for c in range(22)]
+    random.Random(7).shuffle(pts)                           # a fixed order, the same on every render
+    dots = "".join(f'<i style="left:{x}px;top:{y}px"></i>' for x, y in pts)
+    html = (field("linear-gradient(160deg,#7a35ff 0%,#5020d0 55%,#2a1280 100%)", ls)
+            + f'<div class="dots" id="r4-dots" data-motion-blur="off" data-layout-ignore>{dots}</div>'
+            + f'<div class="eb" id="r4-eb" style="position:absolute;left:100px;right:100px;top:560px;text-align:center">{TX["r4_eb"]}</div>'
+            + f'<div class="hd rn" id="r4-n" style="left:0;right:0;top:640px;justify-content:center"><span class="ap">≈</span>{digits(4, "r4-cnt", gap_after=0, sep=TX["thou"])}</div>'
+            + f'<div class="lab" id="r4-lab" style="position:absolute;left:0;right:0;top:910px;text-align:center">{wl(TX["r4_lab"])}</div>'
+            + f'<div class="pc"><div class="stamp" id="r4-st" style="opacity:0">{TX["r4_st"][0]} <span>{TX["r4_st"][1]}</span></div></div>')
+    css = RES_CSS + """
+    #root .dots i { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.3); }
+    #root .pc { z-index: 3; }
+    #root #r4-n .cnt { font-size: 256px; }
+    #root #r4-n .ap { font-size: 152px; line-height: 0.84; margin-right: 0.1em; opacity: 0.8; }
+    #root #r4-lab { font-size: 58px; }
+    #root .pc { position: absolute; left: 0; right: 0; top: 1060px; display: flex; justify-content: center; }
+    #root .stamp { padding: 22px 42px 26px; border-radius: 26px; background: #ff3f6c; color: #fff; font: 700 92px/1 Sora, Inter, sans-serif;
+      letter-spacing: -0.03em; box-shadow: 0 30px 60px -24px rgba(40, 0, 60, 0.6); white-space: nowrap; }
+    #root .stamp span { font-size: 52px; font-weight: 600; opacity: 0.92; }"""
+    return html, js, css
+
+
+def t_m300(s, e):
+    """300M+ Ft managed since 2022, upright: the number on one line, its unit starting the line under it."""
+    _h, js, _c = scene_m300(s, e)
+    pre, to, plus, unit = TX["m3_num"]
+    px = TX["t_m3"]
+    ls = [("m3-l0", 12, 90, 100, "66, 92, 255, 0.5"), ("m3-l1", 90, 8, 96, "136, 78, 255, 0.5"), ("m3-l2", 60, 110, 60, "255, 64, 104, 0.3")]
+    lab = (f'<span class="w it ui2">{unit}</span> ' if unit else "") + wl(TX["m3_lab"])
+    html = (field("#070a1c", ls)
+            + f'<div class="eb" id="m3-eb" style="position:absolute;left:100px;right:100px;top:730px;text-align:center">{TX["m3_eb"]}</div>'
+            + f'<div class="hd rn" id="m3-n" style="left:0;right:0;top:810px;justify-content:center">{cur(pre)}{digits(3, "m3-cnt")}<span class="mp">{plus}</span></div>'
+            + f'<div class="lab" id="m3-lab" style="position:absolute;left:0;right:0;top:{810 + round(px * 0.84) + 44}px;text-align:center">{lab}</div>')
+    css = RES_CSS + f"""
+    #root #m3-n .cnt, #root #m3-n .mp, #root #m3-n .cur {{ font-size: {px}px; line-height: 0.84; letter-spacing: -0.055em; }}""" + """
+    #root #m3-lab { font-size: 72px; font-weight: 700; font-family: Sora, Inter, sans-serif; letter-spacing: -0.03em; }
+    #root #m3-lab .ui2 { font-size: 124px; line-height: 0.6; letter-spacing: -0.01em; margin-right: 0.06em; }"""
     return html, js, css
 
 
@@ -865,7 +1079,7 @@ def sounds():
 
 # ================================ the project ================================
 def composition(cid, s, html, js, css):
-    common = open(os.path.join(HERE, "common.css")).read()
+    common = open(os.path.join(HERE, "common.css")).read() + (TALL_CSS if TALL else "")
     return f"""<template>
   <style>
     {common}
@@ -877,7 +1091,7 @@ def composition(cid, s, html, js, css):
     </div>
   </div>
   <script>
-  (() => {{{JS.replace("%START%", f"{s:g}").replace("%WIPE%", f"{WIPE:g}")}
+  (() => {{{JS.replace("%START%", f"{s:g}").replace("%WIPE%", f"{WIPE:g}").replace("%W%", str(W)).replace("%H%", str(H)).replace("%RISE%", str(H + 70))}
     {js}
     window.__timelines["{cid}"] = tl;
   }})();
@@ -910,12 +1124,13 @@ def index(lang="hu"):
 
 
 def main():
-    global TX
+    global TX, W, H, TALL
     only = sys.argv[1:]                                     # e.g. python3 build.py wide-en
-    for lang, folder in OUTS:
+    for lang, folder, tall in OUTS:
         if only and folder not in only:
             continue
-        TX = TEXT[lang]
+        TALL, (W, H) = tall, ((1080, 1920) if tall else (1920, 1080))
+        TX = dict(TEXT[lang], **TALL_TEXT[lang]) if tall else TEXT[lang]
         out = os.path.join(HERE, folder)
         comp = os.path.join(out, "compositions")
         os.makedirs(comp, exist_ok=True)
@@ -927,6 +1142,8 @@ def main():
         builders = {"open": lambda s, e: scene_open(s, e, info), "flyx": scene_flyx, "enzo": scene_enzo, "prod": scene_prod,
                     "how": scene_how, "r1": scene_r1, "r2": scene_r2, "r3": scene_r3, "r4": scene_r4, "m300": scene_m300,
                     "voices": scene_voices, "close": lambda s, e: scene_close(s, e, info)}
+        if tall:                                            # the results are laid out again; their scripts stay
+            builders.update(r1=t_r1, r2=t_r2, r3=t_r3, r4=t_r4, m300=t_m300)
         for n, s, e in SC:
             if n == "logo":
                 src = logo
@@ -950,7 +1167,7 @@ def main():
         if not os.path.islink(link):
             os.symlink("../assets", link)
         subprocess.run(["rm", "-rf", tmp], check=True)
-        print(folder, lang, TOTAL, "s; drop", DROP)
+        print(folder, lang, f"{W}x{H}", TOTAL, "s; drop", DROP)
 
 
 if __name__ == "__main__":

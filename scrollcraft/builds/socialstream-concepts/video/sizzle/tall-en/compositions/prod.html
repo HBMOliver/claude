@@ -1,0 +1,211 @@
+<template>
+  <style>
+    /* Shared by every scene of the SocialStream sizzle (build.py puts it into each scene's style block): the site's type
+   (Sora, Instrument Serif italic, Inter) and the sizzle's objects: the wall, phones, reel cards, comments, hearts,
+   polaroids, counters. SPEC.md has the numbers. */
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
+/* no ground on the root: a scene wipes in over the one before it (its own field is inside the wipe) */
+#root { position: absolute; inset: 0; overflow: hidden; color: #fff; font-family: Inter, sans-serif; }
+#root .ff { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+#root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.0; }
+#root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+#root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.9); white-space: nowrap; }
+#root .acc { color: #ff5272; }
+#root .w { display: inline-block; }
+/* one phrase at a time at the centre of the frame */
+#root .rsv { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; }
+#root .big { font-size: 150px; white-space: nowrap; }
+#root .mid { font-size: 112px; white-space: nowrap; }
+#root .mid .it { font-size: 142px; }
+#root .huge { font-size: 250px; line-height: 0.92; white-space: nowrap; }
+#root .ss { position: relative; display: inline-block; }
+#root .stk { position: absolute; left: -0.03em; right: -0.03em; top: 0.52em; height: 0.08em; border-radius: 0.04em; background: #ff5272; transform-origin: 0 50%; }
+/* a colour field with slow lights, and a client's name tiled faintly over it */
+#root .fld { position: absolute; inset: 0; overflow: hidden; }
+#root .fld .lt { position: absolute; border-radius: 50%; }
+#root .tile { position: absolute; left: -260px; right: -260px; top: -40px; bottom: -40px; display: flex; flex-direction: column; justify-content: space-between;
+  opacity: 0.075; font: 700 78px/1 Sora, Inter, sans-serif; letter-spacing: -0.03em; white-space: nowrap; }
+#root .tile div:nth-child(even) { margin-left: -210px; }
+#root .tile span { margin-right: 76px; }
+/* the wall: a tilted grid of 9:16 cards */
+#root .wl-in { position: absolute; inset: 0; }
+#root .wl-wall { position: absolute; inset: 0; }
+#root .wl-card { position: absolute; overflow: hidden; border-radius: 26px; background: #0b1024;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 30px 60px -30px rgba(0, 0, 0, 0.8); }
+#root .wl-card img, #root .wl-card video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#root .wl-card .g { opacity: 0; }
+#root .glow { position: absolute; inset: 0; background: radial-gradient(ellipse 30% 44% at 50% 50%, rgba(5, 7, 15, 0.95) 0%, rgba(5, 7, 15, 0.76) 44%, rgba(5, 7, 15, 0) 100%); }
+#root .glow.wide { background: radial-gradient(ellipse 60% 46% at 50% 50%, rgba(5, 7, 15, 0.88) 0%, rgba(5, 7, 15, 0.6) 50%, rgba(5, 7, 15, 0) 100%); }
+/* a phone playing a reel */
+#root .phone { position: absolute; width: 380px; height: 790px; border-radius: 58px; background: #0a0b10;
+  box-shadow: 0 50px 90px -30px rgba(0, 0, 0, 0.6), inset 0 0 0 2px rgba(255, 255, 255, 0.14); }
+#root .phone .scr { position: absolute; inset: 12px; border-radius: 47px; overflow: hidden; background: #000; }
+#root .phone .scr video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#root .phone .isl { position: absolute; top: 26px; left: 50%; width: 112px; margin-left: -56px; height: 32px; border-radius: 16px; background: #000; }
+/* a reel card: no body, just the picture */
+#root .card { position: absolute; overflow: hidden; border-radius: 40px; background: #0b1024;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.55), inset 0 0 0 2px rgba(255, 255, 255, 0.14); }
+#root .card video, #root .card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* a pill and a chip: a count beside the work */
+#root .pill { position: absolute; display: flex; align-items: center; gap: 12px; padding: 14px 24px 14px 20px; border-radius: 40px;
+  background: rgba(5, 7, 15, 0.78); font: 700 32px/1 Inter, sans-serif; letter-spacing: -0.01em; white-space: nowrap;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.2); }
+#root .chip { position: absolute; display: flex; align-items: center; gap: 12px; padding: 16px 26px 16px 22px; border-radius: 44px; background: #fff; color: #0b1030;
+  font: 700 38px/1 Sora, Inter, sans-serif; letter-spacing: -0.02em; white-space: nowrap; box-shadow: 0 24px 44px -18px rgba(0, 0, 0, 0.5); }
+#root .chip i, #root .pill i { display: block; width: 0; height: 0; border-left: 17px solid currentColor; border-top: 10px solid transparent; border-bottom: 10px solid transparent; }
+#root .tag { position: absolute; padding: 15px 28px; border-radius: 40px; background: rgba(255, 255, 255, 0.14); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+  font: 700 34px/1 Sora, Inter, sans-serif; letter-spacing: -0.02em; white-space: nowrap; }
+/* a comment or a client's words: a white card whose words type on */
+#root .bub { position: absolute; padding: 22px 30px 24px 100px; border-radius: 28px; background: #fff; color: #11152a;
+  font: 600 32px/1.3 Inter, sans-serif; letter-spacing: -0.01em; box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.5); transform-origin: 0 100%; }
+#root .bub .av { position: absolute; left: 26px; top: 24px; width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(160deg, #d9def0, #a9b2cf); }
+#root .bub .src { display: block; margin-bottom: 6px; font: 700 22px/1.2 Inter, sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: #6c7493; }
+#root .bub.q { font: italic 400 44px/1.14 "Instrument Serif", Georgia, serif; letter-spacing: 0; }
+#root .tw { display: inline-block; white-space: pre; }
+/* a heart rising from the work */
+#root .hrt { position: absolute; left: 0; top: 0; z-index: 6; }
+#root .hrt svg { display: block; width: 100%; height: 100%; }
+/* a polaroid of the team at work */
+#root .pol { position: absolute; width: 400px; height: 500px; padding: 16px 16px 68px; background: #fdfdfb; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.55); }
+#root .pol img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* a counted number: fixed-width digits, never smeared */
+#root .cnt { display: inline-flex; align-items: baseline; }
+#root .cnt .d { display: inline-block; width: 0.62em; text-align: center; }
+#root .lab { font: 600 54px/1.2 Inter, sans-serif; letter-spacing: -0.01em; white-space: nowrap; }
+
+/* the upright cut: larger labels, phrases that break over two lines, a narrower phone, cards with a smaller corner */
+#root .eb { font-size: 30px; white-space: normal; }
+#root .rsv .hd { line-height: 1.05; }
+#root .mid { font-size: 104px; }
+#root .mid .it { font-size: 132px; }
+#root .b2 { font-size: 128px; white-space: nowrap; }
+#root .glow { background: radial-gradient(ellipse 66% 23% at 50% 50%, rgba(5, 7, 15, 0.95) 0%, rgba(5, 7, 15, 0.76) 44%, rgba(5, 7, 15, 0) 100%); }
+#root .glow.wide { background: radial-gradient(ellipse 100% 28% at 50% 50%, rgba(5, 7, 15, 0.88) 0%, rgba(5, 7, 15, 0.6) 50%, rgba(5, 7, 15, 0) 100%); }
+#root .phone { width: 320px; height: 665px; border-radius: 49px; }
+#root .phone .scr { inset: 10px; border-radius: 40px; }
+#root .phone .isl { top: 22px; width: 94px; margin-left: -47px; height: 27px; border-radius: 14px; }
+#root .card { border-radius: 32px; }
+#root .pill { font-size: 34px; }
+#root .chip { font-size: 42px; }
+#root .bub { font-size: 34px; text-wrap: balance; }
+#root .bub .src { font-size: 24px; }
+#root .lab { font-size: 58px; }
+
+    
+    #root #pr-tags { position: absolute; left: 60px; top: 124px; display: flex; gap: 18px; }
+    #root #pr-tags .tag { position: relative; font-size: 40px; padding: 17px 30px; }
+    #root #pr-tags { left: 100px; top: 320px; width: 900px; flex-wrap: wrap; gap: 16px; }
+    #root #pr-tags .tag { font-size: 38px; padding: 16px 27px; }
+  </style>
+  <div id="root" data-composition-id="prod" data-width="1080" data-height="1920">
+    <div class="ff" id="wp">
+    <div class="ff" id="pr-g"><div class="fld" style="background:linear-gradient(140deg,#4a22c8 0%,#3418a0 52%,#1c0d58 100%)"><i class="lt" id="pr-l0" data-layout-allow-overflow style="left:94%;top:8%;width:96vmax;height:96vmax;margin:-48.0vmax 0 0 -48.0vmax;background:radial-gradient(closest-side,rgba(255, 64, 104, 0.4),rgba(255, 64, 104,0))"></i><i class="lt" id="pr-l1" data-layout-allow-overflow style="left:4%;top:96%;width:90vmax;height:90vmax;margin:-45.0vmax 0 0 -45.0vmax;background:radial-gradient(closest-side,rgba(56, 160, 255, 0.5),rgba(56, 160, 255,0))"></i></div><div class="tile" data-layout-allow-overflow data-layout-ignore style="color:#fff"><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div><div><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span><span>SocialStream</span></div></div></div><div class="eb" id="pr-eb" style="position:absolute;left:100px;top:250px">Clips from our videos</div><div id="pr-tags" data-layout-allow-overflow><div class="tag" id="pr-t0">Shooting</div><div class="tag" id="pr-t1">Editing</div><div class="tag" id="pr-t2">Subtitles</div><div class="tag" id="pr-t3">Reels</div><div class="tag" id="pr-t4">Podcast &amp; interview</div></div><div class="card" id="pr-c0" style="left:60px;top:600px;width:300px;height:533px;z-index:1"><video id="pr-c0-v0" class="clip " src="assets/clips/pr1.mp4" data-start="1.32" data-duration="1.76" data-media-start="0" data-hf-media-start-basis="local" data-track-index="1" muted playsinline></video><video id="pr-c0-v1" class="clip " src="assets/clips/pr6.mp4" data-start="3.08" data-duration="1" data-media-start="0" data-hf-media-start-basis="local" data-track-index="2" muted playsinline></video></div><div class="card" id="pr-c1" style="left:720px;top:560px;width:300px;height:533px;z-index:1"><video id="pr-c1-v0" class="clip " src="assets/clips/pr2.mp4" data-start="1.32" data-duration="1.76" data-media-start="0" data-hf-media-start-basis="local" data-track-index="3" muted playsinline></video><video id="pr-c1-v1" class="clip " src="assets/clips/pr4.mp4" data-start="3.08" data-duration="1" data-media-start="0" data-hf-media-start-basis="local" data-track-index="4" muted playsinline></video></div><div class="card" id="pr-c2" style="left:330px;top:760px;width:420px;height:747px;z-index:3"><video id="pr-c2-v0" class="clip " src="assets/clips/pw2.mp4" data-start="1.32" data-duration="2.76" data-media-start="0" data-hf-media-start-basis="local" data-track-index="5" muted playsinline></video></div><div class="card" id="pr-c3" style="left:60px;top:1190px;width:300px;height:533px;z-index:1"><video id="pr-c3-v0" class="clip " src="assets/clips/pw1.mp4" data-start="1.32" data-duration="1.76" data-media-start="0" data-hf-media-start-basis="local" data-track-index="6" muted playsinline></video><video id="pr-c3-v1" class="clip " src="assets/clips/pr5.mp4" data-start="3.08" data-duration="1" data-media-start="0" data-hf-media-start-basis="local" data-track-index="7" muted playsinline></video></div><div class="card" id="pr-c4" style="left:720px;top:1150px;width:300px;height:533px;z-index:1"><video id="pr-c4-v0" class="clip " src="assets/clips/pr3.mp4" data-start="1.32" data-duration="2.76" data-media-start="0" data-hf-media-start-basis="local" data-track-index="8" muted playsinline></video></div><i class="hrt" id="pr-h0" data-layout-ignore style="width:44px;height:44px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="pr-h1" data-layout-ignore style="width:36px;height:36px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="pr-h2" data-layout-ignore style="width:36px;height:36px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="pr-h3" data-layout-ignore style="width:44px;height:44px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="pr-h4" data-layout-ignore style="width:54px;height:54px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="pr-h5" data-layout-ignore style="width:30px;height:30px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="pr-h6" data-layout-ignore style="width:36px;height:36px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><i class="hrt" id="pr-h7" data-layout-ignore style="width:44px;height:44px"><svg viewBox="0 0 24 22"><path d="M12 21.2S2.4 14.9 2.4 8.3C2.4 5 4.9 2.4 8 2.4c1.7 0 3.2.8 4 2.1.8-1.3 2.3-2.1 4-2.1 3.1 0 5.6 2.6 5.6 5.9 0 6.6-9.6 12.9-9.6 12.9z" fill="#ff3f6c"/></svg></i><div class="pol" id="pr-p0" data-layout-ignore style="left:-25px;top:-91px;z-index:11"><img src="assets/pol/p01.jpg" alt=""></div><div class="pol" id="pr-p1" data-layout-ignore style="left:350px;top:-73px;z-index:13"><img src="assets/pol/p02.jpg" alt=""></div><div class="pol" id="pr-p2" data-layout-ignore style="left:722px;top:-61px;z-index:24"><img src="assets/pol/p03.jpg" alt=""></div><div class="pol" id="pr-p3" data-layout-ignore style="left:-24px;top:307px;z-index:17"><img src="assets/pol/p04.jpg" alt=""></div><div class="pol" id="pr-p4" data-layout-ignore style="left:338px;top:342px;z-index:19"><img src="assets/pol/p05.jpg" alt=""></div><div class="pol" id="pr-p5" data-layout-ignore style="left:743px;top:345px;z-index:10"><img src="assets/pol/p06.jpg" alt=""></div><div class="pol" id="pr-p6" data-layout-ignore style="left:-48px;top:710px;z-index:23"><img src="assets/pol/p07.jpg" alt=""></div><div class="pol" id="pr-p7" data-layout-ignore style="left:339px;top:716px;z-index:18"><img src="assets/pol/p08.jpg" alt=""></div><div class="pol" id="pr-p8" data-layout-ignore style="left:698px;top:730px;z-index:15"><img src="assets/pol/p09.jpg" alt=""></div><div class="pol" id="pr-p9" data-layout-ignore style="left:-31px;top:1130px;z-index:14"><img src="assets/pol/p10.jpg" alt=""></div><div class="pol" id="pr-p10" data-layout-ignore style="left:323px;top:1143px;z-index:20"><img src="assets/pol/p01.jpg" alt=""></div><div class="pol" id="pr-p11" data-layout-ignore style="left:728px;top:1113px;z-index:22"><img src="assets/pol/p02.jpg" alt=""></div><div class="pol" id="pr-p12" data-layout-ignore style="left:-40px;top:1529px;z-index:16"><img src="assets/pol/p03.jpg" alt=""></div><div class="pol" id="pr-p13" data-layout-ignore style="left:353px;top:1503px;z-index:21"><img src="assets/pol/p04.jpg" alt=""></div><div class="pol" id="pr-p14" data-layout-ignore style="left:715px;top:1538px;z-index:12"><img src="assets/pol/p05.jpg" alt=""></div>
+    </div>
+  </div>
+  <script>
+  (() => {
+    const FPS = 25, W = 1080, H = 1920, START = 21.08, AT = (t) => t - START;
+    const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
+    const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
+    const tl = gsap.timeline({ paused: true });
+    // a scene comes in over the last one with a wipe: diagonal from the right or the left, up, or an iris
+    const WIPES = {
+      dr: ["polygon(132% 0%, 132% 0%, 132% 100%, 162% 100%)", "polygon(-32% 0%, 132% 0%, 132% 100%, -2% 100%)"],
+      dl: ["polygon(-32% 0%, -32% 0%, -62% 100%, -32% 100%)", "polygon(-32% 0%, 132% 0%, 102% 100%, -32% 100%)"],
+      up: ["polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)", "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"],
+      iris: ["circle(0% at 50% 50%)", "circle(75% at 50% 50%)"],
+    };
+    const wipeIn = (t, k) => tl.fromTo("#wp", { clipPath: WIPES[k][0] }, { clipPath: WIPES[k][1], duration: 0.32, ease: "power3.inOut" }, AT(t));
+    // one phrase at a time: it comes into focus, and goes when the next one comes
+    const say = (sel, tin, tout) => {
+      tl.fromTo(sel, { opacity: 0, filter: "blur(12px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.13, ease: "power2.out" }, AT(tin));
+      if (tout !== undefined) tl.fromTo(sel, { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(12px)", duration: 0.1, ease: "power2.in", immediateRender: false }, AT(tout));
+    };
+    const words = (sel, t, st = 0.07) => tl.fromTo(sel, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: st }, AT(t));
+    const out = (sel, t) => tl.fromTo(sel, { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in", immediateRender: false }, AT(t));
+    const fade = (sel, t, d = 0.25) => tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: d, ease: "power2.out" }, AT(t));
+    // a card pops: scale and position with a little overshoot (opacity never bounces)
+    const pop = (sel, t, d = 0.45) => {
+      tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "none" }, AT(t));
+      tl.fromTo(sel, { scale: 0.55, y: 30 }, { scale: 1, y: 0, duration: d, ease: "back.out(1.7)" }, AT(t));
+    };
+    // a phone or a card rises from below the frame, turning, and settles
+    const rise = (sel, t, r0, r1, d = 0.72) => tl.fromTo(sel, { y: 1990, rotation: r0 }, { y: 0, rotation: r1, duration: d, ease: "expo.out" }, AT(t));
+    const drift = (sel, t, d, dx, dy) => tl.fromTo(sel, { x: 0, y: 0 }, { x: dx, y: dy, duration: d, ease: "sine.inOut" }, AT(t));
+    // a comment types itself, a word at a time
+    const type = (sel, t, st = 0.045) => tl.fromTo(sel + " .tw", { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none", stagger: st }, AT(t));
+    // a heart rises from the work, sways and goes
+    const heart = (sel, t, x, y, up, sway, d) => {
+      tl.fromTo(sel, { x, y, scale: 0.3 }, { x: x + sway, y: y - up, scale: 1, duration: d, ease: "power1.out" }, AT(t));
+      tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, AT(t));
+      tl.fromTo(sel, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power1.in", immediateRender: false }, AT(t + d - 0.3));
+    };
+    // a counted number: fixed-width digit boxes, written once per frame as the value changes, never smeared
+    const count = (el, t, dur, to, ease = "expo.out") => {
+      const ds = [...el.querySelectorAll(".d")]; let last = null;
+      for (let i = 0; i <= Math.round(dur * FPS); i++) {
+        const tt = t + i / FPS, v = Math.round(to * ez(ease, (tt - t) / dur));
+        if (v === last) continue; last = v;
+        const s = String(v).padStart(ds.length, " ");
+        ds.forEach((d, k) => tl.set(d, { textContent: s[k] === " " ? "" : s[k] }, Math.max(0, AT(tt) - 0.01)));
+      }
+      const sep = el.querySelector(".sep");                 // a thousands comma: there once there are thousands
+      if (sep) tl.fromTo(sep, { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none" }, AT(t + dur * 0.12));
+    };
+    tl.fromTo("#pr-p0", { x: -968, y: -2164, rotation: 27.1 }, { x: 0, y: 0, rotation: 9.5, duration: 0.5, ease: "expo.out" }, AT(21.13));
+    tl.fromTo("#pr-p0", { x: 0, y: 0, rotation: 9.5 }, { x: -1016, y: -2272, rotation: 30.6, duration: 0.45, ease: "power3.in", immediateRender: false }, AT(22.45));
+    tl.fromTo("#pr-p1", { x: 84, y: -2318, rotation: 6.8 }, { x: 0, y: 0, rotation: 10.9, duration: 0.5, ease: "expo.out" }, AT(21.19));
+    tl.fromTo("#pr-p1", { x: 0, y: 0, rotation: 10.9 }, { x: 88, y: -2434, rotation: 33.7, duration: 0.45, ease: "power3.in", immediateRender: false }, AT(22.48));
+    tl.fromTo("#pr-p2", { x: 1108, y: -2156, rotation: 20.1 }, { x: 0, y: 0, rotation: 3.3, duration: 0.5, ease: "expo.out" }, AT(21.52));
+    tl.fromTo("#pr-p2", { x: 0, y: 0, rotation: 3.3 }, { x: 1164, y: -2264, rotation: -17.3, duration: 0.45, ease: "power3.in", immediateRender: false }, AT(22.64));
+    tl.fromTo("#pr-p3", { x: -1496, y: -1727, rotation: -31.9 }, { x: 0, y: 0, rotation: -7.5, duration: 0.5, ease: "expo.out" }, AT(21.31));
+    tl.fromTo("#pr-p3", { x: 0, y: 0, rotation: -7.5 }, { x: -1570, y: -1813, rotation: 0.8, duration: 0.45, ease: "power3.in", immediateRender: false }, AT(22.54));
+    tl.fromTo("#pr-p4", { x: -70, y: -2265, rotation: 11.8 }, { x: 0, y: 0, rotation: -9.4, duration: 0.5, ease: "expo.out" }, AT(21.37));
+    tl.fromTo("#pr-p4", { x: 0, y: 0, rotation: -9.4 }, { x: -74, y: -2378, rotation: -1.5, duration: 0.45, ease: "power3.in", immediateRender: false }, AT(22.57));
+    tl.fromTo("#pr-p5", { x: 1621, y: -1530, rotation: 14.9 }, { x: 0, y: 0, rotation: 10.8, duration: 0.5, ease: "expo.out" }, AT(21.10));
+    tl.fromTo("#pr-p5", { x: 0, y: 0, rotation: 10.8 }, { x: 1702, y: -1607, rotation: 5.2, duration: 0.45, ease: "power3.in", immediateRender: false }, AT(22.44));
+    tl.fromTo("#pr-p6", { x: -2342, y: 93, rotation: 0.9 }, { x: 0, y: 0, rotation: 0.8, duration: 0.5, ease: "expo.out" }, AT(21.49));
+    tl.fromTo("#pr-p6", { x: 0, y: 0, rotation: 0.8 }, { x: -2459, y: 98, rotation: -8.3, duration: 0.45, ease: "power3.in", immediateRender: false }, AT(22.62));
+    tl.fromTo("#pr-p7", { x: -392, y: 2320, rotation: 41.1 }, { x: 0, y: 0, rotation: 7.4, duration: 0.5, ease: "expo.out" }, AT(21.34));
+    tl.fromTo("#pr-p7", { x: 0, y: 0, rotation: 7.4 }, { x: -411, y: 2436, rotation: -17.5, duration: 0.45, ease: "power3.in", immediateRender: false }, AT(22.55));
+    tl.fromTo("#pr-p8", { x: 2311, y: 95, rotation: 34.1 }, { x: 0, y: 0, rotation: 0.5, duration: 0.5, ease: "expo.out" }, AT(21.25));
+    tl.fromTo("#pr-p8", { x: 0, y: 0, rotation: 0.5 }, { x: 2426, y: 99, rotation: -18.9, duration: 0.45, ease: "power3.in", immediateRender: false }, AT(22.51));
+    tl.fromTo("#pr-p9", { x: -1557, y: 1775, rotation: 37.4 }, { x: 0, y: 0, rotation: 7.3, duration: 0.5, ease: "expo.out" }, AT(21.22));
+    tl.fromTo("#pr-p9", { x: 0, y: 0, rotation: 7.3 }, { x: -1635, y: 1864, rotation: -5.4, duration: 0.45, ease: "power3.in", immediateRender: false }, AT(22.50));
+    tl.fromTo("#pr-p10", { x: -106, y: 2230, rotation: -39.6 }, { x: 0, y: 0, rotation: -7.2, duration: 0.5, ease: "expo.out" }, AT(21.40));
+    tl.fromTo("#pr-p10", { x: 0, y: 0, rotation: -7.2 }, { x: -111, y: 2342, rotation: -6.2, duration: 0.45, ease: "power3.in", immediateRender: false }, AT(22.58));
+    tl.fromTo("#pr-p11", { x: 1529, y: 1704, rotation: -24.8 }, { x: 0, y: 0, rotation: 9.2, duration: 0.5, ease: "expo.out" }, AT(21.46));
+    tl.fromTo("#pr-p11", { x: 0, y: 0, rotation: 9.2 }, { x: 1606, y: 1789, rotation: 1.5, duration: 0.45, ease: "power3.in", immediateRender: false }, AT(22.61));
+    tl.fromTo("#pr-p12", { x: -1018, y: 2099, rotation: 5.3 }, { x: 0, y: 0, rotation: 9.6, duration: 0.5, ease: "expo.out" }, AT(21.28));
+    tl.fromTo("#pr-p12", { x: 0, y: 0, rotation: 9.6 }, { x: -1069, y: 2204, rotation: 5.0, duration: 0.45, ease: "power3.in", immediateRender: false }, AT(22.52));
+    tl.fromTo("#pr-p13", { x: 107, y: 2331, rotation: -37.2 }, { x: 0, y: 0, rotation: -4.7, duration: 0.5, ease: "expo.out" }, AT(21.43));
+    tl.fromTo("#pr-p13", { x: 0, y: 0, rotation: -4.7 }, { x: 112, y: 2448, rotation: -17.2, duration: 0.45, ease: "power3.in", immediateRender: false }, AT(22.59));
+    tl.fromTo("#pr-p14", { x: 877, y: 2026, rotation: 19.2 }, { x: 0, y: 0, rotation: 3.2, duration: 0.5, ease: "expo.out" }, AT(21.16));
+    tl.fromTo("#pr-p14", { x: 0, y: 0, rotation: 3.2 }, { x: 921, y: 2127, rotation: -19.3, duration: 0.45, ease: "power3.in", immediateRender: false }, AT(22.47));
+    fade("#pr-g", 21.54, 0.2);
+    drift("#pr-l0", 21.2, 3.96, -70, 50); drift("#pr-l1", 21.2, 3.96, 70, -50);
+    fade("#pr-eb", 22.4);
+    rise("#pr-c0", 22.36, -8, 0, 0.66);
+    rise("#pr-c1", 22.42, -4, 0, 0.66);
+    rise("#pr-c2", 22.48, 0, 0, 0.66);
+    rise("#pr-c3", 22.54, 4, 0, 0.66);
+    rise("#pr-c4", 22.6, 8, 0, 0.66);
+    pop("#pr-t0", 23.08, 0.4);
+    pop("#pr-t1", 23.17, 0.4);
+    pop("#pr-t2", 23.26, 0.4);
+    pop("#pr-t3", 23.35, 0.4);
+    pop("#pr-t4", 23.44, 0.4);
+    heart("#pr-h0", 23.26, 373, 1559, 400, 15, 1.70);
+    heart("#pr-h1", 23.38, 653, 1234, 392, 24, 1.32);
+    heart("#pr-h2", 23.59, 810, 1424, 290, -35, 1.82);
+    heart("#pr-h3", 23.93, 801, 1485, 383, -24, 1.81);
+    heart("#pr-h4", 24.15, 859, 1397, 361, 39, 1.68);
+    heart("#pr-h5", 24.32, 417, 1418, 287, -5, 1.67);
+    heart("#pr-h6", 24.52, 492, 1478, 293, -32, 1.51);
+    heart("#pr-h7", 24.72, 508, 1422, 264, -1, 1.44);
+    window.__timelines["prod"] = tl;
+  })();
+  </script>
+</template>
