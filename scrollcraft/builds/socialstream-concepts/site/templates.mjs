@@ -176,7 +176,7 @@ const T = {
       ${tw('p', 'pg-name-p', C.name, 'data-r')}
     </div>
   </section>`,
-    mix.teamSec(), mix.stepsSec(), mix.whoSec(), mix.offerSec(),
+    mix.teamSec(pg.teamWhere), mix.stepsSec(), mix.whoSec(), mix.offerSec(),
   ]),
 
   audit: (pg, l) => { const tr = trail(pg), o = C.offer; return shell(pg, l, [

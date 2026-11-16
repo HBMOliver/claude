@@ -267,10 +267,11 @@ export const teamCards = () => `<div class="mx-team-grid">
           ${tx('p', 'mx-bio', pair(m.p))}
         </article>`).join('\n        ')}
       </div>`;
-export const teamSec = () => { const tm = C.team; return `  <!-- the team: each photo moves slowly in its frame, with the name and role on a pill over it -->
+// sub: an optional line under the heading (the About page's places); without it the section is as on the home page
+export const teamSec = (sub = null) => { const tm = C.team; return `  <!-- the team: each photo moves slowly in its frame, with the name and role on a pill over it -->
   <section class="mx-team" id="csapat" aria-labelledby="tm-h">
     <div class="wrap">
-      <div class="mx-head center">${tx('p', 'mx-eyebrow', tm.eyebrow, 'data-r')}${tx('h2', 'mx-h2', tm.h2, 'id="tm-h" data-r')}</div>
+      <div class="mx-head center">${tx('p', 'mx-eyebrow', tm.eyebrow, 'data-r')}${tx('h2', 'mx-h2', tm.h2, 'id="tm-h" data-r')}${sub ? tx('p', 'mx-sub', sub, 'data-r') : ''}</div>
       ${teamCards()}
     </div>
   </section>`; };

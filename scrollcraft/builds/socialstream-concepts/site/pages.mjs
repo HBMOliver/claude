@@ -144,8 +144,11 @@ export const PAGES = [
       'Since 2022 we have made the video, run the ads and measured what they bring in. A team of four in Tenerife and Budapest, with at most two new partners a month.'),
     crumb: p('Rólunk', 'About us'), nav: p('Rólunk', 'About us'),
     h1k: p('Rólunk', 'About us'), h1t: p('Interest media ügynökség, <em>2022 óta</em>.', 'An interest media agency <em>since 2022</em>.'),
-    lead: p('Mi gyártjuk a videót, mi futtatjuk a hirdetést, és mi mérjük, mit hozott. Olivér 2022-ben alapította a SocialStreamet; ma négyen dolgozunk Tenerifén és Budapesten, és havonta legfeljebb két új partnert vállalunk.',
-      'We make the video, we run the ads, and we measure what they bring in. Olivér founded SocialStream in 2022; today four of us work from Tenerife and Budapest, and we take on at most two new partners a month.'),
+    // Tenerife and Budapest stay off the first screen, as on the home page (the founder, 2026-11-16): they sit under the
+    // team's heading lower down (teamWhere)
+    lead: p('Mi gyártjuk a videót, mi futtatjuk a hirdetést, és mi mérjük, mit hozott. Olivér 2022-ben alapította a SocialStreamet; ma négyen vagyunk, és havonta legfeljebb két új partnert vállalunk.',
+      'We make the video, we run the ads, and we measure what they bring in. Olivér founded SocialStream in 2022; today there are four of us, and we take on at most two new partners a month.'),
+    teamWhere: p('Tenerifén és Budapesten dolgozunk.', 'We work from Tenerife and Budapest.'),
     // the one set of facts (the doc's AEO point 3), as figures; 300M+ Ft is €820K+ on the English page (content.mjs)
     facts: [
       { n: '2022', l: p('óta dolgozunk', 'the year we started') },

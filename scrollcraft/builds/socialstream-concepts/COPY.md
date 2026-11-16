@@ -108,7 +108,10 @@ New sentences worth a look (all in `site/pages.mjs`):
   and under its reels "Az Up To Youth az alapítónk saját szervezete." / "Up To Youth is our founder's own organisation."
 - About us: "Interest media ügynökség, *2022 óta*.", the facts as cards (2022 óta dolgozunk · 300M+ Ft kezelt
   hirdetési büdzsé · 4 ember a csapatban · 2 új partner havonta, legfeljebb), "A nevünk" over the claim and the
-  name's line (content.mjs).
+  name's line (content.mjs). The first paragraph ends "ma négyen vagyunk, és havonta legfeljebb két új partnert
+  vállalunk." / "today there are four of us, and we take on at most two new partners a month."; the places sit under
+  the team's heading: "Tenerifén és Budapesten dolgozunk." / "We work from Tenerife and Budapest." (the founder,
+  2026-11-16: off the first screen, as on the home page).
 - Contact: "Írj nekünk, *válaszolunk*." / "Write to us. *We'll reply.*"
 - Questions: the home page's eight (two reworded to stand alone: "Mennyi ideig tart az audit?", "Mi történik, miután
   elküldöm a jelentkezést?", "Mit kapok az audit végén?") and eleven new ones answered from the site's facts (the six
