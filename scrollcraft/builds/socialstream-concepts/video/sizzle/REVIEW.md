@@ -89,8 +89,8 @@ live.
 - *Looked at.* Stills from the projects at a phone's width (360 px) and at 540 px with the safe box drawn on
   them, every scene in both languages (`SPEC.md`, QA), and 40 frames from the two renders, with the wipes,
   the counts in mid-run and the hits. **Not watched at speed, not on a phone, not in the site's card.**
-- *Weakest shots.* (1) The hook's wall is four cards across instead of nine: FlyX's owner stands whole in the
-  card beside the middle one (in the wide frame he is half out of it), and he is in a phone again at 15 s. (2)
+- *Weakest shots.* (1) The hook's wall is four cards across instead of nine, so each card is nearly twice the
+  size (see "The upright wall without FlyX's owner", below). (2)
   "How" is quiet: two lines and a small ring in a tall night frame. (3) The numbers are 250-400 px where the
   wide cut has 440-580: the frame is narrower. (4) In the site's card (about 360 px) the eyebrows, the tags and
   the "Komment" labels are texture, not text.
@@ -98,7 +98,31 @@ live.
   wall without it, then the logo builds again. It reads as a restart, with the logo twice in five seconds; a
   softer join is to loop back to 3.2 s after the first play (`SPEC.md`). Not changed: that is the site's call.
 - Masters: `master-tall-hu.mp4` and `master-tall-en.mp4` in this folder (not in git); review copies
-  `drafts/sizzle-draft6c-upright-hu.mp4` and `-en.mp4`.
+  `drafts/sizzle-draft6c-upright-hu.mp4` and `-en.mp4` (the first render; `-draft6d-` after the change below).
+
+**The upright wall without FlyX's owner (same day).** A correction first. I wrote here, and told the founder and
+the site session, that in the wide frame FlyX's owner is "half out of it". That was wrong: I had taken the card
+under the middle one (s04, a landscape) for his, without looking at the cards. Looked at one by one, he hosts
+five of the wall's cards: the stills s01, s02 and s03, the playing w02 from its third second ("WATCH TILL THE
+END", then "DO FLY X", the frame it freezes on), and the last second of w03 ("ALL IN 30 MINUTES", also the frame
+it freezes on). In the wide cut the founder approved, w02 stands left of the middle card and s02 right of it,
+both whole, w03 is two thirds in the frame, s01 a quarter, and w02's frozen frame is one of the six cards in the
+"how" ring. So the wide cut shows him in more of the frame's cards than the upright one did; what the upright
+frame changes is their size.
+
+The site session asked for him to leave the upright wall (he is in a phone at 15 s, and `SPEC.md` bans a face
+in more than one world; the wall and the ring are collages of reels, which is why that ban had not been applied
+to them). Done in the upright cuts only: three stills of FlyX's cinema screen (s18 a sunset, s23 a helicopter,
+s27 a coast; nobody's face) stand where w02, s02 and s01 stood, so that wall plays ten reels, not eleven; and the
+edit suite (s21) takes w02's card in the ring. w03 stays: 5-8 % of that card is in the upright frame. Not
+considered: the Miskolc promo beside the middle (its presenter is already in the ring and in the productions),
+the smartwatch ad there (a black first second beside the logo), a Prof Enzo reel there (two beside each other).
+The wide cut is unchanged and still shows him in those cards: taking him out there means rendering the two wide
+masters again, which nobody has asked for.
+
+Measured: both new masters 1080 x 1920, 1485 frames, the same sound stream; against the first upright masters
+the picture differs only where the wall or the ring is on screen. Looked at: 0.0, 0.5, 1.2, 2.4, 3.6, 5.8, 7.9,
+9.0, 25.8, 53.4, 56.0 and 59.36 s from the project, and frames from the renders.
 
 **Weakest shots.** (1) The turn is one shot for four seconds: a breath after the hook, by design; if it reads as
 slow it can go back to one bar and the bar can go to 81× and 300M+. (2) 81× and 300M+ still pass in 2 s each.

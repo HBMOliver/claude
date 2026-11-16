@@ -313,6 +313,13 @@ def wall_map():
     rest = [(r, c) for r in range(ROWS) for c in range(COLS) if (r, c) not in m]
     for k, rc in enumerate(rest):
         m[rc] = STILL[(k * 5 + 2) % len(STILL)]
+    if TALL:
+        # The upright frame is four cards across, so the cards round the middle are large. FlyX's owner hosts three of
+        # them (the playing w02 from its third second, left of the middle; s02 right of it; s01 above), and he is in a
+        # phone at 15 s. In the upright wall three stills of FlyX's cinema screen stand there instead (a sunset, a
+        # helicopter, a coast: nobody's face), so that wall has ten playing reels, not eleven. (The wide wall, nine
+        # cards across, keeps its cards.)
+        m.update({(2, 3): "s18", (2, 5): "s23", (1, 6): "s27"})
     return m
 
 
@@ -582,9 +589,10 @@ def scene_how(s, e):
         return [(W / 2 + rx * math.cos(a0 + i * 2 * math.pi / n) - w / 2, H / 2 + ry * math.sin(a0 + i * 2 * math.pi / n) - h / 2) for i in range(n)]
 
     # each ring's first angle and radii: wide around the phrase, or (upright) above and below it
+    RING0 = "s21" if TALL else "w02"                       # upright: the edit suite where FlyX's owner stood (see wall_map)
     R = ((math.pi / 6, 390, 640), (0.9, 300, 450), (0.9, 290, 450)) if TALL else ((0.42, 740, 360), (0.85, 700, 350), (0.3, 700, 350))
     g0 = "".join(f'<div class="card mini g0" style="left:{x:.0f}px;top:{y:.0f}px;width:170px;height:302px;transform:rotate({(-7, 5, -4, 8, -6, 4)[i]}deg)">'
-                 f'<img src="assets/wall/{t}.jpg" alt=""></div>' for i, ((x, y), t) in enumerate(zip(ring(6, R[0][0], 170, 302, R[0][1], R[0][2]), ["w02", "w04", "w07", "w15", "w09", "w10"])))
+                 f'<img src="assets/wall/{t}.jpg" alt=""></div>' for i, ((x, y), t) in enumerate(zip(ring(6, R[0][0], 170, 302, R[0][1], R[0][2]), [RING0, "w04", "w07", "w15", "w09", "w10"])))
     g1 = "".join(f'<div class="tag g1" style="left:{x:.0f}px;top:{y:.0f}px">{t}</div>' for (x, y), t in zip(ring(4, R[1][0], 230, 92, R[1][1], R[1][2]), ["Meta", "TikTok", "Google", "Reels"]))
     g2 = "".join(f'<div class="chip g2" style="left:{x:.0f}px;top:{y:.0f}px">{t}</div>' for (x, y), t in zip(ring(4, R[2][0], 270, 104, R[2][1], R[2][2]), TX["how_chips"]))
     html = (field("#05070f", ls) + g0 + g1 + g2

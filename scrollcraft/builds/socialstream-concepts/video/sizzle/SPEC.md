@@ -129,12 +129,12 @@ TYPE:    one phrase a line where the wide cut has one line: "Mégsem jönnek / a
 
 | Scene | Wide | Upright |
 |---|---|---|
-| The feed, the hook | the wall, nine cards across | the same wall and drift, about four cards across; the phrases at 150 and 104 px, the glow a wide ellipse |
+| The feed, the hook | the wall, nine cards across | the same wall and drift, about four cards across; the phrases at 150 and 104 px, the glow a wide ellipse; the three cards round the middle that FlyX's owner hosts (w02, s02, s01) are stills of FlyX's cinema screen here (s18, s23, s27) |
 | The turn | the cinema shot, full frame | its own 9:16 window on the 4K shot (`w-turn-t`: the middle head, the sunlit cliff; everyone from behind); the claim in three lines at the foot |
 | FlyX | the count left, three phones right, comments under the count | the count on top, the three phones fanned across the middle, the comments over their feet |
 | Prof Enzo | three reels the height of the frame, the number over them | a profile's grid, three by two (the six clips at once, each tile changing on the bar), the number over it, the four counts in a row under it |
 | Productions | polaroids five by three; five cards in a row | polaroids three by five; a collage, the smartwatch ad in the middle and four cards around it; the tags in two rows |
-| How | each phrase ringed left and right | each phrase in two lines, its ring above and below |
+| How | each phrase ringed left and right | each phrase in two lines, its ring above and below; the edit suite (s21) where the wide ring has FlyX's owner (w02) |
 | 79 M Ft | number left, hall right, days under | hall above, the number, the seven days in one row |
 | 81× | number left, coins right | the number, "1 Ft ↓", the 81 coins under it, "81 Ft" |
 | 23× | number, pill, watch at the side | number, pill, the watch below |
