@@ -24,22 +24,24 @@ const ARR = dir => `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="${dir <
 // ad, Prof Enzo, Sóskút, the Türkiye film; the founder has their consent), since 2026-11-16 two smartwatch ads the
 // founder found and cleared for the site, and a few of the FlyX and András reels.
 // Their captions are the clients' own, or words from the source: what is said in the clip, the film's own subtitles,
-// the spec ad's end lines laid over its shots (cut by tools/reels.py, see README). f1 and f4 hide on tablets (761-1080 px),
-// so those two are the old ones.
-const FLY = [['r-tr-smile', -1, 0.04], ['r-andras-1', -1, -0.03], ['r-uty', -1, 0.06], ['r-lv-sunset', 1, -0.04], ['r-flyx-1', 1, 0.05], ['r-miskolc', 1, 0.03]];
-const RAIL = ['r-lv-yellow', 'r-nike-1', 'r-flyx-2', 'r-watch-1', 'r-enzo-1', 'r-soskut', 'r-lv-hoodie', 'r-andras-2', 'r-nike-2', 'r-tr-friends', 'r-watch-2', 'r-enzo-2', 'r-flyx-3', 'r-lv-cap'];
+// the spec ad's end lines laid over its shots, and since 2026-11-16 event titles on Up To Youth's Latvia clips (cut by
+// tools/reels.py, see README). f1 and f4 hide on tablets (761-1080 px), so those two are the old ones. The two big ones on
+// top are the smartwatch creator's ad and Prof Enzo since 2026-11-16: the founder found the Türkiye close-up and the
+// Latvia sunset there not like ads or social content (the sunset went to the rail with an event title).
+const FLY = [['r-watch-1', -1, 0.04], ['r-andras-1', -1, -0.03], ['r-uty', -1, 0.06], ['r-enzo-2', 1, -0.04], ['r-flyx-1', 1, 0.05], ['r-miskolc', 1, 0.03]];
+const RAIL = ['r-lv-yellow', 'r-nike-1', 'r-flyx-2', 'r-lv-sunset', 'r-enzo-1', 'r-soskut', 'r-lv-hoodie', 'r-andras-2', 'r-nike-2', 'r-tr-friends', 'r-lv-cap', 'r-watch-2', 'r-flyx-3'];
 // whose post each reel is: [name, kind] with kind 0 = an account (its initial in a ring), 1 = a place (a pin),
 // 2 = no badge (the spec ads, which belong to no client, and the smartwatch ads, whose brand the site does not name:
 // whether it is the watch webshop of the results is not confirmed, and that client stays unnamed)
-const LV = { hu: 'Lettország', en: 'Latvia' };
 const WATCH_AD = { hu: 'Okosóra hirdetés', en: 'Smartwatch ad' };
 const WHO = {
   'r-uty': ['Up to Youth', 0], 'r-miskolc': ['Miskolc Plaza', 0], 'r-soskut': ['Bridle Up Hope', 0],
   'r-enzo-1': ['Prof Enzo', 0], 'r-enzo-2': ['Prof Enzo', 0], 'r-andras-1': ['Gyenis András', 0], 'r-andras-2': ['Gyenis András', 0],
   'r-flyx-1': ['FlyX Tenerife', 0], 'r-flyx-2': ['FlyX Tenerife', 0], 'r-flyx-3': ['FlyX Tenerife', 0],
-  // the Latvia clips were shot at Bernāti, south of Liepāja (their GPS), so they name the country
-  'r-lv-sunset': [LV, 1], 'r-lv-yellow': [LV, 1], 'r-lv-hoodie': [LV, 1], 'r-lv-cap': [LV, 1],
-  'r-tr-smile': ['Kemer', 1], 'r-tr-friends': ['Kemer', 1],
+  // the Latvia clips are Up To Youth's (their event at Bernāti, June 2025), and the Türkiye film (Kemer) is DELSAS's,
+  // the Democracy And Law Studies Association (instagram.com/delsas01): the founder, 2026-11-16
+  'r-lv-sunset': ['Up to Youth', 0], 'r-lv-yellow': ['Up to Youth', 0], 'r-lv-hoodie': ['Up to Youth', 0], 'r-lv-cap': ['Up to Youth', 0],
+  'r-tr-smile': ['DELSAS', 0], 'r-tr-friends': ['DELSAS', 0],
   'r-nike-1': [{ hu: 'Spec hirdetés', en: 'Spec ad' }, 2], 'r-nike-2': [{ hu: 'Spec hirdetés', en: 'Spec ad' }, 2],
   'r-watch-1': [WATCH_AD, 2], 'r-watch-2': [WATCH_AD, 2],
 };

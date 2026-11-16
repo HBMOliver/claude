@@ -58,8 +58,9 @@ The published pages are private until they are shared from their Share menu.
   - `[data-follow]` followers and magnetic buttons
   - the menu
   - the audit form
-- `reels.js` (Aurora Mix only, since 2026-11-15): Mix's 20 reels are short silent loops (`assets/r-*.mp4`, 360x640,
-  2.1-5.3 s, 3.2 MB together) over their posters (`assets/r-*.jpg`), with a reel's furniture in markup: a progress
+- `reels.js` (Aurora Mix only, since 2026-11-15): Mix's 19 reels (six around the statement, 13 in the rail) are short silent loops (`assets/r-*.mp4`, 360x640,
+  2.1-5.3 s, 3.0 MB together; since 2026-11-16 the two big ones by the statement are the smartwatch ad and Prof Enzo, and the
+  Latvia clips are Up To Youth's with event titles, the Türkiye film DELSAS's) over their posters (`assets/r-*.jpg`), with a reel's furniture in markup: a progress
   bar, the side icons, whose post it is. A clip loads and plays only while its card is on screen. With reduced motion
   or a data saver only the posters show.
 - `tools/reels.py`: cuts those clips and posters from the founder's footage (paths are local to the founder's Mac).

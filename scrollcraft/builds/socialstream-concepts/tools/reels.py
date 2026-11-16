@@ -5,8 +5,9 @@
 # The sources are the founder's own files on the founder's Mac, so the paths below only work there. FOOT is where the logo
 # session exported the Türkiye, Latvia and Sóskút clips from Photos (a scratch folder: re-export from Photos if it is
 # gone); ENZO holds Prof Enzo's TikToks 7664967202709294358 and 7662730135665315074 (yt-dlp, tiktok.com/@profenzohungary).
-# The Latvia captions are the words said in the clips (transcribed on the Mac with whisper-large-v3-turbo), the
-# Türkiye ones the film's own English subtitles, the Nike ones the spec ad's own end lines. The two smartwatch ads
+# The Latvia clips are Up To Youth's event videos (the founder, 2026-11-16: "make it look like its event videos not just
+# talking about someone"), so they carry event titles at the top instead of the speakers' words. The Türkiye ones carry
+# the film's own English subtitles, the Nike ones the spec ad's own end lines. The two smartwatch ads
 # (found by the founder on 2026-11-16, cleared for the site) are a creator's video, captioned with the creator's own
 # first words (transcribed the same way), and the V89 Valentine's ad, which keeps its own captions.
 import os, subprocess, sys, tempfile
@@ -26,14 +27,11 @@ BOLD = '/System/Library/Fonts/Supplemental/Arial Bold.ttf'
 # frame: 'v' = already vertical; a number = centre of a 9:16 crop of a wide frame; (w, h, x, y) = a fixed crop first
 R = {
     'r-uty':       (HOME + '/Downloads/copy_C6D41801-5C0E-404C-8A06-E036C9BCF8FE.MOV', 4.0, 4.0, 'v', 2.1, []),
-    'r-lv-sunset': (FOOT + '/latvia/IMG_1758.MOV', 8.0, 3.5, 'v', 1.0, []),
-    'r-lv-yellow': (FOOT + '/latvia/IMG_1686.MOV', 1.0, 5.3, 'v', 0.8, [
-        (0.0, 1.46, 'ROKAS IS A\nGREAT FRIEND', 'reel'), (1.46, 4.18, 'AND I THINK\nHIS PROJECT', 'reel'),
-        (4.18, 5.3, 'WILL BE REALLY\nSUCCESSFUL', 'reel')]),
-    'r-lv-hoodie': (FOOT + '/latvia/IMG_1692.MOV', 0.8, 2.7, 'v', 0.5, [
-        (0.0, 1.12, 'FIRST THING\nTHAT COMES', 'reel'), (1.12, 2.7, 'TO YOUR MIND\nABOUT ROKAS', 'reel')]),
-    'r-lv-cap':    (FOOT + '/latvia/IMG_1790.MOV', 0.0, 4.0, 'v', 0.7, [
-        (0.0, 1.46, 'FRIENDLY AND\nALWAYS', 'reel'), (1.46, 4.0, "ASK HOW\nI'M DOING", 'reel')]),
+    # Up To Youth's event in Latvia (June 2025, the Baltic coast at Bernāti): one title each, over the whole clip
+    'r-lv-sunset': (FOOT + '/latvia/IMG_1758.MOV', 8.0, 3.5, 'v', 1.0, [(0.0, 3.5, 'SUNSET ON THE\nBALTIC COAST', 'reel', 0.06)]),
+    'r-lv-yellow': (FOOT + '/latvia/IMG_1686.MOV', 1.0, 5.3, 'v', 0.8, [(0.0, 5.3, 'UP TO YOUTH\nIN LATVIA', 'reel', 0.06)]),
+    'r-lv-hoodie': (FOOT + '/latvia/IMG_1692.MOV', 0.8, 2.7, 'v', 0.5, [(0.0, 2.7, 'MEET THE\nPARTICIPANTS', 'reel', 0.06)]),
+    'r-lv-cap':    (FOOT + '/latvia/IMG_1790.MOV', 0.0, 4.0, 'v', 0.7, [(0.0, 4.0, 'WHAT HAPPENS\nAT UP TO YOUTH', 'reel', 0.06)]),
     'r-miskolc':   (BAL + '/05 Miskolc Plaza sakk promóció [h2ZJTq3HAO0].mp4', 0.0, 4.0, 'v', 2.69, []),
     'r-nike-1':    (BAL + '/02 Nike ad creative [zfiaI92RW4g].mp4', 22.5, 3.2, (480, 852, 720, 114), 1.8, [
         (0.0, 3.2, "NOBODY'S\nWATCHING.", 'ad')]),
