@@ -3,7 +3,7 @@
 // the real numbers; the film in a glass frame whose light follows the cursor; service cards with a light that
 // runs round their edge.
 import { C } from '../content.mjs';
-import { esc, tx, tw, pair, toSvc, btn, head, scripts, nav, claim, promise, ticks, film, rail, tickerItems, count, form, offerCopy, faqList, footer } from '../parts.mjs';
+import { esc, tx, tw, pair, toSvc, btn, head, scripts, nav, claim, promise, ticks, film, rail, tickerItems, count, figure, form, offerCopy, faqList, footer } from '../parts.mjs';
 
 export function page() {
   const s = C.services, r = C.results, w = C.who, st = C.steps, v = C.voices, t = C.team, p = C.problem, cp = C.compare;
@@ -29,7 +29,7 @@ export function page() {
       <div class="au-glass" aria-hidden="true">
         ${glass.map((it, i) => `<div class="au-g g${i}" data-follow data-k="${[0.045, 0.08, 0.03][i]}"><div class="bob">
           <img src="assets/${it.obj}.webp" alt="" width="400" height="400">
-          <p class="n num">${it.n}<small>${esc(it.unit)}</small></p>
+          <p class="n num">${figure(it.n, it.unit, it.en)}</p>
           <p class="who" data-en="${esc(it.who[1])}">${esc(it.who[0])}</p>
         </div></div>`).join('\n        ')}
       </div>
@@ -112,7 +112,7 @@ export function page() {
       <div class="au-stats">
         ${r.items.map((it, i) => `<article class="au-card au-stat" data-r style="--d:${i}">
           <img class="bob" style="--dur:${6.4 + i * 0.5}s;--delay:-${i * 1.2}s;--amp:-9px" src="assets/${it.obj}.webp" alt="" width="400" height="400" loading="lazy">
-          <p class="n num">${count(it.n, it.unit)}</p>
+          <p class="n num">${count(it.n, it.unit, it.en)}</p>
           ${tx('p', 'who', pair(it.who))}
           ${tx('p', 'd', pair(it.p))}
         </article>`).join('\n        ')}

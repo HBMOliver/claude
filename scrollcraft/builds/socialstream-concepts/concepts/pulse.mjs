@@ -48,9 +48,9 @@ export function page() {
       <div class="p-f f4"><div class="bob">${reel(C.reels.all[19])}</div></div>
     </div>
     <div class="wrap">
-      <p class="p-statement" data-lit><span data-l="hu">${esc(C.lead1.hu)} A SocialStream egy kézben tartja a kreatívot, a kampányt és a landing oldalt, hogy minden forint a bevételt szolgálja.</span><span data-l="en">${esc(C.lead1.en)} SocialStream keeps the creative, the campaign and the landing page in one pair of hands, so every forint works toward revenue.</span></p>
+      <p class="p-statement" data-lit><span data-l="hu">${esc(C.lead1.hu)} A SocialStream egy kézben tartja a kreatívot, a kampányt és a landing oldalt, hogy minden forint a bevételt szolgálja.</span><span data-l="en">${esc(C.lead1.en)} SocialStream keeps the creative, the campaign and the landing page in one pair of hands, so every euro works toward revenue.</span></p>
       <div class="p-facts" data-r>
-        <span><b class="num">300M+ Ft</b> <span data-en="budget managed since 2022">kezelt büdzsé 2022 óta</span></span>
+        <span><b class="num" data-en="€820K+">300M+ Ft</b> <span data-en="budget managed since 2022">kezelt büdzsé 2022 óta</span></span>
         ${tx('span', '', C.final.small)}
       </div>
     </div>
@@ -105,7 +105,7 @@ export function page() {
       <div class="p-stats">
         ${r.items.map((it, i) => `<article class="p-stat" data-r style="--d:${i}">
           <img class="p-stat-obj bob" style="--dur:${6 + i * 0.6}s;--delay:-${i * 1.3}s" src="assets/${it.obj}.webp" alt="" width="400" height="400" loading="lazy">
-          <p class="n num">${count(it.n, it.unit)}</p>
+          <p class="n num">${count(it.n, it.unit, it.en)}</p>
           ${tx('p', 'who', pair(it.who))}
           ${tx('p', 'd', pair(it.p))}
         </article>`).join('\n        ')}

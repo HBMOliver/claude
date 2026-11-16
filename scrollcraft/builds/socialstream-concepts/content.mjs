@@ -21,7 +21,7 @@ export const C = {
   promise: { hu: ['Videók, amiket végignéznek.', 'Hirdetések, amik megtérülnek.'], en: ['Videos people watch to the end.', 'Ads that pay off.'] },
   lead: {
     hu: '<strong>Mi gyártjuk a videót, mi futtatjuk a hirdetést, és mi mérjük, mit hozott.</strong> A SocialStream egy kézben tartja a kreatívot, a kampányt és a landing oldalt, hogy minden forint a bevételt szolgálja.',
-    en: '<strong>We make the video, we run the ads, and we measure what they bring in.</strong> SocialStream keeps the creative, the campaign and the landing page in one pair of hands, so every forint works toward revenue.',
+    en: '<strong>We make the video, we run the ads, and we measure what they bring in.</strong> SocialStream keeps the creative, the campaign and the landing page in one pair of hands, so every euro works toward revenue.',
   },
   lead1: { hu: 'Mi gyártjuk a videót, mi futtatjuk a hirdetést, és mi mérjük, mit hozott.', en: 'We make the video, we run the ads, and we measure what they bring in.' },
   cta: { hu: 'Kérem az ingyenes auditot', en: 'Get my free audit' },
@@ -35,7 +35,7 @@ export const C = {
     eyebrow: { hu: '2022 óta', en: 'Since 2022' },
     h2: { hu: 'Ennyi hirdetési pénzről döntöttünk eddig.', en: 'This much ad money has passed through our hands.' },
     label: { hu: 'Kezelt büdzsé', en: 'Budget managed' },
-    line: { hu: 'Minden forintnál ugyanazt kérdezzük: mit hoz vissza?', en: 'With every forint we ask the same question: what does it bring back?' },
+    line: { hu: 'Minden forintnál ugyanazt kérdezzük: mit hoz vissza?', en: 'With every euro we ask the same question: what does it bring back?' },
   },
 
   problem: {
@@ -84,8 +84,8 @@ export const C = {
     lead: { hu: 'Akkor vagyunk jó választás, ha a vállalkozásod stabil bevételt termel, hosszú távon gondolkodsz, és befektetésnek látod a marketinget.', en: 'We are a good fit if your business has steady revenue, you think long term and you see marketing as an investment.' },
     cards: [
       { img: 'a-shop', hu: ['Webshopok', 'Vásárlások Google és Meta kampányokból. A legjobb e-commerce eredményünk: <b>81× ROAS</b> egy ajtó webshopnál.'], en: ['Webshops', 'Sales from Google and Meta campaigns. Our best e-commerce result: <b>81× ROAS</b> for a door webshop.'] },
-      { img: 'a-b2b', hu: ['B2B szolgáltatók', 'Ajánlatkérések ott is, ahol „a Facebook nem működik”. Egy csarnoképítő ügyfélnek <b>79M Ft</b> bevétel egy hét alatt.'], en: ['B2B companies', 'Quote requests even where “Facebook doesn’t work”. <b>79M Ft</b> of revenue in one week for an industrial hall builder.'] },
-      { img: 'a-events', hu: ['Webinárok és események', 'Jelentkezők alacsony költséggel: egy egészségügyi webinárnál <b>105 Ft</b> volt egy jelentkező.'], en: ['Webinars and events', 'Sign-ups at a low cost: <b>105 Ft</b> per registrant for a healthcare webinar.'] },
+      { img: 'a-b2b', hu: ['B2B szolgáltatók', 'Ajánlatkérések ott is, ahol „a Facebook nem működik”. Egy csarnoképítő ügyfélnek <b>79M Ft</b> bevétel egy hét alatt.'], en: ['B2B companies', 'Quote requests even where “Facebook doesn’t work”. <b>€216K</b> of revenue in one week for an industrial hall builder.'] },
+      { img: 'a-events', hu: ['Webinárok és események', 'Jelentkezők alacsony költséggel: egy egészségügyi webinárnál <b>105 Ft</b> volt egy jelentkező.'], en: ['Webinars and events', 'Sign-ups at a low cost: <b>€0.29</b> per registrant for a healthcare webinar.'] },
       { img: 'a-local', hu: ['Helyi szolgáltatók és élményprogramok', 'Szépségszalontól a tenerifei élményprogramig: videó, social és hirdetés egy csapattól.'], en: ['Local services and experiences', 'From beauty salons to experiences on Tenerife: video, social and ads from one team.'] },
     ],
     notfor: { hu: 'Nem neked való, ha egy éjszaka alatti sikert vagy olcsó félmegoldást keresel.', en: 'Not for you if you are after overnight success or a cheap half-measure.' },
@@ -116,24 +116,27 @@ export const C = {
     ],
   },
 
+  // The English page shows money in euros, the English film's figures (video/sizzle/build.py TEXT["en"]): forints at the
+  // ECB rate of 13 November 2026, 365.6 Ft to the euro, revenue and budget rounded down, costs rounded up: 79M Ft = €216K,
+  // over 8M Ft = over €21K, 300M+ Ft = €820K+, 600K Ft = €1,650, 105 Ft = €0.29, 1 Ft to 81 Ft = €1 to €81 (founder, 2026-11-16)
   results: {
     eyebrow: { hu: 'Valódi ügyfelek · valódi számok', en: 'Real clients · real numbers' },
     h2: { hu: 'Számok, amiket az ügyfeleinknek hoztunk.', en: 'Numbers we brought our clients.' },
     items: [
-      { obj: 'o-door', n: 81, unit: '× ROAS', who: ['Ajtó webshop · Google Performance Max', 'Door webshop · Google Performance Max'], p: ['1 forint hirdetésből 81 forint bevétel.', '81 forints of revenue for every forint of ads.'] },
-      { obj: 'o-hall', n: 79, unit: 'M Ft', who: ['Csarnoképítő ügyfél · Meta', 'Industrial hall builder · Meta'], p: ['Bevétel egy hét alatt, egy B2B kampányból.', 'Revenue in one week, from one B2B campaign.'] },
-      { obj: 'o-watch', n: 23, unit: '× ROAS', who: ['Karóra webshop · Karácsony', 'Watch webshop · Christmas'], p: ['Ünnepi kampány, több mint 8M Ft bevétellel.', 'A holiday campaign with over 8M Ft in revenue.'] },
-      { obj: 'o-webinar', n: 105, unit: 'Ft', who: ['Egészségügyi webinár', 'Healthcare webinar'], p: ['Ennyibe került egy jelentkező: körülbelül 5700 jelentkező 600K Ft-ból.', 'The cost of one registrant: about 5,700 registrants from 600K Ft.'] },
+      { obj: 'o-door', n: 81, unit: '× ROAS', who: ['Ajtó webshop · Google Performance Max', 'Door webshop · Google Performance Max'], p: ['1 forint hirdetésből 81 forint bevétel.', '€81 of revenue for every €1 of ads.'] },
+      { obj: 'o-hall', n: 79, unit: 'M Ft', en: { pre: '€', n: 216, unit: 'K' }, who: ['Csarnoképítő ügyfél · Meta', 'Industrial hall builder · Meta'], p: ['Bevétel egy hét alatt, egy B2B kampányból.', 'Revenue in one week, from one B2B campaign.'] },
+      { obj: 'o-watch', n: 23, unit: '× ROAS', who: ['Karóra webshop · Karácsony', 'Watch webshop · Christmas'], p: ['Ünnepi kampány, több mint 8M Ft bevétellel.', 'A holiday campaign with over €21K in revenue.'] },
+      { obj: 'o-webinar', n: 105, unit: 'Ft', en: { pre: '€', n: 0.29, unit: '' }, who: ['Egészségügyi webinár', 'Healthcare webinar'], p: ['Ennyibe került egy jelentkező: körülbelül 5700 jelentkező 600K Ft-ból.', 'The cost of one registrant: about 5,700 registrants from €1,650.'] },
     ],
     cta: { hu: 'Ilyen számokat szeretnék', en: 'I want numbers like these' },
   },
   // a running band of the same real numbers, word for word from the results above
   ticker: [
     { hu: '81× ROAS · Ajtó webshop', en: '81× ROAS · Door webshop' },
-    { hu: '79M Ft bevétel egy hét alatt · B2B', en: '79M Ft of revenue in one week · B2B' },
+    { hu: '79M Ft bevétel egy hét alatt · B2B', en: '€216K of revenue in one week · B2B' },
     { hu: '23× ROAS · Karóra webshop, karácsony', en: '23× ROAS · Watch webshop, Christmas' },
-    { hu: '105 Ft egy jelentkező · Egészségügyi webinár', en: '105 Ft per registrant · Healthcare webinar' },
-    { hu: '300M+ Ft kezelt büdzsé 2022 óta', en: '300M+ Ft budget managed since 2022' },
+    { hu: '105 Ft egy jelentkező · Egészségügyi webinár', en: '€0.29 per registrant · Healthcare webinar' },
+    { hu: '300M+ Ft kezelt büdzsé 2022 óta', en: '€820K+ budget managed since 2022' },
   ],
   // service and platform words for the running tag bands (all from the services and the steps)
   tags: [
@@ -159,9 +162,9 @@ export const C = {
     pull: { hu: '„Már az induláskor is volt vásárlás – olyan számokat produkált, amit eddig nem is láttunk.”', en: '“There were purchases from launch day, and he produced numbers we had never seen before.”', who: 'Péter · Hoofbútor' },
     quotes: [
       { hu: '„Egyszer már leállítottuk a Facebook hirdetéseinket, mert egyszerűen nem érte meg. Miután megismertük Olivért, adtunk egy újabb esélyt. Már az induláskor is volt vásárlás – olyan számokat produkált, amit eddig nem is láttunk.”', en: '“We had already switched off our Facebook ads once because they simply weren’t worth it. After meeting Olivér we gave it another chance. There were purchases from launch day, and he produced numbers we had never seen before.”', who: ['Péter · Hoofbútor', 'Péter · Hoofbútor'] },
-      { hu: '„Azt hittük, a Facebook a fiataloknak és a webshopoknak való – mi csarnokot építünk. Aztán egy hét alatt annyi ajánlatkérésünk lett, mint korábban fél év alatt összesen.”', en: '“We thought Facebook was for young people and webshops; we build industrial halls. Then in one week we got as many quote requests as we used to get in half a year.”', who: ['Csarnoképítő ügyfél · B2B', 'Hall-building client · B2B'], metric: { n: '79M Ft', hu: 'bevétel egy hét alatt', en: 'revenue in one week' } },
+      { hu: '„Azt hittük, a Facebook a fiataloknak és a webshopoknak való – mi csarnokot építünk. Aztán egy hét alatt annyi ajánlatkérésünk lett, mint korábban fél év alatt összesen.”', en: '“We thought Facebook was for young people and webshops; we build industrial halls. Then in one week we got as many quote requests as we used to get in half a year.”', who: ['Csarnoképítő ügyfél · B2B', 'Hall-building client · B2B'], metric: { n: '79M Ft', n_en: '€216K', hu: 'bevétel egy hét alatt', en: 'revenue in one week' } },
       { hu: '„Minden decemberben rettegtünk a hirdetési áraktól. Idén először éreztük úgy, hogy az ünnepi szezon nekünk dolgozik – nem ellenünk.”', en: '“Every December we dreaded ad prices. This year, for the first time, the holiday season felt like it was working for us, not against us.”', who: ['Karóra webshop', 'Watch webshop'], metric: { n: '23× ROAS', hu: 'ünnepi kampány', en: 'holiday campaign' } },
-      { hu: '„Pár száz jelentkezőre számítottunk a webinárra. Amikor a számláló majdnem 5700-nál állt meg, alig hittük el, hogy ez ugyanabból a büdzséből jött ki.”', en: '“We expected a few hundred registrants for the webinar. When the counter stopped at almost 5,700, we could hardly believe it came from the same budget.”', who: ['Egészségügyi szolgáltató', 'Healthcare provider'], metric: { n: '105 Ft', hu: 'egy jelentkező', en: 'per registrant' } },
+      { hu: '„Pár száz jelentkezőre számítottunk a webinárra. Amikor a számláló majdnem 5700-nál állt meg, alig hittük el, hogy ez ugyanabból a büdzséből jött ki.”', en: '“We expected a few hundred registrants for the webinar. When the counter stopped at almost 5,700, we could hardly believe it came from the same budget.”', who: ['Egészségügyi szolgáltató', 'Healthcare provider'], metric: { n: '105 Ft', n_en: '€0.29', hu: 'egy jelentkező', en: 'per registrant' } },
       { hu: '„Profi csapatot szerettem volna az indulás után. Mind Facebook/Instagram, mind weboldal és hirdetés területén profi kampányokat készítenek. Rövid időn belül jöttek az eredmények – nekem semmi dolgom nem volt velük.”', en: '“I wanted a professional team after launch. They build professional campaigns across Facebook/Instagram, the website and ads. Results came quickly, and I had nothing to do.”', who: ['Rita · Rita’s Beauty Corner', 'Rita · Rita’s Beauty Corner'] },
       { hu: '„A Social Stream profi módon készítette el a weboldalam. Mindenkinek tetszett az igényes és könnyen áttekinthető tartalom! Csak ajánlani tudom őket.”', en: '“Social Stream built my website professionally. Everyone loved the polished, easy-to-follow content! I can only recommend them.”', who: ['János · EJ Massage Therapies', 'János · EJ Massage Therapies'] },
     ],

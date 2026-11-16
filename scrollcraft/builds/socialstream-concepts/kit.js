@@ -20,9 +20,11 @@
 
   /* ---------------- numbers count up the first time they are seen ---------------- */
   $$('[data-count]').forEach(function (el) {
-    var to = +el.dataset.count, done = false, holder = el.closest('[data-r]') || el;
+    var to = +el.dataset.count, done = false, holder = el.closest('[data-r]') || el, prev = holder._count;
     function show(n) { el.textContent = SS.fmtN(n); }
+    // one holder may carry two figures (the Hungarian one and the English page's euros): both count when it arrives
     holder._count = function () {
+      if (prev) prev();
       if (done) return; done = true;
       if (reduce) { show(to); return; }
       var t0 = performance.now(), dur = to > 1000 ? 1900 : 1300;

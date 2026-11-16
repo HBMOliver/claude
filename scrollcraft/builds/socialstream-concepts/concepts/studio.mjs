@@ -39,7 +39,7 @@ export function page() {
       </div>
     </div>
     <ul class="wrap st-trust" data-r>
-      <li><b class="num">300M+ Ft</b> <span data-en="budget managed since 2022">kezelt büdzsé 2022 óta</span></li>
+      <li><b class="num" data-en="€820K+">300M+ Ft</b> <span data-en="budget managed since 2022">kezelt büdzsé 2022 óta</span></li>
       ${tx('li', '', C.final.small)}
       <li><span data-en="Meta, TikTok and Google">Meta, TikTok és Google</span></li>
     </ul>
@@ -68,7 +68,7 @@ export function page() {
       <div class="st-res-grid" id="eredmenyek">
         ${r.items.map((it, i) => `<article class="st-card st-res-card" data-r style="--d:${i}">
           <img class="bob" style="--dur:${6 + i * 0.5}s;--delay:-${i}s;--amp:-10px" src="assets/${it.obj}.webp" alt="" width="400" height="400" loading="lazy">
-          <p class="n num">${count(it.n, it.unit)}</p>
+          <p class="n num">${count(it.n, it.unit, it.en)}</p>
           ${tx('p', 'who', pair(it.who))}
           ${tx('p', 'd', pair(it.p))}
         </article>`).join('\n        ')}
@@ -132,7 +132,7 @@ export function page() {
       <div class="st-head center">${tx('p', 'st-eyebrow', v.eyebrow, 'data-r')}${tw('h2', 'st-h2', v.h2, 'id="vo-h" data-r')}</div>
       <div class="st-wall">
         ${v.quotes.map((q, i) => `<figure class="st-card st-q" data-r style="--d:${i % 3}">
-          ${q.metric ? `<p class="st-metric"><b class="num">${esc(q.metric.n)}</b> <span data-en="${esc(q.metric.en)}">${esc(q.metric.hu)}</span></p>` : `<p class="st-quote-mark" aria-hidden="true">„</p>`}
+          ${q.metric ? `<p class="st-metric"><b class="num"${q.metric.n_en ? ` data-en="${esc(q.metric.n_en)}"` : ''}>${esc(q.metric.n)}</b> <span data-en="${esc(q.metric.en)}">${esc(q.metric.hu)}</span></p>` : `<p class="st-quote-mark" aria-hidden="true">„</p>`}
           <blockquote data-en="${esc(q.en)}">${esc(q.hu)}</blockquote>
           <figcaption><i aria-hidden="true">${esc(q.who[0].charAt(0))}</i><span data-en="${esc(q.who[1])}">${esc(q.who[0])}</span></figcaption>
         </figure>`).join('\n        ')}

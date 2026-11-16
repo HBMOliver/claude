@@ -11,6 +11,8 @@
 [hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 96px; }
 html[lang="en"] [data-l="hu"], html:not([lang="en"]) [data-l="en"] { display: none !important; }
+/* a currency sign before a figure (the English page's euros), set like the unit after it */
+html .n small.pre { margin-left: 0; margin-right: 0.04em; }
 body { margin: 0; background: var(--bg); color: var(--fg); font: 400 17px/1.6 var(--font-b); -webkit-font-smoothing: antialiased; overflow-x: clip; }
 img, video { display: block; max-width: 100%; height: auto; }
 a { color: inherit; }

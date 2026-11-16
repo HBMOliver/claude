@@ -104,7 +104,7 @@ export function page() {
     </div>
     <div class="wrap">
       <h2 class="mx-statement" id="say-h" data-lit><span data-l="hu">${esc(C.lead1.hu)}</span><span data-l="en">${esc(C.lead1.en)}</span></h2>
-      <p class="mx-facts" data-r><span><b class="num">300M+ Ft</b> <span data-en="budget managed since 2022">kezelt büdzsé 2022 óta</span></span>${tx('span', '', C.final.small)}</p>
+      <p class="mx-facts" data-r><span><b class="num" data-en="€820K+">300M+ Ft</b> <span data-en="budget managed since 2022">kezelt büdzsé 2022 óta</span></span>${tx('span', '', C.final.small)}</p>
     </div>
   </section>
 
@@ -166,7 +166,7 @@ export function page() {
       <div class="mx-stats">
         ${r.items.map((it, i) => `<article class="mx-card mx-stat" data-r style="--d:${i}">
           <img class="bob" style="--dur:${6.2 + i * 0.5}s;--delay:-${i * 1.2}s;--amp:-10px" src="assets/${it.obj}-mix.webp" alt="" width="400" height="400" loading="lazy">
-          <p class="n num">${count(it.n, it.unit)}</p>
+          <p class="n num">${count(it.n, it.unit, it.en)}</p>
           ${tx('p', 'who', pair(it.who))}
           ${tx('p', 'd', pair(it.p))}
         </article>`).join('\n        ')}
@@ -242,7 +242,7 @@ export function page() {
     </div>
     <div class="mx-row" data-row tabindex="0" role="group" aria-labelledby="vo-h">
       ${v.quotes.map((q, i) => `<figure class="mx-card mx-q${i === 0 ? ' hot' : ''}">
-        ${q.metric ? `<p class="mx-metric"><b class="num">${esc(q.metric.n)}</b> <span data-en="${esc(q.metric.en)}">${esc(q.metric.hu)}</span></p>` : ''}
+        ${q.metric ? `<p class="mx-metric"><b class="num"${q.metric.n_en ? ` data-en="${esc(q.metric.n_en)}"` : ''}>${esc(q.metric.n)}</b> <span data-en="${esc(q.metric.en)}">${esc(q.metric.hu)}</span></p>` : ''}
         <blockquote data-en="${esc(q.en)}">${esc(q.hu)}</blockquote>
         <figcaption><i aria-hidden="true">${esc(q.who[0].charAt(0))}</i><span data-en="${esc(q.who[1])}">${esc(q.who[0])}</span></figcaption>
       </figure>`).join('\n      ')}

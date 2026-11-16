@@ -94,7 +94,7 @@ export function page() {
         ${r.items.map((it, i) => `<article class="pr-case c${i}" style="--i:${i}">
           <div class="pr-case-t">
             ${tx('p', 'who', pair(it.who))}
-            <p class="n num" data-r>${count(it.n, it.unit)}</p>
+            <p class="n num" data-r>${count(it.n, it.unit, it.en)}</p>
             ${tx('p', 'd', pair(it.p))}
           </div>
           <img class="pr-case-obj bob" style="--dur:${6.5 + i * 0.5}s;--delay:-${i}s" src="assets/${it.obj}.webp" alt="" width="400" height="400" loading="lazy">

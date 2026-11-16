@@ -91,7 +91,13 @@ export const rail = (inner, cls = '', dir = 1, speed = 40) => `<div class="rail 
 export const tagItems = (cls = 'tag') => C.tags.map(([hu, en]) => `<span class="${cls}" data-en="${esc(en)}">${esc(hu)}</span>`).join('');
 export const tickerItems = (cls = 'tk') => C.ticker.map(t => `<span class="${cls}" data-en="${esc(t.en)}">${esc(t.hu)}</span>`).join('');
 
-export const count = (n, unit = '') => `<span data-count="${n}">${n}</span>${unit ? `<small>${esc(unit)}</small>` : ''}`;
+// a figure with its unit: `count` counts it up the first time it is seen (a figure with decimals stands still), `figure`
+// shows it as it is. Where a figure is money, `en` gives the English page its own in euros, the English film's figures
+// (content.mjs, results): { pre: '€', n, unit }
+const fig = (n, unit, pre, counted) => `${pre ? `<small class="pre">${esc(pre)}</small>` : ''}${counted && Number.isInteger(n) ? `<span data-count="${n}">${n}</span>` : `<span>${n}</span>`}${unit ? `<small>${esc(unit)}</small>` : ''}`;
+const both = (n, unit, en, counted) => en ? `<span data-l="hu">${fig(n, unit, '', counted)}</span><span data-l="en">${fig(en.n, en.unit, en.pre, counted)}</span>` : fig(n, unit, '', counted);
+export const count = (n, unit = '', en = null) => both(n, unit, en, true);
+export const figure = (n, unit = '', en = null) => both(n, unit, en, false);
 
 // the audit form, exactly as on Daylight (same fields, ids and words); kit.js runs it
 export function form(cls = 'app') {
