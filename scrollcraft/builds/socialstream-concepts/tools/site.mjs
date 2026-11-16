@@ -23,10 +23,11 @@
 // (60 MB, 1,500 files).
 import fs from 'node:fs';
 import path from 'node:path';
-import { PAGES, ORIGIN, url } from '../site/pages.mjs';
+import { PAGES, ORIGIN, url, IS_DRAFTS } from '../site/pages.mjs';
 import { renderPage } from '../site/templates.mjs';
 
-const OUT = 'dist/site';
+// SS_DRAFTS=1 also builds the draft pages (site/pages.mjs), into their own folder, never into the one that is uploaded
+const OUT = IS_DRAFTS ? 'dist/site-drafts' : 'dist/site';
 const OG = 'assets/og-image.jpg';
 const FILM = ['hero-1080', 'hero-v-720'].flatMap(n => [`assets/${n}.mp4`, `assets/${n}-en.mp4`]);
 const LIMIT_MB = 60, LIMIT_FILES = 1500;
@@ -96,8 +97,10 @@ ${pages.map(({ pg, l }) => `  <url>
 // llms.txt: the doc's draft (facts from the site only), with the pages' own addresses in both languages
 const page = id => PAGES.find(pg => pg.id === id);
 const plain = s => String(s).replace(/<[^>]+>/g, '');
-const link = (id, l) => `- [${plain(page(id).crumb[l])}](${url(page(id), l)})`;
-const ids = ['services', ...PAGES.filter(pg => pg.type === 'service').map(pg => pg.id), 'about', 'audit', 'faq', 'contact'];
+const link = (id, l) => `- [${plain(page(id).crumb[l])}${page(id).type === 'case' ? (l === 'en' ? ' (case study)' : ' (esettanulmány)') : ''}](${url(page(id), l)})`;
+const ids = ['services', ...PAGES.filter(pg => pg.type === 'service').map(pg => pg.id), 'cases', ...PAGES.filter(pg => pg.type === 'case').map(pg => pg.id), 'about', 'audit', 'faq', 'contact'];
+const unlisted = PAGES.filter(pg => !ids.includes(pg.id) && pg.id !== 'home').map(pg => pg.id);
+if (unlisted.length) throw new Error('llms.txt does not list ' + unlisted.join(', '));
 fs.writeFileSync(OUT + '/llms.txt', `# SocialStream
 
 > Interest media agency: we make the video, run the ads on Meta, TikTok and Google,

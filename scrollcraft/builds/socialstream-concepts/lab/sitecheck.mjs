@@ -73,6 +73,13 @@ for (const pg of pages) {
     ok(pg.path + ' FAQ data has every question shown', fq && fq.mainEntity.length === shownQ && shownQ > 8, (fq && fq.mainEntity.length) + ' vs ' + shownQ);
   }
   if (/\/(rolunk|about)\/$/.test(pg.path)) ok(pg.path + ' the team as people', g.filter(n => n['@type'] === 'Person').length === 4);
+  // case studies: the hub lists every case as a link; a case sits under the hub and shows its number on its first screen
+  if (/\/(esettanulmanyok|case-studies)\/$/.test(pg.path)) ok(pg.path + ' the case studies as a collection, each case linked', !!node('CollectionPage') && (html.match(/<a class="mx-card mx-stat pg-case" href="/g) || []).length >= 4);
+  if (/\/(esettanulmanyok|case-studies)\/[^/]+\/$/.test(pg.path)) {
+    const bc = node('BreadcrumbList');
+    ok(pg.path + ' a case under the case studies', bc && bc.itemListElement.length === 3 && /\/(esettanulmanyok|case-studies)\/$/.test(bc.itemListElement[1].item), JSON.stringify(bc && bc.itemListElement.map(i => i.item)));
+    ok(pg.path + ' the case shows its number on its first screen', /<div class="pg-case-art">\s*<article class="mx-card mx-stat pg-case[^"]*"[^>]*>[\s\S]*?<p class="n num">/.test(html));
+  }
   // every link inside the site goes somewhere that exists
   for (const m of html.matchAll(/href="(\/[^"]*)"/g)) {
     const [p, frag] = m[1].split('#'), target = p.endsWith('/') ? p.slice(1) + 'index.html' : p.slice(1);
@@ -155,3 +162,5 @@ ok('404 heading', nf.h1 === 'Ez az oldal nem létezik.'); ok('404 logo loads', n
 if (process.env.SHOTS) await p.screenshot({ path: path.join(process.env.SHOTS, '404-phone.png') });
 await b.close();
 console.log(`${files.length} files fetched, ${pages.length} pages, ${checks} checks; ${fails ? fails + ' FAILED' : 'all site checks passed'}`);
+// a failure fails the run, as the static pass does (before 2026-11-16 the browser pass always ended with 0)
+process.exitCode = fails ? 1 : 0;

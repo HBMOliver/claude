@@ -28,7 +28,8 @@ function graph(pg, l) {
     email: 'hello@socialstream.hu', description: home.desc[l], slogan: CLAIM[l], foundingDate: '2022',
     founder: { '@type': 'Person', name: 'Olivér', jobTitle: C.team.people[0].role[l === 'en' ? 1 : 0] } };
   const site = { '@type': 'WebSite', '@id': SITE, url: ORIGIN + '/', name: 'SocialStream', inLanguage: ['hu', 'en'], publisher: { '@id': ORG } };
-  const type = { about: 'AboutPage', contact: 'ContactPage', faq: 'FAQPage' }[pg.type] || 'WebPage';
+  // a case stays a WebPage (not an Article) until it has its story and a visible byline
+  const type = { about: 'AboutPage', contact: 'ContactPage', faq: 'FAQPage', cases: 'CollectionPage' }[pg.type] || 'WebPage';
   const page = { '@type': type, '@id': u + '#webpage', url: u, name: plain(pg.title[l]), description: pg.desc[l], inLanguage: l, isPartOf: { '@id': SITE }, about: { '@id': ORG } };
   const nodes = [org, site, page];
   if (pg.id !== 'home') {

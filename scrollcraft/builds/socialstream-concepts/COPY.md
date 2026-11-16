@@ -119,9 +119,36 @@ New sentences worth a look (all in `site/pages.mjs`):
   after the audit, who it is not for, how many new partners, who works on an account, since when). A few of them
   also sit on the service pages.
 
+Case studies (2026-11-16, the founder: "Case studies first"; new copy, waits for the founder's yes). Each says only
+what the site already says about its result (content.mjs: results, voices, who) and leaves out what is not there yet:
+the period, the budget, what was made and changed.
+
+| Page | Address (HU · EN) | Title (HU / EN) |
+|---|---|---|
+| Esettanulmányok / Case studies | /esettanulmanyok/ · /en/case-studies/ | Esettanulmányok: valódi ügyfelek, valódi számok / Case studies: real clients, real numbers |
+| Ajtó webshop / Door webshop | …/ajto-webshop/ · …/door-webshop/ | Ajtó webshop: 81× ROAS Google Performance Maxszel / Door webshop: 81× ROAS with Google Performance Max |
+| Csarnoképítő / Hall builder | …/b2b-csarnokepito/ · …/industrial-hall-builder/ | B2B Facebook-hirdetés: 79M Ft egy hét alatt / B2B Facebook ads: €216K in one week |
+| Karóra webshop / Watch webshop | …/karora-webshop/ · …/watch-webshop/ | Karóra webshop: 23× ROAS a karácsonyi szezonban / Watch webshop: 23× ROAS over Christmas |
+| Egészségügyi webinár / Healthcare webinar | …/egeszsegugyi-webinar/ · …/healthcare-webinar/ | Webinár-jelentkezők 105 Ft-ért: egészségügyi eset / Webinar registrants at €0.29 each: a healthcare case |
+
+- The hub: "Esettanulmányok: Számok, amiket az ügyfeleinknek hoztunk." (the home page's heading), "Valódi ügyfelek,
+  valódi számok: minden esetnél ott a platform, és ahol van, az ügyfél saját szava.", "Válassz egy esetet." / "Pick a
+  case.", then the three clients' words from the home page.
+- A case: its result as the heading (e.g. "*79M Ft* bevétel egy hét alatt."), a sentence from the site's own words
+  (the B2B card, the FAQ's "Ezt egy ajtó webshop Google Performance Max kampányában értük el", the watch webshop's
+  and the webinar's quotes retold), the stat card, the client's words where the site has them (none for the door
+  webshop: Péter's Hoofbútor quote is not tied to it), "Amivel elértük." / "What it took." (Fizetett hirdetés), and
+  "További esetek." / "More cases.".
+- Every footer adds "Esettanulmányok" / "Case studies" to the SocialStream column. The header's "Eredmények" still
+  goes to the home page's results (the founder's call).
+- Drafts, built only with SS_DRAFTS=1 (dist/site-drafts), never uploaded: FlyX Tenerife ("*69K* megtekintés egy
+  reelen.", its most-played Facebook reel) and Prof Enzo ("*9,8M+* megtekintés.", every view of the Facebook page
+  since it began, with 33K followers), and the social media page's "Ügyfeleink fiókjai, számokban." with both. The
+  clients agreed to be named; what SocialStream did for each, and since when, waits for the founder.
+
 Left out until the founder sends them: pricing, the legal notice and privacy policy, a phone number or address,
-profile links, proof for automation, the named clients' numbers (Prof Enzo's 9.8M+ views, FlyX's 69K on one reel:
-the film shows them, but a page naming a client with a number waits for the client's OK), "Ezt az oldalt is mi
+profile links, proof for automation, the named clients' numbers outside the drafts (Prof Enzo's 9.8M+ views, FlyX's
+69K on one reel: the film shows them; the clients agreed, but our part in them is not on the site yet), "Ezt az oldalt is mi
 építettük." on the web page (the doc suggests it, the site does not say it), and the doc's title, meta and H1-line
 drafts for the home page. Also asked: the home page's reels show Up To Youth's clips without saying it is the
 founder's own organisation (the video page says so); the home page stays as it is until the founder decides.

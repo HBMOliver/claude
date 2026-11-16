@@ -8,12 +8,20 @@
 // and leans toward the cursor; the aurora moves inside and its light follows the cursor; the real numbers (or the
 // service words) run along its foot. Then each kind of page has its own sections, and every page ends on the audit.
 import { C } from '../content.mjs';
-import { render, esc, t, h, ar, twin, asset, tx, tw, pair, btn, head, scripts, nav, footer, rail, tagItems, tickerItems, form, ARROW } from '../parts.mjs';
+import { render, esc, t, h, ar, twin, asset, tx, tw, pair, btn, head, scripts, nav, footer, rail, tagItems, tickerItems, form, count, figure, ARROW } from '../parts.mjs';
 import * as mix from '../concepts/mix.mjs';
 import { PAGES, NAV, W, byId } from './pages.mjs';
 import { seo, trail } from './head.mjs';
 
 const SERVICES = PAGES.filter(pg => pg.type === 'service');
+const CASES = PAGES.filter(pg => pg.type === 'case');
+const CW = {
+  pick: { hu: 'Válassz egy esetet.', en: 'Pick a case.' },
+  more: { hu: 'További esetek.', en: 'More cases.' },
+  go: { hu: 'Az eset', en: 'The case' },
+  used: { hu: 'Amivel elértük.', en: 'What it took.' },
+  named: { hu: 'Ügyfeleink fiókjai, számokban.', en: 'Our clients’ accounts, in numbers.' },
+};
 const plain = s => String(s).replace(/<[^>]+>/g, '');
 
 const siteNav = (pg, l) => ({
@@ -25,7 +33,7 @@ const siteFoot = l => ({
   home: byId('home').path[l], line: W.line,
   groups: [
     { label: W.more, links: [{ href: byId('services').path[l], label: { hu: 'Minden szolgáltatás', en: 'All services' } }, ...SERVICES.map(pg => ({ href: pg.path[l], label: pg.crumb }))] },
-    { label: W.pagesGroup, links: ['about', 'audit', 'faq', 'contact'].map(id => ({ href: byId(id).path[l], label: byId(id).crumb })) },
+    { label: W.pagesGroup, links: ['cases', 'about', 'audit', 'faq', 'contact'].map(id => ({ href: byId(id).path[l], label: byId(id).crumb })) },
   ],
 });
 
@@ -145,6 +153,46 @@ const more = (pg, l) => `  <!-- the other services -->
     </div>
   </section>`;
 
+// ---------- case studies ----------
+
+// a case's result: the home page's stat (content.mjs, results) or, for a named client's draft, its own figure
+const resultOf = pg => pg.res && C.results.items.find(it => it.obj === pg.res);
+// one case as the home page's stat card: on its own first screen (hero), or linked to its page
+function caseCard(pg, l, { link = false, hero = false, i = 0 } = {}) {
+  const it = resultOf(pg), f = pg.fig, tag = link ? 'a' : 'article';
+  const img = it ? `<img class="bob" style="--dur:${6.2 + i * 0.5}s;--delay:-${i * 1.2}s;--amp:-10px" src="${asset(it.obj + '-mix.webp')}" alt="" width="400" height="400"${hero ? '' : ' loading="lazy"'}>` : '';
+  // on the first screen the number stands still: kit.js counts up only the cards that are revealed while scrolling
+  const num = it ? (hero ? figure : count)(it.n, it.unit, it.en) : `<span>${typeof f.n === 'string' ? esc(f.n) : t(f.n)}</span>`;
+  return `<${tag} class="mx-card mx-stat pg-case${hero ? ' bob' : ''}"${link ? ` href="${pg.path[l]}"` : ''}${hero ? ' style="--dur:6.8s;--amp:-8px"' : ` data-r style="--d:${i}"`}>
+          ${img}
+          <p class="n num">${num}</p>
+          ${tx('p', 'who', it ? pair(it.who) : f.who)}
+          ${tx('p', 'd', it ? pair(it.p) : f.d)}${link ? `
+          <span class="pg-case-go">${t(CW.go)}${ARROW}</span>` : ''}
+        </${tag}>`;
+}
+const caseGrid = (list, l) => `<div class="mx-stats pg-case-grid n${list.length}">
+        ${list.map((x, i) => caseCard(x, l, { link: true, i })).join('\n        ')}
+      </div>`;
+// a section of linked case cards under a heading
+const caseSec = (list, l, h2, { id, eyebrow = C.results.eyebrow } = {}) => `  <!-- cases as the home page's stat cards, each going to its page -->
+  <section class="mx-res pg-res"${id ? ` id="${id}"` : ''} aria-labelledby="${id || 'oc'}-h">
+    <div class="wrap">
+      <div class="mx-head row"><div>${tx('p', 'mx-eyebrow', eyebrow, 'data-r')}${tx('h2', 'mx-h2', h2, `id="${id || 'oc'}-h" data-r`)}</div></div>
+      ${caseGrid(list, l)}
+    </div>
+  </section>`;
+// the services a case took, as the services' cards
+const used = (pg, l) => pg.uses ? `  <!-- the services this case took -->
+  <section class="pg-more pg-used" aria-labelledby="used-h">
+    <div class="wrap">
+      <div class="mx-head">${tx('p', 'mx-eyebrow', W.more, 'data-r')}${tx('h2', 'mx-h2', CW.used, 'id="used-h" data-r')}</div>
+      <ul class="pg-more-grid few">
+        ${pg.uses.map(byId).map((x, i) => `<li data-r style="--d:${i}"><a class="mx-card pg-more-card" href="${x.path[l]}"><img class="bob" style="--dur:${5.4 + i * 0.5}s;--delay:-${i}s;--amp:-8px" src="${asset(x.s.icon + '-mix.webp')}" alt="" width="520" height="520" loading="lazy"><span class="k">${t(x.crumb)}</span><span class="d">${t(pair(x.s.t))}</span>${ARROW}</a></li>`).join('\n        ')}
+      </ul>
+    </div>
+  </section>` : '';
+
 // ---------- the templates ----------
 
 const T = {
@@ -162,9 +210,23 @@ const T = {
   service: (pg, l) => { const pr = pg.proof || {}; return shell(pg, l, [
     hero(pg, l, `<div class="pg-obj">${obj(pg.s.icon + '-mix.webp', '', 0.035, 6.4)}</div>`, { band: pg.svc === 'ads' || pg.svc === 'strat' ? 'ticker' : 'tags' }),
     pain(pg), included(pg),
-    pr.stats ? stats() : '', pr.reels ? reels(pr.reels) : '', pr.quotes ? quotes(pr.quotes) : '', pr.compare ? mix.compareSec() : '',
+    pr.stats ? stats() : '', pr.named ? caseSec(pr.named.map(f => byId(f.page)), l, CW.named, { id: 'fiokok' }) : '',
+    pr.reels ? reels(pr.reels) : '', pr.quotes ? quotes(pr.quotes) : '', pr.compare ? mix.compareSec() : '',
     mix.stepsSec(), faqBlock(pg.faq, l), more(pg, l), mix.offerSec(),
   ]); },
+
+  cases: (pg, l) => shell(pg, l, [
+    hero(pg, l, `<div class="pg-cluster">${obj('o-hall-mix.webp', 'c1', 0.035, 6.2)}${obj('o-door-mix.webp', 'c2', -0.03, 5.6)}${obj('o-webinar-mix.webp', 'c3', 0.05, 7)}</div>`),
+    caseSec(CASES, l, CW.pick, { id: 'esetek' }),
+    quotes(CASES.filter(x => x.quote != null).map(x => x.quote)),
+    mix.stepsSec(), mix.offerSec(),
+  ]),
+
+  case: (pg, l) => shell(pg, l, [
+    hero(pg, l, `<div class="pg-case-art">${caseCard(pg, l, { hero: true })}</div>`),
+    pg.quote != null ? quotes([pg.quote]) : '', pg.reels ? reels(pg.reels) : '',
+    used(pg, l), caseSec(CASES.filter(x => x !== pg), l, CW.more, { eyebrow: { hu: 'Esettanulmányok', en: 'Case studies' } }), mix.offerSec(),
+  ]),
 
   about: (pg, l) => shell(pg, l, [
     hero(pg, l, `<dl class="pg-facts">${pg.facts.map((f, i) => `<div class="mx-card bob" style="--dur:${6 + i * 0.6}s;--delay:-${i * 1.1}s;--amp:-8px"><dt>${t(f.l)}</dt><dd class="num">${typeof f.n === 'string' ? esc(f.n) : t(f.n)}</dd></div>`).join('')}</dl>`),

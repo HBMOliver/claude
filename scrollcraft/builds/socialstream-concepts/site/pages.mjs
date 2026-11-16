@@ -5,17 +5,30 @@
 // The words: everything here is NEW and waits for the founder's yes (COPY.md lists it), but it says nothing that is
 // not already on the site (content.mjs): the same services, numbers, steps, team and reviews, in new sentences.
 // Left out until the founder sends them (the doc's "Needed from you"): pricing, the legal notice and privacy policy,
-// a phone number or address, profile links, the named clients' numbers (Prof Enzo's 9.8M+ views, FlyX's 69K), proof
-// for automation, and the case studies, audience pages and /en/tenerife/ (phase 3).
+// a phone number or address, profile links, proof for automation, the audience pages and /en/tenerife/.
+// Case studies (2026-11-16, the founder: "Case studies first"): the hub and the four anonymous cases, from the
+// site's own results and their clients' words only. The named clients agreed to be named with numbers (the
+// founder, "i have everyones approval"), but what SocialStream did for FlyX and Prof Enzo, and since when, is not
+// on the site yet: their cases and their numbers on the social media page are drafts (draft: true), built only with
+// SS_DRAFTS=1 into dist/site-drafts for review, never into dist/site.
 // No em dashes anywhere in the copy (tools/site.mjs stops on one).
 import { C } from '../content.mjs';
 
+const DRAFTS = !!process.env.SS_DRAFTS;
 export const ORIGIN = 'https://socialstream.hu';
 const p = (hu, en) => ({ hu, en });
 const svc = id => C.services.items.find(s => s.id === id);
 // a question from the home page's eight (content.mjs, faq), as it stands there
 const homeQ = i => ({ q: p(...C.faq.items[i][0]), a: p(...C.faq.items[i][1]) });
 const q = (qhu, qen, ahu, aen) => ({ q: p(qhu, qen), a: p(ahu, aen) });
+
+// The named clients' own numbers, worded as the film words them (video/sizzle/SPEC.md, Honesty). 69K is FlyX
+// Tenerife's most-played reel on Facebook. 9,8M+ is every view of Prof Enzo's Facebook page since it began (Meta's
+// "All views", 9,828,876, rounded down), so it is "views on Facebook", never "reel views". Drafts (see above).
+const NAMED = [
+  { n: '69K', who: p('FlyX Tenerife · Élményközpont', 'FlyX Tenerife · Experience centre'), d: p('megtekintés egy reelen', 'views on one reel'), page: 'case-flyx' },
+  { n: p('9,8M+', '9.8M+'), who: p('Prof Enzo · Facebook', 'Prof Enzo · Facebook'), d: p('megtekintés · 33K követő', 'views · 33K followers'), page: 'case-enzo' },
+];
 
 // shared words of the site's pages
 export const W = {
@@ -34,7 +47,7 @@ export const W = {
 };
 
 // The pages. nav: the header's links, in this order; parent: the page above it in the breadcrumb.
-export const PAGES = [
+const ALL = [
   {
     id: 'home', type: 'home', path: p('/', '/en/'),
     // the live title and description stay until the founder approves the doc's drafts (its "Five fixes first", 2):
@@ -76,8 +89,9 @@ export const PAGES = [
     lead: p('Feed, Stories, Reels és TikTok egy stratégiával és egy hanggal. Mi készítjük a tartalomnaptárt, mi kezeljük a közösséget, mi írjuk a szövegeket, és a videókat is mi gyártjuk.',
       'Feed, Stories, Reels and TikTok with one strategy and one voice. We plan the content calendar, manage the community, write the copy and make the videos ourselves.'),
     included: [p('Tartalomnaptár', 'Content calendar'), p('Közösségkezelés', 'Community management'), p('Szövegírás', 'Copywriting'), p('Feed, Stories és Reels', 'Feed, Stories and Reels'), p('TikTok', 'TikTok'), p('A videók is tőlünk', 'The videos from us too')],
-    // Rita's words name Facebook/Instagram; the numbers of the clients' own accounts wait for their OK
-    proof: { reels: ['r-flyx-1', 'r-enzo-2', 'r-flyx-2', 'r-enzo-1', 'r-flyx-3', 'r-andras-1', 'r-andras-2'], quotes: [4] },
+    // Rita's words name Facebook/Instagram; FlyX's and Prof Enzo's numbers (NAMED) only in the drafts until the founder
+    // says what we did for them and since when
+    proof: { reels: ['r-flyx-1', 'r-enzo-2', 'r-flyx-2', 'r-enzo-1', 'r-flyx-3', 'r-andras-1', 'r-andras-2'], quotes: [4], named: DRAFTS ? NAMED : null },
     faq: [q('Melyik felületekkel foglalkoztok?', 'Which platforms do you cover?', 'Feed, Stories, Reels és TikTok, egy stratégiával és egy hanggal.', 'Feed, Stories, Reels and TikTok, with one strategy and one voice.'), homeQ(5), homeQ(4)],
   },
   {
@@ -136,6 +150,79 @@ export const PAGES = [
     proof: { compare: true },
     faq: [homeQ(3), homeQ(0),
       q('Mi jön az audit után?', 'What comes after the audit?', 'A stratégia: kampánystratégia, funnel és pozicionálás, vagyis kinek, mit és melyik platformon mutatunk. Utána jön a gyártás, végül a hirdetés és a skálázás.', 'The strategy: campaign strategy, funnel and positioning, that is, what we show, to whom, and where. Then production, and finally the ads and scaling.')],
+  },
+  // ---- case studies: the hub, then one page per case. res: the result on the home page (content.mjs, results) the
+  // case is built on; quote: its client's words there (voices); uses: the service pages it took. A case says only
+  // what the site already says about it: no period, budget or method until the founder sends them.
+  {
+    id: 'cases', type: 'cases', path: p('/esettanulmanyok/', '/en/case-studies/'),
+    title: p('Esettanulmányok: valódi ügyfelek, valódi számok · SocialStream', 'Case studies: real clients, real numbers · SocialStream'),
+    desc: p('81× ROAS egy ajtó webshopnál, 79M Ft bevétel egy hét alatt egy B2B kampányból, 23× ROAS karácsonykor, 105 Ft egy webinár-jelentkező. Ügyfeleink számai, platformmal.',
+      '81× ROAS for a door webshop, €216K in a week from one B2B campaign, 23× ROAS at Christmas, €0.29 per webinar registrant. Real clients, real numbers.'),
+    crumb: p('Esettanulmányok', 'Case studies'),
+    h1k: p('Esettanulmányok', 'Case studies'), h1t: C.results.h2,
+    lead: p('Valódi ügyfelek, valódi számok: minden esetnél ott a platform, és ahol van, az ügyfél saját szava.', 'Real clients, real numbers: each case with its platform and, where there is one, the client’s own words.'),
+  },
+  {
+    id: 'case-door', type: 'case', parent: 'cases', res: 'o-door', uses: ['svc-ads'], path: p('/esettanulmanyok/ajto-webshop/', '/en/case-studies/door-webshop/'),
+    title: p('Ajtó webshop: 81× ROAS Google Performance Maxszel · SocialStream', 'Door webshop: 81× ROAS with Google Performance Max · SocialStream'),
+    desc: p('Egy ajtó webshop Google Performance Max kampányában 1 forint hirdetésből 81 forint bevétel lett. Esettanulmány valódi számokkal.',
+      'In a door webshop’s Google Performance Max campaign, every €1 of ads brought in €81 of revenue. A case study with real numbers.'),
+    crumb: p('Ajtó webshop', 'Door webshop'),
+    h1k: p('Ajtó webshop · Google Performance Max', 'Door webshop · Google Performance Max'),
+    h1t: p('1 forint hirdetésből <em>81 forint</em> bevétel.', '<em>€81</em> of revenue for every €1 of ads.'),
+    lead: p('Ezt egy ajtó webshop Google Performance Max kampányában értük el: 1 forint hirdetésből 81 forint bevétel lett, vagyis 81× ROAS.',
+      'We reached it in a door webshop’s Google Performance Max campaign: every €1 of ads brought in €81 of revenue, that is 81× ROAS.'),
+  },
+  {
+    id: 'case-hall', type: 'case', parent: 'cases', res: 'o-hall', quote: 1, uses: ['svc-ads'], path: p('/esettanulmanyok/b2b-csarnokepito/', '/en/case-studies/industrial-hall-builder/'),
+    title: p('B2B Facebook-hirdetés: 79M Ft egy hét alatt · SocialStream', 'B2B Facebook ads: €216K in one week · SocialStream'),
+    desc: p('Egy csarnoképítő ügyfelünk azt hitte, a Facebook a fiataloknak és a webshopoknak való. Egy B2B kampány a Metán egy hét alatt 79M Ft bevételt hozott.',
+      'An industrial hall builder thought Facebook was for young people and webshops. One B2B campaign on Meta brought in €216K of revenue in one week.'),
+    crumb: p('Csarnoképítő ügyfél', 'Industrial hall builder'),
+    h1k: p('Csarnoképítő ügyfél · B2B · Meta', 'Industrial hall builder · B2B · Meta'),
+    h1t: p('<em>79M Ft</em> bevétel egy hét alatt.', '<em>€216K</em> of revenue in one week.'),
+    lead: p('Ajánlatkérések ott is, ahol „a Facebook nem működik”: egy csarnoképítő ügyfélnek egy B2B kampány a Metán egy hét alatt 79M Ft bevételt hozott.',
+      'Quote requests even where “Facebook doesn’t work”: for an industrial hall builder, one B2B campaign on Meta brought in €216K of revenue in one week.'),
+  },
+  {
+    id: 'case-watch', type: 'case', parent: 'cases', res: 'o-watch', quote: 2, uses: ['svc-ads'], path: p('/esettanulmanyok/karora-webshop/', '/en/case-studies/watch-webshop/'),
+    title: p('Karóra webshop: 23× ROAS a karácsonyi szezonban · SocialStream', 'Watch webshop: 23× ROAS over Christmas · SocialStream'),
+    desc: p('Ünnepi kampány egy karóra webshopnak: 23× ROAS és több mint 8M Ft bevétel. Esettanulmány valódi számokkal.',
+      'A holiday campaign for a watch webshop: 23× ROAS and over €21K in revenue. A case study with real numbers.'),
+    crumb: p('Karóra webshop', 'Watch webshop'),
+    h1k: p('Karóra webshop · Karácsony', 'Watch webshop · Christmas'),
+    h1t: p('<em>23×</em> ROAS az ünnepi szezonban.', '<em>23×</em> ROAS in the holiday season.'),
+    lead: p('Ünnepi kampány egy karóra webshopnak: 23× ROAS és több mint 8M Ft bevétel, egy ügyfélnél, aki korábban minden decemberben a hirdetési áraktól tartott.',
+      'A holiday campaign for a watch webshop: 23× ROAS and over €21K in revenue, for a client who used to dread ad prices every December.'),
+  },
+  {
+    id: 'case-webinar', type: 'case', parent: 'cases', res: 'o-webinar', quote: 3, uses: ['svc-ads'], path: p('/esettanulmanyok/egeszsegugyi-webinar/', '/en/case-studies/healthcare-webinar/'),
+    title: p('Webinár-jelentkezők 105 Ft-ért: egészségügyi eset · SocialStream', 'Webinar registrants at €0.29 each: a healthcare case · SocialStream'),
+    desc: p('Egy egészségügyi szolgáltató webinárjára körülbelül 5700 jelentkező érkezett 600K Ft-ból: 105 Ft egy jelentkező. Pár százra számítottak.',
+      'About 5,700 people registered for a healthcare provider’s webinar from €1,650: €0.29 per registrant. They expected a few hundred.'),
+    crumb: p('Egészségügyi webinár', 'Healthcare webinar'),
+    h1k: p('Egészségügyi webinár', 'Healthcare webinar'),
+    h1t: p('<em>105 Ft</em> egy jelentkező.', '<em>€0.29</em> per registrant.'),
+    lead: p('Egy egészségügyi szolgáltató webinárjára körülbelül 5700 jelentkező érkezett 600K Ft-ból. Ők pár száz jelentkezőre számítottak.',
+      'About 5,700 people registered for a healthcare provider’s webinar from €1,650. They had expected a few hundred.'),
+  },
+  // drafts: the clients agreed to be named; what we did for them and since when waits for the founder
+  {
+    id: 'case-flyx', type: 'case', parent: 'cases', draft: true, fig: NAMED[0], reels: ['r-flyx-1', 'r-flyx-2', 'r-flyx-3'], path: p('/esettanulmanyok/flyx-tenerife/', '/en/case-studies/flyx-tenerife/'),
+    title: p('FlyX Tenerife: 69K megtekintés egy reelen · SocialStream', 'FlyX Tenerife: 69K views on one reel · SocialStream'),
+    desc: p('Reelek a FlyX Tenerife élményközpontnak: a legtöbbet nézett Facebook-reeljük 69K megtekintést ért el.', 'Reels for FlyX Tenerife, an experience centre: their most-played Facebook reel reached 69K views.'),
+    crumb: p('FlyX Tenerife', 'FlyX Tenerife'),
+    h1k: NAMED[0].who, h1t: p('<em>69K</em> megtekintés egy reelen.', '<em>69K</em> views on one reel.'),
+    lead: p('A FlyX Tenerife élményközpont legtöbbet nézett Facebook-reelje 69K megtekintést ért el.', 'FlyX Tenerife’s most-played Facebook reel reached 69K views.'),
+  },
+  {
+    id: 'case-enzo', type: 'case', parent: 'cases', draft: true, fig: NAMED[1], reels: ['r-enzo-1', 'r-enzo-2'], path: p('/esettanulmanyok/prof-enzo/', '/en/case-studies/prof-enzo/'),
+    title: p('Prof Enzo: 9,8M+ megtekintés a Facebookon · SocialStream', 'Prof Enzo: 9.8M+ views on Facebook · SocialStream'),
+    desc: p('Prof Enzo Facebook-oldala indulása óta több mint 9,8 millió megtekintést és 33K követőt gyűjtött.', 'Since it began, Prof Enzo’s Facebook page has gathered more than 9.8 million views and 33K followers.'),
+    crumb: p('Prof Enzo', 'Prof Enzo'),
+    h1k: NAMED[1].who, h1t: p('<em>9,8M+</em> megtekintés.', '<em>9.8M+</em> views.'),
+    lead: p('Prof Enzo Facebook-oldala indulása óta több mint 9,8 millió megtekintést és 33K követőt gyűjtött.', 'Since it began, Prof Enzo’s Facebook page has gathered more than 9.8 million views and 33K followers.'),
   },
   {
     id: 'about', type: 'about', path: p('/rolunk/', '/en/about/'),
@@ -219,7 +306,10 @@ export const PAGES = [
 ];
 
 // a service page's service (content.mjs) and its page
-for (const pg of PAGES) if (pg.svc) { pg.s = svc(pg.svc); pg.crumb = p(...pg.s.k); pg.h1t = p(...pg.s.t); }
+for (const pg of ALL) if (pg.svc) { pg.s = svc(pg.svc); pg.crumb = p(...pg.s.k); pg.h1t = p(...pg.s.t); }
+// the pages that are built: drafts only with SS_DRAFTS=1 (tools/site.mjs then writes dist/site-drafts)
+export const PAGES = ALL.filter(pg => DRAFTS || !pg.draft);
+export const IS_DRAFTS = DRAFTS;
 export const byId = id => PAGES.find(pg => pg.id === id);
 export const url = (pg, l) => ORIGIN + pg.path[l];
 // the header's links: the services, the results on the home page, About us, the questions, contact

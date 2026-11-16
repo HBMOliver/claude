@@ -156,12 +156,26 @@
 .js .pg-claim.in .strike::after { transform: scaleX(1); }
 .pg-name-p { margin-top: 28px; max-width: 46ch; font: 500 clamp(1.1rem, 1.6vw, 1.35rem)/1.5 var(--font-b); color: var(--fg2); }
 
+/* ---------- case studies: the case's stat card on its first screen, the cases as linked stat cards ---------- */
+.pg-case-art { width: min(100%, 380px); }
+.pg-case-art .mx-stat { min-height: 330px; padding: 28px; }
+.pg-case-art .mx-stat img { top: 14px; right: 14px; width: 150px; height: 150px; }
+.pg-case-art .mx-stat .n { font-size: clamp(3.2rem, 5vw, 4.6rem); }
+a.pg-case { color: inherit; text-decoration: none; transition: background 200ms; }
+.pg-case-go { display: inline-flex; align-items: center; gap: 7px; margin-top: 16px; font: 600 13.5px/1 var(--font-b); color: var(--fg); }
+.pg-case-go svg { width: 15px; height: 15px; color: var(--pink); transition: transform 260ms var(--out); }
+@media (hover: hover) { a.pg-case:hover { background: rgba(255, 255, 255, 0.08); } a.pg-case:hover .pg-case-go svg { transform: translateX(3px); } }
+.pg-case-grid.n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pg-case-grid.n5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pg-more-grid.few { grid-template-columns: repeat(auto-fill, minmax(220px, 300px)); }
+
 /* ---------- tablets and phones ---------- */
 @media (max-width: 1080px) {
   .pg-hero-in, .pg-audit .pg-hero-in { grid-template-columns: minmax(0, 1fr); }
   .pg-art { min-height: 0; }
   .pg-more-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .pg-quote-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pg-case-grid.n3, .pg-case-grid.n5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
   .pg-hero { padding-top: 72px; }
@@ -181,7 +195,10 @@
   .pg-split, .pg-qgroup .pg-split { grid-template-columns: minmax(0, 1fr); }
   .pg-qgroup .pg-split-l { position: static; }
   .pg-quote-grid, .pg-quote-grid.n2 { grid-template-columns: minmax(0, 1fr); }
-  .pg-more-grid { grid-template-columns: minmax(0, 1fr); }
+  .pg-more-grid, .pg-more-grid.few { grid-template-columns: minmax(0, 1fr); }
+  .pg-case-art { width: 100%; }
+  .pg-case-art .mx-stat { min-height: 280px; }
+  .pg-case-art .mx-stat img { width: 116px; height: 116px; }
   .pg-more-card { grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center; column-gap: 14px; }
   .pg-more-card img { grid-row: 1 / 3; width: 56px; height: 56px; margin: 0; }
   .pg-more-card .k, .pg-more-card .d { grid-column: 2; }
