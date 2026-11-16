@@ -69,7 +69,10 @@ def chain(key, start, w, h, tmp):
     return c
 
 
-SPEED = {"fx1b": 0.78}     # the sunset shot is 1.7 s long and its phone shows it for 2 s: slowed a little
+# the sunset shot is 1.7 s long and its phone shows it for 2 s: slowed a little. The V89 ad cuts to its shop page
+# (the brand's logo, prices in Ft) at 7.7 s: the wall's tile takes the gift box and the watch only, 3.0-7.6 s, slowed
+# to fill the wall's 8 s
+SPEED = {"fx1b": 0.78, "w16": 0.575}
 
 
 def clip(name, key, start, dur, w, h, crf, tmp, sub="clips", pad=0.0):
@@ -106,9 +109,9 @@ def main():
     LIVE = [("w01", "rain", 2.4), ("w02", "ad1", 8.0), ("w03", "calima", 11.5), ("w04", "ez1", 1.5), ("w05", "ez2", 4.0),
             ("w06", "ez3", 5.0), ("w07", "lv_yellow", 1.0), ("w08", "lv_hood", 0.8), ("w09", "uty", 2.0), ("w10", "misk", 0.0),
             ("w11", "horse", 7.2), ("w12", "szolg", 1.0), ("w13", "melodie", 56.0), ("w14", "ez4", 5.5),
-            ("w15", "watch_ugc", 2.0), ("w16", "watch_val", 3.0)]
-    for name, key, start in LIVE:
-        out = clip(name, key, start, 8.0, 360, 640, 23, tmp, sub="wall")
+            ("w15", "watch_ugc", 2.0), ("w16", "watch_val", 3.0, 4.6)]
+    for name, key, start, *span in LIVE:                    # (a fourth number: seconds of the source, see SPEED)
+        out = clip(name, key, start, span[0] if span else 8.0, 360, 640, 23, tmp, sub="wall")
         f = os.path.join(HERE, "assets", "wall", name + ".jpg")
         run(["-i", out, "-vf", r"select=eq(n\,182)", "-frames:v", "1", "-q:v", "3", f])
         grey(f)

@@ -99,8 +99,8 @@ BANNED:  numbers on an empty gradient with a small icon; four scenes in one layo
 - 69K: FlyX Tenerife's most-played reel on Facebook. 149K, 122K, 105K, 82K, 33K followers: Prof Enzo's Facebook page.
   **1M+** is the sum of the play counts Facebook shows on Prof Enzo's 30 newest reels (1.03 million, read
   2026-11-15); it is my arithmetic, so the founder must confirm it before the film is published.
-- Comments are real, shown without names or pictures. Counts sit beside the phones, never on one, because the
-  reels on this Mac cannot be matched to their counts.
+- Comments are real, shown without names or pictures, each marked "Komment" in FlyX's own world. Counts sit
+  beside the phones, never on one, because the reels on this Mac cannot be matched to their counts.
 - Prof Enzo's reels are the client's own published videos (downloaded by the site session); the one with a film
   clip and a fast-food sign, and the shot of an oil bottle, are left out.
 - The Latvia, Up To Youth, Miskolc Plaza and Sóskút clips are the ones the site session put on the site as
@@ -109,8 +109,10 @@ BANNED:  numbers on an empty gradient with a small icon; four scenes in one layo
 - FlyX's viewers' comments are shown in FlyX's world only. "Ne nekünk higgy. Nekik." is followed by the clients'
   reviews of SocialStream and nothing else.
 - The smartwatch ads (ZS&M Smart: a creator's ad and the Valentine's Day ad for the V89) are shown as the team's
-  videos, unnamed. They are not placed beside the "Karóra webshop" result: whether that client is this brand has
-  not been confirmed, and the site keeps that client unnamed.
+  videos, with no label of ours; the V89 ad's own caption names the watch ("EGY V89-ES OKOSÓRÁVAL"). The ad's last
+  third is the brand's shop page (its logo, prices in Ft): no card shows it (the wall's tile takes 3.0-7.6 s of the
+  ad; in drafts 4 and 5 that tile ran into the page). The ads are not placed beside the "Karóra webshop" result:
+  whether that client is this brand has not been confirmed, and the site keeps that client unnamed.
 - English: the site's own English for every line it has; new strings are plain labels ("views on one reel",
   "views", "followers", "Comment", the days of the week).
 - **Money in the English cut is in euros** (the founder: "in english version convert the forints to euros"); the
@@ -138,7 +140,8 @@ and 16.6 (FlyX: comments, clips changed), 19.0 and 20.6 (Prof Enzo: 1M+, the chi
 and tags), each "how" phrase, 32.0 and 33.6 (the week filling, then full), 35.4, 37.6 and 38.8 (23×), 40.9 (the
 stamp), 43.2, 44.6, 45.7 ("Nekik." with the first review under it), 48.0 and 51.8 (the stack), 54, 56 (promise),
 58.6 (logo). English (12 stills): the claim, FlyX, the euro chips, each result, the stack, the logo; a search of
-the English project finds no "Ft". The hook (0-8.8 s) has the same frames as draft 5.
+the English project's files finds no "Ft". The hook (0-8.8 s) is built by the same code as in draft 5; from the
+final render its frames at 0.0, 2.0, 4.8, 6.6, 7.8 and 8.9 s were looked at again, with the V89 tile recut.
 
 Sound checked on the renders (REVIEW.md): the kick against the picture at the drop and at a late beat, loudness,
 true peak.
