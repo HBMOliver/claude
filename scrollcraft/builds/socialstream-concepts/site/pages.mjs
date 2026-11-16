@@ -31,7 +31,6 @@ export const W = {
   pagesGroup: p('SocialStream', 'SocialStream'),
   // Up To Youth is the founder's own organisation: wherever its videos are shown as our work, the page says so
   uty: p('Az Up To Youth az alapítónk saját szervezete.', 'Up To Youth is our founder’s own organisation.'),
-  ownSite: p('Ezt az oldalt is mi építettük.', 'We built this site too.'),
 };
 
 // The pages. nav: the header's links, in this order; parent: the page above it in the breadcrumb.
@@ -79,7 +78,7 @@ export const PAGES = [
     included: [p('Tartalomnaptár', 'Content calendar'), p('Közösségkezelés', 'Community management'), p('Szövegírás', 'Copywriting'), p('Feed, Stories és Reels', 'Feed, Stories and Reels'), p('TikTok', 'TikTok'), p('A videók is tőlünk', 'The videos from us too')],
     // Rita's words name Facebook/Instagram; the numbers of the clients' own accounts wait for their OK
     proof: { reels: ['r-flyx-1', 'r-enzo-2', 'r-flyx-2', 'r-enzo-1', 'r-flyx-3', 'r-andras-1', 'r-andras-2'], quotes: [4] },
-    faq: [q('Melyik felületekkel foglalkoztok?', 'Which platforms do you cover?', 'Feed, Stories és Reels (Instagram, Facebook) és TikTok, egy stratégiával és egy hanggal.', 'Feed, Stories and Reels (Instagram, Facebook) and TikTok, with one strategy and one voice.'), homeQ(5), homeQ(4)],
+    faq: [q('Melyik felületekkel foglalkoztok?', 'Which platforms do you cover?', 'Feed, Stories, Reels és TikTok, egy stratégiával és egy hanggal.', 'Feed, Stories, Reels and TikTok, with one strategy and one voice.'), homeQ(5), homeQ(4)],
   },
   {
     id: 'svc-ads', type: 'service', svc: 'ads', parent: 'services', path: p('/szolgaltatasok/hirdeteskezeles/', '/en/services/paid-ads/'),
@@ -105,7 +104,8 @@ export const PAGES = [
     lead: p('Gyors, mobilra tervezett landing oldalakat és weboldalakat építünk, amik konvertálnak. A videót és a hirdetést is mi készítjük, így az oldal azt fejezi be, amit a videó elkezdett.',
       'We build fast, mobile-first landing pages and websites that convert. We make the video and run the ads too, so the page finishes what the video started.'),
     included: [p('Landing oldalak', 'Landing pages'), p('Weboldalak', 'Websites'), p('Mobilra tervezve', 'Designed for phones first'), p('Gyors betöltés', 'Fast to load'), p('Konverzióra építve', 'Built to convert')],
-    proof: { quotes: [5, 4], own: true },
+    // "we built this site too" is left out until the founder says so (the doc suggests it; the site does not say it)
+    proof: { quotes: [5, 4] },
     faq: [q('Landing oldalt vagy teljes weboldalt készítetek?', 'Do you build landing pages or whole websites?', 'Mindkettőt: gyors, mobilra tervezett landing oldalakat és weboldalakat, amik konvertálnak.', 'Both: fast, mobile-first landing pages and websites that convert.'),
       q('Ki építi az oldalt?', 'Who builds the site?', 'David, a fejlesztőnk: weboldalak, landing oldalak, automatizálás.', 'David, our developer: websites, landing pages, automation.'),
       q('A hirdetést is ti futtatjátok hozzá?', 'Do you run the ads for it too?', 'Igen. Mi gyártjuk a videót, mi futtatjuk a hirdetést, és mi építjük az oldalt, ami befejezi, amit a videó elkezdett.', 'Yes. We make the video, we run the ads, and we build the page that finishes what the video started.')],

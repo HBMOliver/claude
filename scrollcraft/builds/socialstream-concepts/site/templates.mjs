@@ -124,14 +124,13 @@ const reels = list => { const ids = list === 'all' ? ALL_REELS : list; return ` 
   </section>`; };
 
 // a few clients' words, as cards side by side
-const quotes = (idx, own) => `  <!-- clients' words about this service -->
+const quotes = idx => `  <!-- clients' words about this service -->
   <section class="pg-quotes" aria-labelledby="pq-h">
     <div class="wrap">
       <div class="mx-head">${tx('p', 'mx-eyebrow', C.voices.eyebrow, 'data-r')}${tw('h2', 'mx-h2', C.voices.h2, 'id="pq-h" data-r')}</div>
       <div class="pg-quote-grid n${idx.length}" data-r>
       ${idx.map((n, i) => mix.quote(C.voices.quotes[n], i)).join('\n      ')}
-      </div>${own ? `
-      ${tx('p', 'pg-note', W.ownSite, 'data-r')}` : ''}
+      </div>
     </div>
   </section>`;
 
@@ -163,7 +162,7 @@ const T = {
   service: (pg, l) => { const pr = pg.proof || {}; return shell(pg, l, [
     hero(pg, l, `<div class="pg-obj">${obj(pg.s.icon + '-mix.webp', '', 0.035, 6.4)}</div>`, { band: pg.svc === 'ads' || pg.svc === 'strat' ? 'ticker' : 'tags' }),
     pain(pg), included(pg),
-    pr.stats ? stats() : '', pr.reels ? reels(pr.reels) : '', pr.quotes ? quotes(pr.quotes, pr.own) : '', pr.compare ? mix.compareSec() : '',
+    pr.stats ? stats() : '', pr.reels ? reels(pr.reels) : '', pr.quotes ? quotes(pr.quotes) : '', pr.compare ? mix.compareSec() : '',
     mix.stepsSec(), faqBlock(pg.faq, l), more(pg, l), mix.offerSec(),
   ]); },
 

@@ -101,8 +101,7 @@ const ids = ['services', ...PAGES.filter(pg => pg.type === 'service').map(pg => 
 fs.writeFileSync(OUT + '/llms.txt', `# SocialStream
 
 > Interest media agency: we make the video, run the ads on Meta, TikTok and Google,
-> and measure what they bring in. Founded in 2022. Works from Budapest and Tenerife,
-> in Hungarian and English.
+> and measure what they bring in. Founded in 2022. Works from Budapest and Tenerife.
 
 ## What we do
 - Video production: hooks, creative direction, shooting and editing for ads and reels

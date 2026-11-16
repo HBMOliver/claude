@@ -106,7 +106,6 @@ New sentences worth a look (all in `site/pages.mjs`):
 - "Mit kapsz?" / "What you get": a list per service, from the service's own words, the steps' chips and the tags.
 - The video page: "Akik csinálják: David (hookok, forgatás, kreatív irány) és Bálint (forgatás, vágás, hang és fotó)."
   and under its reels "Az Up To Youth az alapítónk saját szervezete." / "Up To Youth is our founder's own organisation."
-- The web page: "Ezt az oldalt is mi építettük." / "We built this site too."
 - About us: "Interest media ügynökség, *2022 óta*.", the facts as cards (2022 óta dolgozunk · 300M+ Ft kezelt
   hirdetési büdzsé · 4 ember a csapatban · 2 új partner havonta, legfeljebb), "A nevünk" over the claim and the
   name's line (content.mjs).
@@ -119,5 +118,7 @@ New sentences worth a look (all in `site/pages.mjs`):
 
 Left out until the founder sends them: pricing, the legal notice and privacy policy, a phone number or address,
 profile links, proof for automation, the named clients' numbers (Prof Enzo's 9.8M+ views, FlyX's 69K on one reel:
-the film shows them, but a page naming a client with a number waits for the client's OK), and the doc's title,
-meta and H1-line drafts for the home page.
+the film shows them, but a page naming a client with a number waits for the client's OK), "Ezt az oldalt is mi
+építettük." on the web page (the doc suggests it, the site does not say it), and the doc's title, meta and H1-line
+drafts for the home page. Also asked: the home page's reels show Up To Youth's clips without saying it is the
+founder's own organisation (the video page says so); the home page stays as it is until the founder decides.
