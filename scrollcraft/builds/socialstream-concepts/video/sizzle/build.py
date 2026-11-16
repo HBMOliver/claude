@@ -92,7 +92,7 @@ TEXT = {
             '      <div class="hd cb1 l2"><span class="w">vette</span> <span class="w">át</span> <span class="w">a</span> '
             '<span class="w">helyét<span class="acc">.</span></span></div>'),
         fx_eb="FlyX Tenerife · Élményközpont", fx_lab="megtekintés egy reelen", comment="Komment",
-        ez_eb="Prof Enzo · Facebook-reelek", ez_lab="megtekintés", ez_f="33K követő",
+        ez_eb="Prof Enzo · Facebook", ez_lab="megtekintés", ez_f="33K követő", ez_num=("9", ",", "8"),
         pr_eb="Részletek a videóinkból", tags=["Forgatás", "Vágás", "Feliratozás", "Reels", "Podcast &amp; interjú"],
         how=['Mi gyártjuk a <span class="it">videót</span>,', 'mi futtatjuk a <span class="it">hirdetést</span>,', "és mi mérjük,",
              'mit <span class="it hz">hozott</span><span class="acc">.</span>'],
@@ -124,7 +124,7 @@ TEXT = {
             '      <div class="hd cb1 l2"><span class="w">has</span> <span class="w">taken</span> <span class="w">its</span> '
             '<span class="w">place<span class="acc">.</span></span></div>'),
         fx_eb="FlyX Tenerife · Experience centre", fx_lab="views on one reel", comment="Comment",
-        ez_eb="Prof Enzo · Facebook reels", ez_lab="views", ez_f="33K followers",
+        ez_eb="Prof Enzo · Facebook", ez_lab="views", ez_f="33K followers", ez_num=("9", ".", "8"),
         pr_eb="Clips from our videos", tags=["Shooting", "Editing", "Subtitles", "Reels", "Podcast &amp; interview"],
         how=['We make the <span class="it">video</span>,', 'we run the <span class="it">ads</span>,', "and we measure",
              'what they <span class="it hz">bring in</span><span class="acc">.</span>'],
@@ -441,9 +441,11 @@ def scene_flyx(s, e):
 
 
 def scene_enzo(s, e):
-    """Prof Enzo: green. Three reels fill the height; the total of their plays counts over them; the best reels'
-    counts pop along the bottom."""
+    """Prof Enzo: green. Three reels fill the height; the page's views count over them (9.8 million: Meta's
+    dashboard for the page, "All views", from the founder's screenshot of 2026-11-16; SPEC.md, Honesty); the best
+    reels' own counts pop along the bottom."""
     t0, cut, hit = b(B_EZ), b(B_EZ + 4), b(B_EZ + 2)
+    n_int, n_dec, n_frac = TX["ez_num"]
     ls = [("ez-l0", 4, 6, 90, "190, 255, 120, 0.4"), ("ez-l1", 96, 96, 90, "20, 60, 160, 0.45")]
     cl = [("ez-c0", 170, "ez1a", "ez1b"), ("ez-c1", 710, "ez2a", "ez2b"), ("ez-c2", 1250, "ez3a", "ez3b")]
     cards = "".join(card(cid, x, 96, 500, 889, [(fa, 0, cut - s), (fb, cut - s, e - cut)], 1 + 2 * k) for k, (cid, x, fa, fb) in enumerate(cl))
@@ -452,15 +454,16 @@ def scene_enzo(s, e):
     hh, hj = hearts("ez-h", 12, b(B_EZ + 1), b(B_EZ + 7.5), (200, 760, 1720, 1000), 9)
     html = (field("linear-gradient(140deg,#16c172 0%,#0b8f7a 52%,#075e63 100%)", ls) + tile("Prof Enzo") + cards
             + '<div class="ff" id="ez-scrim" style="background:rgba(4,20,22,0.42)"></div>'
-            + f'<div class="ezo"><div class="ezrow"><div class="hd ezn" id="ez-n">{digits(3, "ez-cnt")}<span>K</span></div>'
-              f'<div class="hd ezn" id="ez-m" style="opacity:0">1M+</div></div><div class="hd ezl" id="ez-lab">{TX["ez_lab"]}</div></div>'
+            + f'<div class="ezo"><div class="ezrow"><div class="hd ezn" id="ez-n"><span class="cnt" id="ez-cnt" data-motion-blur="off">'
+              f'<span class="d" id="ez-d0">0</span><span class="dp">{n_dec}</span><span class="d" id="ez-d1">0</span></span><span>M</span></div>'
+              f'<div class="hd ezn" id="ez-m" style="opacity:0">{n_int}{n_dec}{n_frac}M+</div></div><div class="hd ezl" id="ez-lab">{TX["ez_lab"]}</div></div>'
             + f'<div class="pill" id="ez-eb" style="left:200px;top:128px">{TX["ez_eb"]}</div>'
             + f'<div class="pill" id="ez-f" style="left:1440px;top:128px">{TX["ez_f"]}</div>'
             + "".join(f'<div class="chip" id="ez-k{k}" style="left:{x}px;top:872px"><i></i>{v}</div>' for k, (v, x, t) in enumerate(chips)) + hh)
     css = """
     #root #ez-scrim, #root .ezo, #root #ez-eb, #root #ez-f, #root .chip { z-index: 4; }
     #root .ezo { position: absolute; left: 0; right: 0; top: 262px; text-align: center; }
-    #root .ezrow { position: relative; height: 390px; }
+    #root .ezrow { position: relative; height: 430px; }     /* room under the number for the Hungarian decimal comma */
     #root .ezn { position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: center; align-items: baseline; white-space: nowrap;
       font-size: 440px; line-height: 0.9; letter-spacing: -0.05em; text-shadow: 0 14px 70px rgba(0, 0, 0, 0.5); }
     #root .ezl { font-size: 108px; text-shadow: 0 10px 50px rgba(0, 0, 0, 0.5); }
@@ -470,9 +473,14 @@ def scene_enzo(s, e):
     js += [f'rise("#{cid}", {s + 0.04 + 0.08 * k:g}, {(-6, 0, 6)[k]}, 0);' for k, (cid, x, fa, fb) in enumerate(cl)]
     js += [f'fade("#ez-scrim", {t0 - 0.12:g}, 0.3);', f'pop("#ez-eb", {t0 - 0.06:g}, 0.4);',
            f'tl.fromTo("#ez-n", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.1, ease: "none" }}, AT({t0 - 0.02:g}));',
-           f'count(document.getElementById("ez-cnt"), {t0:g}, {hit - t0 - 0.04:g}, 999, "power2.in");',
-           f'fade("#ez-lab", {t0 + 0.1:g});',
-           # the hit: the count becomes "1M+" exactly on the beat
+           f'fade("#ez-lab", {t0 + 0.1:g});']
+    # the views count in tenths of a million, written once a frame as the value changes (cubic in, like power2.in)
+    dur, to, last = hit - t0 - 0.04, int(n_int + n_frac), (0, 0)
+    for i in range(1, round(dur * FPS) + 1):
+        now = divmod(round(to * min(1.0, i / (dur * FPS)) ** 3), 10)
+        js += [f'tl.set("#ez-d{k}", {{ textContent: "{now[k]}" }}, Math.max(0, AT({t0 + i / FPS:.2f}) - 0.01));' for k in (0, 1) if now[k] != last[k]]
+        last = now
+    js += [# the hit: the count becomes "9,8M+" exactly on the beat
            f'tl.set("#ez-n", {{ opacity: 0 }}, AT({hit:g}));', f'tl.set("#ez-m", {{ opacity: 1 }}, AT({hit:g}));',
            f'tl.fromTo("#ez-m", {{ scale: 1.28 }}, {{ scale: 1, duration: 0.5, ease: "back.out(2.2)" }}, AT({hit:g}));',
            f'pop("#ez-f", {b(B_EZ + 3) - 0.08:g}, 0.4);']
@@ -819,7 +827,7 @@ def sounds():
     ev = [("sub", DEATH + F, (1.6, 1.3), 0.3), ("wind", bx(0)), ("sub", bx(0)), ("cheer", bx(0), (2.6, 1.4)),
           # FlyX: the world, the count landing, the three comments
           ("whoosh", bx(B_FX)), ("pop2", b(B_FX) + 0.9 + F), ("pop", bx(B_FX + 2)), ("pop2", bx(B_FX + 3)), ("pop", bx(B_FX + 4)),
-          # Prof Enzo: the world, 1M+, the followers, the counts in two pairs
+          # Prof Enzo: the world, 9.8M+, the followers, the counts in two pairs
           ("wind", bx(B_EZ)), ("pop2", bx(B_EZ + 2)), ("pop", bx(B_EZ + 3)), ("pop2", bx(B_EZ + 4)), ("pop", bx(B_EZ + 6)),
           # productions: four shutters for the pile, the scatter, the tags
           ("shutter", b(B_PR) - 0.04 + F), ("shutter", b(B_PR) + 0.14 + F), ("shutter", b(B_PR) + 0.34 + F), ("shutter", b(B_PR) + 0.56 + F),

@@ -20,7 +20,8 @@ one a second (`SPEC.md`, PACE and the shots). The beat was measured again on the
 hit a quarter of a second before each kick, this one on it, and the film ends where the track ends. The English
 cut shows euros; `SPEC.md` (Honesty) has every conversion and its rate. **Draft 6b** (English only): the
 founder chose the ECB rate of 13 November for every figure (€216K, over €21K, €820K+) over the cautious 400 Ft of
-the first render; only those numbers changed.
+the first render; only those numbers changed. **Draft 6c** (both cuts): Prof Enzo's number is the founder's
+own, from Meta's dashboard for the page: "9,8M+" / "9.8M+" views in place of my "1M+".
 
 ## Files
 

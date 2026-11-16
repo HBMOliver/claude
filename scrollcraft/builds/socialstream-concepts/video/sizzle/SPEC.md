@@ -18,6 +18,10 @@ kick (drafts 4 and 5 hit a quarter of a second before it), and the English cut s
 founder chose the current rate ("Use today's rate"). The English cut was rendered again with €216K, over €21K and
 €820K+ (Honesty); nothing else differs, and the Hungarian cut is draft 6's.
 
+**Draft 6c** (both cuts, 2026-11-16): the founder sent Prof Enzo's views from Meta's dashboard ("these are the
+profenzo views for the video"): 9,828,876. The scene's number is now "9,8M+" / "9.8M+" in place of my own "1M+",
+and its eyebrow says "Prof Enzo · Facebook" (Honesty). Nothing else differs.
+
 ## What the reference does (Social Chain 2026 sizzle, 67.6 s, 124.5 bpm, read at 5 frames a second)
 
 1. **Footage is the picture.** About 70 % of its screen time is three playing vertical videos at 60-90 % of the frame
@@ -85,7 +89,7 @@ BANNED:  numbers on an empty gradient with a small icon; four scenes in one layo
 | 6.80-8.72 | b-5..-4 | Diagnosis | "A social media" is struck through; on 7.28 "meghalt." and every card freezes and turns grey, from the middle outwards | low hit |
 | 8.80-13.24 | b-1..b8 | The turn | The middle card comes back in colour, grows, and on the drop it is the whole frame: the FlyX cinema from behind, heads against the bright screen. "Az érdeklődés" lands on the drop, "vette át a helyét." two beats later; the picture pushes in for two bars | riser, drop, low hit, crowd |
 | 13.24-17.20 | b8-b16 | FlyX Tenerife | Orange world. "69K megtekintés egy reelen" counts up; three phones fan out, their clips change on b12; three real comments type on, a beat apart (b10, b11, b12), and stay; hearts rise; a slow push | whoosh, pops |
-| 17.20-21.20 | b16-b24 | Prof Enzo | Green world. Three reels fill the height; the plays count over them and become "1M+" on b18; "33K követő" on b19; the chips come two at a time: 149K and 122K on b20, 105K and 82K on b22 | wind, pops |
+| 17.20-21.20 | b16-b24 | Prof Enzo | Green world. Three reels fill the height; the page's views count over them in tenths of a million and become "9,8M+" on b18; "33K követő" on b19; the chips come two at a time: 149K and 122K on b20, 105K and 82K on b22 | wind, pops |
 | 21.20-25.16 | b24-b32 | Productions | Polaroids of the team at work pile over the frame and scatter; violet world: five reel cards (Latvia, Up To Youth, the V89 smartwatch ad in the middle, the creator's smartwatch ad, a podcast; three of them change on b30 to Latvia, Miskolc and Sóskút); the tags come as one wave on b28: Forgatás, Vágás, Feliratozás, Reels, Podcast & interjú | shutters, pop |
 | 25.16-31.08 | b32-b44 | How | Night. Four phrases, three beats each: "Mi gyártjuk a videót," (reel cards ring it) / "mi futtatjuk a hirdetést," (Meta, TikTok, Google, Reels) / "és mi mérjük," (81×, 79M Ft, 23×, 105 Ft) / "mit hozott." and the camera goes through it | wind, pops |
 | 31.08-34.08 | b44-b50 | 79 M Ft | Blue. The week's seven days light up as the number climbs; the seventh and the whole number land on b47; "bevétel egy hét alatt"; it holds 1.5 s | whoosh, pop |
@@ -101,8 +105,14 @@ BANNED:  numbers on an empty gradient with a small icon; four scenes in one layo
 
 - Every line is the site's own (`../../content.mjs`); quotes are cut with "…" only.
 - 69K: FlyX Tenerife's most-played reel on Facebook. 149K, 122K, 105K, 82K, 33K followers: Prof Enzo's Facebook page.
-  **1M+** is the sum of the play counts Facebook shows on Prof Enzo's 30 newest reels (1.03 million, read
-  2026-11-15); it is my arithmetic, so the founder must confirm it before the film is published.
+  **9,8M+** (English "9.8M+") is the founder's figure: their screenshot of Meta's professional dashboard for
+  Prof Enzo's Facebook page, sent on 2026-11-16 for this film: Views 9,828,876, on the "All views" tab (reels,
+  posts and stories together), custom range 16 May to 16 Nov, whose axis runs over eighteen months (the curve
+  starts in late December and peaks in March), so in effect since the page began. It is rounded down, never "10M".
+  The same screenshot shows 4,491,150 three-second views and 1400 days 16 hours of watch time; the film uses
+  the Views figure only, under the word the dashboard uses ("megtekintés", "views"). Because the figure is for
+  all of the page's content, the scene's eyebrow says "Prof Enzo · Facebook", not "Facebook reels". (Drafts 4 to
+  6b showed "1M+", my own sum of the play counts on the 30 newest reels: 1.03 million, read 2026-11-15.)
 - Comments are real, shown without names or pictures, each marked "Komment" in FlyX's own world. Counts sit
   beside the phones, never on one, because the reels on this Mac cannot be matched to their counts.
 - Prof Enzo's reels are the client's own published videos (downloaded by the site session); the one with a film
@@ -144,7 +154,7 @@ BANNED:  numbers on an empty gradient with a small icon; four scenes in one layo
 ## QA
 
 Frames checked in draft 6 (Hungarian, 27 stills): 9.5 and 10.9 (the claim's two lines), 12.8 (still held), 15.0
-and 16.6 (FlyX: comments, clips changed), 19.0 and 20.6 (Prof Enzo: 1M+, the chips), 22.0 (polaroids), 24.4 (cards
+and 16.6 (FlyX: comments, clips changed), 19.0 and 20.6 (Prof Enzo: the number, the chips), 22.0 (polaroids), 24.4 (cards
 and tags), each "how" phrase, 32.0 and 33.6 (the week filling, then full), 35.4, 37.6 and 38.8 (23×), 40.9 (the
 stamp), 43.2, 44.6, 45.7 ("Nekik." with the first review under it), 48.0 and 51.8 (the stack), 54, 56 (promise),
 58.6 (logo). English (12 stills): the claim, FlyX, the euro chips, each result, the stack, the logo; a search of
@@ -156,6 +166,12 @@ Frame by frame against draft 6's English master (PSNR, 45 dB as the line) the re
 (the chip), 31.28-33.96 s (€216K), 36.56-38.92 s (the pill) and 42.04-43.88 s (€820K+); its sound stream is
 byte-identical. Stills from the render at 29.3, 32.0, 32.5, 33.6, 36.7, 38.6, 42.3 and 43.6 s were looked at, and
 the pill enlarged from the project.
+
+Draft 6c (both cuts): the renders differ from the masters before them only at 17.20-21.68 s (Prof Enzo's scene);
+the sound streams are byte-identical. Looked at, from the project: the count at 17.6, 17.96 and 18.12 s, the hit
+at 18.28 s, 19.0 and 20.8 s in Hungarian, 19.0 and 20.8 s in English; from the renders: 17.96, 18.2, 18.36 and
+20.8 s in both. The Hungarian decimal comma hangs below the line, so the label under the number sits 40 px lower
+than in draft 6 (in both cuts).
 
 Sound checked on the renders (REVIEW.md): the kick against the picture at the drop and at a late beat, loudness,
 true peak.

@@ -52,6 +52,18 @@ so its loudness and sync measurements stand. Frame by frame against that master 
 chip, €216K mid-count and held, the pill mid-count and held (and enlarged from the project), €820K+ mid-count and
 held. Review copy: `drafts/sizzle-draft6b-wide-en.mp4` (23.3 MiB). Not watched at speed and not heard, as before.
 
+**Draft 6c (both cuts).** Prof Enzo's number is the founder's: 9,828,876 views on Meta's dashboard for the page,
+shown as "9,8M+" / "9.8M+" (`SPEC.md`, Honesty), counted up in tenths of a million and landing on the same kick
+as "1M+" did. I changed the scene's eyebrow from "Facebook-reelek" / "Facebook reels" to "Facebook" without being
+asked: the figure is the dashboard's "All views" (reels, posts and stories), so it cannot sit under the word
+"reels". 1485 frames, 59.40 s in both cuts; the sound streams are byte-identical to the masters before; the
+picture differs only at 17.20-21.68 s. `hyperframes check`: no errors; the same craft warnings as draft 6, and a
+new `contrast_aa_failure` on the words of FlyX's comment cards at 16.5 s, which is the check's own error (it
+measures their dark type against the film's night ground, not against the white card they sit on; the still at
+16.5 s shows them as before, and that scene's file did not change). Masters: `master-wide-hu.mp4` and
+`master-wide-en.mp4` in this folder (not in git); review copies `drafts/sizzle-draft6c-wide-hu.mp4` and
+`-en.mp4`. Not watched at speed and not heard.
+
 **Weakest shots.** (1) The turn is one shot for four seconds: a breath after the hook, by design; if it reads as
 slow it can go back to one bar and the bar can go to 81× and 300M+. (2) 81× and 300M+ still pass in 2 s each.
 (3) Once five reviews are in, the oldest card is cut by the top of the frame as it leaves. (4) The last review is
@@ -68,8 +80,7 @@ M Ft (the giant digits' line box overlaps the eyebrow's box; the glyphs do not, 
 `duplicate_media_discovery_risk` on the wall's repeated stills outside the frame.
 
 **To confirm with the founder.** Whether the English site should show euros too (the basis is settled: the
-founder chose the 13 November rate on 2026-11-16); "1M+" (my sum of Facebook's play counts on Prof Enzo's 30
-newest reels); the music track; whether the Latvia and Up To Youth speakers may appear; whether the smartwatch
+founder chose the 13 November rate on 2026-11-16; Prof Enzo's number is theirs since draft 6c); the music track; whether the Latvia and Up To Youth speakers may appear; whether the smartwatch
 brand is the watch webshop of the 23× result.
 
 ## Drafts 4 and 5
