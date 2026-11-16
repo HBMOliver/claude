@@ -78,9 +78,10 @@ assert abs(TOTAL * FPS - round(TOTAL * FPS)) < 1e-6
 # ---- every line of the film in both languages. Hungarian is the site's copy; the English is the site's own English
 # for the same line (../../content.mjs), so nothing is translated twice. Comments on FlyX's reels were written in
 # English and stay as they are. Money is forints in Hungarian and euros in English (the founder: "in english version
-# convert the forints to euros"). Each euro figure is converted so that it cannot flatter the forint one (SPEC.md,
-# Honesty): revenue and budget at 400 Ft to the euro, rounded down; costs at the ECB reference rate of 2026-11-13,
-# 365.6 Ft, rounded up. r1_num is (sign before, digit boxes, value, unit after, digit size, unit size) ----
+# convert the forints to euros"). Every euro figure is converted at one rate, the ECB reference rate of 2026-11-13,
+# 365.6 Ft: revenue and budget rounded down, costs rounded up (SPEC.md, Honesty). The founder chose that rate on
+# 2026-11-16 over a more cautious 400 Ft (which gave €197K, over €20K and €750K+).
+# r1_num is (sign before, digit boxes, value, unit after, digit size, unit size) ----
 TEXT = {
     "hu": dict(
         p1="Posztolsz.", p2="Hirdetsz.", p3='Mégsem jönnek a <span class="acc">vevők?</span>',
@@ -127,14 +128,14 @@ TEXT = {
         pr_eb="Clips from our videos", tags=["Shooting", "Editing", "Subtitles", "Reels", "Podcast &amp; interview"],
         how=['We make the <span class="it">video</span>,', 'we run the <span class="it">ads</span>,', "and we measure",
              'what they <span class="it hz">bring in</span><span class="acc">.</span>'],
-        how_chips=["81×", "€197K", "23×", "€0.29"],
+        how_chips=["81×", "€216K", "23×", "€0.29"],
         r1_eb="Industrial hall builder · B2B · Meta", r1_lab="revenue in one week", days=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        r1_num=("€", 3, 197, "K", 400, 224),                # 79M Ft at 400 Ft to the euro: €197.5K
+        r1_num=("€", 3, 216, "K", 400, 224),                # 79M Ft at 365.6 Ft to the euro: €216.08K
         r2_eb="Door webshop · Google Performance Max", r2_c1="€1", r2_gl="€81",
-        r3_eb="Watch webshop · Christmas", r3_p=('over&nbsp;<span class="eu">€</span>', '<span class="kk">K in revenue</span>'), r3_n=(2, 20),   # over 8M Ft at 400
+        r3_eb="Watch webshop · Christmas", r3_p=('over&nbsp;<span class="eu">€</span>', '<span class="kk">K in revenue</span>'), r3_n=(2, 21),   # over 8M Ft at 365.6: €21.88K
         r4_eb="Healthcare webinar", r4_lab="registrants from €1,650", r4_st=("€0.29", "per registrant"), thou=",",
         # (600K Ft and 105 Ft at 365.6: €1,641 and €0.287, rounded up; €1,650 over 5,700 registrants is €0.29)
-        m3_eb="Since 2022", m3_lab="budget managed", m3_num=("€", 750, "K+", ""),   # 300M+ Ft at 400
+        m3_eb="Since 2022", m3_lab="budget managed", m3_num=("€", 820, "K+", ""),   # 300M+ Ft at 365.6: €820.57K
         v0=("mid", "Don’t take our word for it."), v1="Take theirs",
         voices=[
             ("q", "Péter · Hoofbútor", "“There were purchases from launch day…”"),

@@ -20,9 +20,11 @@ The founder on draft 5: "its a bit too fast paste, also in english version conve
   every hit is on its kick, and an effect that belongs to a beat is placed on the kick itself.
 - *The ending.* The film now ends where the track ends: its last kick is beat 95, the logo lands on beat 96 with
   the cinematic hit, in the track's own ring-out. (Draft 5 faded the music out under the logo.)
-- *Euros.* Revenue and budget at 400 Ft to the euro, rounded down; costs at the ECB rate of 13 November 2026
-  (365.6 Ft), rounded up, so no euro figure flatters the forint one (`SPEC.md`, Honesty, has each pair). The
-  English site still shows forints.
+- *Euros.* Every figure at the ECB rate of 13 November 2026 (365.6 Ft): revenue and budget rounded down (€216K,
+  over €21K, €820K+), costs rounded up (€1,650, €0.29); `SPEC.md`, Honesty, has each pair. The first render used
+  a cautious 400 Ft for revenue and budget (€197K, over €20K, €750K+); shown both, the founder chose the current
+  rate ("Use today's rate"), and the English cut was rendered again (draft 6b, below). The English site still
+  shows forints.
 - *Not asked for, and done anyway.* The sync and the ending above. The comment cards in FlyX's world are marked
   "Komment" only (they said "Komment · FlyX Tenerife" three times under a headline that already names FlyX).
   The V89 ad's tile on the wall of reels ran into the brand's shop page (its logo, and a line with "35.000 FT"),
@@ -42,12 +44,21 @@ the stack stepping up, the wipe into the promise and the logo's hit; six frames 
 from the final render, with the recut tile. **Not watched at speed, not on a phone, and not heard by anyone**:
 the sound was measured only.
 
+**Draft 6b (English only).** The euros at the 13 November rate. Four lines of the project changed (the chip in
+`how`, the counters' targets in `r1`, `r3` and `m300`). `hyperframes check`: the same as draft 6 (no errors, the
+same three craft warnings). 1485 frames, 59.40 s. The sound stream is byte-identical to draft 6's English master,
+so its loudness and sync measurements stand. Frame by frame against that master the picture differs only at
+28.20-29.64 s, 31.28-33.96 s, 36.56-38.92 s and 42.04-43.88 s: the four numbers. Looked at, from the render: the
+chip, €216K mid-count and held, the pill mid-count and held (and enlarged from the project), €820K+ mid-count and
+held. Review copy: `drafts/sizzle-draft6b-wide-en.mp4` (23.3 MiB). Not watched at speed and not heard, as before.
+
 **Weakest shots.** (1) The turn is one shot for four seconds: a breath after the hook, by design; if it reads as
 slow it can go back to one bar and the bar can go to 81× and 300M+. (2) 81× and 300M+ still pass in 2 s each.
 (3) Once five reviews are in, the oldest card is cut by the top of the frame as it leaves. (4) The last review is
 readable for 2.1 s, and the English "what they bring in." for 1.1 s before the camera goes through it. (5) The
 music stops by itself a beat before the logo; whether the effect carries that moment has to be heard. (6) The
-film does not loop seamlessly.
+film does not loop seamlessly. (7) In the English cut the 1 of €216K stands a little apart from its neighbours: a
+counter's digits sit in equal boxes (the 1 of €197K did the same).
 
 **Warnings kept on purpose.** `line_unread` (the check's rule: 0.5 s + 0.3 s a word): draft 5 as committed has 13 such
 lines in Hungarian and 15 in English; draft 6 has 2 in each. Left: the last review (2.1 s against a floor of 2.2 s in
@@ -56,10 +67,10 @@ M Ft (the giant digits' line box overlaps the eyebrow's box; the glyphs do not, 
 `text_below_floor`: the three "Komment" labels in FlyX's world (22 px; the names on the review cards are 28 px now).
 `duplicate_media_discovery_risk` on the wall's repeated stills outside the frame.
 
-**To confirm with the founder.** The euro figures and their basis (at the 13 November rate throughout they would
-read €216K, over €21K and €820K+); whether the English site should show euros too; "1M+" (my sum of Facebook's
-play counts on Prof Enzo's 30 newest reels); the music track; whether the Latvia and Up To Youth speakers may
-appear; whether the smartwatch brand is the watch webshop of the 23× result.
+**To confirm with the founder.** Whether the English site should show euros too (the basis is settled: the
+founder chose the 13 November rate on 2026-11-16); "1M+" (my sum of Facebook's play counts on Prof Enzo's 30
+newest reels); the music track; whether the Latvia and Up To Youth speakers may appear; whether the smartwatch
+brand is the watch webshop of the 23× result.
 
 ## Drafts 4 and 5
 

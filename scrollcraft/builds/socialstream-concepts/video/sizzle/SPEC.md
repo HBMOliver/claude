@@ -14,6 +14,10 @@ comments": FlyX's viewers' comments are about FlyX's videos, so they stay in Fly
 clock after the drop is new (PACE and the shots below; 59.40 s instead of 49.40), every hit sits on the track's
 kick (drafts 4 and 5 hit a quarter of a second before it), and the English cut shows euros (Honesty).
 
+**Draft 6b** (English only, 2026-11-16): shown the euro figures on a cautious basis and at the current rate, the
+founder chose the current rate ("Use today's rate"). The English cut was rendered again with €216K, over €21K and
+€820K+ (Honesty); nothing else differs, and the Hungarian cut is draft 6's.
+
 ## What the reference does (Social Chain 2026 sizzle, 67.6 s, 124.5 bpm, read at 5 frames a second)
 
 1. **Footage is the picture.** About 70 % of its screen time is three playing vertical videos at 60-90 % of the frame
@@ -116,22 +120,26 @@ BANNED:  numbers on an empty gradient with a small icon; four scenes in one layo
 - English: the site's own English for every line it has; new strings are plain labels ("views on one reel",
   "views", "followers", "Comment", the days of the week).
 - **Money in the English cut is in euros** (the founder: "in english version convert the forints to euros"); the
-  English site still shows forints. The conversions are mine, made so that no euro figure can flatter the forint
-  one. Revenue and budget: 400 Ft to the euro, weaker than every yearly average of the ECB reference rate since
-  2022 (391, 382, 395, 398, 368), rounded down. Costs: the ECB reference rate of 2026-11-13, 365.6 Ft, the
-  strongest forint of those years, rounded up.
+  English site still shows forints. Every figure is converted at one rate, the ECB reference rate of 2026-11-13,
+  365.6 Ft to the euro (the latest published on 2026-11-16, when the founder chose it: "Use today's rate"):
+  revenue and budget rounded down, costs rounded up. The first render of draft 6 used a cautious 400 Ft for
+  revenue and budget (weaker than every yearly average of the ECB rate since 2022: 391, 382, 395, 398, 368) and
+  read €197K, over €20K and €750K+; the founder was shown both and chose the current rate.
 
   | Hungarian | English | How |
   |---|---|---|
-  | 79 M Ft bevétel egy hét alatt | €197K revenue in one week | 79,000,000 / 400 = 197,500 |
-  | több mint 8 M Ft bevétel | over €20K in revenue | 8,000,000 / 400 = 20,000 |
-  | 300M+ Ft kezelt büdzsé | €750K+ budget managed | 300,000,000 / 400 = 750,000 |
+  | 79 M Ft bevétel egy hét alatt | €216K revenue in one week | 79,000,000 / 365.6 = 216,083 |
+  | több mint 8 M Ft bevétel | over €21K in revenue | 8,000,000 / 365.6 = 21,882 |
+  | 300M+ Ft kezelt büdzsé | €820K+ budget managed | 300,000,000 / 365.6 = 820,569 |
   | ≈5 700 jelentkező 600K Ft-ból | ≈5,700 registrants from €1,650 | 600,000 / 365.6 = 1,641, rounded up |
   | 105 Ft egy jelentkező | €0.29 per registrant | 105 / 365.6 = 0.287, rounded up; 1,650 / 5,700 = 0.29 |
   | 1 Ft → 81 Ft | €1 → €81 | a ratio, no rate |
 
-  At the 13 November rate throughout, the first three would read €216K, over €21K and €820K+. The founder knows
-  when each campaign ran and must confirm these figures before the English cut is published.
+  These are forint results at one day's rate, not what each campaign earned in euros when it ran: in 2022-2025
+  the forint was weaker (yearly averages 382-398 Ft), so the same forints were fewer euros then (79 M Ft at 395
+  Ft is €200K). The rounding leaves little room: €216K holds while the rate is at or under 365.74 Ft, €820K+ at
+  or under 365.85 Ft, "over €21K" up to 380.9 Ft. Convert again if the cut is published after the forint has
+  weakened.
 
 ## QA
 
@@ -142,6 +150,12 @@ stamp), 43.2, 44.6, 45.7 ("Nekik." with the first review under it), 48.0 and 51.
 58.6 (logo). English (12 stills): the claim, FlyX, the euro chips, each result, the stack, the logo; a search of
 the English project's files finds no "Ft". The hook (0-8.8 s) is built by the same code as in draft 5; from the
 final render its frames at 0.0, 2.0, 4.8, 6.6, 7.8 and 8.9 s were looked at again, with the V89 tile recut.
+
+Draft 6b (English): four lines of the project differ from draft 6 (the chip's text and three counters' targets).
+Frame by frame against draft 6's English master (PSNR, 45 dB as the line) the render differs only at 28.20-29.64 s
+(the chip), 31.28-33.96 s (€216K), 36.56-38.92 s (the pill) and 42.04-43.88 s (€820K+); its sound stream is
+byte-identical. Stills from the render at 29.3, 32.0, 32.5, 33.6, 36.7, 38.6, 42.3 and 43.6 s were looked at, and
+the pill enlarged from the project.
 
 Sound checked on the renders (REVIEW.md): the kick against the picture at the drop and at a late beat, loudness,
 true peak.

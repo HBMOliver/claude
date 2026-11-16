@@ -18,7 +18,9 @@ euros". 59.40 s. The hook and the three client worlds keep their length; the cla
 and comes a line at a time, "how we work" gets three bars, the big results six beats each, and the reviews land
 one a second (`SPEC.md`, PACE and the shots). The beat was measured again on the track's kick drum: drafts 4 and 5
 hit a quarter of a second before each kick, this one on it, and the film ends where the track ends. The English
-cut shows euros; `SPEC.md` (Honesty) has every conversion and its rate.
+cut shows euros; `SPEC.md` (Honesty) has every conversion and its rate. **Draft 6b** (English only): the
+founder chose the ECB rate of 13 November for every figure (€216K, over €21K, €820K+) over the cautious 400 Ft of
+the first render; only those numbers changed.
 
 ## Files
 
