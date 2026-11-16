@@ -79,20 +79,21 @@
     #root .rn { position: absolute; display: flex; align-items: baseline; white-space: nowrap; }
     #root .rn .cnt { font-size: 520px; line-height: 0.84; letter-spacing: -0.055em; }
     #root .rn .ui { font-size: 290px; line-height: 0.84; margin-left: 0.12em; }
+    #root .rn .cur { font-size: 520px; line-height: 0.84; letter-spacing: -0.03em; }
     #root .rn .x { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 320px; line-height: 0.84; margin-left: 0.02em; }
     #root .rn .u { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 128px; margin-left: 0.16em; letter-spacing: -0.03em; }
-    #root #m3-n .cnt, #root #m3-n .mp { font-size: 440px; line-height: 0.84; letter-spacing: -0.055em; }
+    #root #m3-n .cnt, #root #m3-n .mp, #root #m3-n .cur { font-size: 440px; line-height: 0.84; letter-spacing: -0.055em; }
     #root #m3-n .ui { font-size: 330px; }
     #root #m3-lab { font-size: 76px; font-weight: 700; font-family: Sora, Inter, sans-serif; letter-spacing: -0.03em; }
   </style>
   <div id="root" data-composition-id="m300" data-width="1920" data-height="1080">
     <div class="ff" id="wp">
-    <div class="fld" style="background:#070a1c"><i class="lt" id="m3-l0" data-layout-allow-overflow style="left:12%;top:90%;width:100vmax;height:100vmax;margin:-50.0vmax 0 0 -50.0vmax;background:radial-gradient(closest-side,rgba(66, 92, 255, 0.5),rgba(66, 92, 255,0))"></i><i class="lt" id="m3-l1" data-layout-allow-overflow style="left:90%;top:8%;width:96vmax;height:96vmax;margin:-48.0vmax 0 0 -48.0vmax;background:radial-gradient(closest-side,rgba(136, 78, 255, 0.5),rgba(136, 78, 255,0))"></i><i class="lt" id="m3-l2" data-layout-allow-overflow style="left:60%;top:110%;width:60vmax;height:60vmax;margin:-30.0vmax 0 0 -30.0vmax;background:radial-gradient(closest-side,rgba(255, 64, 104, 0.3),rgba(255, 64, 104,0))"></i></div><div class="eb" id="m3-eb" style="position:absolute;left:0;right:0;top:150px;text-align:center">Since 2022</div><div class="hd rn" id="m3-n" style="left:0;right:0;top:220px;justify-content:center"><span class="cnt" id="m3-cnt" data-motion-blur="off"><span class="d"></span><span class="d"></span><span class="d"></span></span><span class="mp">M+</span><span class="it ui">Ft</span></div><div class="lab" id="m3-lab" style="position:absolute;left:0;right:0;top:720px;text-align:center"><span class="w ">budget</span> <span class="w ">managed</span></div>
+    <div class="fld" style="background:#070a1c"><i class="lt" id="m3-l0" data-layout-allow-overflow style="left:12%;top:90%;width:100vmax;height:100vmax;margin:-50.0vmax 0 0 -50.0vmax;background:radial-gradient(closest-side,rgba(66, 92, 255, 0.5),rgba(66, 92, 255,0))"></i><i class="lt" id="m3-l1" data-layout-allow-overflow style="left:90%;top:8%;width:96vmax;height:96vmax;margin:-48.0vmax 0 0 -48.0vmax;background:radial-gradient(closest-side,rgba(136, 78, 255, 0.5),rgba(136, 78, 255,0))"></i><i class="lt" id="m3-l2" data-layout-allow-overflow style="left:60%;top:110%;width:60vmax;height:60vmax;margin:-30.0vmax 0 0 -30.0vmax;background:radial-gradient(closest-side,rgba(255, 64, 104, 0.3),rgba(255, 64, 104,0))"></i></div><div class="eb" id="m3-eb" style="position:absolute;left:0;right:0;top:150px;text-align:center">Since 2022</div><div class="hd rn" id="m3-n" style="left:0;right:0;top:220px;justify-content:center"><span class="cur">€</span><span class="cnt" id="m3-cnt" data-motion-blur="off"><span class="d"></span><span class="d"></span><span class="d"></span></span><span class="mp">K+</span></div><div class="lab" id="m3-lab" style="position:absolute;left:0;right:0;top:720px;text-align:center"><span class="w ">budget</span> <span class="w ">managed</span></div>
     </div>
   </div>
   <script>
   (() => {
-    const FPS = 25, W = 1920, H = 1080, START = 34.72, AT = (t) => t - START;
+    const FPS = 25, W = 1920, H = 1080, START = 41.68, AT = (t) => t - START;
     const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
     const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
     const tl = gsap.timeline({ paused: true });
@@ -140,14 +141,15 @@
       const sep = el.querySelector(".sep");                 // a thousands comma: there once there are thousands
       if (sep) tl.fromTo(sep, { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none" }, AT(t + dur * 0.12));
     };
-    wipeIn(34.72, "iris");
-    drift("#m3-l0", 34.72, 2.28, -80, 60);
-    drift("#m3-l1", 34.72, 2.28, 70, -50);
-    drift("#m3-l2", 34.72, 2.28, -80, 60);
-    fade("#m3-eb", 34.94);
-    tl.fromTo("#m3-n", { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "none" }, AT(34.98));
-    count(document.getElementById("m3-cnt"), 35.04, 0.9, 300, "expo.out");
-    words("#m3-lab .w", 35.34, 0.06);
+    wipeIn(41.68, "iris");
+    tl.fromTo("#wp", { scale: 1 }, { scale: 1.03, duration: 2.32, ease: "none" }, AT(41.68));
+    drift("#m3-l0", 41.68, 2.32, -80, 60);
+    drift("#m3-l1", 41.68, 2.32, 70, -50);
+    drift("#m3-l2", 41.68, 2.32, -80, 60);
+    fade("#m3-eb", 41.9);
+    tl.fromTo("#m3-n", { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "none" }, AT(41.94));
+    count(document.getElementById("m3-cnt"), 42, 0.9, 750, "expo.out");
+    words("#m3-lab .w", 42.3, 0.06);
     window.__timelines["m300"] = tl;
   })();
   </script>

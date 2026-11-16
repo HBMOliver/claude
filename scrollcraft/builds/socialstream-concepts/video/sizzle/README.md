@@ -1,4 +1,4 @@
-# The SocialStream sizzle (draft 5, 2026-11-16)
+# The SocialStream sizzle (draft 6, 2026-11-16)
 
 After seeing the v6 draft (`../film-v6/`), the founder sent Social Chain's 2026 sizzle as the film they had in mind
 ("i want it more like that"): ours said nothing and did not grab attention. They want the feeling of achievement
@@ -12,6 +12,13 @@ video better". `REVIEW.md` is its review. 49.40 s, wide, with sound.
 
 **Draft 5**: the founder liked draft 4; it adds the two smartwatch ads they found, makes the "their words" stack
 the clients' reviews only, and adds the English cut (`wide-en/`; every line lives in `TEXT` in `build.py`).
+
+**Draft 6**: the founder on draft 5: "its a bit too fast paste, also in english version convert the forints to
+euros". 59.40 s. The hook and the three client worlds keep their length; the claim after the drop holds two bars
+and comes a line at a time, "how we work" gets three bars, the big results six beats each, and the reviews land
+one a second (`SPEC.md`, PACE and the shots). The beat was measured again on the track's kick drum: drafts 4 and 5
+hit a quarter of a second before each kick, this one on it, and the film ends where the track ends. The English
+cut shows euros; `SPEC.md` (Honesty) has every conversion and its rate.
 
 ## Files
 
@@ -32,8 +39,9 @@ python3 build.py
 for p in wide wide-en; do (cd $p && npx --yes hyperframes@0.9.40 check && npx --yes hyperframes@0.9.40 render -q delivery -o ../master-$p.mp4); done
 ```
 
-Measure the render's sound (`npx hyperframes audio <file> --json`): the mix level changed between renders of this
-draft (see `REVIEW.md`), so bring it to about -14 LUFS when encoding.
+Measure the render's sound (`npx hyperframes audio <file> --json`): the mix level changed between renders (see
+`REVIEW.md`), so bring it to about -14 LUFS when encoding. A review copy sent through the app must stay under
+30 MiB: about 3.3 Mbps of video for these 59 s.
 
 # Earlier drafts
 

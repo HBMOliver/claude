@@ -97,10 +97,10 @@
     <div class="rsv" id="op-p3"><div class="hd mid">Mégsem jönnek a <span class="acc">vevők?</span></div></div>
     <div class="rsv" id="op-ca"><div><div class="hd big"><span class="w">A</span> <span class="ss"><span class="w">social</span> <span class="w">media</span><i class="stk" id="op-stk"></i></span></div>
       <div class="it huge" id="op-m">meghalt.</div></div></div>
-    <div class="ff" id="op-rot" data-layout-allow-overflow><div class="ff" id="op-hcard"><video id="op-hv" class="clip full" src="assets/clips/w-turn.mp4" data-start="8.76" data-duration="2.52" data-media-start="0" data-hf-media-start-basis="local" data-track-index="20" muted playsinline></video></div></div>
+    <div class="ff" id="op-rot" data-layout-allow-overflow><div class="ff" id="op-hcard"><video id="op-hv" class="clip full" src="assets/clips/w-turn.mp4" data-start="8.76" data-duration="4.48" data-media-start="0" data-hf-media-start-basis="local" data-track-index="20" muted playsinline></video></div></div>
     <div class="ff" id="op-shade"></div>
-    <div class="cb" id="op-cb"><div class="hd cb1"><span class="w">Az</span> <span class="w it">érdeklődés</span></div>
-      <div class="hd cb1"><span class="w">vette</span> <span class="w">át</span> <span class="w">a</span> <span class="w">helyét<span class="acc">.</span></span></div></div>
+    <div class="cb" id="op-cb"><div class="hd cb1 l1"><span class="w">Az</span> <span class="w it">érdeklődés</span></div>
+      <div class="hd cb1 l2"><span class="w">vette</span> <span class="w">át</span> <span class="w">a</span> <span class="w">helyét<span class="acc">.</span></span></div></div>
     </div>
   </div>
   <script>
@@ -178,7 +178,10 @@
     tl.fromTo(["#op-glow", "#op-glow2"], { opacity: 1 }, { opacity: 0, duration: 0.14, ease: "power2.in", immediateRender: false }, AT(8.72));
     tl.fromTo("#op-in", { scale: 1 }, { scale: 1.3, duration: 0.36, ease: "power2.in", immediateRender: false }, AT(8.92));
     fade("#op-shade", 9.2, 0.3);
-    words("#op-cb .w", 9.28, 0.08);
+    // the claim, a line at a time: the first on the drop, the second two beats later; the picture pushes in under it
+    words("#op-cb .l1 .w", 9.28, 0.08);
+    words("#op-cb .l2 .w", 10.28, 0.07);
+    tl.fromTo("#op-hcard", { scale: 1 }, { scale: 1.06, duration: 3.96, ease: "none", immediateRender: false }, AT(9.28));
     window.__timelines["open"] = tl;
   })();
   </script>

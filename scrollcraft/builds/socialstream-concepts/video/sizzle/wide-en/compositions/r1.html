@@ -79,8 +79,11 @@
     #root .rn { position: absolute; display: flex; align-items: baseline; white-space: nowrap; }
     #root .rn .cnt { font-size: 520px; line-height: 0.84; letter-spacing: -0.055em; }
     #root .rn .ui { font-size: 290px; line-height: 0.84; margin-left: 0.12em; }
+    #root .rn .cur { font-size: 520px; line-height: 0.84; letter-spacing: -0.03em; }
     #root .rn .x { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 320px; line-height: 0.84; margin-left: 0.02em; }
     #root .rn .u { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 128px; margin-left: 0.16em; letter-spacing: -0.03em; }
+    #root #r1-n .cnt, #root #r1-n .cur { font-size: 400px; }
+    #root #r1-n .ui { font-size: 224px; }
     #root .days { position: absolute; left: 130px; top: 800px; display: flex; gap: 18px; }
     #root .day { width: 180px; height: 116px; border-radius: 28px; display: flex; align-items: center; justify-content: center;
       font: 700 46px/1 Sora, Inter, sans-serif; letter-spacing: -0.02em; background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.5);
@@ -88,12 +91,12 @@
   </style>
   <div id="root" data-composition-id="r1" data-width="1920" data-height="1080">
     <div class="ff" id="wp">
-    <div class="fld" style="background:linear-gradient(140deg,#1b3cff 0%,#3a22d8 58%,#1a0f6c 100%)"><i class="lt" id="r1-l0" data-layout-allow-overflow style="left:94%;top:90%;width:100vmax;height:100vmax;margin:-50.0vmax 0 0 -50.0vmax;background:radial-gradient(closest-side,rgba(255, 64, 104, 0.5),rgba(255, 64, 104,0))"></i><i class="lt" id="r1-l1" data-layout-allow-overflow style="left:4%;top:4%;width:86vmax;height:86vmax;margin:-43.0vmax 0 0 -43.0vmax;background:radial-gradient(closest-side,rgba(56, 190, 255, 0.5),rgba(56, 190, 255,0))"></i></div><div class="eb" id="r1-eb" style="position:absolute;left:130px;top:110px">Industrial hall builder · B2B · Meta</div><div class="hd rn" id="r1-n" style="left:118px;top:168px"><span class="cnt" id="r1-cnt" data-motion-blur="off"><span class="d"></span><span class="d"></span></span><span class="it ui">M Ft</span></div><div class="lab" id="r1-lab" style="position:absolute;left:130px;top:650px"><span class="w ">revenue</span> <span class="w ">in</span> <span class="w ">one</span> <span class="w ">week</span></div><div class="days"><div class="day" id="r1-d0">Mon</div><div class="day" id="r1-d1">Tue</div><div class="day" id="r1-d2">Wed</div><div class="day" id="r1-d3">Thu</div><div class="day" id="r1-d4">Fri</div><div class="day" id="r1-d5">Sat</div><div class="day" id="r1-d6">Sun</div></div><img id="r1-obj" src="assets/img/o-hall-mix.webp" alt="" style="position:absolute;left:1340px;top:120px;width:500px;height:500px">
+    <div class="fld" style="background:linear-gradient(140deg,#1b3cff 0%,#3a22d8 58%,#1a0f6c 100%)"><i class="lt" id="r1-l0" data-layout-allow-overflow style="left:94%;top:90%;width:100vmax;height:100vmax;margin:-50.0vmax 0 0 -50.0vmax;background:radial-gradient(closest-side,rgba(255, 64, 104, 0.5),rgba(255, 64, 104,0))"></i><i class="lt" id="r1-l1" data-layout-allow-overflow style="left:4%;top:4%;width:86vmax;height:86vmax;margin:-43.0vmax 0 0 -43.0vmax;background:radial-gradient(closest-side,rgba(56, 190, 255, 0.5),rgba(56, 190, 255,0))"></i></div><div class="eb" id="r1-eb" style="position:absolute;left:130px;top:110px">Industrial hall builder · B2B · Meta</div><div class="hd rn" id="r1-n" style="left:118px;top:228px"><span class="cur">€</span><span class="cnt" id="r1-cnt" data-motion-blur="off"><span class="d"></span><span class="d"></span><span class="d"></span></span><span class="it ui">K</span></div><div class="lab" id="r1-lab" style="position:absolute;left:130px;top:650px"><span class="w ">revenue</span> <span class="w ">in</span> <span class="w ">one</span> <span class="w ">week</span></div><div class="days"><div class="day" id="r1-d0">Mon</div><div class="day" id="r1-d1">Tue</div><div class="day" id="r1-d2">Wed</div><div class="day" id="r1-d3">Thu</div><div class="day" id="r1-d4">Fri</div><div class="day" id="r1-d5">Sat</div><div class="day" id="r1-d6">Sun</div></div><img id="r1-obj" src="assets/img/o-hall-mix.webp" alt="" style="position:absolute;left:1340px;top:120px;width:500px;height:500px">
     </div>
   </div>
   <script>
   (() => {
-    const FPS = 25, W = 1920, H = 1080, START = 26.8, AT = (t) => t - START;
+    const FPS = 25, W = 1920, H = 1080, START = 30.76, AT = (t) => t - START;
     const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
     const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
     const tl = gsap.timeline({ paused: true });
@@ -141,28 +144,29 @@
       const sep = el.querySelector(".sep");                 // a thousands comma: there once there are thousands
       if (sep) tl.fromTo(sep, { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none" }, AT(t + dur * 0.12));
     };
-    wipeIn(26.8, "iris");
-    drift("#r1-l0", 26.8, 2.28, -80, 60);
-    drift("#r1-l1", 26.8, 2.28, 70, -50);
-    fade("#r1-eb", 27.02);
-    tl.fromTo("#r1-n", { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "none" }, AT(27.06));
-    count(document.getElementById("r1-cnt"), 27.12, 0.826, 79, "power1.inOut");
-    words("#r1-lab .w", 27.1, 0.05);
-    tl.fromTo("#r1-obj", { opacity: 0, y: 90, scale: 0.8, rotation: -8 }, { opacity: 1, y: 0, scale: 1, rotation: 0, duration: 0.6, ease: "back.out(1.5)" }, AT(27));
-    tl.fromTo("#r1-d0", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(27.18));
-    tl.fromTo("#r1-d0", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(27.18));
-    tl.fromTo("#r1-d1", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(27.30));
-    tl.fromTo("#r1-d1", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(27.30));
-    tl.fromTo("#r1-d2", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(27.41));
-    tl.fromTo("#r1-d2", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(27.41));
-    tl.fromTo("#r1-d3", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(27.53));
-    tl.fromTo("#r1-d3", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(27.53));
-    tl.fromTo("#r1-d4", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(27.65));
-    tl.fromTo("#r1-d4", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(27.65));
-    tl.fromTo("#r1-d5", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(27.77));
-    tl.fromTo("#r1-d5", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(27.77));
-    tl.fromTo("#r1-d6", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(27.89));
-    tl.fromTo("#r1-d6", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(27.89));
+    wipeIn(30.76, "iris");
+    tl.fromTo("#wp", { scale: 1 }, { scale: 1.03, duration: 3.32, ease: "none" }, AT(30.76));
+    drift("#r1-l0", 30.76, 3.32, -80, 60);
+    drift("#r1-l1", 30.76, 3.32, 70, -50);
+    fade("#r1-eb", 30.98);
+    tl.fromTo("#r1-n", { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "none" }, AT(31.02));
+    count(document.getElementById("r1-cnt"), 31.08, 1.488, 197, "power1.inOut");
+    words("#r1-lab .w", 31.06, 0.05);
+    tl.fromTo("#r1-obj", { opacity: 0, y: 90, scale: 0.8, rotation: -8 }, { opacity: 1, y: 0, scale: 1, rotation: 0, duration: 0.6, ease: "back.out(1.5)" }, AT(30.96));
+    tl.fromTo("#r1-d0", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(31.23));
+    tl.fromTo("#r1-d0", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(31.23));
+    tl.fromTo("#r1-d1", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(31.45));
+    tl.fromTo("#r1-d1", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(31.45));
+    tl.fromTo("#r1-d2", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(31.66));
+    tl.fromTo("#r1-d2", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(31.66));
+    tl.fromTo("#r1-d3", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(31.87));
+    tl.fromTo("#r1-d3", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(31.87));
+    tl.fromTo("#r1-d4", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(32.08));
+    tl.fromTo("#r1-d4", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(32.08));
+    tl.fromTo("#r1-d5", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(32.30));
+    tl.fromTo("#r1-d5", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(32.30));
+    tl.fromTo("#r1-d6", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(32.51));
+    tl.fromTo("#r1-d6", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(32.51));
     window.__timelines["r1"] = tl;
   })();
   </script>

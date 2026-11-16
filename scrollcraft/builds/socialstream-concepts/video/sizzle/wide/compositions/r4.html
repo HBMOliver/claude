@@ -79,6 +79,7 @@
     #root .rn { position: absolute; display: flex; align-items: baseline; white-space: nowrap; }
     #root .rn .cnt { font-size: 520px; line-height: 0.84; letter-spacing: -0.055em; }
     #root .rn .ui { font-size: 290px; line-height: 0.84; margin-left: 0.12em; }
+    #root .rn .cur { font-size: 520px; line-height: 0.84; letter-spacing: -0.03em; }
     #root .rn .x { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 320px; line-height: 0.84; margin-left: 0.02em; }
     #root .rn .u { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 128px; margin-left: 0.16em; letter-spacing: -0.03em; }
     #root .dots i { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.3); }
@@ -98,7 +99,7 @@
   </div>
   <script>
   (() => {
-    const FPS = 25, W = 1920, H = 1080, START = 32.72, AT = (t) => t - START;
+    const FPS = 25, W = 1920, H = 1080, START = 38.72, AT = (t) => t - START;
     const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
     const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
     const tl = gsap.timeline({ paused: true });
@@ -146,16 +147,17 @@
       const sep = el.querySelector(".sep");                 // a thousands comma: there once there are thousands
       if (sep) tl.fromTo(sep, { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none" }, AT(t + dur * 0.12));
     };
-    wipeIn(32.72, "dr");
-    drift("#r4-l0", 32.72, 2.32, -80, 60);
-    drift("#r4-l1", 32.72, 2.32, 70, -50);
-    fade("#r4-eb", 32.94);
-    tl.fromTo("#r4-dots i", { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "none", stagger: { amount: 0.7 } }, AT(32.84));
-    tl.fromTo("#r4-n", { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "none" }, AT(32.98));
-    count(document.getElementById("r4-cnt"), 33.04, 0.6, 5700, "expo.out");
-    words("#r4-lab .w", 33.14, 0.05);
-    tl.set("#r4-st", { opacity: 1 }, AT(33.56));
-    tl.fromTo("#r4-st", { scale: 1.7, rotation: -10 }, { scale: 1, rotation: -4, duration: 0.3, ease: "expo.out" }, AT(33.56));
+    wipeIn(38.72, "dr");
+    tl.fromTo("#wp", { scale: 1 }, { scale: 1.03, duration: 3.28, ease: "none" }, AT(38.72));
+    drift("#r4-l0", 38.72, 3.28, -80, 60);
+    drift("#r4-l1", 38.72, 3.28, 70, -50);
+    fade("#r4-eb", 38.94);
+    tl.fromTo("#r4-dots i", { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "none", stagger: { amount: 1.3 } }, AT(38.84));
+    tl.fromTo("#r4-n", { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "none" }, AT(38.98));
+    count(document.getElementById("r4-cnt"), 39.04, 0.744, 5700, "power3.out");
+    words("#r4-lab .w", 39.14, 0.05);
+    tl.set("#r4-st", { opacity: 1 }, AT(40.04));
+    tl.fromTo("#r4-st", { scale: 1.7, rotation: -10 }, { scale: 1, rotation: -4, duration: 0.3, ease: "expo.out" }, AT(40.04));
     window.__timelines["r4"] = tl;
   })();
   </script>

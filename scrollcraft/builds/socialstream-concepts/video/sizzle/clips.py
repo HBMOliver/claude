@@ -125,7 +125,8 @@ def main():
     # the full-frame shot of the turn: the FlyX cinema from behind, heads against the bright screen (their promo, 4K);
     # and the wall's middle card: a card-sized window on that shot's middle, where it opens from
     turn = os.path.join(HERE, "assets", "clips", "w-turn.mp4")
-    run(["-ss", "25.24", "-t", "3.4", "-i", HOME + "/Downloads/DMC Promo video.mp4", "-vf", "scale=1920:1080:flags=lanczos,fps=25,format=yuv420p"]
+    # (the shot runs from 25.2 s to about 30.3 s in the promo; the film holds it for two bars after the drop, 4.5 s)
+    run(["-ss", "25.24", "-t", "4.8", "-i", HOME + "/Downloads/DMC Promo video.mp4", "-vf", "scale=1920:1080:flags=lanczos,fps=25,format=yuv420p"]
         + OUT + ["-crf", "18", turn])
     grey(still("mid", turn, 0.0, 360, 640, "wall", vf_pre="crop=300:533:765:273,"))
 

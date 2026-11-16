@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The SocialStream sizzle, draft 4 (2026-11-16). SPEC.md is the plan: the grammar of the Social Chain 2026 sizzle
+"""The SocialStream sizzle, draft 6 (2026-11-16). SPEC.md is the plan: the grammar of the Social Chain 2026 sizzle
 the founder sent (footage as the picture, a new world every few seconds, quiet lines and giant numbers, proof that
 looks like the platforms, clips changing on the beat) telling SocialStream's own story in SocialStream's own look.
 
@@ -7,8 +7,10 @@ The feed dies ("A social media meghalt."), one card comes back to life on the mu
 ("Az érdeklődés vette át a helyét."); three client worlds (FlyX Tenerife, Prof Enzo, the team's productions); how
 they work; five results; their clients' and viewers' words; the promise; the logo.
 
-Every line is the site's own copy (../../content.mjs) or a real number or comment (SPEC.md, Honesty).
-Run from this folder: python3 clips.py <photos> <enzo>, then python3 build.py (writes wide/; then render, README.md).
+Every line is the site's own copy (../../content.mjs) or a real number or comment (SPEC.md, Honesty); the English
+cut shows money in euros (the conversions and their rates are in SPEC.md).
+Run from this folder: python3 clips.py <photos> <enzo>, then python3 build.py (writes wide/ and wide-en/; then
+render, README.md).
 """
 import json, math, os, random, re, subprocess, sys
 
@@ -17,22 +19,39 @@ LOGO_TOOLS = os.path.normpath(os.path.join(HERE, "../../../../brand/socialstream
 FPS, W, H = 25, 1920, 1080
 WIPE = 0.32                                   # a scene comes in over the last one with a wipe this long
 
-# ---- the music: "What About Action" (Mixkit, free licence; in their CapCut folder), 121 bpm. The film starts
-# 53.975 s into it, in its breakdown, so the hook plays over the quiet part and the drop (63.255 s) lands at 9.28 s;
-# every beat is counted from the drop, never added up ----
-MUSIC, MUSIC_AT = "what-about-action", 53.975
-DROP, BEAT = 9.28, 0.4952
+# ---- the music: "What About Action" (Mixkit, free licence; in their CapCut folder), 121.0 bpm. Measured on its
+# kick drum (35-140 Hz, 2 ms steps; a straight line through the 96 kicks leaves 1.5 ms): the first kick after the
+# breakdown is 63.479 s into the track and a beat is 0.49587 s. (Drafts 4 and 5 took 63.255 s and 0.4952 s from a
+# coarser reading, so each of their hits came about a quarter of a second before its kick, on the off-beat.) The
+# film starts in the breakdown, so the hook plays over the quiet part and that first kick, the drop, lands at
+# 9.28 s. The track has exactly 96 kicks after the drop (beats 0-95) and then rings out: the logo lands on beat 96,
+# where the next kick would be. Every beat is counted from the drop, never added up ----
+MUSIC, KICK0 = "what-about-action", 63.479
+DROP, BEAT = 9.28, 0.49587
+MUSIC_AT = round(KICK0 - DROP, 3)
 
 
 def b(k):
+    """Beat k as a time of the film, on a frame: for the picture."""
     return round((DROP + k * BEAT) * FPS) / FPS
+
+
+def bx(k):
+    """Beat k exactly: for a sound whose hit belongs on the kick."""
+    return DROP + k * BEAT
 
 
 def r2(v):
     return round(v + 1e-9, 2)
 
 
-TOTAL = r2(b(76) + 2.48)
+# ---- the clock after the drop, in beats: the track's 96 kicks, spent where there is something to read (the founder
+# on draft 5: "its a bit too fast paste"). The turn holds its claim for two bars; three worlds of two bars; how
+# they work, three bars; the results 6, 4, 6, 6 and 4 beats; their clients' words 18; the promise 8; the logo on 96 ----
+B_FX, B_EZ, B_PR, B_HOW = 8, 16, 24, 32
+B_R1, B_R2, B_R3, B_R4, B_M3 = 44, 50, 54, 60, 66
+B_VO, B_CL, B_LOGO = 70, 88, 96
+TOTAL = r2(b(B_LOGO) + 2.52)
 # the hook's clock (before the drop)
 P1, P2, P3, P3_OUT = b(-12), b(-10), b(-8), 6.64          # Posztolsz. / Hirdetsz. / Mégsem jönnek a vevők?
 CA, STRIKE, DEATH, CA_OUT = b(-5), 7.08, b(-4), 8.72      # A social media (struck) meghalt.: the wall dies
@@ -40,16 +59,16 @@ SPARK, GROW = b(-1), 8.92                                 # the middle card come
 
 # ---- the scenes: id, start, end (seconds of the film); the order is the paint order ----
 SC = [
-    ("open", 0.0, b(4)),                                  # the feed, the problem, the diagnosis, the turn
+    ("open", 0.0, b(B_FX)),                                  # the feed, the problem, the diagnosis, the turn
     ("logo", 0.0, 3.0),                                   # the logo builds over the feed (the kit's film-open format)
-    ("flyx", r2(b(4) - WIPE), b(12)),                     # FlyX Tenerife
-    ("enzo", r2(b(12) - WIPE), r2(b(20) + 0.6)),          # Prof Enzo (the polaroids cover it)
-    ("prod", r2(b(20) - 0.12), b(28)),                    # the team's productions
-    ("how", r2(b(28) - WIPE), b(36)),                     # Mi gyártjuk a videót, mi futtatjuk a hirdetést, ...
-    ("r1", r2(b(36) - WIPE), b(40)), ("r2", r2(b(40) - WIPE), b(44)), ("r3", r2(b(44) - WIPE), b(48)),
-    ("r4", r2(b(48) - WIPE), b(52)), ("m300", r2(b(52) - WIPE), b(56)),
-    ("voices", r2(b(56) - WIPE), r2(b(68) + 0.04)),       # Ne nekünk higgy. Nekik.
-    ("close", r2(b(68) - WIPE), TOTAL),                   # the promise, the logo
+    ("flyx", r2(b(B_FX) - WIPE), b(B_EZ)),                     # FlyX Tenerife
+    ("enzo", r2(b(B_EZ) - WIPE), r2(b(B_PR) + 0.6)),          # Prof Enzo (the polaroids cover it)
+    ("prod", r2(b(B_PR) - 0.12), b(B_HOW)),                    # the team's productions
+    ("how", r2(b(B_HOW) - WIPE), b(B_R1)),                     # Mi gyártjuk a videót, mi futtatjuk a hirdetést, ...
+    ("r1", r2(b(B_R1) - WIPE), b(B_R2)), ("r2", r2(b(B_R2) - WIPE), b(B_R3)), ("r3", r2(b(B_R3) - WIPE), b(B_R4)),
+    ("r4", r2(b(B_R4) - WIPE), b(B_M3)), ("m300", r2(b(B_M3) - WIPE), b(B_VO)),
+    ("voices", r2(b(B_VO) - WIPE), r2(b(B_CL) + 0.04)),       # Ne nekünk higgy. Nekik.
+    ("close", r2(b(B_CL) - WIPE), TOTAL),                   # the promise, the logo
 ]
 for _n, _a, _z in SC:
     for _x in (_a, _z):
@@ -58,26 +77,31 @@ assert abs(TOTAL * FPS - round(TOTAL * FPS)) < 1e-6
 
 # ---- every line of the film in both languages. Hungarian is the site's copy; the English is the site's own English
 # for the same line (../../content.mjs), so nothing is translated twice. Comments on FlyX's reels were written in
-# English and stay as they are ----
+# English and stay as they are. Money is forints in Hungarian and euros in English (the founder: "in english version
+# convert the forints to euros"). Each euro figure is converted so that it cannot flatter the forint one (SPEC.md,
+# Honesty): revenue and budget at 400 Ft to the euro, rounded down; costs at the ECB reference rate of 2026-11-13,
+# 365.6 Ft, rounded up. r1_num is (sign before, digit boxes, value, unit after, digit size, unit size) ----
 TEXT = {
     "hu": dict(
         p1="Posztolsz.", p2="Hirdetsz.", p3='Mégsem jönnek a <span class="acc">vevők?</span>',
         ca=('<span class="w">A</span> <span class="ss"><span class="w">social</span> <span class="w">media</span>'
             '<i class="stk" id="op-stk"></i></span>'),
         ca2="meghalt.",
-        cb=('<div class="hd cb1"><span class="w">Az</span> <span class="w it">érdeklődés</span></div>\n'
-            '      <div class="hd cb1"><span class="w">vette</span> <span class="w">át</span> <span class="w">a</span> '
+        cb=('<div class="hd cb1 l1"><span class="w">Az</span> <span class="w it">érdeklődés</span></div>\n'
+            '      <div class="hd cb1 l2"><span class="w">vette</span> <span class="w">át</span> <span class="w">a</span> '
             '<span class="w">helyét<span class="acc">.</span></span></div>'),
         fx_eb="FlyX Tenerife · Élményközpont", fx_lab="megtekintés egy reelen", comment="Komment",
         ez_eb="Prof Enzo · Facebook-reelek", ez_lab="megtekintés", ez_f="33K követő",
         pr_eb="Részletek a videóinkból", tags=["Forgatás", "Vágás", "Feliratozás", "Reels", "Podcast &amp; interjú"],
         how=['Mi gyártjuk a <span class="it">videót</span>,', 'mi futtatjuk a <span class="it">hirdetést</span>,', "és mi mérjük,",
              'mit <span class="it hz">hozott</span><span class="acc">.</span>'],
+        how_chips=["81×", "79M Ft", "23×", "105 Ft"],
         r1_eb="Csarnoképítő ügyfél · B2B · Meta", r1_lab="bevétel egy hét alatt", days=["H", "K", "Sze", "Cs", "P", "Szo", "V"],
-        r2_eb="Ajtó webshop · Google Performance Max",
-        r3_eb="Karóra webshop · Karácsony", r3_p=("több mint&nbsp;", "M Ft bevétel"),
+        r1_num=("", 2, 79, "M Ft", 520, 290),
+        r2_eb="Ajtó webshop · Google Performance Max", r2_c1="1 Ft", r2_gl="81 Ft",
+        r3_eb="Karóra webshop · Karácsony", r3_p=("több mint&nbsp;", "M Ft bevétel"), r3_n=(1, 8),
         r4_eb="Egészségügyi webinár", r4_lab="jelentkező 600K Ft-ból", r4_st=("105 Ft", "egy jelentkező"), thou="",
-        m3_eb="2022 óta", m3_lab="kezelt büdzsé",        # the year is said once, above the number
+        m3_eb="2022 óta", m3_lab="kezelt büdzsé", m3_num=("", 300, "M+", "Ft"),   # the year is said once, above the number
         v0=("big", "Ne nekünk higgy."), v1="Nekik",
         # their clients' reviews of them, from the site, cut only with "…". (FlyX's viewers' comments are about
         # FlyX's videos, not about SocialStream: they stay in FlyX's world.)
@@ -95,19 +119,22 @@ TEXT = {
         p1="You post.", p2="You advertise.", p3='And still no <span class="acc">buyers?</span>',
         ca='<span class="ss"><span class="w">Social</span> <span class="w">media</span><i class="stk" id="op-stk"></i></span>',
         ca2="is dead.",
-        cb=('<div class="hd cb1"><span class="w it">Interest</span></div>\n'
-            '      <div class="hd cb1"><span class="w">has</span> <span class="w">taken</span> <span class="w">its</span> '
+        cb=('<div class="hd cb1 l1"><span class="w it">Interest</span></div>\n'
+            '      <div class="hd cb1 l2"><span class="w">has</span> <span class="w">taken</span> <span class="w">its</span> '
             '<span class="w">place<span class="acc">.</span></span></div>'),
         fx_eb="FlyX Tenerife · Experience centre", fx_lab="views on one reel", comment="Comment",
         ez_eb="Prof Enzo · Facebook reels", ez_lab="views", ez_f="33K followers",
         pr_eb="Clips from our videos", tags=["Shooting", "Editing", "Subtitles", "Reels", "Podcast &amp; interview"],
         how=['We make the <span class="it">video</span>,', 'we run the <span class="it">ads</span>,', "and we measure",
              'what they <span class="it hz">bring in</span><span class="acc">.</span>'],
+        how_chips=["81×", "€197K", "23×", "€0.29"],
         r1_eb="Industrial hall builder · B2B · Meta", r1_lab="revenue in one week", days=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        r2_eb="Door webshop · Google Performance Max",
-        r3_eb="Watch webshop · Christmas", r3_p=("over&nbsp;", "M Ft in revenue"),
-        r4_eb="Healthcare webinar", r4_lab="registrants from 600K Ft", r4_st=("105 Ft", "per registrant"), thou=",",
-        m3_eb="Since 2022", m3_lab="budget managed",
+        r1_num=("€", 3, 197, "K", 400, 224),                # 79M Ft at 400 Ft to the euro: €197.5K
+        r2_eb="Door webshop · Google Performance Max", r2_c1="€1", r2_gl="€81",
+        r3_eb="Watch webshop · Christmas", r3_p=('over&nbsp;<span class="eu">€</span>', '<span class="kk">K in revenue</span>'), r3_n=(2, 20),   # over 8M Ft at 400
+        r4_eb="Healthcare webinar", r4_lab="registrants from €1,650", r4_st=("€0.29", "per registrant"), thou=",",
+        # (600K Ft and 105 Ft at 365.6: €1,641 and €0.287, rounded up; €1,650 over 5,700 registrants is €0.29)
+        m3_eb="Since 2022", m3_lab="budget managed", m3_num=("€", 750, "K+", ""),   # 300M+ Ft at 400
         v0=("mid", "Don’t take our word for it."), v1="Take theirs",
         voices=[
             ("q", "Péter · Hoofbútor", "“There were purchases from launch day…”"),
@@ -231,6 +258,11 @@ def digits(n, cid, gap_after=None, sep=""):
 
 def wl(text, cls=""):
     return " ".join(f'<span class="w {cls}">{w}</span>' for w in text.split())
+
+
+def cur(sign):
+    """A currency sign before a counted number (the English cut's euro)."""
+    return f'<span class="cur">{sign}</span>' if sign else ""
 
 
 def hearts(prefix, n, t0, t1, box, seed):
@@ -365,28 +397,32 @@ def scene_open(s, e, info):
     tl.fromTo(["#op-glow", "#op-glow2"], {{ opacity: 1 }}, {{ opacity: 0, duration: 0.14, ease: "power2.in", immediateRender: false }}, AT({SPARK - 0.08:g}));
     tl.fromTo("#op-in", {{ scale: 1 }}, {{ scale: 1.3, duration: {DROP - GROW:g}, ease: "power2.in", immediateRender: false }}, AT({GROW:g}));
     fade("#op-shade", {DROP - 0.08:g}, 0.3);
-    words("#op-cb .w", {DROP:g}, 0.08);"""
+    // the claim, a line at a time: the first on the drop, the second two beats later; the picture pushes in under it
+    words("#op-cb .l1 .w", {DROP:g}, 0.08);
+    words("#op-cb .l2 .w", {b(2):g}, 0.07);
+    tl.fromTo("#op-hcard", {{ scale: 1 }}, {{ scale: 1.06, duration: {e - DROP:g}, ease: "none", immediateRender: false }}, AT({DROP:g}));"""
     return html, js, css
 
 
 def scene_flyx(s, e):
     """FlyX Tenerife: orange. Three phones fan out, their clips change on the bar; the reach counts up; three real
-    comments type themselves; hearts rise; one slow push."""
-    t0, cut = b(4), b(8)
+    comments type themselves a beat apart, as the count lands, and then stay to be read (this is FlyX's world, so
+    each is marked "Komment" and nothing more); hearts rise; one slow push."""
+    t0, cut = b(B_FX), b(B_FX + 4)
     ls = [("fx-l0", 6, 96, 92, "255, 214, 102, 0.55"), ("fx-l1", 97, 5, 86, "150, 60, 255, 0.42")]
     ph = [("fx-p0", 880, 250, -20, -12, "fx1a", "fx1b", 1), ("fx-p2", 1490, 230, 18, 9, "fx3a", "fx3b", 1), ("fx-p1", 1180, 150, -10, -3, "fx2a", "fx2b", 2)]
     phones = "".join(phone(pid, x, y, [(fa, 0, cut - s), (fb, cut - s, e - cut)], 1 + 2 * k, z)
                      for k, (pid, x, y, r0, r1, fa, fb, z) in enumerate(ph))
-    cm = [("fx-c0", 110, 548, "It was brilliant fun… highly recommended it", 640, b(6)),
-          ("fx-c1", 150, 722, "A fantastic experience, absolutely loved it.", 640, b(7.5)),
-          ("fx-c2", 110, 896, "Where is it please?", None, b(9))]
-    hh, hj = hearts("fx-h", 11, b(5), b(11), (900, 640, 1820, 980), 4)
+    cm = [("fx-c0", 110, 548, "It was brilliant fun… highly recommended it", 640, b(B_FX + 2)),
+          ("fx-c1", 150, 722, "A fantastic experience, absolutely loved it.", 640, b(B_FX + 3)),
+          ("fx-c2", 110, 896, "Where is it please?", None, b(B_FX + 4))]
+    hh, hj = hearts("fx-h", 11, b(B_FX + 1), b(B_FX + 7), (900, 640, 1820, 980), 4)
     html = (field("linear-gradient(135deg,#ff8a1f 0%,#ff5a3c 48%,#e0306f 100%)", ls) + tile("FlyX Tenerife")
             + f'<div class="fxt"><div class="eb" id="fx-eb">{TX["fx_eb"]}</div>'
               f'<div class="hd fxn" id="fx-n">{digits(2, "fx-cnt")}<span class="k">K</span></div>'
               f'<div class="lab" id="fx-lab">{wl(TX["fx_lab"])}</div></div>'
             + f'<div class="ff" id="fx-grp" data-layout-allow-overflow>{phones}</div>'
-            + "".join(bubble(cid, x, y, TX["comment"] + " · FlyX Tenerife", text, width=w) for cid, x, y, text, w, t in cm) + hh)
+            + "".join(bubble(cid, x, y, TX["comment"], text, width=w) for cid, x, y, text, w, t in cm) + hh)
     css = """
     #root .fxt { position: absolute; left: 110px; top: 92px; }
     #root .fxn { display: flex; align-items: baseline; margin-top: 14px; white-space: nowrap; font-size: 290px; line-height: 0.86; letter-spacing: -0.05em; }
@@ -398,20 +434,21 @@ def scene_flyx(s, e):
     js += [f'fade("#fx-eb", {t0 - 0.1:g});', f'tl.fromTo("#fx-n", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.1, ease: "none" }}, AT({t0 - 0.04:g}));',
            f'count(document.getElementById("fx-cnt"), {t0:g}, 0.9, 69);', f'words("#fx-lab .w", {t0 + 0.08:g}, 0.06);']
     for cid, x, y, text, w, t in cm:
-        js += [f'pop("#{cid}", {t - 0.08:g});', f'type("#{cid}", {t + 0.06:g});']
-    js += [hj, f'tl.fromTo("#fx-grp", {{ scale: 1 }}, {{ scale: 1.08, duration: {b(12) - cut:g}, ease: "power1.inOut" }}, AT({cut:g}));']
+        js += [f'pop("#{cid}", {t - 0.08:g});', f'type("#{cid}", {t + 0.06:g}, 0.06);']
+    js += [hj, f'tl.fromTo("#fx-grp", {{ scale: 1 }}, {{ scale: 1.08, duration: {e - cut:g}, ease: "power1.inOut" }}, AT({cut:g}));']
     return html, "\n    ".join(js), css
 
 
 def scene_enzo(s, e):
     """Prof Enzo: green. Three reels fill the height; the total of their plays counts over them; the best reels'
     counts pop along the bottom."""
-    t0, cut = b(12), b(16)
+    t0, cut, hit = b(B_EZ), b(B_EZ + 4), b(B_EZ + 2)
     ls = [("ez-l0", 4, 6, 90, "190, 255, 120, 0.4"), ("ez-l1", 96, 96, 90, "20, 60, 160, 0.45")]
     cl = [("ez-c0", 170, "ez1a", "ez1b"), ("ez-c1", 710, "ez2a", "ez2b"), ("ez-c2", 1250, "ez3a", "ez3b")]
     cards = "".join(card(cid, x, 96, 500, 889, [(fa, 0, cut - s), (fb, cut - s, e - cut)], 1 + 2 * k) for k, (cid, x, fa, fb) in enumerate(cl))
-    chips = [("149K", 250, b(15)), ("122K", 610, b(16)), ("105K", 970, b(17)), ("82K", 1330, b(18))]
-    hh, hj = hearts("ez-h", 12, b(13), b(19.5), (200, 760, 1720, 1000), 9)
+    # the best reels' counts come two at a time, two beats apart (draft 5 popped one a beat)
+    chips = [("149K", 250, cut), ("122K", 610, cut + 0.1), ("105K", 970, b(B_EZ + 6)), ("82K", 1330, b(B_EZ + 6) + 0.1)]
+    hh, hj = hearts("ez-h", 12, b(B_EZ + 1), b(B_EZ + 7.5), (200, 760, 1720, 1000), 9)
     html = (field("linear-gradient(140deg,#16c172 0%,#0b8f7a 52%,#075e63 100%)", ls) + tile("Prof Enzo") + cards
             + '<div class="ff" id="ez-scrim" style="background:rgba(4,20,22,0.42)"></div>'
             + f'<div class="ezo"><div class="ezrow"><div class="hd ezn" id="ez-n">{digits(3, "ez-cnt")}<span>K</span></div>'
@@ -432,12 +469,12 @@ def scene_enzo(s, e):
     js += [f'rise("#{cid}", {s + 0.04 + 0.08 * k:g}, {(-6, 0, 6)[k]}, 0);' for k, (cid, x, fa, fb) in enumerate(cl)]
     js += [f'fade("#ez-scrim", {t0 - 0.12:g}, 0.3);', f'pop("#ez-eb", {t0 - 0.06:g}, 0.4);',
            f'tl.fromTo("#ez-n", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.1, ease: "none" }}, AT({t0 - 0.02:g}));',
-           f'count(document.getElementById("ez-cnt"), {t0:g}, {b(14) - t0 - 0.04:g}, 999, "power2.in");',
+           f'count(document.getElementById("ez-cnt"), {t0:g}, {hit - t0 - 0.04:g}, 999, "power2.in");',
            f'fade("#ez-lab", {t0 + 0.1:g});',
            # the hit: the count becomes "1M+" exactly on the beat
-           f'tl.set("#ez-n", {{ opacity: 0 }}, AT({b(14):g}));', f'tl.set("#ez-m", {{ opacity: 1 }}, AT({b(14):g}));',
-           f'tl.fromTo("#ez-m", {{ scale: 1.28 }}, {{ scale: 1, duration: 0.5, ease: "back.out(2.2)" }}, AT({b(14):g}));',
-           f'pop("#ez-f", {b(14.5):g}, 0.4);']
+           f'tl.set("#ez-n", {{ opacity: 0 }}, AT({hit:g}));', f'tl.set("#ez-m", {{ opacity: 1 }}, AT({hit:g}));',
+           f'tl.fromTo("#ez-m", {{ scale: 1.28 }}, {{ scale: 1, duration: 0.5, ease: "back.out(2.2)" }}, AT({hit:g}));',
+           f'pop("#ez-f", {b(B_EZ + 3) - 0.08:g}, 0.4);']
     js += [f'pop("#ez-k{k}", {t - 0.08:g}, 0.4);' for k, (v, x, t) in enumerate(chips)]
     js.append(hj)
     return html, "\n    ".join(js), css
@@ -446,7 +483,7 @@ def scene_enzo(s, e):
 def scene_prod(s, e):
     """The team's productions: polaroids of them at work pile over the frame (and over Prof Enzo's world) and
     scatter; behind them, violet: five reel cards and what they do to a video."""
-    t0 = b(20)
+    t0, cut = b(B_PR), b(B_PR + 6)
     rnd = random.Random(21)
     ls = [("pr-l0", 94, 8, 96, "255, 64, 104, 0.4"), ("pr-l1", 4, 96, 90, "56, 160, 255, 0.5")]
     # the pile: five columns, three rows, jittered; each flies in from outside and out again
@@ -464,17 +501,17 @@ def scene_prod(s, e):
         pj.append(f'tl.fromTo("#pr-p{i}", {{ x: {fx:.0f}, y: {fy:.0f}, rotation: {rot + rnd.uniform(-35, 35):.1f} }}, {{ x: 0, y: 0, rotation: {rot:.1f}, duration: 0.5, ease: "expo.out" }}, AT({t0 - 0.1 + 0.03 * k:.2f}));')
         pj.append(f'tl.fromTo("#pr-p{i}", {{ x: 0, y: 0, rotation: {rot:.1f} }}, {{ x: {fx * 1.05:.0f}, y: {fy * 1.05:.0f}, rotation: {rot + rnd.uniform(-25, 25):.1f}, duration: 0.45, ease: "power3.in", immediateRender: false }}, AT({t0 + 1.24 + 0.014 * k:.2f}));')
     t_c = t0 + 1.2                                          # the cards come as the polaroids leave
-    cl = [("pr-c0", 60, 351, 280, 498, [("pr1", t_c - s, b(26) - t_c), ("pr6", b(26) - s, e - b(26))]),
-          ("pr-c1", 380, 298, 340, 604, [("pr2", t_c - s, b(26) - t_c), ("pr4", b(26) - s, e - b(26))]),
+    cl = [("pr-c0", 60, 351, 280, 498, [("pr1", t_c - s, cut - t_c), ("pr6", cut - s, e - cut)]),
+          ("pr-c1", 380, 298, 340, 604, [("pr2", t_c - s, cut - t_c), ("pr4", cut - s, e - cut)]),
           ("pr-c2", 760, 245, 400, 711, [("pw2", t_c - s, e - t_c)]),
-          ("pr-c3", 1200, 298, 340, 604, [("pw1", t_c - s, b(26) - t_c), ("pr5", b(26) - s, e - b(26))]),
+          ("pr-c3", 1200, 298, 340, 604, [("pw1", t_c - s, cut - t_c), ("pr5", cut - s, e - cut)]),
           ("pr-c4", 1580, 351, 280, 498, [("pr3", t_c - s, e - t_c)])]
     cards, track = "", 1
     for cid, x, y, w, h, clips in cl:
         cards += card(cid, x, y, w, h, clips, track)
         track += len(clips)
     tags = TX["tags"]
-    hh, hj = hearts("pr-h", 8, b(24), b(27.5), (200, 760, 1700, 1000), 13)
+    hh, hj = hearts("pr-h", 8, b(B_PR + 4), b(B_PR + 7.5), (200, 760, 1700, 1000), 13)
     html = (f'<div class="ff" id="pr-g">{field("linear-gradient(140deg,#4a22c8 0%,#3418a0 52%,#1c0d58 100%)", ls)}{tile("SocialStream")}</div>'
             + f'<div class="eb" id="pr-eb" style="position:absolute;left:60px;top:70px">{TX["pr_eb"]}</div>'
             + '<div id="pr-tags" data-layout-allow-overflow>' + "".join(f'<div class="tag" id="pr-t{k}">{t}</div>' for k, t in enumerate(tags)) + '</div>'
@@ -486,15 +523,16 @@ def scene_prod(s, e):
                f'drift("#pr-l0", {t0:g}, {e - t0:g}, -70, 50); drift("#pr-l1", {t0:g}, {e - t0:g}, 70, -50);',
                f'fade("#pr-eb", {t_c:g});']
     js += [f'rise("#{cid}", {t_c - 0.04 + 0.06 * k:g}, {(-8, -4, 0, 4, 8)[k]}, 0, 0.66);' for k, (cid, *_r) in enumerate(cl)]
-    js += [f'pop("#pr-t{k}", {b(24) + 0.5 * BEAT * k - 0.08:.2f}, 0.4);' for k in range(len(tags))]
+    # the tags come as one wave on the bar (draft 5 popped them one by one, four a second)
+    js += [f'pop("#pr-t{k}", {b(B_PR + 4) + 0.09 * k - 0.08:.2f}, 0.4);' for k in range(len(tags))]
     js.append(hj)
     return html, "\n    ".join(js), css
 
 
 def scene_how(s, e):
-    """Night. How they work, one phrase every two beats, each with what it is about around it: their reels, the
-    platforms, the numbers that follow."""
-    T = [b(28), b(30), b(32), b(34)]
+    """Night. How they work, a phrase at a time, each with what it is about around it: their reels, the platforms,
+    the numbers that follow. Four phrases over three bars: three beats each."""
+    T = [b(B_HOW + 3 * k) for k in range(4)]
     ls = [("hw-l0", 14, 10, 90, "66, 92, 255, 0.36"), ("hw-l1", 88, 92, 90, "136, 78, 255, 0.34"), ("hw-l2", 96, 6, 50, "255, 64, 104, 0.22")]
 
     def ring(n, a0, w, h, rx=770, ry=395):
@@ -503,7 +541,7 @@ def scene_how(s, e):
     g0 = "".join(f'<div class="card mini g0" style="left:{x:.0f}px;top:{y:.0f}px;width:170px;height:302px;transform:rotate({(-7, 5, -4, 8, -6, 4)[i]}deg)">'
                  f'<img src="assets/wall/{t}.jpg" alt=""></div>' for i, ((x, y), t) in enumerate(zip(ring(6, 0.42, 170, 302, 740, 360), ["w02", "w04", "w07", "w15", "w09", "w10"])))
     g1 = "".join(f'<div class="tag g1" style="left:{x:.0f}px;top:{y:.0f}px">{t}</div>' for (x, y), t in zip(ring(4, 0.85, 230, 92, 700, 350), ["Meta", "TikTok", "Google", "Reels"]))
-    g2 = "".join(f'<div class="chip g2" style="left:{x:.0f}px;top:{y:.0f}px">{t}</div>' for (x, y), t in zip(ring(4, 0.3, 270, 104, 700, 350), ["81×", "79M Ft", "23×", "105 Ft"]))
+    g2 = "".join(f'<div class="chip g2" style="left:{x:.0f}px;top:{y:.0f}px">{t}</div>' for (x, y), t in zip(ring(4, 0.3, 270, 104, 700, 350), TX["how_chips"]))
     html = (field("#05070f", ls) + g0 + g1 + g2
             + f'<div class="rsv" id="hw-0"><div class="hd mid">{TX["how"][0]}</div></div>'
             + f'<div class="rsv" id="hw-1"><div class="hd mid">{TX["how"][1]}</div></div>'
@@ -522,8 +560,8 @@ def scene_how(s, e):
         js.append(f'tl.fromTo(".g{k}", {{ scale: 0.3 }}, {{ scale: 1, duration: 0.5, ease: "back.out(1.6)", stagger: 0.04 }}, AT({T[k] - 0.06:g}));')
         js.append(f'tl.fromTo(".g{k}", {{ opacity: 1 }}, {{ opacity: 0, duration: 0.14, ease: "power2.in", immediateRender: false }}, AT({T[k + 1] - 0.12:g}));')
     # the last phrase is the door to the numbers: the camera goes through it
-    js.append(f'tl.fromTo("#hw-3t", {{ scale: 1 }}, {{ scale: 3.2, duration: 0.3, ease: "power3.in" }}, AT({b(36) - 0.34:g}));')
-    js.append(f'tl.fromTo("#hw-3t", {{ opacity: 1 }}, {{ opacity: 0, duration: 0.2, ease: "power2.in", immediateRender: false }}, AT({b(36) - 0.24:g}));')
+    js.append(f'tl.fromTo("#hw-3t", {{ scale: 1 }}, {{ scale: 3.2, duration: 0.26, ease: "power3.in" }}, AT({e - 0.28:g}));')
+    js.append(f'tl.fromTo("#hw-3t", {{ opacity: 1 }}, {{ opacity: 0, duration: 0.16, ease: "power2.in", immediateRender: false }}, AT({e - 0.18:g}));')
     return html, "\n    ".join(js), css
 
 
@@ -531,35 +569,46 @@ RES_CSS = """
     #root .rn { position: absolute; display: flex; align-items: baseline; white-space: nowrap; }
     #root .rn .cnt { font-size: 520px; line-height: 0.84; letter-spacing: -0.055em; }
     #root .rn .ui { font-size: 290px; line-height: 0.84; margin-left: 0.12em; }
+    #root .rn .cur { font-size: 520px; line-height: 0.84; letter-spacing: -0.03em; }
     #root .rn .x { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 320px; line-height: 0.84; margin-left: 0.02em; }
     #root .rn .u { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 128px; margin-left: 0.16em; letter-spacing: -0.03em; }"""
 
 
+def push(s, e, to=1.03):
+    """A result's world pushes in slowly for as long as it is on: nothing stands still while it is read."""
+    return f'tl.fromTo("#wp", {{ scale: 1 }}, {{ scale: {to}, duration: {e - s:g}, ease: "none" }}, AT({s:g}));'
+
+
 def res_open(rid, s, e, kind, ls):
-    js = [f'wipeIn({s:g}, "{kind}");'] + [f'drift("#{l[0]}", {s:g}, {e - s:g}, {70 if k % 2 else -80}, {-50 if k % 2 else 60});' for k, l in enumerate(ls)]
+    js = [f'wipeIn({s:g}, "{kind}");', push(s, e)]
+    js += [f'drift("#{l[0]}", {s:g}, {e - s:g}, {70 if k % 2 else -80}, {-50 if k % 2 else 60});' for k, l in enumerate(ls)]
     js.append(f'fade("#{rid}-eb", {s + WIPE - 0.1:g});')
     return js
 
 
 def scene_r1(s, e):
-    """79 M Ft in one week, blue: the week's days light up one by one while the revenue climbs."""
-    t0, step = b(36), 0.118
+    """79 M Ft in one week, blue: the week's days light up one by one while the revenue climbs; the seventh day and
+    the whole number land together on a kick, three beats in; then it holds to be read."""
+    t0, step = b(B_R1), 3 * BEAT / 7
+    pre, n, to, unit, px, upx = TX["r1_num"]
     ls = [("r1-l0", 94, 90, 100, "255, 64, 104, 0.5"), ("r1-l1", 4, 4, 86, "56, 190, 255, 0.5")]
     days = TX["days"]
     html = (field("linear-gradient(140deg,#1b3cff 0%,#3a22d8 58%,#1a0f6c 100%)", ls)
             + f'<div class="eb" id="r1-eb" style="position:absolute;left:130px;top:110px">{TX["r1_eb"]}</div>'
-            + f'<div class="hd rn" id="r1-n" style="left:118px;top:168px">{digits(2, "r1-cnt")}<span class="it ui">M Ft</span></div>'
+            + f'<div class="hd rn" id="r1-n" style="left:118px;top:{168 + round((520 - px) * 0.5)}px">{cur(pre)}{digits(n, "r1-cnt")}<span class="it ui">{unit}</span></div>'
             + f'<div class="lab" id="r1-lab" style="position:absolute;left:130px;top:650px">{wl(TX["r1_lab"])}</div>'
             + '<div class="days">' + "".join(f'<div class="day" id="r1-d{k}">{d}</div>' for k, d in enumerate(days)) + '</div>'
             + '<img id="r1-obj" src="assets/img/o-hall-mix.webp" alt="" style="position:absolute;left:1340px;top:120px;width:500px;height:500px">')
-    css = RES_CSS + """
+    css = RES_CSS + f"""
+    #root #r1-n .cnt, #root #r1-n .cur {{ font-size: {px}px; }}
+    #root #r1-n .ui {{ font-size: {upx}px; }}""" + """
     #root .days { position: absolute; left: 130px; top: 800px; display: flex; gap: 18px; }
     #root .day { width: 180px; height: 116px; border-radius: 28px; display: flex; align-items: center; justify-content: center;
       font: 700 46px/1 Sora, Inter, sans-serif; letter-spacing: -0.02em; background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.5);
       box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.22); }"""
     js = res_open("r1", s, e, "iris", ls) + [
         f'tl.fromTo("#r1-n", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.1, ease: "none" }}, AT({t0 - 0.06:g}));',
-        f'count(document.getElementById("r1-cnt"), {t0:g}, {7 * step:g}, 79, "power1.inOut");',
+        f'count(document.getElementById("r1-cnt"), {t0:g}, {7 * step:.3f}, {to}, "power1.inOut");',
         f'words("#r1-lab .w", {t0 - 0.02:g}, 0.05);',
         f'tl.fromTo("#r1-obj", {{ opacity: 0, y: 90, scale: 0.8, rotation: -8 }}, {{ opacity: 1, y: 0, scale: 1, rotation: 0, duration: 0.6, ease: "back.out(1.5)" }}, AT({t0 - 0.12:g}));']
     for k in range(7):
@@ -571,14 +620,14 @@ def scene_r1(s, e):
 
 def scene_r2(s, e):
     """81x ROAS, red-pink: one forint, then eighty-one: a coin, then a 9 x 9 grid of coins bursts out."""
-    t0 = b(40)
+    t0 = b(B_R2)
     ls = [("r2-l0", 6, 94, 92, "255, 170, 80, 0.5"), ("r2-l1", 96, 6, 90, "110, 60, 255, 0.5")]
     html = (field("linear-gradient(140deg,#ff2d5f 0%,#d81d74 55%,#7a1690 100%)", ls)
             + f'<div class="eb" id="r2-eb" style="position:absolute;left:130px;top:110px">{TX["r2_eb"]}</div>'
             + f'<div class="hd rn" id="r2-n" style="left:118px;top:168px">{digits(2, "r2-cnt")}<span class="x">×</span><span class="u">ROAS</span></div>'
-            + '<div class="c1" id="r2-c1"><i class="cn"></i><span>1 Ft</span><b>→</b></div>'
+            + f'<div class="c1" id="r2-c1"><i class="cn"></i><span>{TX["r2_c1"]}</span><b>→</b></div>'
             + '<div class="grid" id="r2-g" data-motion-blur="off">' + '<i class="cn"></i>' * 81 + '</div>'
-            + '<div class="gl" id="r2-gl">81 Ft</div>')
+            + f'<div class="gl" id="r2-gl">{TX["r2_gl"]}</div>')
     css = RES_CSS + """
     #root .cn { display: block; width: 62px; height: 62px; border-radius: 50%;
       background: radial-gradient(circle at 34% 30%, #ffffff 0%, #ffe8ef 48%, #ffbfd0 100%);
@@ -603,30 +652,35 @@ def scene_r2(s, e):
 
 
 def scene_r3(s, e):
-    """23x ROAS at Christmas, white: the number slams in ink; the holiday revenue counts under it; the watch drops in."""
-    t0 = b(44)
+    """23x ROAS at Christmas, white: the number slams in ink on the first kick, the holiday revenue counts under it
+    on the second, the watch drops in on the third; then it holds to be read."""
+    t0, t1, t2 = b(B_R3), b(B_R3 + 1), b(B_R3 + 2)
+    pn, pto = TX["r3_n"]
     html = ('<div class="fld" style="background:#f3f5fb"></div>'
             + f'<div class="eb" id="r3-eb" style="position:absolute;left:0;right:0;top:106px;text-align:center;color:#3a4266">{TX["r3_eb"]}</div>'
             + f'<div class="hd rn" id="r3-n" style="left:0;right:0;top:160px;justify-content:center">{digits(2, "r3-cnt")}<span class="x acc">×</span><span class="u">ROAS</span></div>'
-            + f'<div class="pc"><div class="pill" id="r3-p">{TX["r3_p"][0]}' + digits(1, "r3-pc") + f'{TX["r3_p"][1]}</div></div>'
+            + f'<div class="pc"><div class="pill" id="r3-p">{TX["r3_p"][0]}' + digits(pn, "r3-pc") + f'{TX["r3_p"][1]}</div></div>'
             + '<img id="r3-obj" src="assets/img/o-watch-mix.webp" alt="" style="position:absolute;left:1390px;top:560px;width:460px;height:460px">')
     css = RES_CSS + """
     #root #r3-n { color: #0b1030; transform-origin: 50% 60%; }
     #root #r3-n .cnt { font-size: 580px; }
     #root .pc { position: absolute; left: 0; right: 0; top: 720px; display: flex; justify-content: center; }
     #root #r3-p { position: relative; background: #0b1030; color: #fff; font: 700 54px/1 Sora, Inter, sans-serif; letter-spacing: -0.02em; padding: 24px 40px; box-shadow: none; }
-    #root #r3-p .cnt .d { width: 0.6em; }"""
-    js = [f'wipeIn({s:g}, "up");', f'fade("#r3-eb", {s + WIPE - 0.1:g});',
+    #root #r3-p .cnt .d { width: 0.6em; }
+    #root #r3-p .eu { margin: 0 -13px 0 -12px; }
+    #root #r3-p .kk { margin-left: -11px; }"""
+    js = [f'wipeIn({s:g}, "up");', push(s, e), f'fade("#r3-eb", {s + WIPE - 0.1:g});',
           f'tl.fromTo("#r3-n", {{ opacity: 0, scale: 1.4 }}, {{ opacity: 1, scale: 1, duration: 0.36, ease: "expo.out" }}, AT({t0 - 0.04:g}));',
           f'count(document.getElementById("r3-cnt"), {t0 - 0.04:g}, 0.5, 23, "power2.out");',
-          f'pop("#r3-p", {t0 + 0.42:g}, 0.4);', f'count(document.getElementById("r3-pc"), {t0 + 0.46:g}, 0.4, 8, "power2.out");',
-          f'tl.fromTo("#r3-obj", {{ opacity: 0, y: -260, rotation: 24 }}, {{ opacity: 1, y: 0, rotation: 8, duration: 0.7, ease: "bounce.out" }}, AT({t0 + 0.2:g}));']
+          # the watch's first bounce (36 % into bounce.out) lands on the third kick
+          f'tl.fromTo("#r3-obj", {{ opacity: 0, y: -260, rotation: 24 }}, {{ opacity: 1, y: 0, rotation: 8, duration: 0.7, ease: "bounce.out" }}, AT({t2 - 0.25:g}));',
+          f'pop("#r3-p", {t1 - 0.08:g}, 0.4);', f'count(document.getElementById("r3-pc"), {t1 - 0.04:g}, 0.5, {pto}, "power2.out");']
     return html, "\n    ".join(js), css
 
 
 def scene_r4(s, e):
     """About 5 700 sign-ups at 105 Ft each, violet: a counter races while dots fill the frame; the price stamps in."""
-    t0 = b(48)
+    t0, t_st = b(B_R4), b(B_R4 + 2)                         # the count lands a beat and a half in, the stamp on the next kick
     ls = [("r4-l0", 94, 8, 92, "255, 64, 104, 0.45"), ("r4-l1", 6, 94, 92, "56, 190, 255, 0.5")]
     pts = [(24 + c * 48, 26 + r * 58) for r in range(18) for c in range(40)]
     random.Random(7).shuffle(pts)                           # a fixed order, the same on every render
@@ -648,51 +702,54 @@ def scene_r4(s, e):
       letter-spacing: -0.03em; box-shadow: 0 30px 60px -24px rgba(40, 0, 60, 0.6); }
     #root .stamp span { font-size: 60px; font-weight: 600; opacity: 0.92; }"""
     js = res_open("r4", s, e, "dr", ls) + [
-        f'tl.fromTo("#r4-dots i", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.1, ease: "none", stagger: {{ amount: 0.7 }} }}, AT({t0 - 0.2:g}));',
+        f'tl.fromTo("#r4-dots i", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.1, ease: "none", stagger: {{ amount: 1.3 }} }}, AT({t0 - 0.2:g}));',
         f'tl.fromTo("#r4-n", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.1, ease: "none" }}, AT({t0 - 0.06:g}));',
-        f'count(document.getElementById("r4-cnt"), {t0:g}, 0.6, 5700, "expo.out");',
+        f'count(document.getElementById("r4-cnt"), {t0:g}, {1.5 * BEAT:.3f}, 5700, "power3.out");',
         f'words("#r4-lab .w", {t0 + 0.1:g}, 0.05);',
         # the stamp is a hit: it is there on the beat, then settles
-        f'tl.set("#r4-st", {{ opacity: 1 }}, AT({b(49):g}));',
-        f'tl.fromTo("#r4-st", {{ scale: 1.7, rotation: -10 }}, {{ scale: 1, rotation: -4, duration: 0.3, ease: "expo.out" }}, AT({b(49):g}));']
+        f'tl.set("#r4-st", {{ opacity: 1 }}, AT({t_st:g}));',
+        f'tl.fromTo("#r4-st", {{ scale: 1.7, rotation: -10 }}, {{ scale: 1, rotation: -4, duration: 0.3, ease: "expo.out" }}, AT({t_st:g}));']
     return html, "\n    ".join(js), css
 
 
 def scene_m300(s, e):
     """300M+ Ft managed since 2022: night, the widest number of the film."""
-    t0 = b(52)
+    t0 = b(B_M3)
+    pre, to, plus, unit = TX["m3_num"]
+    unit_html = f'<span class="it ui">{unit}</span>' if unit else ""
     ls = [("m3-l0", 12, 90, 100, "66, 92, 255, 0.5"), ("m3-l1", 90, 8, 96, "136, 78, 255, 0.5"), ("m3-l2", 60, 110, 60, "255, 64, 104, 0.3")]
     html = (field("#070a1c", ls)
             + f'<div class="eb" id="m3-eb" style="position:absolute;left:0;right:0;top:150px;text-align:center">{TX["m3_eb"]}</div>'
-            + f'<div class="hd rn" id="m3-n" style="left:0;right:0;top:220px;justify-content:center">{digits(3, "m3-cnt")}<span class="mp">M+</span><span class="it ui">Ft</span></div>'
+            + f'<div class="hd rn" id="m3-n" style="left:0;right:0;top:220px;justify-content:center">{cur(pre)}{digits(3, "m3-cnt")}<span class="mp">{plus}</span>{unit_html}</div>'
             + f'<div class="lab" id="m3-lab" style="position:absolute;left:0;right:0;top:720px;text-align:center">{wl(TX["m3_lab"])}</div>')
     css = RES_CSS + """
-    #root #m3-n .cnt, #root #m3-n .mp { font-size: 440px; line-height: 0.84; letter-spacing: -0.055em; }
+    #root #m3-n .cnt, #root #m3-n .mp, #root #m3-n .cur { font-size: 440px; line-height: 0.84; letter-spacing: -0.055em; }
     #root #m3-n .ui { font-size: 330px; }
     #root #m3-lab { font-size: 76px; font-weight: 700; font-family: Sora, Inter, sans-serif; letter-spacing: -0.03em; }"""
     js = res_open("m3", s, e, "iris", ls) + [
         f'tl.fromTo("#m3-n", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.1, ease: "none" }}, AT({t0 - 0.06:g}));',
-        f'count(document.getElementById("m3-cnt"), {t0:g}, 0.9, 300, "expo.out");',
+        f'count(document.getElementById("m3-cnt"), {t0:g}, 0.9, {to}, "expo.out");',
         f'words("#m3-lab .w", {t0 + 0.3:g}, 0.06);']
     return html, "\n    ".join(js), css
 
 
 def scene_voices(s, e):
-    """"Ne nekünk higgy. Nekik." Then their clients' reviews stack up the frame, one a beat, typing themselves;
-    the last lands four beats before the wall returns, so the stack can be read."""
-    BASE, STEP, CWD = 826, 214, 1060
+    """"Ne nekünk higgy. Nekik." Their clients' reviews stack up the frame, one every two beats (a second each, so
+    each can be read as it lands), typing themselves; the first lands under "Nekik.", the last five beats before
+    the wall returns."""
+    BASE, STEP, CWD = 826, 222, 1060
     VOICES = TX["voices"]
-    t_i = [b(59 + i) for i in range(len(VOICES))]         # the last one lands two beats before the wall returns
+    t_i = [b(B_VO + 3 + 2 * i) for i in range(len(VOICES))]
     ls = [("vc-l0", 8, 12, 80, "66, 92, 255, 0.3"), ("vc-l1", 94, 90, 84, "255, 64, 104, 0.24")]
     cards = "".join(bubble(f"vc-q{i}", (W - CWD) // 2, BASE + i * STEP, src, text, "q" if kind == "q" else "", CWD)
                     for i, (kind, src, text) in enumerate(VOICES))
     rnd = random.Random(5)
     bubs, bj = [], []
-    for k in range(10):                                     # quotation marks drift up at the sides
+    for k in range(16):                                     # quotation marks drift up at the sides
         size = rnd.choice([200, 260, 320, 400])
         x = rnd.uniform(30, 330 - size * 0.4) if k % 2 == 0 else rnd.uniform(1600, 1900 - size * 0.4)
         y0 = rnd.uniform(700, 1080)
-        tt = b(59) - 0.3 + rnd.uniform(0, 3.4)
+        tt = t_i[0] - 0.3 + rnd.uniform(0, 5.8)
         bubs.append(f'<div class="qm it" id="vc-b{k}" data-layout-ignore style="font-size:{size}px">{TX["qm"][k % 2]}</div>')
         bj.append(f'heart("#vc-b{k}", {tt:.2f}, {x:.0f}, {y0:.0f}, {rnd.uniform(420, 760):.0f}, {rnd.uniform(-30, 30):.0f}, {rnd.uniform(2.2, 3.0):.2f});')
     html = (field("#05070f", ls) + "".join(bubs)
@@ -703,21 +760,21 @@ def scene_voices(s, e):
     #root .bub { padding: 26px 44px 28px 118px; border-radius: 32px; font-size: 38px; }
     #root .bub.q { font-size: 52px; }
     #root .bub .av { left: 32px; top: 28px; width: 60px; height: 60px; }
-    #root .bub .src { font-size: 24px; }
+    #root .bub .src { font-size: 28px; }
     #root .qm { position: absolute; left: 0; top: 0; line-height: 0.7; color: rgba(255, 255, 255, 0.2); }"""
     js = [f'wipeIn({s:g}, "dl");', f'drift("#vc-l0", {s:g}, {e - s:g}, 60, 40); drift("#vc-l1", {s:g}, {e - s:g}, -60, -40);',
-          f'say("#vc-0", {b(56):g}, {b(58) - 0.06:g}); say("#vc-1", {b(58):g}, {b(59) - 0.12:g});']
+          f'say("#vc-0", {b(B_VO):g}, {b(B_VO + 2) - 0.06:g}); say("#vc-1", {b(B_VO + 2):g}, {b(B_VO + 4) - 0.12:g});']
     for i, t in enumerate(t_i):
         if i:                                               # the stack steps up one card just before the next lands
             js.append(f'tl.fromTo("#vc-st", {{ y: {-(i - 1) * STEP} }}, {{ y: {-i * STEP}, duration: 0.3, ease: "power3.inOut", immediateRender: false }}, AT({t - 0.34:g}));')
-        js += [f'pop("#vc-q{i}", {t - 0.1:g}, 0.4);', f'type("#vc-q{i}", {t + 0.02:g}, 0.04);']
+        js += [f'pop("#vc-q{i}", {t - 0.1:g}, 0.4);', f'type("#vc-q{i}", {t + 0.02:g}, 0.065);']
     js += bj
     return html, "\n    ".join(js), css
 
 
 def scene_close(s, e, info):
     """The wall is alive again and pulls back; the promise, a line every four beats; the logo."""
-    T1, T2, TL = b(68), b(72), b(76)
+    T1, T2, TL = b(B_CL), b(B_CL + 4), b(B_LOGO)
     html = f"""<div class="fld" style="background:#05070f"></div>
     <div class="wl-in ff" data-layout-allow-overflow id="cs-in">
       <div class="wl-tilt"><div class="wl-wall" id="cs-wall">{wall("cs", e - s)}</div></div>
@@ -741,7 +798,7 @@ def scene_close(s, e, info):
     // the logo is a hit: on the beat, sharp, then it holds
     tl.set("#cs-logo", {{ opacity: 1 }}, AT({TL:g}));
     tl.fromTo("#cs-logo", {{ scale: 1.12, filter: "blur(10px)" }}, {{ scale: 1, filter: "blur(0px)", duration: 0.4, ease: "expo.out" }}, AT({TL:g}));
-    fade("#cs-eb", {b(77):g}, 0.3);"""
+    fade("#cs-eb", {TL + 0.24:g}, 0.3);"""
     return html, js, css
 
 
@@ -754,19 +811,30 @@ X = {  # effect: file in assets/audio, where it hits (s into the file), volume
 
 
 def sounds():
-    """The music, and an effect on every visible action that needs one: each placed so that its hit lands a frame
-    after its picture. (name, when it hits, optional (seconds it plays, fade-out))."""
-    ev = [("sub", DEATH, (1.6, 1.3), 0.3), ("wind", DROP), ("sub", DROP), ("cheer", DROP, (2.6, 1.4)),
-          ("whoosh", b(4)), ("pop2", b(4) + 0.9), ("pop", b(6)), ("pop2", b(7.5)), ("pop", b(9)),
-          ("wind", b(12)), ("pop2", b(14)), ("pop", b(15)), ("pop2", b(16)), ("pop", b(17)), ("pop2", b(18)),
-          ("shutter", b(20) - 0.04), ("shutter", b(20) + 0.14), ("shutter", b(20) + 0.34), ("shutter", b(20) + 0.56),
-          ("whoosh", b(20) + 1.5), ("pop", b(24)), ("pop2", b(25)), ("pop", b(26)),
-          ("wind", b(28)), ("pop2", b(30)), ("pop", b(32)),
-          ("whoosh", b(36)), ("pop2", b(36) + 0.83), ("coins", b(40) + 0.24), ("pop2", b(40) + 0.8),
-          ("sub", b(44)), ("pop", b(44) + 0.5), ("pop2", b(48) + 0.6), ("sub", b(49)), ("whoosh", b(52)), ("pop2", b(52) + 0.9),
-          ("wind", b(56))]
-    ev += [("pop2", b(58))] + [("pop" if i % 2 == 0 else "pop2", b(59 + i)) for i in range(len(TX["voices"]))]
-    ev += [("whoosh", b(68)), ("impact", b(76))]
+    """The music, and an effect on every visible action that needs one. A hit that belongs to a beat lands exactly on
+    its kick (bx); one that belongs to a picture between beats lands a frame after it. (name, when it hits,
+    optional (seconds it plays, fade-out), optional volume)."""
+    F = 1 / FPS
+    ev = [("sub", DEATH + F, (1.6, 1.3), 0.3), ("wind", bx(0)), ("sub", bx(0)), ("cheer", bx(0), (2.6, 1.4)),
+          # FlyX: the world, the count landing, the three comments
+          ("whoosh", bx(B_FX)), ("pop2", b(B_FX) + 0.9 + F), ("pop", bx(B_FX + 2)), ("pop2", bx(B_FX + 3)), ("pop", bx(B_FX + 4)),
+          # Prof Enzo: the world, 1M+, the followers, the counts in two pairs
+          ("wind", bx(B_EZ)), ("pop2", bx(B_EZ + 2)), ("pop", bx(B_EZ + 3)), ("pop2", bx(B_EZ + 4)), ("pop", bx(B_EZ + 6)),
+          # productions: four shutters for the pile, the scatter, the tags
+          ("shutter", b(B_PR) - 0.04 + F), ("shutter", b(B_PR) + 0.14 + F), ("shutter", b(B_PR) + 0.34 + F), ("shutter", b(B_PR) + 0.56 + F),
+          ("whoosh", b(B_PR) + 1.5 + F), ("pop", bx(B_PR + 4)),
+          # how: the night, the platforms' ring, the numbers' ring
+          ("wind", bx(B_HOW)), ("pop2", bx(B_HOW + 3)), ("pop", bx(B_HOW + 6)),
+          # the results: the week filled; the coins and their 81; the slam, the revenue, the watch; the count, the stamp
+          ("whoosh", bx(B_R1)), ("pop2", bx(B_R1 + 3)),
+          ("coins", b(B_R2) + 0.24 + F), ("pop2", b(B_R2) + 0.8 + F),
+          ("sub", bx(B_R3)), ("pop", bx(B_R3 + 1)), ("pop2", bx(B_R3 + 2)),
+          ("pop2", bx(B_R4 + 1.5)), ("sub", bx(B_R4 + 2)),
+          ("whoosh", bx(B_M3)), ("pop2", b(B_M3) + 0.9 + F),
+          # their words: the night, "Nekik.", a pop for every review
+          ("wind", bx(B_VO)), ("pop2", bx(B_VO + 2))]
+    ev += [("pop" if i % 2 == 0 else "pop2", bx(B_VO + 3 + 2 * i)) for i in range(len(TX["voices"]))]
+    ev += [("whoosh", bx(B_CL)), ("impact", bx(B_LOGO))]
     out = []
     for k, (name, t, *rest) in enumerate(ev):
         f, hit, vol = X[name]
@@ -774,7 +842,7 @@ def sounds():
             vol = rest[1]
         if name == "sub" and not rest:                      # the low hit rings for 6 s in its file: two are enough
             rest = [(2.0, 1.5)]
-        start = round(t + 1 / FPS - hit, 3)
+        start = round(t - hit, 3)
         media = 0.0
         if start < 0:
             media, start = -start, 0.0
@@ -782,7 +850,7 @@ def sounds():
         out.append(f'      <audio id="sfx{k}" class="clip" src="assets/audio/{f}.mp3" data-start="{start:g}" data-media-start="{media:g}" '
                    f'data-track-index="{40 + k}" data-volume="{vol}"{extra}></audio>')
     out.append(f'      <audio id="music" class="clip" src="assets/audio/{MUSIC}.mp3" data-start="0" data-duration="{TOTAL:g}" '
-               f'data-media-start="{MUSIC_AT:g}" data-track-index="39" data-volume="0.72" data-fade-in="0.3" data-fade-out="1.6"></audio>')
+               f'data-media-start="{MUSIC_AT:g}" data-track-index="39" data-volume="0.72" data-fade-in="0.3" data-fade-out="0.6"></audio>')
     return "\n".join(out)
 
 

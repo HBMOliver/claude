@@ -1,4 +1,4 @@
-# SocialStream sizzle, drafts 4 and 5 (spec, 2026-11-16)
+# SocialStream sizzle, drafts 4 to 6 (spec, 2026-11-16)
 
 The founder on draft 3: "there is too much andras at the beginning, i think we can still do better ... bring your
 most expert knowledge, plan it first then do the video", then "study the socialchain video better". This spec is
@@ -9,6 +9,10 @@ notes); REVIEW.md is the review.
 productions row; the stack of "their words" is the clients' reviews only ("you are mixing client reviews with flyx
 comments": FlyX's viewers' comments are about FlyX's videos, so they stay in FlyX's world); and an English cut
 (`wide-en/`), every line the site's own English.
+
+**Draft 6** (the founder: "its a bit too fast paste, also in english version convert the forints to euros"): the
+clock after the drop is new (PACE and the shots below; 59.40 s instead of 49.40), every hit sits on the track's
+kick (drafts 4 and 5 hit a quarter of a second before it), and the English cut shows euros (Honesty).
 
 ## What the reference does (Social Chain 2026 sizzle, 67.6 s, 124.5 bpm, read at 5 frames a second)
 
@@ -32,9 +36,17 @@ GOAL:    a business owner who posts and advertises without buyers feels "these p
          watch, and it pays", and remembers "social media is dead, interest took its place" and the logo.
 OUTPUT:  HyperFrames, wide 1920 x 1080, 25 fps, with sound, in Hungarian (wide/) and English (wide-en/). (Tall after
          the verdict.)
-TIME:    49.40 s x 25 = 1235 frames. Music "What About Action" (Mixkit), 121 bpm, entered at 53.975 s: its
-         breakdown carries the hook and its drop lands at 9.28 s. Beat = 0.4952 s = 12.38 frames; every beat is
-         computed from the drop, b(k) = round((9.28 + 0.4952 k) x 25) / 25. Layouts change on the bar (4 beats).
+TIME:    59.40 s x 25 = 1485 frames. Music "What About Action" (Mixkit), 121.0 bpm, measured on its kick drum
+         (35-140 Hz, 2 ms steps; a line through the 96 kicks leaves 1.5 ms): the first kick after the breakdown
+         is 63.479 s into the track and a beat is 0.49587 s = 12.40 frames. The film enters the track at
+         54.199 s, so the breakdown carries the hook and that kick, the drop, lands at 9.28 s; every beat is
+         computed from the drop, b(k) = round((9.28 + 0.49587 k) x 25) / 25. The track has 96 kicks after the
+         drop (beats 0-95) and then rings out: the logo lands on beat 96. A sound that belongs to a beat is
+         placed on the kick itself, not on the frame.
+PACE:    (draft 6) After the drop the 96 beats are spent where there is something to read: the turn 8 (the
+         claim, a line at a time), FlyX 8, Prof Enzo 8, productions 8, how 12, the results 6 + 4 + 6 + 6 + 4,
+         their words 18, the promise 8. A line aims at 0.5 s + 0.3 s a word on screen; reviews land one a
+         second; a result builds over its first beats and then holds while its world pushes in 3 %.
 LOOK:    SocialStream's own, not the reference's: night #05070f with blue (66,92,255) and violet (136,78,255)
          light; ink #ffffff; accent red-pink #ff5272 on one thing per frame (a strike, a full stop, a heart).
          Narrator lines: Sora 700, 112-150 px, one phrase at a time at the centre, the stressed word in
@@ -67,19 +79,19 @@ BANNED:  numbers on an empty gradient with a small icon; four scenes in one layo
 | 0.00-3.00 | | The feed | The wall of their reels, 16 of them playing, settles and drifts; the logo builds itself in its middle and goes | music (breakdown) |
 | 3.32-6.64 | b-12..-8 | Problem | One phrase at a time at the centre: "Posztolsz." / "Hirdetsz." / "Mégsem jönnek a vevők?"; the wall dims | |
 | 6.80-8.72 | b-5..-4 | Diagnosis | "A social media" is struck through; on 7.28 "meghalt." and every card freezes and turns grey, from the middle outwards | low hit |
-| 8.80-11.28 | b-1..b4 | The turn | The middle card comes back in colour, grows, and on the drop it is the whole frame: the FlyX cinema from behind, heads against the bright screen. "Az érdeklődés vette át a helyét." | riser, drop, low hit, crowd |
-| 11.28-15.24 | b4-b12 | FlyX Tenerife | Orange world. "69K megtekintés egy reelen" counts up; three phones fan out, their clips change on b8; three real comments type on; hearts rise; a slow push | whoosh, pops |
-| 15.24-19.20 | b12-b20 | Prof Enzo | Green world. Three reels fill the height; the plays count over them and become "1M+" on b14; chips 149K, 122K, 105K, 82K pop; "33K követő" | wind, pops |
-| 19.20-23.16 | b20-b28 | Productions | Polaroids of the team at work pile over the frame and scatter; violet world: five reel cards (Latvia, Up To Youth, the V89 smartwatch ad in the middle, the creator's smartwatch ad, a podcast; three of them change on b26 to Latvia, Miskolc and Sóskút), tags pop: Forgatás, Vágás, Feliratozás, Reels, Podcast & interjú | shutters, pops |
-| 23.16-27.12 | b28-b36 | How | Night. "Mi gyártjuk a videót," (reel cards ring it) / "mi futtatjuk a hirdetést," (Meta, TikTok, Google, Reels) / "és mi mérjük," (81×, 79M Ft, 23×, 105 Ft) / "mit hozott." and the camera goes through it | wind, pops |
-| 27.12-29.08 | b36-b40 | 79 M Ft | Blue. The week's seven days light up as the number climbs; "bevétel egy hét alatt" | whoosh, pop |
-| 29.08-31.08 | b40-b44 | 81× ROAS | Red-pink. One "1 Ft" coin, then 81 burst out | coins |
-| 31.08-33.04 | b44-b48 | 23× ROAS | White. The number slams in ink; "több mint 8M Ft bevétel"; the watch drops in | low hit |
-| 33.04-35.04 | b48-b52 | ≈5 700 | Violet. Dots fill the frame as sign-ups count; "105 Ft egy jelentkező" stamps on b49 | low hit |
-| 35.04-37.00 | b52-b56 | 300M+ Ft | Night. The widest number of the film; "2022 óta" above it, "kezelt büdzsé" under it | whoosh, pop |
-| 37.00-42.96 | b56-b68 | Their words | "Ne nekünk higgy." / "Nekik."; then six cards stack up the frame, one a beat from b59 to b64, typing themselves: the six clients' reviews from the site; quotation marks drift at the sides; the stack holds two seconds | pops |
-| 42.96-46.92 | b68-b76 | Promise | The wall is alive again and pulls back: "Videók, amiket végignéznek." / "Hirdetések, amik megtérülnek." | whoosh |
-| 46.92-49.40 | b76 | Logo | The logo on the wall, "Interest media ügynökség" | impact |
+| 8.80-13.24 | b-1..b8 | The turn | The middle card comes back in colour, grows, and on the drop it is the whole frame: the FlyX cinema from behind, heads against the bright screen. "Az érdeklődés" lands on the drop, "vette át a helyét." two beats later; the picture pushes in for two bars | riser, drop, low hit, crowd |
+| 13.24-17.20 | b8-b16 | FlyX Tenerife | Orange world. "69K megtekintés egy reelen" counts up; three phones fan out, their clips change on b12; three real comments type on, a beat apart (b10, b11, b12), and stay; hearts rise; a slow push | whoosh, pops |
+| 17.20-21.20 | b16-b24 | Prof Enzo | Green world. Three reels fill the height; the plays count over them and become "1M+" on b18; "33K követő" on b19; the chips come two at a time: 149K and 122K on b20, 105K and 82K on b22 | wind, pops |
+| 21.20-25.16 | b24-b32 | Productions | Polaroids of the team at work pile over the frame and scatter; violet world: five reel cards (Latvia, Up To Youth, the V89 smartwatch ad in the middle, the creator's smartwatch ad, a podcast; three of them change on b30 to Latvia, Miskolc and Sóskút); the tags come as one wave on b28: Forgatás, Vágás, Feliratozás, Reels, Podcast & interjú | shutters, pop |
+| 25.16-31.08 | b32-b44 | How | Night. Four phrases, three beats each: "Mi gyártjuk a videót," (reel cards ring it) / "mi futtatjuk a hirdetést," (Meta, TikTok, Google, Reels) / "és mi mérjük," (81×, 79M Ft, 23×, 105 Ft) / "mit hozott." and the camera goes through it | wind, pops |
+| 31.08-34.08 | b44-b50 | 79 M Ft | Blue. The week's seven days light up as the number climbs; the seventh and the whole number land on b47; "bevétel egy hét alatt"; it holds 1.5 s | whoosh, pop |
+| 34.08-36.04 | b50-b54 | 81× ROAS | Red-pink. One "1 Ft" coin, then 81 burst out | coins |
+| 36.04-39.04 | b54-b60 | 23× ROAS | White. The number slams in ink on b54; "több mint 8M Ft bevétel" on b55; the watch drops in on b56; it holds 2 s | low hit, pops |
+| 39.04-42.00 | b60-b66 | ≈5 700 | Violet. Dots fill the frame as sign-ups count; "105 Ft egy jelentkező" stamps on b62 and holds 1.7 s | pop, low hit |
+| 42.00-44.00 | b66-b70 | 300M+ Ft | Night. The widest number of the film; "2022 óta" above it, "kezelt büdzsé" under it | whoosh, pop |
+| 44.00-52.92 | b70-b88 | Their words | "Ne nekünk higgy." (b70) / "Nekik." (b72); six cards stack up the frame, one every two beats from b73 to b83 (the first under "Nekik."), typing themselves: the six clients' reviews from the site; quotation marks drift at the sides; the stack holds 2.2 s | pops |
+| 52.92-56.88 | b88-b96 | Promise | The wall is alive again and pulls back: "Videók, amiket végignéznek." / "Hirdetések, amik megtérülnek.", a bar each; the track's last kick is b95 | whoosh |
+| 56.88-59.40 | b96 | Logo | The logo on the wall where the next kick would be, in the track's ring-out; "Interest media ügynökség" a quarter of a second later | impact |
 
 ## Honesty
 
@@ -101,11 +113,32 @@ BANNED:  numbers on an empty gradient with a small icon; four scenes in one layo
   not been confirmed, and the site keeps that client unnamed.
 - English: the site's own English for every line it has; new strings are plain labels ("views on one reel",
   "views", "followers", "Comment", the days of the week).
+- **Money in the English cut is in euros** (the founder: "in english version convert the forints to euros"); the
+  English site still shows forints. The conversions are mine, made so that no euro figure can flatter the forint
+  one. Revenue and budget: 400 Ft to the euro, weaker than every yearly average of the ECB reference rate since
+  2022 (391, 382, 395, 398, 368), rounded down. Costs: the ECB reference rate of 2026-11-13, 365.6 Ft, the
+  strongest forint of those years, rounded up.
+
+  | Hungarian | English | How |
+  |---|---|---|
+  | 79 M Ft bevétel egy hét alatt | €197K revenue in one week | 79,000,000 / 400 = 197,500 |
+  | több mint 8 M Ft bevétel | over €20K in revenue | 8,000,000 / 400 = 20,000 |
+  | 300M+ Ft kezelt büdzsé | €750K+ budget managed | 300,000,000 / 400 = 750,000 |
+  | ≈5 700 jelentkező 600K Ft-ból | ≈5,700 registrants from €1,650 | 600,000 / 365.6 = 1,641, rounded up |
+  | 105 Ft egy jelentkező | €0.29 per registrant | 105 / 365.6 = 0.287, rounded up; 1,650 / 5,700 = 0.29 |
+  | 1 Ft → 81 Ft | €1 → €81 | a ratio, no rate |
+
+  At the 13 November rate throughout, the first three would read €216K, over €21K and €820K+. The founder knows
+  when each campaign ran and must confirm these figures before the English cut is published.
 
 ## QA
 
-Frames checked: 0.0 (a full wall, not black), 4.8 (problem readable over the wall), 7.6 (all cards grey), 8.9-9.4
-(the card's growth, no seam), 10.5 (claim readable on footage), 13.2, 14.9 (FlyX: comments readable, clips
-changed), 16.1, 19.2 (Prof Enzo: number readable over footage), 20.0 (polaroids cover the frame), 22.0 (cards and
-tags), each "how" phrase, each result at its hold, 40.5 (stack: four cards readable), 44, 46 (promise on the wall),
-49.0 (logo).
+Frames checked in draft 6 (Hungarian, 27 stills): 9.5 and 10.9 (the claim's two lines), 12.8 (still held), 15.0
+and 16.6 (FlyX: comments, clips changed), 19.0 and 20.6 (Prof Enzo: 1M+, the chips), 22.0 (polaroids), 24.4 (cards
+and tags), each "how" phrase, 32.0 and 33.6 (the week filling, then full), 35.4, 37.6 and 38.8 (23×), 40.9 (the
+stamp), 43.2, 44.6, 45.7 ("Nekik." with the first review under it), 48.0 and 51.8 (the stack), 54, 56 (promise),
+58.6 (logo). English (12 stills): the claim, FlyX, the euro chips, each result, the stack, the logo; a search of
+the English project finds no "Ft". The hook (0-8.8 s) has the same frames as draft 5.
+
+Sound checked on the renders (REVIEW.md): the kick against the picture at the drop and at a late beat, loudness,
+true peak.

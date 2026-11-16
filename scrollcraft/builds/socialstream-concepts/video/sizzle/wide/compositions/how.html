@@ -89,7 +89,7 @@
   </div>
   <script>
   (() => {
-    const FPS = 25, W = 1920, H = 1080, START = 22.84, AT = (t) => t - START;
+    const FPS = 25, W = 1920, H = 1080, START = 24.84, AT = (t) => t - START;
     const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
     const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
     const tl = gsap.timeline({ paused: true });
@@ -137,20 +137,20 @@
       const sep = el.querySelector(".sep");                 // a thousands comma: there once there are thousands
       if (sep) tl.fromTo(sep, { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none" }, AT(t + dur * 0.12));
     };
-    wipeIn(22.84, "iris");
-    drift("#hw-l0", 22.84, 4.28, 60, 40); drift("#hw-l1", 22.84, 4.28, -60, -40);
-    say("#hw-0", 23.16, 24.06); say("#hw-1", 24.12, 25.06); say("#hw-2", 25.12, 26.06); say("#hw-3", 26.12);
-    tl.fromTo(".g0", { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none", stagger: 0.04 }, AT(23.1));
-    tl.fromTo(".g0", { scale: 0.3 }, { scale: 1, duration: 0.5, ease: "back.out(1.6)", stagger: 0.04 }, AT(23.1));
-    tl.fromTo(".g0", { opacity: 1 }, { opacity: 0, duration: 0.14, ease: "power2.in", immediateRender: false }, AT(24));
-    tl.fromTo(".g1", { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none", stagger: 0.04 }, AT(24.06));
-    tl.fromTo(".g1", { scale: 0.3 }, { scale: 1, duration: 0.5, ease: "back.out(1.6)", stagger: 0.04 }, AT(24.06));
-    tl.fromTo(".g1", { opacity: 1 }, { opacity: 0, duration: 0.14, ease: "power2.in", immediateRender: false }, AT(25));
-    tl.fromTo(".g2", { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none", stagger: 0.04 }, AT(25.06));
-    tl.fromTo(".g2", { scale: 0.3 }, { scale: 1, duration: 0.5, ease: "back.out(1.6)", stagger: 0.04 }, AT(25.06));
-    tl.fromTo(".g2", { opacity: 1 }, { opacity: 0, duration: 0.14, ease: "power2.in", immediateRender: false }, AT(26));
-    tl.fromTo("#hw-3t", { scale: 1 }, { scale: 3.2, duration: 0.3, ease: "power3.in" }, AT(26.78));
-    tl.fromTo("#hw-3t", { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "power2.in", immediateRender: false }, AT(26.88));
+    wipeIn(24.84, "iris");
+    drift("#hw-l0", 24.84, 6.24, 60, 40); drift("#hw-l1", 24.84, 6.24, -60, -40);
+    say("#hw-0", 25.16, 26.58); say("#hw-1", 26.64, 28.06); say("#hw-2", 28.12, 29.54); say("#hw-3", 29.6);
+    tl.fromTo(".g0", { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none", stagger: 0.04 }, AT(25.1));
+    tl.fromTo(".g0", { scale: 0.3 }, { scale: 1, duration: 0.5, ease: "back.out(1.6)", stagger: 0.04 }, AT(25.1));
+    tl.fromTo(".g0", { opacity: 1 }, { opacity: 0, duration: 0.14, ease: "power2.in", immediateRender: false }, AT(26.52));
+    tl.fromTo(".g1", { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none", stagger: 0.04 }, AT(26.58));
+    tl.fromTo(".g1", { scale: 0.3 }, { scale: 1, duration: 0.5, ease: "back.out(1.6)", stagger: 0.04 }, AT(26.58));
+    tl.fromTo(".g1", { opacity: 1 }, { opacity: 0, duration: 0.14, ease: "power2.in", immediateRender: false }, AT(28));
+    tl.fromTo(".g2", { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none", stagger: 0.04 }, AT(28.06));
+    tl.fromTo(".g2", { scale: 0.3 }, { scale: 1, duration: 0.5, ease: "back.out(1.6)", stagger: 0.04 }, AT(28.06));
+    tl.fromTo(".g2", { opacity: 1 }, { opacity: 0, duration: 0.14, ease: "power2.in", immediateRender: false }, AT(29.48));
+    tl.fromTo("#hw-3t", { scale: 1 }, { scale: 3.2, duration: 0.26, ease: "power3.in" }, AT(30.8));
+    tl.fromTo("#hw-3t", { opacity: 1 }, { opacity: 0, duration: 0.16, ease: "power2.in", immediateRender: false }, AT(30.9));
     window.__timelines["how"] = tl;
   })();
   </script>
