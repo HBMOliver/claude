@@ -65,7 +65,8 @@ The published pages are private until they are shared from their Share menu.
   or a data saver only the posters show.
 - `tools/reels.py`: cuts those clips and posters from the founder's footage (paths are local to the founder's Mac).
   Captions are burned in only where the words are real: the clients' own edits (FlyX, András, Prof Enzo, Up To
-  Youth, Miskolc Plaza), the words said in the Latvia clips (transcribed on the Mac), the Türkiye film's own subtitles
+  Youth, Miskolc Plaza), event titles on Up To Youth's Latvia clips (written for the site since 2026-11-16, when the founder asked for them
+  to read as event videos; before that, the words said in them), the Türkiye film's own subtitles
   set for a vertical frame, the Nike spec ad's two end lines laid over its shots, and the two smartwatch ads (added
   2026-11-16): a creator's opening line (transcribed on the Mac, set at the top so the watch stays clear) and the V89
   ad's own caption. Those two are labelled "Okosóra hirdetés" without the brand's name (the V89 caption still names
