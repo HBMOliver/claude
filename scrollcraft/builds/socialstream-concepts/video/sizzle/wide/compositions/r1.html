@@ -1,8 +1,8 @@
 <template>
   <style>
     /* Shared by every scene of the SocialStream sizzle (build.py puts it into each scene's style block): the site's type
-   and palette (Sora, Instrument Serif italic, Inter; blue-violet with red-pink as the accent) and the sizzle's
-   devices: colour fields, phones, comment bubbles, counters. */
+   (Sora, Instrument Serif italic, Inter) and the sizzle's objects: the wall, phones, reel cards, comments, hearts,
+   polaroids, counters. SPEC.md has the numbers. */
 @font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; }
 @font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
 @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
@@ -11,75 +11,124 @@
 #root .ff { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 #root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.0; }
 #root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
-#root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.86); }
+#root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.9); white-space: nowrap; }
 #root .acc { color: #ff5272; }
 #root .w { display: inline-block; }
-/* a colour field with slow lights */
+/* one phrase at a time at the centre of the frame */
+#root .rsv { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; }
+#root .big { font-size: 150px; white-space: nowrap; }
+#root .mid { font-size: 112px; white-space: nowrap; }
+#root .mid .it { font-size: 142px; }
+#root .huge { font-size: 250px; line-height: 0.92; white-space: nowrap; }
+#root .ss { position: relative; display: inline-block; }
+#root .stk { position: absolute; left: -0.03em; right: -0.03em; top: 0.52em; height: 0.08em; border-radius: 0.04em; background: #ff5272; transform-origin: 0 50%; }
+/* a colour field with slow lights, and a client's name tiled faintly over it */
 #root .fld { position: absolute; inset: 0; overflow: hidden; }
 #root .fld .lt { position: absolute; border-radius: 50%; }
+#root .tile { position: absolute; left: -260px; right: -260px; top: -40px; bottom: -40px; display: flex; flex-direction: column; justify-content: space-between;
+  opacity: 0.075; font: 700 78px/1 Sora, Inter, sans-serif; letter-spacing: -0.03em; white-space: nowrap; }
+#root .tile div:nth-child(even) { margin-left: -210px; }
+#root .tile span { margin-right: 76px; }
+/* the wall: a tilted grid of 9:16 cards */
+#root .wl-in { position: absolute; inset: 0; }
+#root .wl-wall { position: absolute; inset: 0; }
+#root .wl-card { position: absolute; overflow: hidden; border-radius: 26px; background: #0b1024;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 30px 60px -30px rgba(0, 0, 0, 0.8); }
+#root .wl-card img, #root .wl-card video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#root .wl-card .g { opacity: 0; }
+#root .glow { position: absolute; inset: 0; background: radial-gradient(ellipse 30% 44% at 50% 50%, rgba(5, 7, 15, 0.95) 0%, rgba(5, 7, 15, 0.76) 44%, rgba(5, 7, 15, 0) 100%); }
+#root .glow.wide { background: radial-gradient(ellipse 60% 46% at 50% 50%, rgba(5, 7, 15, 0.88) 0%, rgba(5, 7, 15, 0.6) 50%, rgba(5, 7, 15, 0) 100%); }
 /* a phone playing a reel */
 #root .phone { position: absolute; width: 380px; height: 790px; border-radius: 58px; background: #0a0b10;
   box-shadow: 0 50px 90px -30px rgba(0, 0, 0, 0.6), inset 0 0 0 2px rgba(255, 255, 255, 0.14); }
 #root .phone .scr { position: absolute; inset: 12px; border-radius: 47px; overflow: hidden; background: #000; }
-#root .phone .scr video, #root .phone .scr img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#root .phone .scr video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 #root .phone .isl { position: absolute; top: 26px; left: 50%; width: 112px; margin-left: -56px; height: 32px; border-radius: 16px; background: #000; }
-/* a pill on a phone: views */
-#root .pill { position: absolute; display: flex; align-items: center; gap: 12px; padding: 14px 22px 14px 18px; border-radius: 40px;
-  background: rgba(5, 7, 15, 0.72); font: 700 30px/1 Inter, sans-serif; letter-spacing: -0.01em; white-space: nowrap;
-  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.18); }
-#root .pill i { display: block; width: 0; height: 0; border-left: 18px solid #fff; border-top: 11px solid transparent; border-bottom: 11px solid transparent; }
-/* a comment or a client's words: a white card */
-#root .bub { position: absolute; width: 600px; padding: 24px 30px 26px 96px; border-radius: 30px; background: #fff; color: #11152a;
-  font: 600 30px/1.32 Inter, sans-serif; letter-spacing: -0.01em; box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.5); transform-origin: 0 100%; }
-#root .bub .av { position: absolute; left: 26px; top: 26px; width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(160deg, #d9def0, #a9b2cf); }
-#root .bub .src { display: block; margin-bottom: 8px; font: 700 22px/1.2 Inter, sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: #6c7493; }
-#root .bub.q { font: italic 400 40px/1.18 "Instrument Serif", Georgia, serif; letter-spacing: 0; }
+/* a reel card: no body, just the picture */
+#root .card { position: absolute; overflow: hidden; border-radius: 40px; background: #0b1024;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.55), inset 0 0 0 2px rgba(255, 255, 255, 0.14); }
+#root .card video, #root .card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* a pill and a chip: a count beside the work */
+#root .pill { position: absolute; display: flex; align-items: center; gap: 12px; padding: 14px 24px 14px 20px; border-radius: 40px;
+  background: rgba(5, 7, 15, 0.78); font: 700 32px/1 Inter, sans-serif; letter-spacing: -0.01em; white-space: nowrap;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.2); }
+#root .chip { position: absolute; display: flex; align-items: center; gap: 12px; padding: 16px 26px 16px 22px; border-radius: 44px; background: #fff; color: #0b1030;
+  font: 700 38px/1 Sora, Inter, sans-serif; letter-spacing: -0.02em; white-space: nowrap; box-shadow: 0 24px 44px -18px rgba(0, 0, 0, 0.5); }
+#root .chip i, #root .pill i { display: block; width: 0; height: 0; border-left: 17px solid currentColor; border-top: 10px solid transparent; border-bottom: 10px solid transparent; }
+#root .tag { position: absolute; padding: 15px 28px; border-radius: 40px; background: rgba(255, 255, 255, 0.14); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+  font: 700 34px/1 Sora, Inter, sans-serif; letter-spacing: -0.02em; white-space: nowrap; }
+/* a comment or a client's words: a white card whose words type on */
+#root .bub { position: absolute; padding: 22px 30px 24px 100px; border-radius: 28px; background: #fff; color: #11152a;
+  font: 600 32px/1.3 Inter, sans-serif; letter-spacing: -0.01em; box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.5); transform-origin: 0 100%; }
+#root .bub .av { position: absolute; left: 26px; top: 24px; width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(160deg, #d9def0, #a9b2cf); }
+#root .bub .src { display: block; margin-bottom: 6px; font: 700 22px/1.2 Inter, sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: #6c7493; }
+#root .bub.q { font: italic 400 44px/1.14 "Instrument Serif", Georgia, serif; letter-spacing: 0; }
+#root .tw { display: inline-block; white-space: pre; }
+/* a heart rising from the work */
+#root .hrt { position: absolute; left: 0; top: 0; z-index: 6; }
+#root .hrt svg { display: block; width: 100%; height: 100%; }
+/* a polaroid of the team at work */
+#root .pol { position: absolute; width: 400px; height: 500px; padding: 16px 16px 68px; background: #fdfdfb; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.55); }
+#root .pol img { display: block; width: 100%; height: 100%; object-fit: cover; }
 /* a counted number: fixed-width digits, never smeared */
 #root .cnt { display: inline-flex; align-items: baseline; }
 #root .cnt .d { display: inline-block; width: 0.62em; text-align: center; }
+#root .lab { font: 600 54px/1.2 Inter, sans-serif; letter-spacing: -0.01em; white-space: nowrap; }
 
     
     #root .rn { position: absolute; display: flex; align-items: baseline; white-space: nowrap; }
-    #root .rn .cnt { font-size: 420px; line-height: 0.86; letter-spacing: -0.05em; }
-    #root .rn .ui { font-size: 230px; line-height: 0.86; margin-left: 0.12em; }
-    #root .rn .x { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 260px; line-height: 0.86; margin-left: 0.03em; }
-    #root .rn .u { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 110px; margin-left: 0.18em; letter-spacing: -0.03em; }
-    #root .lab { font: 600 50px/1.2 Inter, sans-serif; letter-spacing: -0.01em; }
-    #root .bub.q { font-size: 40px; }
-    #root .days { position: absolute; left: 130px; top: 790px; display: flex; gap: 22px; }
-    #root .day { width: 196px; height: 124px; border-radius: 28px; display: flex; align-items: center; justify-content: center;
+    #root .rn .cnt { font-size: 520px; line-height: 0.84; letter-spacing: -0.055em; }
+    #root .rn .ui { font-size: 290px; line-height: 0.84; margin-left: 0.12em; }
+    #root .rn .x { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 320px; line-height: 0.84; margin-left: 0.02em; }
+    #root .rn .u { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: 128px; margin-left: 0.16em; letter-spacing: -0.03em; }
+    #root .days { position: absolute; left: 130px; top: 800px; display: flex; gap: 18px; }
+    #root .day { width: 180px; height: 116px; border-radius: 28px; display: flex; align-items: center; justify-content: center;
       font: 700 46px/1 Sora, Inter, sans-serif; letter-spacing: -0.02em; background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.5);
       box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.22); }
   </style>
   <div id="root" data-composition-id="r1" data-width="1920" data-height="1080">
     <div class="ff" id="wp">
-    <div class="fld" style="background:linear-gradient(140deg,#1631c0 0%,#3d1fb4 60%,#1a0f5c 100%)"><i class="lt" id="r1-l0" data-layout-allow-overflow style="left:92%;top:88%;width:100vmax;height:100vmax;margin:-50.0vmax 0 0 -50.0vmax;background:radial-gradient(closest-side,rgba(255, 64, 104, 0.5),rgba(255, 64, 104,0))"></i><i class="lt" id="r1-l1" data-layout-allow-overflow style="left:6%;top:6%;width:80vmax;height:80vmax;margin:-40.0vmax 0 0 -40.0vmax;background:radial-gradient(closest-side,rgba(56, 160, 255, 0.5),rgba(56, 160, 255,0))"></i></div><div class="eb" id="r1-eb" style="position:absolute;left:130px;top:140px">Csarnoképítő ügyfél · Meta · B2B</div><div class="hd rn" id="r1-n" style="left:122px;top:196px"><span class="cnt" id="r1-cnt" data-motion-blur="off"><span class="d"></span><span class="d"></span></span><span class="it ui">M Ft</span></div><div class="lab" id="r1-lab" style="position:absolute;left:130px;top:590px"><span class="w ">bevétel</span> <span class="w ">egy</span> <span class="w ">hét</span> <span class="w ">alatt</span></div><div class="days" id="r1-days"><div class="day" id="r1-d0">H</div><div class="day" id="r1-d1">K</div><div class="day" id="r1-d2">Sze</div><div class="day" id="r1-d3">Cs</div><div class="day" id="r1-d4">P</div><div class="day" id="r1-d5">Szo</div><div class="day" id="r1-d6">V</div></div><div class="bub q" id="r1-q" style="left:1190px;top:196px;width:620px"><span class="av"></span><span class="src">Csarnoképítő ügyfél · B2B</span>„…annyi ajánlatkérésünk lett, mint korábban fél év alatt összesen.”</div>
+    <div class="fld" style="background:linear-gradient(140deg,#1b3cff 0%,#3a22d8 58%,#1a0f6c 100%)"><i class="lt" id="r1-l0" data-layout-allow-overflow style="left:94%;top:90%;width:100vmax;height:100vmax;margin:-50.0vmax 0 0 -50.0vmax;background:radial-gradient(closest-side,rgba(255, 64, 104, 0.5),rgba(255, 64, 104,0))"></i><i class="lt" id="r1-l1" data-layout-allow-overflow style="left:4%;top:4%;width:86vmax;height:86vmax;margin:-43.0vmax 0 0 -43.0vmax;background:radial-gradient(closest-side,rgba(56, 190, 255, 0.5),rgba(56, 190, 255,0))"></i></div><div class="eb" id="r1-eb" style="position:absolute;left:130px;top:110px">Csarnoképítő ügyfél · B2B · Meta</div><div class="hd rn" id="r1-n" style="left:118px;top:168px"><span class="cnt" id="r1-cnt" data-motion-blur="off"><span class="d"></span><span class="d"></span></span><span class="it ui">M Ft</span></div><div class="lab" id="r1-lab" style="position:absolute;left:130px;top:650px"><span class="w ">bevétel</span> <span class="w ">egy</span> <span class="w ">hét</span> <span class="w ">alatt</span></div><div class="days"><div class="day" id="r1-d0">H</div><div class="day" id="r1-d1">K</div><div class="day" id="r1-d2">Sze</div><div class="day" id="r1-d3">Cs</div><div class="day" id="r1-d4">P</div><div class="day" id="r1-d5">Szo</div><div class="day" id="r1-d6">V</div></div><img id="r1-obj" src="assets/img/o-hall-mix.webp" alt="" style="position:absolute;left:1340px;top:120px;width:500px;height:500px">
     </div>
   </div>
   <script>
   (() => {
-    const FPS = 25, W = 1920, H = 1080, START = 17.84, AT = (t) => t - START;
+    const FPS = 25, W = 1920, H = 1080, START = 26.8, AT = (t) => t - START;
     const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
     const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
     const tl = gsap.timeline({ paused: true });
-    // the scene comes in over the last one with a wipe: diagonal from the right or the left, up, or an iris
+    // a scene comes in over the last one with a wipe: diagonal from the right or the left, up, or an iris
     const WIPES = {
       dr: ["polygon(132% 0%, 132% 0%, 132% 100%, 162% 100%)", "polygon(-32% 0%, 132% 0%, 132% 100%, -2% 100%)"],
       dl: ["polygon(-32% 0%, -32% 0%, -62% 100%, -32% 100%)", "polygon(-32% 0%, 132% 0%, 102% 100%, -32% 100%)"],
       up: ["polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)", "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"],
       iris: ["circle(0% at 50% 50%)", "circle(75% at 50% 50%)"],
     };
-    const wipeIn = (t, k = "dr") => tl.fromTo("#wp", { clipPath: WIPES[k][0] }, { clipPath: WIPES[k][1], duration: 0.32, ease: "power3.inOut" }, AT(t));
-    // words land by focus and opacity, a little apart; a line goes out of focus
+    const wipeIn = (t, k) => tl.fromTo("#wp", { clipPath: WIPES[k][0] }, { clipPath: WIPES[k][1], duration: 0.32, ease: "power3.inOut" }, AT(t));
+    // one phrase at a time: it comes into focus, and goes when the next one comes
+    const say = (sel, tin, tout) => {
+      tl.fromTo(sel, { opacity: 0, filter: "blur(12px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.13, ease: "power2.out" }, AT(tin));
+      if (tout !== undefined) tl.fromTo(sel, { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(12px)", duration: 0.1, ease: "power2.in", immediateRender: false }, AT(tout));
+    };
     const words = (sel, t, st = 0.07) => tl.fromTo(sel, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: st }, AT(t));
     const out = (sel, t) => tl.fromTo(sel, { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in", immediateRender: false }, AT(t));
-    // a card pops: scale with a little overshoot (position may bounce, opacity never)
-    const pop = (sel, t, d = 0.45) => { tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, AT(t));
-      tl.fromTo(sel, { scale: 0.55, y: 30 }, { scale: 1, y: 0, duration: d, ease: "back.out(1.7)" }, AT(t)); };
-    // a phone rises from below the frame, leaning, and settles
-    const rise = (sel, t, r0, r1) => tl.fromTo(sel, { y: 980, rotation: r0 }, { y: 0, rotation: r1, duration: 0.72, ease: "expo.out" }, AT(t));
-    // slow light in a field
+    const fade = (sel, t, d = 0.25) => tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: d, ease: "power2.out" }, AT(t));
+    // a card pops: scale and position with a little overshoot (opacity never bounces)
+    const pop = (sel, t, d = 0.45) => {
+      tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "none" }, AT(t));
+      tl.fromTo(sel, { scale: 0.55, y: 30 }, { scale: 1, y: 0, duration: d, ease: "back.out(1.7)" }, AT(t));
+    };
+    // a phone or a card rises from below the frame, turning, and settles
+    const rise = (sel, t, r0, r1, d = 0.72) => tl.fromTo(sel, { y: 1150, rotation: r0 }, { y: 0, rotation: r1, duration: d, ease: "expo.out" }, AT(t));
     const drift = (sel, t, d, dx, dy) => tl.fromTo(sel, { x: 0, y: 0 }, { x: dx, y: dy, duration: d, ease: "sine.inOut" }, AT(t));
+    // a comment types itself, a word at a time
+    const type = (sel, t, st = 0.045) => tl.fromTo(sel + " .tw", { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none", stagger: st }, AT(t));
+    // a heart rises from the work, sways and goes
+    const heart = (sel, t, x, y, up, sway, d) => {
+      tl.fromTo(sel, { x, y, scale: 0.3 }, { x: x + sway, y: y - up, scale: 1, duration: d, ease: "power1.out" }, AT(t));
+      tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, AT(t));
+      tl.fromTo(sel, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power1.in", immediateRender: false }, AT(t + d - 0.3));
+    };
     // a counted number: fixed-width digit boxes, written once per frame as the value changes, never smeared
     const count = (el, t, dur, to, ease = "expo.out") => {
       const ds = [...el.querySelectorAll(".d")]; let last = null;
@@ -90,30 +139,28 @@
         ds.forEach((d, k) => tl.set(d, { textContent: s[k] === " " ? "" : s[k] }, Math.max(0, AT(tt) - 0.01)));
       }
     };
-    wipeIn(17.84, "dr");
-    drift("#r1-l0", 17.84, 4.28, -80, 60);
-    drift("#r1-l1", 17.84, 4.28, 70, -50);
-    tl.fromTo("#r1-eb", { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" }, AT(18.16));
-    tl.fromTo("#r1-n", { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, AT(18.26));
-    tl.fromTo("#r1-n .ui", { opacity: 0, filter: "blur(12px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "power2.out" }, AT(18.36));
-    count(document.getElementById("r1-cnt"), 18.41, 1.7332, 79, "power1.inOut");
-    tl.fromTo("#r1-d0", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.12, ease: "power2.out", immediateRender: true }, AT(18.5576));
-    tl.fromTo("#r1-d0", { scale: 0.9 }, { scale: 1, duration: 0.3, ease: "back.out(2.2)", immediateRender: false }, AT(18.5576));
-    tl.fromTo("#r1-d1", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.12, ease: "power2.out", immediateRender: false }, AT(18.8052));
-    tl.fromTo("#r1-d1", { scale: 0.9 }, { scale: 1, duration: 0.3, ease: "back.out(2.2)", immediateRender: false }, AT(18.8052));
-    tl.fromTo("#r1-d2", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.12, ease: "power2.out", immediateRender: false }, AT(19.0528));
-    tl.fromTo("#r1-d2", { scale: 0.9 }, { scale: 1, duration: 0.3, ease: "back.out(2.2)", immediateRender: false }, AT(19.0528));
-    tl.fromTo("#r1-d3", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.12, ease: "power2.out", immediateRender: false }, AT(19.3004));
-    tl.fromTo("#r1-d3", { scale: 0.9 }, { scale: 1, duration: 0.3, ease: "back.out(2.2)", immediateRender: false }, AT(19.3004));
-    tl.fromTo("#r1-d4", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.12, ease: "power2.out", immediateRender: false }, AT(19.548));
-    tl.fromTo("#r1-d4", { scale: 0.9 }, { scale: 1, duration: 0.3, ease: "back.out(2.2)", immediateRender: false }, AT(19.548));
-    tl.fromTo("#r1-d5", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.12, ease: "power2.out", immediateRender: false }, AT(19.7956));
-    tl.fromTo("#r1-d5", { scale: 0.9 }, { scale: 1, duration: 0.3, ease: "back.out(2.2)", immediateRender: false }, AT(19.7956));
-    tl.fromTo("#r1-d6", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.12, ease: "power2.out", immediateRender: false }, AT(20.0432));
-    tl.fromTo("#r1-d6", { scale: 0.9 }, { scale: 1, duration: 0.3, ease: "back.out(2.2)", immediateRender: false }, AT(20.0432));
-    words("#r1-lab .w", 20.2432, 0.06);
-    pop("#r1-q", 19.26, 0.5);
-    out(["#r1-eb", "#r1-n", "#r1-lab", "#r1-days", "#r1-q"], 21.78);
+    wipeIn(26.8, "iris");
+    drift("#r1-l0", 26.8, 2.28, -80, 60);
+    drift("#r1-l1", 26.8, 2.28, 70, -50);
+    fade("#r1-eb", 27.02);
+    tl.fromTo("#r1-n", { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "none" }, AT(27.06));
+    count(document.getElementById("r1-cnt"), 27.12, 0.826, 79, "power1.inOut");
+    words("#r1-lab .w", 27.1, 0.05);
+    tl.fromTo("#r1-obj", { opacity: 0, y: 90, scale: 0.8, rotation: -8 }, { opacity: 1, y: 0, scale: 1, rotation: 0, duration: 0.6, ease: "back.out(1.5)" }, AT(27));
+    tl.fromTo("#r1-d0", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(27.18));
+    tl.fromTo("#r1-d0", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(27.18));
+    tl.fromTo("#r1-d1", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(27.30));
+    tl.fromTo("#r1-d1", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(27.30));
+    tl.fromTo("#r1-d2", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(27.41));
+    tl.fromTo("#r1-d2", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(27.41));
+    tl.fromTo("#r1-d3", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(27.53));
+    tl.fromTo("#r1-d3", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(27.53));
+    tl.fromTo("#r1-d4", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(27.65));
+    tl.fromTo("#r1-d4", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(27.65));
+    tl.fromTo("#r1-d5", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(27.77));
+    tl.fromTo("#r1-d5", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(27.77));
+    tl.fromTo("#r1-d6", { backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }, { backgroundColor: "#ffffff", color: "#141a4a", duration: 0.1, ease: "power2.out" }, AT(27.89));
+    tl.fromTo("#r1-d6", { scale: 0.86 }, { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, AT(27.89));
     window.__timelines["r1"] = tl;
   })();
   </script>

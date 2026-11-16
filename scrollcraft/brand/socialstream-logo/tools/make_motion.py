@@ -47,6 +47,12 @@ FORMATS = {
                           ground="transparent", master="socialstream-logo-stacked-dark.svg", pad=0.10),
     "film-end-tall": dict(layout="stacked", size=(1080, 1920), height_frac=0.28125, hero_h=0.38, total=3.0,
                           ground="transparent", master="socialstream-logo-stacked-dark.svg", pad=0.10),
+    # the sizzle (socialstream-concepts/video/sizzle): the logo builds over the opening wall and goes (0.3 s) so the
+    # film's first line can take its place
+    "film-open-wide": dict(layout="stacked", size=(1920, 1080), height_frac=0.28125, hero_h=0.38, total=3.0, exit=0.3,
+                           ground="transparent", master="socialstream-logo-stacked-dark.svg", pad=0.10),
+    "film-open-tall": dict(layout="stacked", size=(1080, 1920), height_frac=0.28125, hero_h=0.38, total=3.0, exit=0.3,
+                           ground="transparent", master="socialstream-logo-stacked-dark.svg", pad=0.10),
 }
 TOTAL = 4.6                # seconds; the last 2 s are a still hold
 KIND = "reversed"          # the drawing made for dark grounds

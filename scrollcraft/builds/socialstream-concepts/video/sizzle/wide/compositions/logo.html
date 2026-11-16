@@ -70,6 +70,8 @@
       // 7. the A's cut opens like the phone's
       tl.fromTo("#logo-acut-up", { attr: { height: 42.0348 } }, { attr: { height: 0 }, duration: 0.2, ease: "expo.out" }, 2.32);
       tl.fromTo("#logo-acut-dn", { attr: { y: 25.8072, height: 42.0348 } }, { attr: { y: 67.842, height: 0 }, duration: 0.2, ease: "expo.out" }, 2.32);
+      // 8. out, so the film can move on
+      tl.fromTo(["#logo-phone-soft", "#logo-word-soft"], { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power2.in" }, 2.7);
       window.__timelines["logo"] = tl;
   </script>
 </template>

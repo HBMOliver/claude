@@ -1,8 +1,8 @@
 <template>
   <style>
     /* Shared by every scene of the SocialStream sizzle (build.py puts it into each scene's style block): the site's type
-   and palette (Sora, Instrument Serif italic, Inter; blue-violet with red-pink as the accent) and the sizzle's
-   devices: colour fields, phones, comment bubbles, counters. */
+   (Sora, Instrument Serif italic, Inter) and the sizzle's objects: the wall, phones, reel cards, comments, hearts,
+   polaroids, counters. SPEC.md has the numbers. */
 @font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; }
 @font-face { font-family: "Sora"; src: url("assets/fonts/sora-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; }
 @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
@@ -11,48 +11,96 @@
 #root .ff { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 #root .hd { font-family: Sora, Inter, sans-serif; font-weight: 700; letter-spacing: -0.045em; line-height: 1.0; }
 #root .it { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
-#root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.86); }
+#root .eb { font: 700 28px/1.2 Inter, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.9); white-space: nowrap; }
 #root .acc { color: #ff5272; }
 #root .w { display: inline-block; }
-/* a colour field with slow lights */
+/* one phrase at a time at the centre of the frame */
+#root .rsv { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; }
+#root .big { font-size: 150px; white-space: nowrap; }
+#root .mid { font-size: 112px; white-space: nowrap; }
+#root .mid .it { font-size: 142px; }
+#root .huge { font-size: 250px; line-height: 0.92; white-space: nowrap; }
+#root .ss { position: relative; display: inline-block; }
+#root .stk { position: absolute; left: -0.03em; right: -0.03em; top: 0.52em; height: 0.08em; border-radius: 0.04em; background: #ff5272; transform-origin: 0 50%; }
+/* a colour field with slow lights, and a client's name tiled faintly over it */
 #root .fld { position: absolute; inset: 0; overflow: hidden; }
 #root .fld .lt { position: absolute; border-radius: 50%; }
+#root .tile { position: absolute; left: -260px; right: -260px; top: -40px; bottom: -40px; display: flex; flex-direction: column; justify-content: space-between;
+  opacity: 0.075; font: 700 78px/1 Sora, Inter, sans-serif; letter-spacing: -0.03em; white-space: nowrap; }
+#root .tile div:nth-child(even) { margin-left: -210px; }
+#root .tile span { margin-right: 76px; }
+/* the wall: a tilted grid of 9:16 cards */
+#root .wl-in { position: absolute; inset: 0; }
+#root .wl-wall { position: absolute; inset: 0; }
+#root .wl-card { position: absolute; overflow: hidden; border-radius: 26px; background: #0b1024;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 30px 60px -30px rgba(0, 0, 0, 0.8); }
+#root .wl-card img, #root .wl-card video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#root .wl-card .g { opacity: 0; }
+#root .glow { position: absolute; inset: 0; background: radial-gradient(ellipse 30% 44% at 50% 50%, rgba(5, 7, 15, 0.95) 0%, rgba(5, 7, 15, 0.76) 44%, rgba(5, 7, 15, 0) 100%); }
+#root .glow.wide { background: radial-gradient(ellipse 60% 46% at 50% 50%, rgba(5, 7, 15, 0.88) 0%, rgba(5, 7, 15, 0.6) 50%, rgba(5, 7, 15, 0) 100%); }
 /* a phone playing a reel */
 #root .phone { position: absolute; width: 380px; height: 790px; border-radius: 58px; background: #0a0b10;
   box-shadow: 0 50px 90px -30px rgba(0, 0, 0, 0.6), inset 0 0 0 2px rgba(255, 255, 255, 0.14); }
 #root .phone .scr { position: absolute; inset: 12px; border-radius: 47px; overflow: hidden; background: #000; }
-#root .phone .scr video, #root .phone .scr img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#root .phone .scr video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 #root .phone .isl { position: absolute; top: 26px; left: 50%; width: 112px; margin-left: -56px; height: 32px; border-radius: 16px; background: #000; }
-/* a pill on a phone: views */
-#root .pill { position: absolute; display: flex; align-items: center; gap: 12px; padding: 14px 22px 14px 18px; border-radius: 40px;
-  background: rgba(5, 7, 15, 0.72); font: 700 30px/1 Inter, sans-serif; letter-spacing: -0.01em; white-space: nowrap;
-  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.18); }
-#root .pill i { display: block; width: 0; height: 0; border-left: 18px solid #fff; border-top: 11px solid transparent; border-bottom: 11px solid transparent; }
-/* a comment or a client's words: a white card */
-#root .bub { position: absolute; width: 600px; padding: 24px 30px 26px 96px; border-radius: 30px; background: #fff; color: #11152a;
-  font: 600 30px/1.32 Inter, sans-serif; letter-spacing: -0.01em; box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.5); transform-origin: 0 100%; }
-#root .bub .av { position: absolute; left: 26px; top: 26px; width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(160deg, #d9def0, #a9b2cf); }
-#root .bub .src { display: block; margin-bottom: 8px; font: 700 22px/1.2 Inter, sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: #6c7493; }
-#root .bub.q { font: italic 400 40px/1.18 "Instrument Serif", Georgia, serif; letter-spacing: 0; }
+/* a reel card: no body, just the picture */
+#root .card { position: absolute; overflow: hidden; border-radius: 40px; background: #0b1024;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.55), inset 0 0 0 2px rgba(255, 255, 255, 0.14); }
+#root .card video, #root .card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* a pill and a chip: a count beside the work */
+#root .pill { position: absolute; display: flex; align-items: center; gap: 12px; padding: 14px 24px 14px 20px; border-radius: 40px;
+  background: rgba(5, 7, 15, 0.78); font: 700 32px/1 Inter, sans-serif; letter-spacing: -0.01em; white-space: nowrap;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.2); }
+#root .chip { position: absolute; display: flex; align-items: center; gap: 12px; padding: 16px 26px 16px 22px; border-radius: 44px; background: #fff; color: #0b1030;
+  font: 700 38px/1 Sora, Inter, sans-serif; letter-spacing: -0.02em; white-space: nowrap; box-shadow: 0 24px 44px -18px rgba(0, 0, 0, 0.5); }
+#root .chip i, #root .pill i { display: block; width: 0; height: 0; border-left: 17px solid currentColor; border-top: 10px solid transparent; border-bottom: 10px solid transparent; }
+#root .tag { position: absolute; padding: 15px 28px; border-radius: 40px; background: rgba(255, 255, 255, 0.14); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+  font: 700 34px/1 Sora, Inter, sans-serif; letter-spacing: -0.02em; white-space: nowrap; }
+/* a comment or a client's words: a white card whose words type on */
+#root .bub { position: absolute; padding: 22px 30px 24px 100px; border-radius: 28px; background: #fff; color: #11152a;
+  font: 600 32px/1.3 Inter, sans-serif; letter-spacing: -0.01em; box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.5); transform-origin: 0 100%; }
+#root .bub .av { position: absolute; left: 26px; top: 24px; width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(160deg, #d9def0, #a9b2cf); }
+#root .bub .src { display: block; margin-bottom: 6px; font: 700 22px/1.2 Inter, sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: #6c7493; }
+#root .bub.q { font: italic 400 44px/1.14 "Instrument Serif", Georgia, serif; letter-spacing: 0; }
+#root .tw { display: inline-block; white-space: pre; }
+/* a heart rising from the work */
+#root .hrt { position: absolute; left: 0; top: 0; z-index: 6; }
+#root .hrt svg { display: block; width: 100%; height: 100%; }
+/* a polaroid of the team at work */
+#root .pol { position: absolute; width: 400px; height: 500px; padding: 16px 16px 68px; background: #fdfdfb; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.55); }
+#root .pol img { display: block; width: 100%; height: 100%; object-fit: cover; }
 /* a counted number: fixed-width digits, never smeared */
 #root .cnt { display: inline-flex; align-items: baseline; }
 #root .cnt .d { display: inline-block; width: 0.62em; text-align: center; }
+#root .lab { font: 600 54px/1.2 Inter, sans-serif; letter-spacing: -0.01em; white-space: nowrap; }
 
-    #root .wl-in { position: absolute; inset: 0; }
-    #root .wl-tilt { position: absolute; left: 50%; top: 50%; width: 2294px; height: 3031px; margin: -1515.5px 0 0 -1147.0px; transform: rotate(-10deg); }
-    #root .wl-wall { position: absolute; inset: 0; }
-    #root .wl-card { position: absolute; width: 230px; height: 409px; overflow: hidden; border-radius: 22px; background: #0b1024;
-      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 30px 60px -30px rgba(0, 0, 0, 0.8); }
-    #root .wl-card img { display: block; width: 100%; height: 100%; object-fit: cover; }
-    #root .wl-dim { position: absolute; inset: 0; background: rgba(5, 7, 15, 0.2); }
-    #root .glow { position: absolute; inset: 0; background: radial-gradient(ellipse 30% 44% at 50% 50%, rgba(5, 7, 15, 0.95) 0%, rgba(5, 7, 15, 0.76) 44%, rgba(5, 7, 15, 0) 100%); }
+    #root .wl-tilt { position: absolute; left: 50%; top: 50%; width: 2892px; height: 2761px; margin: -1380.5px 0 0 -1446.0px; transform: rotate(-10deg); }
+    #root .wl-card { width: 300px; height: 533px; }
+    #root video.full { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    #root #op-shade { background: linear-gradient(24deg, rgba(5, 7, 15, 0.86) 0%, rgba(5, 7, 15, 0.4) 36%, rgba(5, 7, 15, 0) 62%); }
+    #root .cb { position: absolute; left: 130px; bottom: 120px; }
+    #root .cb1 { font-size: 136px; white-space: nowrap; }
+    #root .cb1 .it { font-size: 176px; }
   </style>
   <div id="root" data-composition-id="open" data-width="1920" data-height="1080">
     <div class="ff" id="wp">
+    <div class="fld" style="background:#05070f"></div>
     <div class="wl-in ff" data-layout-allow-overflow id="op-in">
-      <div class="wl-tilt"><div class="wl-wall" id="op-wall"><div class="wl-card" style="left:0px;top:0px"><img src="assets/tiles/t04.jpg" alt=""></div><div class="wl-card" style="left:258px;top:0px"><img src="assets/tiles/t09.jpg" alt=""></div><div class="wl-card" style="left:516px;top:0px"><img src="assets/tiles/t14.jpg" alt=""></div><div class="wl-card" style="left:774px;top:0px"><img src="assets/tiles/t19.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:0px"><img src="assets/tiles/t24.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:0px"><img src="assets/tiles/t01.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:0px"><img src="assets/tiles/t06.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:0px"><img src="assets/tiles/t11.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:0px"><img src="assets/tiles/t16.jpg" alt=""></div><div class="wl-card" style="left:0px;top:437px"><img src="assets/tiles/t21.jpg" alt=""></div><div class="wl-card" style="left:258px;top:437px"><img src="assets/tiles/t18.jpg" alt=""></div><div class="wl-card" style="left:516px;top:437px"><img src="assets/tiles/t26.jpg" alt=""></div><div class="wl-card" style="left:774px;top:437px"><img src="assets/tiles/t03.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:437px"><img src="assets/tiles/t08.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:437px"><img src="assets/tiles/t13.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:437px"><img src="assets/tiles/t18.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:437px"><img src="assets/tiles/t23.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:437px"><img src="assets/tiles/t28.jpg" alt=""></div><div class="wl-card" style="left:0px;top:874px"><img src="assets/tiles/t02.jpg" alt=""></div><div class="wl-card" style="left:258px;top:874px"><img src="assets/tiles/t14.jpg" alt=""></div><div class="wl-card" style="left:516px;top:874px"><img src="assets/tiles/t04.jpg" alt=""></div><div class="wl-card" style="left:774px;top:874px"><img src="assets/tiles/t22.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:874px"><img src="assets/tiles/t06.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:874px"><img src="assets/tiles/t05.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:874px"><img src="assets/tiles/t15.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:874px"><img src="assets/tiles/t25.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:874px"><img src="assets/tiles/t13.jpg" alt=""></div><div class="wl-card" style="left:0px;top:1311px"><img src="assets/tiles/t26.jpg" alt=""></div><div class="wl-card" style="left:258px;top:1311px"><img src="assets/tiles/t16.jpg" alt=""></div><div class="wl-card" style="left:516px;top:1311px"><img src="assets/tiles/t17.jpg" alt=""></div><div class="wl-card" style="left:774px;top:1311px"><img src="assets/tiles/t12.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:1311px"><img src="assets/tiles/t01.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:1311px"><img src="assets/tiles/t23.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:1311px"><img src="assets/tiles/t28.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:1311px"><img src="assets/tiles/t27.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:1311px"><img src="assets/tiles/t09.jpg" alt=""></div><div class="wl-card" style="left:0px;top:1748px"><img src="assets/tiles/t24.jpg" alt=""></div><div class="wl-card" style="left:258px;top:1748px"><img src="assets/tiles/t08.jpg" alt=""></div><div class="wl-card" style="left:516px;top:1748px"><img src="assets/tiles/t20.jpg" alt=""></div><div class="wl-card" style="left:774px;top:1748px"><img src="assets/tiles/t10.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:1748px"><img src="assets/tiles/t11.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:1748px"><img src="assets/tiles/t21.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:1748px"><img src="assets/tiles/t03.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:1748px"><img src="assets/tiles/t19.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:1748px"><img src="assets/tiles/t07.jpg" alt=""></div><div class="wl-card" style="left:0px;top:2185px"><img src="assets/tiles/t05.jpg" alt=""></div><div class="wl-card" style="left:258px;top:2185px"><img src="assets/tiles/t10.jpg" alt=""></div><div class="wl-card" style="left:516px;top:2185px"><img src="assets/tiles/t15.jpg" alt=""></div><div class="wl-card" style="left:774px;top:2185px"><img src="assets/tiles/t20.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:2185px"><img src="assets/tiles/t25.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:2185px"><img src="assets/tiles/t02.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:2185px"><img src="assets/tiles/t07.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:2185px"><img src="assets/tiles/t12.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:2185px"><img src="assets/tiles/t17.jpg" alt=""></div><div class="wl-card" style="left:0px;top:2622px"><img src="assets/tiles/t22.jpg" alt=""></div><div class="wl-card" style="left:258px;top:2622px"><img src="assets/tiles/t27.jpg" alt=""></div><div class="wl-card" style="left:516px;top:2622px"><img src="assets/tiles/t04.jpg" alt=""></div><div class="wl-card" style="left:774px;top:2622px"><img src="assets/tiles/t09.jpg" alt=""></div><div class="wl-card" style="left:1032px;top:2622px"><img src="assets/tiles/t14.jpg" alt=""></div><div class="wl-card" style="left:1290px;top:2622px"><img src="assets/tiles/t19.jpg" alt=""></div><div class="wl-card" style="left:1548px;top:2622px"><img src="assets/tiles/t24.jpg" alt=""></div><div class="wl-card" style="left:1806px;top:2622px"><img src="assets/tiles/t01.jpg" alt=""></div><div class="wl-card" style="left:2064px;top:2622px"><img src="assets/tiles/t06.jpg" alt=""></div></div></div>
-      <div class="wl-dim"></div></div>
+      <div class="wl-tilt"><div class="wl-wall" id="op-wall"><div class="wl-card" style="left:0px;top:0px"><img src="assets/wall/s10.jpg" alt=""><img class="g" src="assets/wall/s10-g.jpg" alt=""></div><div class="wl-card" style="left:324px;top:0px"><img src="assets/wall/s18.jpg" alt=""><img class="g" src="assets/wall/s18-g.jpg" alt=""></div><div class="wl-card" style="left:648px;top:0px"><img src="assets/wall/s03.jpg" alt=""><img class="g" src="assets/wall/s03-g.jpg" alt=""></div><div class="wl-card" style="left:972px;top:0px"><img src="assets/wall/s17.jpg" alt=""><img class="g" src="assets/wall/s17-g.jpg" alt=""></div><div class="wl-card" style="left:1296px;top:0px"><img src="assets/wall/s25.jpg" alt=""><img class="g" src="assets/wall/s25-g.jpg" alt=""></div><div class="wl-card" style="left:1620px;top:0px"><img src="assets/wall/s02.jpg" alt=""><img class="g" src="assets/wall/s02-g.jpg" alt=""></div><div class="wl-card" style="left:1944px;top:0px"><img src="assets/wall/s15.jpg" alt=""><img class="g" src="assets/wall/s15-g.jpg" alt=""></div><div class="wl-card" style="left:2268px;top:0px"><img src="assets/wall/s07.jpg" alt=""><img class="g" src="assets/wall/s07-g.jpg" alt=""></div><div class="wl-card" style="left:2592px;top:0px"><img src="assets/wall/s13.jpg" alt=""><img class="g" src="assets/wall/s13-g.jpg" alt=""></div><div class="wl-card" style="left:0px;top:557px"><img src="assets/wall/s22.jpg" alt=""><img class="g" src="assets/wall/s22-g.jpg" alt=""></div><div class="wl-card" style="left:324px;top:557px"><img src="assets/wall/w10.jpg" alt=""><video id="op-v11" class="clip " src="assets/wall/w10.mp4" data-start="0" data-duration="7.28" data-media-start="0" data-hf-media-start-basis="local" data-track-index="1" muted playsinline></video><img class="g" src="assets/wall/w10-g.jpg" alt=""></div><div class="wl-card" style="left:648px;top:557px"><img src="assets/wall/w05.jpg" alt=""><video id="op-v12" class="clip " src="assets/wall/w05.mp4" data-start="0" data-duration="7.28" data-media-start="0" data-hf-media-start-basis="local" data-track-index="2" muted playsinline></video><img class="g" src="assets/wall/w05-g.jpg" alt=""></div><div class="wl-card" style="left:972px;top:557px"><img src="assets/wall/w11.jpg" alt=""><video id="op-v13" class="clip " src="assets/wall/w11.mp4" data-start="0" data-duration="7.28" data-media-start="0" data-hf-media-start-basis="local" data-track-index="3" muted playsinline></video><img class="g" src="assets/wall/w11-g.jpg" alt=""></div><div class="wl-card" style="left:1296px;top:557px"><img src="assets/wall/w04.jpg" alt=""><video id="op-v14" class="clip " src="assets/wall/w04.mp4" data-start="0" data-duration="7.28" data-media-start="0" data-hf-media-start-basis="local" data-track-index="4" muted playsinline></video><img class="g" src="assets/wall/w04-g.jpg" alt=""></div><div class="wl-card" style="left:1620px;top:557px"><img src="assets/wall/s06.jpg" alt=""><img class="g" src="assets/wall/s06-g.jpg" alt=""></div><div class="wl-card" style="left:1944px;top:557px"><img src="assets/wall/s01.jpg" alt=""><img class="g" src="assets/wall/s01-g.jpg" alt=""></div><div class="wl-card" style="left:2268px;top:557px"><img src="assets/wall/s05.jpg" alt=""><img class="g" src="assets/wall/s05-g.jpg" alt=""></div><div class="wl-card" style="left:2592px;top:557px"><img src="assets/wall/w08.jpg" alt=""><video id="op-v18" class="clip " src="assets/wall/w08.mp4" data-start="0" data-duration="7.28" data-media-start="0" data-hf-media-start-basis="local" data-track-index="5" muted playsinline></video><img class="g" src="assets/wall/w08-g.jpg" alt=""></div><div class="wl-card" style="left:0px;top:1114px"><img src="assets/wall/s09.jpg" alt=""><img class="g" src="assets/wall/s09-g.jpg" alt=""></div><div class="wl-card" style="left:324px;top:1114px"><img src="assets/wall/w09.jpg" alt=""><video id="op-v21" class="clip " src="assets/wall/w09.mp4" data-start="0" data-duration="7.28" data-media-start="0" data-hf-media-start-basis="local" data-track-index="6" muted playsinline></video><img class="g" src="assets/wall/w09-g.jpg" alt=""></div><div class="wl-card" style="left:648px;top:1114px"><img src="assets/wall/w07.jpg" alt=""><video id="op-v22" class="clip " src="assets/wall/w07.mp4" data-start="0" data-duration="7.28" data-media-start="0" data-hf-media-start-basis="local" data-track-index="7" muted playsinline></video><img class="g" src="assets/wall/w07-g.jpg" alt=""></div><div class="wl-card" style="left:972px;top:1114px"><img src="assets/wall/w02.jpg" alt=""><video id="op-v23" class="clip " src="assets/wall/w02.mp4" data-start="0" data-duration="7.28" data-media-start="0" data-hf-media-start-basis="local" data-track-index="8" muted playsinline></video><img class="g" src="assets/wall/w02-g.jpg" alt=""></div><div class="wl-card" style="left:1296px;top:1114px"><img src="assets/wall/mid.jpg" alt=""><img class="g" src="assets/wall/mid-g.jpg" alt=""></div><div class="wl-card" style="left:1620px;top:1114px"><img src="assets/wall/s02.jpg" alt=""><img class="g" src="assets/wall/s02-g.jpg" alt=""></div><div class="wl-card" style="left:1944px;top:1114px"><img src="assets/wall/s10.jpg" alt=""><img class="g" src="assets/wall/s10-g.jpg" alt=""></div><div class="wl-card" style="left:2268px;top:1114px"><img src="assets/wall/s15.jpg" alt=""><img class="g" src="assets/wall/s15-g.jpg" alt=""></div><div class="wl-card" style="left:2592px;top:1114px"><img src="assets/wall/s06.jpg" alt=""><img class="g" src="assets/wall/s06-g.jpg" alt=""></div><div class="wl-card" style="left:0px;top:1671px"><img src="assets/wall/s07.jpg" alt=""><img class="g" src="assets/wall/s07-g.jpg" alt=""></div><div class="wl-card" style="left:324px;top:1671px"><img src="assets/wall/w06.jpg" alt=""><video id="op-v31" class="clip " src="assets/wall/w06.mp4" data-start="0" data-duration="7.28" data-media-start="0" data-hf-media-start-basis="local" data-track-index="9" muted playsinline></video><img class="g" src="assets/wall/w06-g.jpg" alt=""></div><div class="wl-card" style="left:648px;top:1671px"><img src="assets/wall/w13.jpg" alt=""><video id="op-v32" class="clip " src="assets/wall/w13.mp4" data-start="0" data-duration="7.28" data-media-start="0" data-hf-media-start-basis="local" data-track-index="10" muted playsinline></video><img class="g" src="assets/wall/w13-g.jpg" alt=""></div><div class="wl-card" style="left:972px;top:1671px"><img src="assets/wall/w03.jpg" alt=""><video id="op-v33" class="clip " src="assets/wall/w03.mp4" data-start="0" data-duration="7.28" data-media-start="0" data-hf-media-start-basis="local" data-track-index="11" muted playsinline></video><img class="g" src="assets/wall/w03-g.jpg" alt=""></div><div class="wl-card" style="left:1296px;top:1671px"><img src="assets/wall/s04.jpg" alt=""><img class="g" src="assets/wall/s04-g.jpg" alt=""></div><div class="wl-card" style="left:1620px;top:1671px"><img src="assets/wall/s12.jpg" alt=""><img class="g" src="assets/wall/s12-g.jpg" alt=""></div><div class="wl-card" style="left:1944px;top:1671px"><img src="assets/wall/s18.jpg" alt=""><img class="g" src="assets/wall/s18-g.jpg" alt=""></div><div class="wl-card" style="left:2268px;top:1671px"><img src="assets/wall/s20.jpg" alt=""><img class="g" src="assets/wall/s20-g.jpg" alt=""></div><div class="wl-card" style="left:2592px;top:1671px"><img src="assets/wall/s05.jpg" alt=""><img class="g" src="assets/wall/s05-g.jpg" alt=""></div><div class="wl-card" style="left:0px;top:2228px"><img src="assets/wall/s14.jpg" alt=""><img class="g" src="assets/wall/s14-g.jpg" alt=""></div><div class="wl-card" style="left:324px;top:2228px"><img src="assets/wall/s19.jpg" alt=""><img class="g" src="assets/wall/s19-g.jpg" alt=""></div><div class="wl-card" style="left:648px;top:2228px"><img src="assets/wall/s26.jpg" alt=""><img class="g" src="assets/wall/s26-g.jpg" alt=""></div><div class="wl-card" style="left:972px;top:2228px"><img src="assets/wall/s04.jpg" alt=""><img class="g" src="assets/wall/s04-g.jpg" alt=""></div><div class="wl-card" style="left:1296px;top:2228px"><img src="assets/wall/s01.jpg" alt=""><img class="g" src="assets/wall/s01-g.jpg" alt=""></div><div class="wl-card" style="left:1620px;top:2228px"><img src="assets/wall/s23.jpg" alt=""><img class="g" src="assets/wall/s23-g.jpg" alt=""></div><div class="wl-card" style="left:1944px;top:2228px"><img src="assets/wall/s16.jpg" alt=""><img class="g" src="assets/wall/s16-g.jpg" alt=""></div><div class="wl-card" style="left:2268px;top:2228px"><img src="assets/wall/s24.jpg" alt=""><img class="g" src="assets/wall/s24-g.jpg" alt=""></div><div class="wl-card" style="left:2592px;top:2228px"><img src="assets/wall/s08.jpg" alt=""><img class="g" src="assets/wall/s08-g.jpg" alt=""></div></div></div>
+    </div>
+    <div class="ff" id="op-dim" style="background:#05070f"></div>
     <div class="glow" id="op-glow"></div>
+    <div class="glow wide" id="op-glow2"></div>
+    <div class="rsv" id="op-p1"><div class="hd big">Posztolsz.</div></div>
+    <div class="rsv" id="op-p2"><div class="hd big">Hirdetsz.</div></div>
+    <div class="rsv" id="op-p3"><div class="hd mid">Mégsem jönnek a <span class="acc">vevők?</span></div></div>
+    <div class="rsv" id="op-ca"><div><div class="hd big"><span class="w">A</span> <span class="ss"><span class="w">social</span> <span class="w">media</span><i class="stk" id="op-stk"></i></span></div>
+      <div class="it huge" id="op-m">meghalt.</div></div></div>
+    <div class="ff" id="op-rot" data-layout-allow-overflow><div class="ff" id="op-hcard"><video id="op-hv" class="clip full" src="assets/clips/w-turn.mp4" data-start="8.76" data-duration="2.52" data-media-start="0" data-hf-media-start-basis="local" data-track-index="20" muted playsinline></video></div></div>
+    <div class="ff" id="op-shade"></div>
+    <div class="cb" id="op-cb"><div class="hd cb1"><span class="w">Az</span> <span class="w it">érdeklődés</span></div>
+      <div class="hd cb1"><span class="w">vette</span> <span class="w">át</span> <span class="w">a</span> <span class="w">helyét<span class="acc">.</span></span></div></div>
     </div>
   </div>
   <script>
@@ -61,24 +109,38 @@
     const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), EZ = {};
     const ez = (n, p) => (EZ[n] || (EZ[n] = gsap.parseEase(n)))(clamp01(p));
     const tl = gsap.timeline({ paused: true });
-    // the scene comes in over the last one with a wipe: diagonal from the right or the left, up, or an iris
+    // a scene comes in over the last one with a wipe: diagonal from the right or the left, up, or an iris
     const WIPES = {
       dr: ["polygon(132% 0%, 132% 0%, 132% 100%, 162% 100%)", "polygon(-32% 0%, 132% 0%, 132% 100%, -2% 100%)"],
       dl: ["polygon(-32% 0%, -32% 0%, -62% 100%, -32% 100%)", "polygon(-32% 0%, 132% 0%, 102% 100%, -32% 100%)"],
       up: ["polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)", "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"],
       iris: ["circle(0% at 50% 50%)", "circle(75% at 50% 50%)"],
     };
-    const wipeIn = (t, k = "dr") => tl.fromTo("#wp", { clipPath: WIPES[k][0] }, { clipPath: WIPES[k][1], duration: 0.32, ease: "power3.inOut" }, AT(t));
-    // words land by focus and opacity, a little apart; a line goes out of focus
+    const wipeIn = (t, k) => tl.fromTo("#wp", { clipPath: WIPES[k][0] }, { clipPath: WIPES[k][1], duration: 0.32, ease: "power3.inOut" }, AT(t));
+    // one phrase at a time: it comes into focus, and goes when the next one comes
+    const say = (sel, tin, tout) => {
+      tl.fromTo(sel, { opacity: 0, filter: "blur(12px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.13, ease: "power2.out" }, AT(tin));
+      if (tout !== undefined) tl.fromTo(sel, { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(12px)", duration: 0.1, ease: "power2.in", immediateRender: false }, AT(tout));
+    };
     const words = (sel, t, st = 0.07) => tl.fromTo(sel, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: st }, AT(t));
     const out = (sel, t) => tl.fromTo(sel, { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in", immediateRender: false }, AT(t));
-    // a card pops: scale with a little overshoot (position may bounce, opacity never)
-    const pop = (sel, t, d = 0.45) => { tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, AT(t));
-      tl.fromTo(sel, { scale: 0.55, y: 30 }, { scale: 1, y: 0, duration: d, ease: "back.out(1.7)" }, AT(t)); };
-    // a phone rises from below the frame, leaning, and settles
-    const rise = (sel, t, r0, r1) => tl.fromTo(sel, { y: 980, rotation: r0 }, { y: 0, rotation: r1, duration: 0.72, ease: "expo.out" }, AT(t));
-    // slow light in a field
+    const fade = (sel, t, d = 0.25) => tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: d, ease: "power2.out" }, AT(t));
+    // a card pops: scale and position with a little overshoot (opacity never bounces)
+    const pop = (sel, t, d = 0.45) => {
+      tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "none" }, AT(t));
+      tl.fromTo(sel, { scale: 0.55, y: 30 }, { scale: 1, y: 0, duration: d, ease: "back.out(1.7)" }, AT(t));
+    };
+    // a phone or a card rises from below the frame, turning, and settles
+    const rise = (sel, t, r0, r1, d = 0.72) => tl.fromTo(sel, { y: 1150, rotation: r0 }, { y: 0, rotation: r1, duration: d, ease: "expo.out" }, AT(t));
     const drift = (sel, t, d, dx, dy) => tl.fromTo(sel, { x: 0, y: 0 }, { x: dx, y: dy, duration: d, ease: "sine.inOut" }, AT(t));
+    // a comment types itself, a word at a time
+    const type = (sel, t, st = 0.045) => tl.fromTo(sel + " .tw", { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none", stagger: st }, AT(t));
+    // a heart rises from the work, sways and goes
+    const heart = (sel, t, x, y, up, sway, d) => {
+      tl.fromTo(sel, { x, y, scale: 0.3 }, { x: x + sway, y: y - up, scale: 1, duration: d, ease: "power1.out" }, AT(t));
+      tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, AT(t));
+      tl.fromTo(sel, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power1.in", immediateRender: false }, AT(t + d - 0.3));
+    };
     // a counted number: fixed-width digit boxes, written once per frame as the value changes, never smeared
     const count = (el, t, dur, to, ease = "expo.out") => {
       const ds = [...el.querySelectorAll(".d")]; let last = null;
@@ -90,10 +152,31 @@
       }
     };
     
-    // frame 0 is the thumbnail: the wall is already there, faint and large, and settles
-    tl.fromTo("#op-wall .wl-card", { opacity: 0.3, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.8, ease: "expo.out", stagger: { grid: [7, 9], from: "center", amount: 0.6 } }, 0);
-    tl.fromTo("#op-wall", { x: 40 }, { x: -20, duration: 3.04, ease: "none" }, 0);
-    tl.fromTo("#op-glow", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, 0.1);
+    // the wall: whole from the first frame (the thumbnail), settling back a little; it drifts until it dies
+    tl.fromTo("#op-in", { scale: 1.12 }, { scale: 1, duration: 1.4, ease: "expo.out" }, 0);
+    tl.fromTo("#op-wall", { x: 80 }, { x: -36.5, duration: 7.28, ease: "none" }, 0);
+    tl.fromTo("#op-wall", { x: -36.5 }, { x: -44.5, duration: 0.6, ease: "power2.out", immediateRender: false }, AT(7.28));
+    fade("#op-glow", 0.1, 0.5);
+    tl.fromTo("#op-dim", { opacity: 0.1 }, { opacity: 0.5, duration: 0.4, ease: "power2.inOut" }, AT(2.9));
+    fade("#op-glow2", 2.9, 0.4);
+    // the problem, one phrase at a time
+    say("#op-p1", 3.32, 4.26); say("#op-p2", 4.32, 5.26); say("#op-p3", 5.32, 6.64);
+    // the diagnosis: struck through, then "meghalt." and every card freezes and turns grey, from the middle outwards
+    words("#op-ca .big .w", 6.8);
+    tl.fromTo("#op-stk", { scaleX: 0 }, { scaleX: 1, duration: 0.2, ease: "power3.out" }, AT(7.08));
+    tl.fromTo("#op-ca .ss .w", { opacity: 1 }, { opacity: 0.42, duration: 0.25, ease: "power2.out", immediateRender: false }, AT(7.18));
+    tl.fromTo("#op-m", { opacity: 0, filter: "blur(14px)", scale: 1.06 }, { opacity: 1, filter: "blur(0px)", scale: 1, duration: 0.26, ease: "power2.out" }, AT(7.28));
+    tl.fromTo("#op-wall .g", { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "power2.out", stagger: { grid: [5, 9], from: "center", amount: 0.5 } }, AT(7.28));
+    tl.fromTo("#op-dim", { opacity: 0.5 }, { opacity: 0.64, duration: 0.5, ease: "power2.out", immediateRender: false }, AT(7.28));
+    out("#op-ca", 8.72);
+    // the turn: the middle card comes back in colour, then grows into the whole frame and lands on the drop
+    tl.fromTo("#op-hcard", { clipPath: "inset(273.5px 854.5px 273.5px 765.5px round 26px)" }, { clipPath: "inset(0px 0px 0px 0px round 0px)", duration: 0.36, ease: "power2.inOut" }, AT(8.92));
+    tl.fromTo("#op-rot", { rotation: -10 }, { rotation: 0, duration: 0.36, ease: "power2.inOut" }, AT(8.92));
+    fade("#op-rot", 8.8, 0.08);
+    tl.fromTo(["#op-glow", "#op-glow2"], { opacity: 1 }, { opacity: 0, duration: 0.14, ease: "power2.in", immediateRender: false }, AT(8.72));
+    tl.fromTo("#op-in", { scale: 1 }, { scale: 1.3, duration: 0.36, ease: "power2.in", immediateRender: false }, AT(8.92));
+    fade("#op-shade", 9.2, 0.3);
+    words("#op-cb .w", 9.28, 0.08);
     window.__timelines["open"] = tl;
   })();
   </script>
