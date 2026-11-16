@@ -58,6 +58,18 @@ The published pages are private until they are shared from their Share menu.
   - `[data-follow]` followers and magnetic buttons
   - the menu
   - the audit form
+- `reels.js` (Aurora Mix only, since 2026-11-15): Mix's 20 reels are short silent loops (`assets/r-*.mp4`, 360x640,
+  2.1-5.3 s, 3.2 MB together) over their posters (`assets/r-*.jpg`), with a reel's furniture in markup: a progress
+  bar, the side icons, whose post it is. A clip loads and plays only while its card is on screen. With reduced motion
+  or a data saver only the posters show.
+- `tools/reels.py`: cuts those clips and posters from the founder's footage (paths are local to the founder's Mac).
+  Captions are burned in only where the words are real: the clients' own edits (FlyX, András, Prof Enzo, Up To
+  Youth, Miskolc Plaza), the words said in the Latvia clips (transcribed on the Mac), the Türkiye film's own subtitles
+  set for a vertical frame, the Nike spec ad's two end lines laid over its shots, and the two smartwatch ads (added
+  2026-11-16): a creator's opening line (transcribed on the Mac, set at the top so the watch stays clear) and the V89
+  ad's own caption. Those two are labelled "Okosóra hirdetés" without the brand's name (the V89 caption still names
+  the model), and the founder cleared both for the site. For the other new clips the founder has the consent of the
+  people shown; the FlyX customers and András's reels come from the clients' own published videos.
 - `build.mjs`: writes `pulse.html`, `premiere.html`, `aurora.html`, `studio.html`, `mix.html`. It stops on an em dash
   in visible copy.
 - `tools/artifact.mjs`: packages each page for claude.ai.

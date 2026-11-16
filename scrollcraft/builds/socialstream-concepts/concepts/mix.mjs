@@ -9,7 +9,7 @@
 // the cursor round the first screen, the reels and the service objects lean toward it, and the buttons are pulled
 // toward it.
 import { C } from '../content.mjs';
-import { esc, tx, tw, pair, toSvc, btn, head, scripts, nav, claim, promise, film, reel, rail, tagItems, tickerItems, count, form, offerCopy, faqList, footer } from '../parts.mjs';
+import { esc, tx, tw, pair, toSvc, btn, head, scripts, nav, claim, promise, film, rail, tagItems, tickerItems, count, form, offerCopy, faqList, footer } from '../parts.mjs';
 
 // labels that only this page has (Hungarian, English); listed in COPY.md as new
 const L = {
@@ -18,8 +18,45 @@ const L = {
   next: { hu: 'Következő vélemény', en: 'Next review' },
 };
 const ARR = dir => `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="${dir < 0 ? 'M14 8H3M7 3.5 2.5 8 7 12.5' : 'M2 8h11M9 3.5 13.5 8 9 12.5'}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-// the reels that close in on the statement: [reel, side (-1 left, 1 right), how far it leans toward the cursor]
-const FLY = [['p06', -1, 0.04], ['p10', -1, -0.03], ['p13', -1, 0.06], ['p15', 1, -0.04], ['p07', 1, 0.05], ['p22', 1, 0.03]];
+// the reels that close in on the statement: [reel, side (-1 left, 1 right), how far it leans toward the cursor].
+// Since 2026-11-15 they and the rail are short silent loops that look like reels (a progress bar, the side icons,
+// whose post it is), mixing new faces (Up To Youth, the Latvia challenge, Bálint's Miskolc Plaza reel and Nike spec
+// ad, Prof Enzo, Sóskút, the Türkiye film; the founder has their consent), since 2026-11-16 two smartwatch ads the
+// founder found and cleared for the site, and a few of the FlyX and András reels.
+// Their captions are the clients' own, or words from the source: what is said in the clip, the film's own subtitles,
+// the spec ad's end lines laid over its shots (cut by tools/reels.py, see README). f1 and f4 hide on tablets (761-1080 px),
+// so those two are the old ones.
+const FLY = [['r-tr-smile', -1, 0.04], ['r-andras-1', -1, -0.03], ['r-uty', -1, 0.06], ['r-lv-sunset', 1, -0.04], ['r-flyx-1', 1, 0.05], ['r-miskolc', 1, 0.03]];
+const RAIL = ['r-lv-yellow', 'r-nike-1', 'r-flyx-2', 'r-watch-1', 'r-enzo-1', 'r-soskut', 'r-lv-hoodie', 'r-andras-2', 'r-nike-2', 'r-tr-friends', 'r-watch-2', 'r-enzo-2', 'r-flyx-3', 'r-lv-cap'];
+// whose post each reel is: [name, kind] with kind 0 = an account (its initial in a ring), 1 = a place (a pin),
+// 2 = no badge (the spec ads, which belong to no client, and the smartwatch ads, whose brand the site does not name:
+// whether it is the watch webshop of the results is not confirmed, and that client stays unnamed)
+const LV = { hu: 'Lettország', en: 'Latvia' };
+const WATCH_AD = { hu: 'Okosóra hirdetés', en: 'Smartwatch ad' };
+const WHO = {
+  'r-uty': ['Up to Youth', 0], 'r-miskolc': ['Miskolc Plaza', 0], 'r-soskut': ['Bridle Up Hope', 0],
+  'r-enzo-1': ['Prof Enzo', 0], 'r-enzo-2': ['Prof Enzo', 0], 'r-andras-1': ['Gyenis András', 0], 'r-andras-2': ['Gyenis András', 0],
+  'r-flyx-1': ['FlyX Tenerife', 0], 'r-flyx-2': ['FlyX Tenerife', 0], 'r-flyx-3': ['FlyX Tenerife', 0],
+  // the Latvia clips were shot at Bernāti, south of Liepāja (their GPS), so they name the country
+  'r-lv-sunset': [LV, 1], 'r-lv-yellow': [LV, 1], 'r-lv-hoodie': [LV, 1], 'r-lv-cap': [LV, 1],
+  'r-tr-smile': ['Kemer', 1], 'r-tr-friends': ['Kemer', 1],
+  'r-nike-1': [{ hu: 'Spec hirdetés', en: 'Spec ad' }, 2], 'r-nike-2': [{ hu: 'Spec hirdetés', en: 'Spec ad' }, 2],
+  'r-watch-1': [WATCH_AD, 2], 'r-watch-2': [WATCH_AD, 2],
+};
+const ICO = {
+  heart: 'M12 20.3 10.6 19C5.4 14.3 2 11.2 2 7.5 2 4.4 4.4 2 7.5 2c1.7 0 3.4.8 4.5 2.1C13.1 2.8 14.8 2 16.5 2 19.6 2 22 4.4 22 7.5c0 3.7-3.4 6.8-8.6 11.5z',
+  chat: 'M21 11.5a8.5 8.5 0 0 1-12.4 7.6L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z',
+  send: 'M22 3 9.5 15.5M22 3l-7 19-5.5-6.5L3 10z',
+  pin: 'M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12zm0-9.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z',
+};
+const ico = d => `<svg viewBox="0 0 24 24"><path d="${d}"/></svg>`;
+// a reel: the poster (lazy) under a silent loop that reels.js loads and plays only while it is on screen
+const rv = id => {
+  const [name, kind] = WHO[id];
+  const badge = kind === 1 ? `<i class="pin">${ico(ICO.pin)}</i>` : kind === 0 ? `<i>${esc(name[0])}</i>` : '';
+  const label = typeof name === 'string' ? `<b>${esc(name)}</b>` : tx('b', '', name);
+  return `<figure class="reel rv" aria-hidden="true"><img src="assets/${id}.jpg" alt="" width="486" height="864" loading="lazy" decoding="async"><video muted playsinline loop preload="none" data-src="assets/${id}.mp4" width="360" height="640"></video><span class="rv-bar"><i></i></span><span class="rv-side">${ico(ICO.heart)}${ico(ICO.chat)}${ico(ICO.send)}</span><span class="rv-who">${badge}${label}</span></figure>`;
+};
 
 export function page() {
   const s = C.services, r = C.results, w = C.who, st = C.steps, v = C.voices, t = C.team, p = C.problem, cp = C.compare;
@@ -63,7 +100,7 @@ export function page() {
   <!-- what we do, lighting as it is read, while their reels close in from both sides -->
   <section class="mx-say" aria-labelledby="say-h" data-drift>
     <div class="mx-fly" aria-hidden="true">
-      ${FLY.map(([id, side, k], i) => `<div class="mx-f f${i}" style="--side:${side}"><div class="mx-f-lean" data-follow data-k="${k}"><div class="bob">${reel(id)}</div></div></div>`).join('\n      ')}
+      ${FLY.map(([id, side, k], i) => `<div class="mx-f f${i}" style="--side:${side}"><div class="mx-f-lean" data-follow data-k="${k}"><div class="bob">${rv(id)}</div></div></div>`).join('\n      ')}
     </div>
     <div class="wrap">
       <h2 class="mx-statement" id="say-h" data-lit><span data-l="hu">${esc(C.lead1.hu)}</span><span data-l="en">${esc(C.lead1.en)}</span></h2>
@@ -137,7 +174,7 @@ export function page() {
     </div>
     <div class="mx-reels">
       <div class="wrap mx-reels-head">${tw('h3', 'mx-h3', C.reels.h2, 'data-r')}${tx('p', 'mx-cap', C.reels.caption, 'data-r')}</div>
-      ${rail(C.reels.all.slice(0, 12).map(id => reel(id)).join(''), 'mx-reel-rail', 1, 40)}
+      ${rail(RAIL.map(rv).join(''), 'mx-reel-rail', 1, 40)}
     </div>
   </section>
 
@@ -252,5 +289,5 @@ export function page() {
     </div>
   </section>
 </main>
-` + footer('mx-foot', true, true) + scripts(['logo-anim.js']);
+` + footer('mx-foot', true, true) + scripts(['logo-anim.js', 'reels.js']);
 }

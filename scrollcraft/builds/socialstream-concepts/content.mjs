@@ -145,7 +145,8 @@ export const C = {
 
   reels: {
     h2: { hu: 'Ami <em>megállítja</em> a hüvelykujjat.', en: 'What <em>stops</em> the thumb.' },
-    caption: { hu: 'Képkockák az ügyfeleinknek készült videókból.', en: 'Frames from the videos we made for our clients.' },
+    // since 2026-11-15 the frames also come from the team's own projects and spec ads, not only client work
+    caption: { hu: 'Részletek a videóinkból.', en: 'Clips from our videos.' },
     // frames from their own client reels; p12 (another creator's name) is out, and the ones with
     // "Tenerife" in the caption never sit on a first screen
     all: ['p02', 'p03', 'p04', 'p05', 'p06', 'p07', 'p08', 'p09', 'p10', 'p11', 'p13', 'p14', 'p15', 'p16', 'p17', 'p18', 'p19', 'p20', 'p21', 'p22', 'p23', 'p24'],
@@ -172,7 +173,11 @@ export const C = {
     people: [
       { img: 'team-oliver', name: 'Olivér', role: ['Alapító, kampánystratéga', 'Founder, campaign strategist'], p: ['Meta Marketing Pro-ként látta, hogyan gondolkodnak a legkomolyabb márkák. 2022-ben alapította a SocialStreamet.', 'As a Meta Marketing Pro he saw how the most serious brands think. He founded SocialStream in 2022.'] },
       { img: 'team-david', name: 'David', role: ['Kreatív és tartalomgyártás', 'Creative and content production'], p: ['Hookok, forgatás, kreatív irány.', 'Hooks, shooting, creative direction.'] },
-      { img: 'team-lidi', name: 'Lidi', role: ['Produkció és szerkesztés', 'Production and editing'], p: ['Vágás, ritmus, precizitás, határidőre.', 'Editing, rhythm, precision, on deadline.'] },
+      // 2026-11-15: Bálint took Lidi's place as the production person (the line is the title of Bálint's own reference video:
+      // videóvágó, hangmérnök, fotós), and a second David, the developer, joined. team-balint.jpg and
+      // team-david-dev.jpg are stand-ins until the founder sends their photos.
+      { img: 'team-balint', name: 'Bálint', role: ['Produkció és vágás', 'Production and editing'], p: ['Forgatás, vágás, hang és fotó.', 'Shooting, editing, sound and photography.'] },
+      { img: 'team-david-dev', name: 'David', role: ['Fejlesztő', 'Developer'], p: ['Weboldalak, landing oldalak, automatizálás.', 'Websites, landing pages, automation.'] },
     ],
   },
 
