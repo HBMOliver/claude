@@ -166,8 +166,20 @@ a.pg-case { color: inherit; text-decoration: none; transition: background 200ms;
 .pg-case-go svg { width: 15px; height: 15px; color: var(--pink); transition: transform 260ms var(--out); }
 @media (hover: hover) { a.pg-case:hover { background: rgba(255, 255, 255, 0.08); } a.pg-case:hover .pg-case-go svg { transform: translateX(3px); } }
 .pg-case-grid.n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.pg-case-grid.n5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pg-case-grid.n5, .pg-case-grid.n6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+/* a named client's card: one of their own reels, leaning, where the result cards have their object */
+.mx-stat img.pg-case-reel { width: 64px; height: auto; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 10px; filter: none; box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.75), inset 0 0 0 1px var(--line2); --r0: -7deg; --r1: -3deg; }
+.pg-case-art .mx-stat img.pg-case-reel { width: 104px; border-radius: 14px; }
+.pg-case-grid.n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 760px; }
 .pg-more-grid.few { grid-template-columns: repeat(auto-fill, minmax(220px, 300px)); }
+
+/* ---------- the buttons in the red-pink third colour (the founder, 2026-11-18: the blue was too much; the buttons
+   should stand out). A deeper shade than the claim's #ff5272, so the white words read at 4.7:1; the ghost buttons
+   keep their outline. Mix's concept page keeps its violet. ---------- */
+:root { --btn-bg: #d92b55; }
+.btn { box-shadow: 0 14px 34px -12px rgba(var(--hot-2), 0.8); }
+.btn.ghost { box-shadow: inset 0 0 0 1.5px var(--line2); }
+@media (hover: hover) { .btn:not(.ghost):hover { box-shadow: 0 18px 40px -12px rgba(var(--hot-2), 0.95); } }
 
 /* ---------- site.js's additions: the film's sound, and two effects after Magic UI (magicui.design, MIT) ---------- */
 /* the brand film's sound, on and off in place: a button like the film's own pause button */

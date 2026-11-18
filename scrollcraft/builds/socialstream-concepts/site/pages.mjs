@@ -22,12 +22,15 @@ const svc = id => C.services.items.find(s => s.id === id);
 const homeQ = i => ({ q: p(...C.faq.items[i][0]), a: p(...C.faq.items[i][1]) });
 const q = (qhu, qen, ahu, aen) => ({ q: p(qhu, qen), a: p(ahu, aen) });
 
-// The named clients' own numbers, worded as the film words them (video/sizzle/SPEC.md, Honesty). 69K is FlyX
-// Tenerife's most-played reel on Facebook. 9,8M+ is every view of Prof Enzo's Facebook page since it began (Meta's
-// "All views", 9,828,876, rounded down), so it is "views on Facebook", never "reel views". Drafts (see above).
+// The named clients' own numbers, worded as the film words them (video/sizzle/SPEC.md, Honesty). 69K is one of FlyX
+// Tenerife's reels on Facebook, organic (the founder: some of their videos have far more). 9,8M+ is every view of Prof
+// Enzo's Facebook page since it began (Meta's "All views", 9,828,876, rounded down), all organic: we have run the page
+// since its first post, and its ads bring in leads, not views (the founder, 2026-11-18). So "views on Facebook",
+// never "reel views".
 const NAMED = [
-  { n: '69K', who: p('FlyX Tenerife · Élményközpont', 'FlyX Tenerife · Experience centre'), d: p('megtekintés egy reelen', 'views on one reel'), page: 'case-flyx' },
-  { n: p('9,8M+', '9.8M+'), who: p('Prof Enzo · Facebook', 'Prof Enzo · Facebook'), d: p('megtekintés · 33K követő', 'views · 33K followers'), page: 'case-enzo' },
+  // img: one of their own reels (already on the site) on the number's card
+  { n: '69K', who: p('FlyX Tenerife · Élményközpont', 'FlyX Tenerife · Experience centre'), d: p('organikus megtekintés egy reelen', 'organic views on one reel'), page: 'case-flyx', img: 'r-flyx-1.jpg' },
+  { n: p('9,8M+', '9.8M+'), who: p('Prof Enzo · Facebook', 'Prof Enzo · Facebook'), d: p('organikus megtekintés · 33K követő', 'organic views · 33K followers'), page: 'case-enzo', img: 'r-enzo-1.jpg' },
 ];
 
 // shared words of the site's pages
@@ -89,9 +92,9 @@ const ALL = [
     lead: p('Feed, Stories, Reels és TikTok egy stratégiával és egy hanggal. Mi készítjük a tartalomnaptárt, mi kezeljük a közösséget, mi írjuk a szövegeket, és a videókat is mi gyártjuk.',
       'Feed, Stories, Reels and TikTok with one strategy and one voice. We plan the content calendar, manage the community, write the copy and make the videos ourselves.'),
     included: [p('Tartalomnaptár', 'Content calendar'), p('Közösségkezelés', 'Community management'), p('Szövegírás', 'Copywriting'), p('Feed, Stories és Reels', 'Feed, Stories and Reels'), p('TikTok', 'TikTok'), p('A videók is tőlünk', 'The videos from us too')],
-    // Rita's words name Facebook/Instagram; FlyX's and Prof Enzo's numbers (NAMED) only in the drafts until the founder
-    // says what we did for them and since when
-    proof: { reels: ['r-flyx-1', 'r-enzo-2', 'r-flyx-2', 'r-enzo-1', 'r-flyx-3', 'r-andras-1', 'r-andras-2'], quotes: [4], named: DRAFTS ? NAMED : null },
+    // Rita's words name Facebook/Instagram; FlyX's and Prof Enzo's numbers (NAMED), both organic, since the founder
+    // said what we do for them (2026-11-18)
+    proof: { reels: ['r-flyx-1', 'r-enzo-2', 'r-flyx-2', 'r-enzo-1', 'r-flyx-3', 'r-andras-1', 'r-andras-2'], quotes: [4], named: NAMED },
     faq: [q('Melyik felületekkel foglalkoztok?', 'Which platforms do you cover?', 'Feed, Stories, Reels és TikTok, egy stratégiával és egy hanggal.', 'Feed, Stories, Reels and TikTok, with one strategy and one voice.'), homeQ(5), homeQ(4)],
   },
   {
@@ -207,22 +210,29 @@ const ALL = [
     lead: p('Egy egészségügyi szolgáltató webinárjára körülbelül 5700 jelentkező érkezett 600K Ft-ból. Ők pár száz jelentkezőre számítottak.',
       'About 5,700 people registered for a healthcare provider’s webinar from €1,650. They had expected a few hundred.'),
   },
-  // drafts: the clients agreed to be named; what we did for them and since when waits for the founder
+  // the named clients, from the founder's answers (2026-11-18): what we do for them, since their first post; their
+  // numbers are organic. did: the work, as a list on the page
   {
-    id: 'case-flyx', type: 'case', parent: 'cases', draft: true, fig: NAMED[0], reels: ['r-flyx-1', 'r-flyx-2', 'r-flyx-3'], path: p('/esettanulmanyok/flyx-tenerife/', '/en/case-studies/flyx-tenerife/'),
-    title: p('FlyX Tenerife: 69K megtekintés egy reelen · SocialStream', 'FlyX Tenerife: 69K views on one reel · SocialStream'),
-    desc: p('Reelek a FlyX Tenerife élményközpontnak: a legtöbbet nézett Facebook-reeljük 69K megtekintést ért el.', 'Reels for FlyX Tenerife, an experience centre: their most-played Facebook reel reached 69K views.'),
+    id: 'case-flyx', type: 'case', parent: 'cases', fig: NAMED[0], reels: ['r-flyx-1', 'r-flyx-2', 'r-flyx-3'], uses: ['svc-video', 'svc-social', 'svc-ads', 'svc-web', 'svc-auto'], path: p('/esettanulmanyok/flyx-tenerife/', '/en/case-studies/flyx-tenerife/'),
+    title: p('FlyX Tenerife: reelek, oldalak, foglalási rendszer · SocialStream', 'FlyX Tenerife: reels, pages and a booking system · SocialStream'),
+    desc: p('Az első posztjuk óta mi visszük a FlyX Tenerife online jelenlétét: reelek, promófilm, oldalak, hirdetések, foglalási rendszer és automatizáció.',
+      'Since their first post we have run FlyX Tenerife’s whole online presence: reels, promo film, pages, ads, their booking system and automation.'),
     crumb: p('FlyX Tenerife', 'FlyX Tenerife'),
-    h1k: NAMED[0].who, h1t: p('<em>69K</em> megtekintés egy reelen.', '<em>69K</em> views on one reel.'),
-    lead: p('A FlyX Tenerife élményközpont legtöbbet nézett Facebook-reelje 69K megtekintést ért el.', 'FlyX Tenerife’s most-played Facebook reel reached 69K views.'),
+    h1k: NAMED[0].who, h1t: p('<em>69K</em> organikus megtekintés egy reelen.', '<em>69K</em> organic views on one reel.'),
+    lead: p('A FlyX Tenerife élményközpontnak az első posztjuk óta mi forgatjuk a reeleket és mi készítettük a promófilmet, és mi visszük az oldalaikat és a hirdetéseiket. A reeljeik organikusan nőnek: ez az egy 69K megtekintést ért el, több videójuk ennél jóval többet.',
+      'For the FlyX Tenerife experience centre we have shot the reels and made the promo film since their first post, and we run their pages and ads. Their reels grow organically: this one reached 69K views, and several of their videos reached far more.'),
+    did: [p('Reelek: forgatás és vágás', 'Reels: shooting and editing'), p('A promófilmjük', 'Their promo film'), p('Az oldalaik vezetése', 'Running their pages'), p('Hirdetések', 'Ads'), p('A foglalási rendszerük, mi programoztuk', 'Their booking system, programmed by us'), p('Véleménykezelés', 'Reputation management'), p('Pénzügyi és adminisztratív automatizáció', 'Finance and admin automation'), p('Influenszer-együttműködések', 'Influencer work')],
   },
   {
-    id: 'case-enzo', type: 'case', parent: 'cases', draft: true, fig: NAMED[1], reels: ['r-enzo-1', 'r-enzo-2'], path: p('/esettanulmanyok/prof-enzo/', '/en/case-studies/prof-enzo/'),
-    title: p('Prof Enzo: 9,8M+ megtekintés a Facebookon · SocialStream', 'Prof Enzo: 9.8M+ views on Facebook · SocialStream'),
-    desc: p('Prof Enzo Facebook-oldala indulása óta több mint 9,8 millió megtekintést és 33K követőt gyűjtött.', 'Since it began, Prof Enzo’s Facebook page has gathered more than 9.8 million views and 33K followers.'),
+    id: 'case-enzo', type: 'case', parent: 'cases', fig: NAMED[1], reels: ['r-enzo-1', 'r-enzo-2'], uses: ['svc-video', 'svc-social', 'svc-strat', 'svc-ads'], path: p('/esettanulmanyok/prof-enzo/', '/en/case-studies/prof-enzo/'),
+    title: p('Prof Enzo: 9,8M+ organikus megtekintés a Facebookon · SocialStream', 'Prof Enzo: 9.8M+ organic views on Facebook · SocialStream'),
+    desc: p('Prof Enzo animált MI-orvos, aki az egészséges életről beszél. Az első posztja óta mi készítjük a videóit és visszük az oldalát: 9,8M+ organikus megtekintés.',
+      'Prof Enzo, an animated AI doctor, talks about healthy living. Since his first post we have made his videos and run his page: 9.8M+ organic views.'),
     crumb: p('Prof Enzo', 'Prof Enzo'),
-    h1k: NAMED[1].who, h1t: p('<em>9,8M+</em> megtekintés.', '<em>9.8M+</em> views.'),
-    lead: p('Prof Enzo Facebook-oldala indulása óta több mint 9,8 millió megtekintést és 33K követőt gyűjtött.', 'Since it began, Prof Enzo’s Facebook page has gathered more than 9.8 million views and 33K followers.'),
+    h1k: NAMED[1].who, h1t: p('<em>9,8M+</em> organikus megtekintés.', '<em>9.8M+</em> organic views.'),
+    lead: p('Prof Enzo animált MI-orvos karakter: az egészséges életmódról, étkezésről, szokásokról és a jóllétről beszél, és doTERRA-termékeket ajánl. Az első posztja óta mi készítjük a videóit, mi visszük a Facebook-oldalát és mi tervezzük a stratégiáját; az oldal organikusan nőtt 9,8M+ megtekintésre és 33K követőre.',
+      'Prof Enzo is an animated AI doctor character who talks about healthy living, healthy eating, good habits and well-being, and recommends doTERRA products. Since his first post we have made his videos, run his Facebook page and planned its strategy; the page grew organically to 9.8M+ views and 33K followers.'),
+    did: [p('A videók, az ötlettől a vágásig', 'The videos, from idea to edit'), p('A Facebook-oldal vezetése', 'Running the Facebook page'), p('Stratégia: mit posztol az oldal és miért', 'Strategy: what the page posts and why'), p('Hirdetések, amik érdeklődőket hoznak, nem megtekintést', 'Ads that bring in leads, not views')],
   },
   {
     id: 'about', type: 'about', path: p('/rolunk/', '/en/about/'),

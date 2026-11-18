@@ -162,7 +162,8 @@ const resultOf = pg => pg.res && C.results.items.find(it => it.obj === pg.res);
 // one case as the home page's stat card: on its own first screen (hero), or linked to its page
 function caseCard(pg, l, { link = false, hero = false, i = 0 } = {}) {
   const it = resultOf(pg), f = pg.fig, tag = link ? 'a' : 'article';
-  const img = it ? `<img class="bob" style="--dur:${6.2 + i * 0.5}s;--delay:-${i * 1.2}s;--amp:-10px" src="${asset(it.obj + '-mix.webp')}" alt="" width="400" height="400"${hero ? '' : ' loading="lazy"'}>` : '';
+  const img = it ? `<img class="bob" style="--dur:${6.2 + i * 0.5}s;--delay:-${i * 1.2}s;--amp:-10px" src="${asset(it.obj + '-mix.webp')}" alt="" width="400" height="400"${hero ? '' : ' loading="lazy"'}>`
+    : f.img ? `<img class="bob pg-case-reel" style="--dur:${6.6 + i * 0.5}s;--delay:-${i * 1.2}s;--amp:-8px" src="${asset(f.img)}" alt="" width="486" height="864"${hero ? '' : ' loading="lazy"'}>` : '';
   // on the first screen the number stands still: kit.js counts up only the cards that are revealed while scrolling
   const num = it ? (hero ? figure : count)(it.n, it.unit, it.en) : `<span>${typeof f.n === 'string' ? esc(f.n) : t(f.n)}</span>`;
   return `<${tag} class="mx-card mx-stat pg-case${hero ? ' bob' : ''}"${link ? ` href="${pg.path[l]}"` : ''}${hero ? ' style="--dur:6.8s;--amp:-8px"' : ` data-r style="--d:${i}"`}>
@@ -184,6 +185,17 @@ const caseSec = (list, l, h2, { id, eyebrow = C.results.eyebrow } = {}) => `  <!
       ${caseGrid(list, l)}
     </div>
   </section>`;
+// what we do for a named client (the founder's own list), beside its heading, as a service's list is shown
+const didSec = pg => pg.did ? `  <!-- what we do for this client -->
+  <section class="pg-incl" aria-labelledby="did-h">
+    <div class="wrap pg-split">
+      <div class="pg-split-l">
+        ${tx('p', 'mx-eyebrow', { hu: 'A munka', en: 'The work' }, 'data-r')}
+        ${tx('h2', 'mx-h2', { hu: 'Mit csinálunk nekik?', en: 'What we do for them' }, 'id="did-h" data-r')}
+      </div>
+      <ul class="mx-card checks pg-checks" data-r style="--d:1">${pg.did.map(x => tx('li', '', x)).join('')}</ul>
+    </div>
+  </section>` : '';
 // the services a case took, as the services' cards
 const used = (pg, l) => pg.uses ? `  <!-- the services this case took -->
   <section class="pg-more pg-used" aria-labelledby="used-h">
@@ -232,7 +244,8 @@ const T = {
 
   case: (pg, l) => shell(pg, l, [
     hero(pg, l, `<div class="pg-case-art">${caseCard(pg, l, { hero: true })}</div>`),
-    pg.quote != null ? quotes([pg.quote]) : '', pg.reels ? reels(pg.reels) : '',
+    // a short list of reels is repeated so the running row fills the screen
+    didSec(pg), pg.quote != null ? quotes([pg.quote]) : '', pg.reels ? reels(Array.from({ length: Math.max(1, Math.ceil(8 / pg.reels.length)) }, () => pg.reels).flat()) : '',
     used(pg, l), caseSec(CASES.filter(x => x !== pg), l, CW.more, { eyebrow: { hu: 'Esettanulmányok', en: 'Case studies' } }), mix.offerSec(),
   ]),
 
