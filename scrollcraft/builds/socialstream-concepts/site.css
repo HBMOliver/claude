@@ -26,7 +26,16 @@
   .nav.menu-open .links { opacity: 1; visibility: visible; translate: none; transition: opacity 200ms var(--ease), translate 320ms var(--out), visibility 0s; }
   .mx-nav .links a { padding: 15px 16px; border-radius: 16px; font-size: 16px; }
 }
-@media (max-width: 380px) { .lang a[aria-current] { display: none; } }
+/* phones: three language links and the audit button share the bar with the logo and the menu button (since the Spanish
+   pages, 2026-11-18). Up to 430 px the switch offers only the other two languages; below 360 px the bar tightens so
+   the longest button ("Auditoría gratuita") still leaves the menu button inside it at 320 px */
+@media (max-width: 430px) { .lang a[aria-current] { display: none; } }
+@media (max-width: 360px) {
+  .mx-nav { gap: 3px; padding-left: 12px; }
+  .mx-nav .lang a { padding: 10px 4px; }
+  .mx-nav .nav-cta { padding: 0 10px; font-size: 12px; }
+  .mx-nav .menu-btn { width: 40px; height: 40px; }
+}
 
 /* ---------- the footer's links to every page ---------- */
 .foot .foot-nav { display: grid; grid-template-columns: repeat(2, max-content); align-items: start; gap: 30px clamp(48px, 8vw, 120px); padding-block: 60px 34px; border-bottom: 1px solid var(--line); }
