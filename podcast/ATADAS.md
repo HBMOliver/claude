@@ -1,7 +1,9 @@
 # Átadás – Prof. Enzo podcast-projekt (helyi munkamenethez)
 
+| `szkript/` (nem a repóban) | A 2. évad 1–8. epizódjának teleprompter-szövege (docx + txt) és a Bevezető videó szövege (pdf + txt) – a Gmailből, a david@hbmarketing.hu-nak továbbított levélből; helyben újra letölthető |
 Ez a fájl mindent tartalmaz, amit a felhős munkamenet eddig elvégzett, hogy egy **helyi (Mac-en futó) Claude Code munkamenet** folytatni tudja.
 
+| `szkript/` (nem a repóban) | A 2. évad 1–8. epizódjának teleprompter-szövege (docx + txt) és a Bevezető videó szövege (pdf + txt) – a Gmailből, a david@hbmarketing.hu-nak továbbított levélből; helyben újra letölthető |
 ## Hogyan indítsd
 1. Mac-en, terminálban:
    ```bash
@@ -15,12 +17,14 @@ Ez a fájl mindent tartalmaz, amit a felhős munkamenet eddig elvégzett, hogy e
 2. Az első üzenet a helyi Claude-nak:
    > Olvasd el a `podcast/ATADAS.md` fájlt, és folytasd onnan a munkát. A 25 perces podcast videó a `~/Downloads` mappában van.
 
+| `szkript/` (nem a repóban) | A 2. évad 1–8. epizódjának teleprompter-szövege (docx + txt) és a Bevezető videó szövege (pdf + txt) – a Gmailből, a david@hbmarketing.hu-nak továbbított levélből; helyben újra letölthető |
 ## A cél
 - Egy podcast videóba (fix, szemből vevő kamera, 2 szék) a **bal oldali székre** beilleszteni az animált **Prof. Enzo** karaktert; a jobb oldalon az élő **András** ül.
 - Enzo ne az asztalon üljön, hanem András mellett, **nagyjából ugyanolyan magas, hasonló testalkatú** legyen.
 - Gesztikuláljon beszéd közben, szünetekben figyeljen Andrásra (jobbra néz, bólogat).
 - Természetes fények, árnyék, a szék/asztal takarása (occlusion), enyhe kolorgrade az egész videón.
 
+| `szkript/` (nem a repóban) | A 2. évad 1–8. epizódjának teleprompter-szövege (docx + txt) és a Bevezető videó szövege (pdf + txt) – a Gmailből, a david@hbmarketing.hu-nak továbbított levélből; helyben újra letölthető |
 ## Következő feladatok (sorrendben)
 1. **Epizódok szétvágása:** a `~/Downloads`-ban lévő 25 perces videóban 5 epizód van (egyenként ~3–4 perc).
    - Az epizódszkriptek eddig **nem kerültek át** ebbe a munkamenetbe – kérd el a felhasználótól, vagy készíts leiratot (ElevenLabs Speech-to-Text) és abból keresd meg a határokat.
@@ -29,6 +33,7 @@ Ez a fájl mindent tartalmaz, amit a felhős munkamenet eddig elvégzett, hogy e
 2. **Hang:** a felhasználó **új hangot fog megadni** a karakterhez – erre kell lecserélni. (Márk HeyGen-hangja volt az eredeti kérés; az ElevenLabs-klón nem jelent meg a bekötött fiókban, ezért ideiglenesen **Miklós** hanggal készült.)
 3. **Beillesztés** minden epizódba, ahol Enzo beszél: a `podcast/beilleszt.sh` scripttel (lásd lent), pozíció/méret beállítása a valós széken, takarási maszk, árnyék, színillesztés, kolorgrade.
 
+| `szkript/` (nem a repóban) | A 2. évad 1–8. epizódjának teleprompter-szövege (docx + txt) és a Bevezető videó szövege (pdf + txt) – a Gmailből, a david@hbmarketing.hu-nak továbbított levélből; helyben újra letölthető |
 ## Ami eddig elkészült (a `podcast/` mappában)
 | Fájl | Mi ez |
 |---|---|
@@ -47,6 +52,7 @@ Ez a fájl mindent tartalmaz, amit a felhős munkamenet eddig elvégzett, hogy e
 | `beilleszt.sh` | Beillesztő script: zöld háttér le (colorkey 0x00B140), despill, árnyék, opcionális takarási maszk, kolorgrade, hangkeverés |
 | `hang_osszefuz.sh` | Mondatonkénti hangfájlok összefűzése szünetekkel + időkódok |
 
+| `szkript/` (nem a repóban) | A 2. évad 1–8. epizódjának teleprompter-szövege (docx + txt) és a Bevezető videó szövege (pdf + txt) – a Gmailből, a david@hbmarketing.hu-nak továbbított levélből; helyben újra letölthető |
 ### `beilleszt.sh` használat
 ```bash
 ./podcast/beilleszt.sh <podcast.mp4> <karakter_zold.mp4> <kimenet.mp4> [X] [Y] [MAGASSAG]
@@ -54,6 +60,7 @@ Ez a fájl mindent tartalmaz, amit a felhős munkamenet eddig elvégzett, hogy e
 ```
 Megjegyzés: az X/Y a karaktervideó **teljes 16:9 keretére** vonatkozik (a karakter a keret közepén ül) – érdemes előbb a karakter befoglaló dobozára vágni (`crop`), hogy a pozicionálás egyértelmű legyen. A zöld kulcsoláshoz a 0.22 / 0.08 / despill 0.25 érték bevált (a türkiz póló megmarad).
 
+| `szkript/` (nem a repóban) | A 2. évad 1–8. epizódjának teleprompter-szövege (docx + txt) és a Bevezető videó szövege (pdf + txt) – a Gmailből, a david@hbmarketing.hu-nak továbbított levélből; helyben újra letölthető |
 ## ElevenLabs (a felhasználó fiókjában)
 - **Flow:** „Doktor karakter – podcast hangpróbák” – flow ID: `Dr643iTMAl7yT8LduqW0`
 - Ülő karakter generáció (A): `sCeg4TZ1xlnoH6W7Fj58` (gpt-image-2.5-sunburst)
@@ -63,9 +70,11 @@ Megjegyzés: az X/Y a karaktervideó **teljes 16:9 keretére** vonatkozik (a kar
 - Hang-ID-k: Miklós `zqSgQYLgidMI4Wt9Eiri`, Gergő `CR2bo0mBsCKXtdiJkK6s`, GGeery `So1xYhVoPuU9ivXmy9r8`. TTS modell: `eleven_v4`.
 - **Márk klón:** a felhasználó létrehozta az ElevenLabsben, de a bekötött fiókban nem látszott – helyben kérd el a **Voice ID**-t (Voices → My Voices → ⋯ → Copy voice ID).
 
+| `szkript/` (nem a repóban) | A 2. évad 1–8. epizódjának teleprompter-szövege (docx + txt) és a Bevezető videó szövege (pdf + txt) – a Gmailből, a david@hbmarketing.hu-nak továbbított levélből; helyben újra letölthető |
 ## Higgsfield
 - 0 kredit (ingyenes csomag) → generálás/klónozás nem ment. Feltöltésre (nyilvános URL-hez) használható volt.
 
+| `szkript/` (nem a repóban) | A 2. évad 1–8. epizódjának teleprompter-szövege (docx + txt) és a Bevezető videó szövege (pdf + txt) – a Gmailből, a david@hbmarketing.hu-nak továbbított levélből; helyben újra letölthető |
 ## Tanulságok
 - A chatbe/Drive-ra elsőre képernyőkép került videó helyett – ellenőrizd a fájltípust (`ffprobe`).
 - Az omnihuman-videóban a karakter kissé elmozdulhat/zoomolhat – a promptban kérd a fix pozíciót, és beillesztéskor ellenőrizd képkockákon.
