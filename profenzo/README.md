@@ -30,7 +30,22 @@ A vázlatokban minden kész a hangon és a szájszinkronon kívül: szöveg, id�
 1. **Prof Enzo hangja.** A HeyGen-fiókban van: HeyGen API-kulcs kell (`api.heygen.com`, `X-Api-Key`). Másik lehetőség az ElevenLabs-kredit és egy „Prof Enzo” Instant Voice Clone `assets/prof-enzo-hangminta.wav`-ból.
 2. **Szájszinkronos animáció.** HeyGen Avatar (a saját fiókból, vagy ElevenLabs-on keresztül a `heygen-avatar6` modellel).
 
-Ha megvan a hangfájl, a feliratok és a jelenetek automatikusan a valódi beszédhez igazodnak:
+### Animált, beszélő Prof Enzo (HeyGen)
+A végleges videókban Prof Enzo a HeyGenben generált klipből beszél és mozog. A klip zöld (#00FF00) háttérrel készül, a motor kivágja, és pontosan az állókép helyére illeszti:
+```bash
+# HeyGen API-val (a kulcs a környezet Network secrets részében: api.heygen.com, X-Api-Key):
+python3 heygen.py check                      # hozzáférés, kvóta
+python3 heygen.py list                       # avatarok és hangok -> ../videok/heygen_inventory.json
+python3 heygen.py voice-match ../assets/prof-enzo-hangminta.wav   # melyik hang egyezik Enzo megszokott hangjával
+python3 heygen.py use talking_photo:<id> <voice_id>
+python3 heygen.py batch --final              # mind a 11: HeyGen-klip -> kivágás -> feliratok a valódi beszédre -> vegleges.mp4
+
+# kézzel exportált HeyGen-klipből (bármilyen háttér; zölddel gyors és tiszta):
+python3 avatar.py final ../videok/04-citrus-napfeny heygen-export.mp4   # -> build/vegleges.mp4 és vegleges_drive.mp4
+```
+Az `avatar.py prep` kinyeri a hangot és a szóidőket (faster-whisper), a zöld hátteret kulcsolja (vagy BiRefNet-tel kivágja), és Enzót automatikusan az állókép méretéhez és helyéhez igazítja (`--scale`, `--dx`, `--dy` finomhangoláshoz).
+
+Ha csak hangfájl van, a feliratok és a jelenetek akkor is a valódi beszédhez igazodnak:
 ```bash
 cd engine
 python3 build.py plan  ../videok/04-citrus-napfeny --vo hang.wav --words szavak.json   # szavak.json: faster-whisper szóidők
@@ -52,6 +67,7 @@ A csapat Drive-mappája: **Prof Enzo – TikTok videók (Claude)**. Itt is van e
 - `1 – Vázlatok (hang és szájszinkron nélkül)`: a vázlatok kb. 3 MB-os előnézetei.
 - `2 – Gyártási csomagok`: a csomagok Google Docként. A `Forrásfájlok – timeline.json` almappában vannak a gépi tervek. Egy új munkamenet ezeket visszamásolja a `videok/NN-…/timeline.json` helyre, és onnan folytatja.
 - `3 – Végleges videók (Prof Enzo hangjával)`: a kész, publikálható videók.
+- `4 – HeyGen-klipek`: ide kerülnek a kézzel exportált HeyGen-klipek, ha nem API-n keresztül készülnek. A szövegeik a „HeyGen-szövegek” dokumentumban vannak.
 
 A Drive-csatlakozó hívásonként kb. 3 MB-ot visz át, ezért a teljes minőségű MP4-ek nem férnek fel. Ezeket a csapat közvetlenül kapja meg.
 

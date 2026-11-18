@@ -448,16 +448,27 @@ function setCaption(t) {
 
 // ---------- character ----------
 function setChar(t) {
+  // returns a promise when a new avatar frame has to be decoded before the screenshot
   const st = CFG.charState(t);
-  if (!st.visible) { charEl.style.display = 'none'; return; }
+  if (!st.visible) { charEl.style.display = 'none'; return null; }
   charEl.style.display = 'block';
-  const env = CFG.vo ? CFG.vo(t) : 0; // speech envelope 0..1 for a little talk-bounce on the still image
-  const breathe = 1 + 0.006 * Math.sin(t * 1.7);
-  const bob = -6 * env * Math.abs(Math.sin(t * 13.0));
-  const rot = 0.7 * Math.sin(t * 0.9) + 0.6 * env * Math.sin(t * 7.3);
+  const fr = CFG.char.frames;   // animated HeyGen avatar (keyed frames) instead of the still image
+  let breathe = 1, bob = 0, rot = 0;
+  if (!fr) {
+    const env = CFG.vo ? CFG.vo(t) : 0; // speech envelope 0..1 for a little talk-bounce on the still image
+    breathe = 1 + 0.006 * Math.sin(t * 1.7);
+    bob = -6 * env * Math.abs(Math.sin(t * 13.0));
+    rot = 0.7 * Math.sin(t * 0.9) + 0.6 * env * Math.sin(t * 7.3);
+  }
   const sc = st.scale * breathe;
   charEl.style.width = CFG.char.w + 'px';
   charEl.style.transform = `translate(${st.x - CFG.char.w / 2}px, ${H - CFG.char.h + CFG.char.bottomPad + bob}px) rotate(${rot}deg) scale(${sc})`;
+  if (fr) {
+    const i = Math.max(0, Math.min(fr.n - 1, Math.floor(t * fr.fps + 1e-6)));
+    const src = `${fr.dir}/f${String(i + 1).padStart(5, '0')}.webp`;
+    if (charEl.dataset.src !== src) { charEl.dataset.src = src; charEl.src = src; return charEl.decode().catch(() => {}); }
+  }
+  return null;
 }
 
 // ---------- main ----------
@@ -479,7 +490,7 @@ function setDomScene(i, s, t) {
   DOMS[s.type].update(curDomRoot, tl, dur, s, t);
 }
 const bufA = offscreen(W, H), bufB = offscreen(W, H);
-window.renderAt = function (t) {
+window.renderAt = async function (t) {
   const sc = CFG.scenes; let i = sc.findIndex(s => t >= s.start && t < s.end); if (i < 0) i = sc.length - 1;
   const s = sc[i], tin = t - s.start, TR = 0.22;
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.filter = 'none';
@@ -492,9 +503,10 @@ window.renderAt = function (t) {
   if (s.type === 'phone') setPhone(tin, s.end - s.start);
   if (s.type === 'end') setEnd(t, s);
   setDomScene(i, s, t);
-  setChar(t); setCaption(t);
+  const charReady = setChar(t); setCaption(t);
   const fl = CFG.flash(t); document.getElementById('flash').style.opacity = fl;
   document.getElementById('draftTag').style.display = CFG.draft ? 'block' : 'none';
+  if (charReady) await charReady;
   return true;
 };
 window.init = async function (cfg) {

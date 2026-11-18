@@ -7,6 +7,9 @@ usage:
   python3 build.py video  <video_dir>                     (render frames -> video_noaudio.mp4)
   python3 build.py audio  <video_dir>                     (sfx + music + vo -> mix.wav)
   python3 build.py mux    <video_dir>                     (-> final.mp4)
+
+With a HeyGen clip of Prof Enzo speaking, `python3 avatar.py final <video_dir> heygen.mp4` runs everything:
+voice + word timings from the clip, keyed animated character instead of the still, captions on the real speech.
 """
 import json, os, re, subprocess, sys, difflib, unicodedata
 import numpy as np
@@ -203,6 +206,11 @@ def plan(video_dir, vo=None, words=None, draft=False):
     }
     cfg["char"]["src"] = "file://" + os.path.abspath(cfg["char"]["src"][7:])
     cfg["avatar"] = "file://" + os.path.abspath(cfg["avatar"][7:])
+    meta_p = os.path.join(video_dir, "build", "avatar", "meta.json")
+    if vo and os.path.exists(meta_p):   # animated HeyGen avatar, keyed by avatar.py prep
+        m = json.load(open(meta_p)); d = "file://" + os.path.dirname(os.path.abspath(meta_p))
+        cfg["char"] = {"src": d + "/f00001.webp", "w": m["box_w"], "h": m["box_h"], "bottomPad": 0,
+                       "frames": {"dir": d, "n": m["n"], "fps": m["fps"]}}
     if vo:
         cfg["vo"] = os.path.abspath(vo)
         x = load_audio(vo, 16000)
