@@ -55,7 +55,8 @@ DOMS.cards = {
   update(root, tl, dur, s) {
     const ttl = root.querySelector('.ttl'); if (ttl) { const k = tl; const sc = popIn(ttl, k, .8); ttl.style.transform = `scale(${sc})`; }
     const st = s.stagger || Math.min(.55, (dur * .6) / Math.max(1, (s.items || []).length));
-    root.querySelectorAll('.it').forEach((n, i) => { const k = tl - (s.title ? .25 : .1) - i * st; const sc = popIn(n, k);
+    // itemsAt: per-item entry times (scene-relative, from "@word" anchors in timeline.json); else an even stagger
+    root.querySelectorAll('.it').forEach((n, i) => { const k = tl - (s.itemsAt && s.itemsAt[i] !== undefined ? s.itemsAt[i] : (s.title ? .25 : .1) + i * st); const sc = popIn(n, k);
       n.style.transform = s.layout === 'list' ? `translateX(${(1 - clamp(k / .2, 0, 1)) * -60}px) scale(${sc})` : `scale(${sc})`;
       n.querySelectorAll('.b').forEach((b, j) => { b.style.opacity = clamp((k - .3 - j * (s.bulletStagger || .25)) / .15, 0, 1); }); });
     const vs = root.querySelector('.vs'); if (vs) { const k = tl - .5 - st; vs.style.transform = `scale(${popIn(vs, k)}) rotate(${(1 - clamp(k / .3, 0, 1)) * -40}deg)`; }

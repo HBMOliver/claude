@@ -195,7 +195,7 @@ def plan(video_dir, vo=None, words=None, draft=False):
             key(s["start"], s["end"], s0=z[0], s1=z[1])
 
     cfg = {
-        "fps": fps, "duration": dur, "draft": draft, "title": tl.get("title", ""),
+        "fps": fps, "duration": dur, "draft": draft, "title": tl.get("title", ""), "tag": tl.get("tag"),
         "scenes": scenes, "captions": caps, "charKeys": keys,
         "capYKeys": ([[0, 1090], [scenes[1]["start"], 880]] if scenes[0]["type"] == "clock" else [[0, 880]]) + [[end["start"], 560]],
         "hideCapRanges": ([[phone["start"], phone["end"]]] if phone else []) + [[s["start"], s["end"]] for s in scenes if s.get("hideCaptions")],

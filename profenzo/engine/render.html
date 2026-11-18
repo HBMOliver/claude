@@ -505,7 +505,9 @@ window.renderAt = async function (t) {
   setDomScene(i, s, t);
   const charReady = setChar(t); setCaption(t);
   const fl = CFG.flash(t); document.getElementById('flash').style.opacity = fl;
-  document.getElementById('draftTag').style.display = CFG.draft ? 'block' : 'none';
+  const tagEl = document.getElementById('draftTag');   // VÁZLAT on drafts, or a custom label (cfg.tag) such as MINTA
+  if (CFG.tag && tagEl.textContent !== CFG.tag) tagEl.textContent = CFG.tag;
+  tagEl.style.display = CFG.draft || CFG.tag ? 'block' : 'none';
   if (charReady) await charReady;
   return true;
 };
