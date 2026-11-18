@@ -67,8 +67,34 @@ reader asks the team, euros the Spanish way (216K €, 0,29 €, 1.650 €), the
 "Las ~~redes sociales~~ han muerto. El *interés* ha ocupado su lugar." Words kept as they are: interest media,
 landing page(s), leads, copywriting, Reels, Stories, Feed, ROAS, B2B and every name. Hooks are "ganchos", the funnel
 "embudo", a partner a "cliente" ("dos nuevos clientes al mes"). The buttons the scripts write are in ss.js, kit.js
-and site.js ("Activar sonido" / "Silenciar", "Reproducir" / "Pausa", the form's topics and messages). The film stays
-in English on the Spanish pages. Change a line in `site/es-words.mjs` and rebuild.
+and site.js ("Activar sonido" / "Silenciar", "Reproducir" / "Pausa", the form's topics and messages). Since v18 the
+film plays in Spanish on the Spanish pages (its lines below). Change a line in `site/es-words.mjs` and rebuild.
+
+## Approved: the brand film in Spanish (2026-11-18)
+
+The founder approved these lines before the first render ("Yes, render them"). They are the Spanish site's own
+words for the English cut's lines, so the film and the pages say the same thing; the money is the English cut's
+euros written the Spanish way. FlyX's three comments stay in English, as in both cuts. In the film's order (they live
+in `video/sizzle/build.py`, `TEXT["es"]`):
+
+- Publicas. / Pagas anuncios. / ¿Y aun así nadie compra?
+- Las ~~redes sociales~~ han muerto. / El *interés* ha ocupado su lugar.
+- FlyX Tenerife · Centro de experiencias · 69K visualizaciones en un reel · Comentario
+- Prof Enzo · Facebook · 9,8M+ visualizaciones · 33K seguidores
+- Fragmentos de nuestros vídeos · Rodaje · Edición · Subtítulos · Reels · Podcast y entrevista
+- Hacemos el *vídeo*, gestionamos los *anuncios* y medimos lo que *generan*. (chips: 81× · 216K € · 23× · 0,29 €)
+- Constructora de naves industriales · B2B · Meta · 216K € · facturación en una semana · Lun Mar Mié Jue Vie Sáb Dom
+- Tienda online de puertas · Google Performance Max · 81× ROAS · 1 € → 81 €
+- Tienda online de relojes · Navidad · 23× ROAS · más de 21K € de facturación
+- Webinar sanitario · ≈5.700 · registros con 1.650 € · 0,29 € por registro
+- Desde 2022 · 820K+ € · presupuesto gestionado
+- No te fíes de nuestra palabra. *Fíate de la suya.*
+- Péter · Hoofbútor: “Hubo compras desde el día del lanzamiento…” · Cliente constructor de naves · B2B: “…tantas
+  solicitudes de presupuesto como antes en medio año.” · Tienda online de relojes: “…la temporada navideña jugó a
+  nuestro favor y no en contra.” · Empresa sanitaria: “…el contador se paró en casi 5.700, apenas podíamos creer…” ·
+  Rita · Rita’s Beauty Corner: “Los resultados llegaron rápido…” · János · EJ Massage Therapies: “Solo puedo
+  recomendarlos.”
+- Vídeos que se ven *hasta el final.* / Anuncios que *salen rentables.* / Agencia de interest media
 
 ## NEW, to confirm: the site's pages (2026-11-16)
 

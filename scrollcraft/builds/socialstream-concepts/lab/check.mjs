@@ -9,7 +9,12 @@
 // no sideways scroll with a mouse at the screen's edges anywhere down the page, at 1440 and 1100 wide.
 // One line per failed check, then a summary line per page.
 import { createRequire } from 'node:module';
+import { filmSrc } from '../site/films.mjs';
 const { chromium } = createRequire(process.cwd() + '/')('playwright-core');
+// the film cuts a site page names for its language (site/films.mjs: Media Storage's addresses, or /assets/ files until a
+// cut is stored) and the language a film source belongs to; a concept page's English cuts end in -en
+const CUTS = Object.fromEntries(['hu', 'en', 'es'].map(l => [l, ['w', 'v'].map(k => filmSrc(l, k))]));
+const cutOf = s => Object.keys(CUTS).find(l => CUTS[l].some(c => s === c || s.endsWith(c)));
 const BASE = process.env.BASE || 'http://localhost:4560/';
 const names = process.argv[2] ? process.argv[2].split(',') : ['pulse', 'premiere', 'aurora', 'studio', 'mix'];
 const b = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', args: ['--autoplay-policy=no-user-gesture-required'] });
@@ -80,7 +85,7 @@ for (const name of names.filter(n => n !== 'site')) {
     await to(p, '[data-film]', 0.15, 1800);
     let f = await film(p);
     ok(`${dev}: the film plays`, f.src && !f.paused && f.t > 0, JSON.stringify(f));
-    if (dev === 'phone') ok('phone: an upright film plays the vertical cut', await p.evaluate(() => { const f = document.querySelector('[data-film]'); const v = f.querySelector('video'); return f.dataset.cut === 'h' || /hero-v-720/.test(v.currentSrc); }));
+    if (dev === 'phone') ok('phone: an upright film plays the vertical cut', await p.evaluate(() => { const f = document.querySelector('[data-film]'); const v = f.querySelector('video'); return f.dataset.cut === 'h' || (f.dataset.srcV ? v.currentSrc.endsWith(f.dataset.srcV) : /hero-v-720/.test(v.currentSrc)); }));
     await p.locator('[data-film] .toggle').first().click({ force: true }); await p.waitForTimeout(300); f = await film(p);
     ok(`${dev}: the film's button pauses it`, f.paused, JSON.stringify(f));
     // the running rows move without any scrolling
@@ -127,12 +132,14 @@ for (const name of names.filter(n => n !== 'site')) {
     const en = await p.evaluate(() => ({ h1: document.querySelector('#hero-h [data-l="en"]').textContent.replace(/\s+/g, ' ').trim(), nav: document.querySelector('.nav .links a').textContent.trim(), cta: document.querySelector('#top a.btn[href="#audit"]').textContent.trim(), hu: [...document.querySelectorAll('[data-l="hu"]')].filter(e => e.offsetParent !== null).length }));
     ok(`${dev}: English`, en.h1 === CLAIM_EN && en.nav === (single ? 'Services' : 'Results') && en.cta === 'Get my free audit' && en.hu === 0, JSON.stringify(en));
     // the film follows the language: every film that has a source has the English one, then the Hungarian one again
+    // (on the site the cuts its page names, site/films.mjs; on a concept the -en ones)
     const filmSrcs = () => p.evaluate(() => [...document.querySelectorAll('[data-film] video')].map(v => v.getAttribute('src') || '').filter(Boolean));
+    const inLang = (s, l) => (single ? cutOf(s) === l : (l === 'en') === /-en\.mp4$/.test(s));
     const enFilms = await filmSrcs();
-    ok(`${dev}: the film in English`, enFilms.length > 0 && enFilms.every(s => /-en\.mp4$/.test(s)), JSON.stringify(enFilms));
+    ok(`${dev}: the film in English`, enFilms.length > 0 && enFilms.every(s => inLang(s, 'en')), JSON.stringify(enFilms));
     await go('hu');
     const huFilms = await filmSrcs();
-    ok(`${dev}: the film back in Hungarian`, huFilms.length > 0 && huFilms.every(s => !/-en\.mp4$/.test(s)), JSON.stringify(huFilms));
+    ok(`${dev}: the film back in Hungarian`, huFilms.length > 0 && huFilms.every(s => inLang(s, 'hu')), JSON.stringify(huFilms));
     ok(`${dev}: eight questions`, (await p.evaluate(() => document.querySelectorAll('.faq-list details').length)) === 8);
     ok(`${dev}: no page errors`, !errs.length, errs.join(' | '));
     await ctx.close();
@@ -180,7 +187,7 @@ for (const name of names.filter(n => n !== 'site')) {
 // and 320. With reduced motion: everything in place, rows still. And the language comes from the page alone: the home
 // page stays Hungarian (with its Hungarian film) for a visitor whose browser remembers English from the one-page site
 // of before, the English home plays the English film with nothing remembered, and the Spanish home shows its claim
-// in Spanish, plays the English film and offers its sound in Spanish.
+// in Spanish, plays the Spanish film (since v18; the English one before) and offers its sound in Spanish.
 if (names.includes('site')) {
   let pass = 0, fail = 0;
   const ok = (what, cond, info = '') => { if (cond) pass++; else { fail++; console.log(`FAIL site: ${what}`, info); } };
@@ -271,19 +278,19 @@ if (names.includes('site')) {
     await ctx.addInitScript(() => { try { localStorage.setItem('ss-lang', 'en'); } catch (e) {} });
     const p = await ctx.newPage(); await p.goto(BASE, { waitUntil: 'load' }); await p.waitForTimeout(2600);
     const s = await p.evaluate(() => ({ lang: document.documentElement.lang, L: SS.L, claim: !!document.querySelector('#hero-h [data-l="hu"]'), films: [...document.querySelectorAll('[data-film] video')].map(v => v.getAttribute('src') || '').filter(Boolean) }));
-    ok('the home page stays Hungarian for a browser that remembers English', s.lang === 'hu' && s.L === 'hu' && s.claim && s.films.length > 0 && s.films.every(f => !/-en\.mp4$/.test(f)), JSON.stringify(s));
+    ok('the home page stays Hungarian for a browser that remembers English', s.lang === 'hu' && s.L === 'hu' && s.claim && s.films.length > 0 && s.films.every(f => cutOf(f) === 'hu'), JSON.stringify(s));
     await ctx.close();
   }
   {
     const ctx = await b.newContext(DESK), p = await ctx.newPage(); await p.goto(BASE + 'en/', { waitUntil: 'load' }); await p.waitForTimeout(2600);
-    const s = await p.evaluate(() => ({ lang: document.documentElement.lang, L: SS.L, playing: [...document.querySelectorAll('[data-film] video')].filter(v => !v.paused).map(v => v.currentSrc.split('/').pop()) }));
-    ok('the English home plays the English film', s.lang === 'en' && s.L === 'en' && s.playing.length > 0 && s.playing.every(f => /-en\.mp4$/.test(f)), JSON.stringify(s));
+    const s = await p.evaluate(() => ({ lang: document.documentElement.lang, L: SS.L, playing: [...document.querySelectorAll('[data-film] video')].filter(v => !v.paused).map(v => v.currentSrc) }));
+    ok('the English home plays the English film', s.lang === 'en' && s.L === 'en' && s.playing.length > 0 && s.playing.every(f => cutOf(f) === 'en'), JSON.stringify(s));
     await ctx.close();
   }
   {
     const ctx = await b.newContext(DESK), p = await ctx.newPage(); await p.goto(BASE + 'es/', { waitUntil: 'load' }); await p.waitForTimeout(2600);
-    const s = await p.evaluate(() => ({ lang: document.documentElement.lang, L: SS.L, claim: [...document.querySelectorAll('#hero-h [data-l="es"]')].some(e => e.textContent.includes('Las redes sociales han muerto')), playing: [...document.querySelectorAll('[data-film] video')].filter(v => !v.paused).map(v => v.currentSrc.split('/').pop()), sound: [...document.querySelectorAll('.ss-sound span')].map(e => e.textContent.trim()) }));
-    ok('the Spanish home: the claim in Spanish, the English film, the sound button in Spanish', s.lang === 'es' && s.L === 'es' && s.claim && s.playing.length > 0 && s.playing.every(f => /-en\.mp4$/.test(f)) && s.sound.length > 0 && s.sound.every(t => t === 'Activar sonido'), JSON.stringify(s));
+    const s = await p.evaluate(() => ({ lang: document.documentElement.lang, L: SS.L, claim: [...document.querySelectorAll('#hero-h [data-l="es"]')].some(e => e.textContent.includes('Las redes sociales han muerto')), playing: [...document.querySelectorAll('[data-film] video')].filter(v => !v.paused).map(v => v.currentSrc), sound: [...document.querySelectorAll('.ss-sound span')].map(e => e.textContent.trim()) }));
+    ok('the Spanish home: the claim in Spanish, the Spanish film, the sound button in Spanish', s.lang === 'es' && s.L === 'es' && s.claim && s.playing.length > 0 && s.playing.every(f => cutOf(f) === 'es') && s.sound.length > 0 && s.sound.every(t => t === 'Activar sonido'), JSON.stringify(s));
     await ctx.close();
   }
   console.log(`site: ${pass} passed, ${fail} failed`);

@@ -14,8 +14,10 @@ import { LOGO_ANIM } from './logo-anim.mjs';
 // word: how a one-language page finds a pair's word (the site passes site/es.mjs's, which looks up the Spanish by
 // the English text); without it, the pair's own
 export const LANGS = ['hu', 'en', 'es'];
-let L = null, ROOT = '', WORD = (p, l) => p[l];
-export function render({ lang = null, root = '', word = null } = {}) { L = LANGS.includes(lang) ? lang : null; ROOT = root; WORD = word || ((p, l) => p[l]); }
+// film: where a one-language page's film cuts are (the site passes site/films.mjs's, k 'w' wide or 'v' upright);
+// without it, kit.js picks them from assets/ by the page's language, as the concepts do
+let L = null, ROOT = '', WORD = (p, l) => p[l], FILM = null;
+export function render({ lang = null, root = '', word = null, film = null } = {}) { L = LANGS.includes(lang) ? lang : null; ROOT = root; WORD = word || ((p, l) => p[l]); FILM = film; }
 export const lang = () => L;
 // a pair whose two sides are built from parts (the claim's two lines, a heading's pieces): each side built, and on a
 // Spanish page the Spanish built from the English parts, each looked up on its own
@@ -133,7 +135,8 @@ export function film(cls = '', cut = 'auto', big = false, extra = '') {
   const poster = cut === 'v' ? `<img src="${asset('hero-v-poster.jpg')}" alt="" width="720" height="1280">`
     : cut === 'h' ? `<img src="${asset('hero-poster.jpg')}" alt="" width="1600" height="900">`
     : `<picture><source media="(max-width: 760px)" srcset="${asset('hero-v-poster.jpg')}"><img src="${asset('hero-poster.jpg')}" alt="" width="1600" height="900"></picture>`;
-  return `<div class="film ${cls}" data-film data-cut="${cut}"${big ? ' data-big' : ''}>
+  const own = FILM ? ` data-src-w="${esc(FILM('w'))}" data-src-v="${esc(FILM('v'))}"` : '';
+  return `<div class="film ${cls}" data-film data-cut="${cut}"${big ? ' data-big' : ''}${own}>
   <div class="poster">${poster}</div>
   <video muted loop playsinline preload="none" data-loop="${FILM_LOOP}"${ar(C.film.label)}></video>
   <button class="toggle" type="button"></button>${extra}

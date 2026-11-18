@@ -8,10 +8,11 @@
 //                         from its parts. Each has its own title, description, canonical address, language
 //                         alternates, share tags and structured data (site/head.mjs)
 //   base.css mix.css site.css ss.js kit.js logo-anim.js reels.js site.js   the pages' own files, linked from the root
-//   assets/               only the files the pages use: named in their markup, styles or scripts, plus the two cuts
-//                         of the brand film that kit.js picks between at runtime for Mix's two film frames (the wide
-//                         1080 where the opening fills a wide screen, the upright 720 in the card and on phones), in
-//                         Hungarian and in English (-en). Mix never asks for hero-540 (a smaller frame elsewhere)
+//   assets/               only the files the pages use: named in their markup, styles or scripts. The brand film's
+//                         two cuts per language (the wide 1080 where Mix's opening fills a wide screen, the upright
+//                         720 in the card and on phones) live in Pulse's Media Storage since v18 and are named by
+//                         their address there (site/films.mjs); a cut not stored yet travels here as before. Mix
+//                         never asks for hero-540 (a smaller frame elsewhere)
 //   favicon.ico favicon.svg apple-touch-icon.png site.webmanifest and the icons the manifest names
 //                         the logo kit's web files, at the root, where the pages' head and the manifest ask for them
 //   404.html robots.txt sitemap.xml llms.txt
@@ -19,14 +20,16 @@
 //                         (the doc's draft: the same effect as before, everything allowed); llms.txt is the site's own
 //                         (the doc's draft with the pages' real addresses), which Pulse then serves instead of its own
 // Real files only, no symlinks. It stops on an em dash in a page's visible words, title or description, if anything
-// a page names is missing, if a top-level name is one of Pulse's own paths, or if the folder breaks Pulse's limits
-// (60 MB, 1,500 files).
+// a page names is missing, if a stored film cut's file is no longer the one Media Storage holds, if a top-level name
+// is one of Pulse's own paths, or if the folder breaks Pulse's limits (60 MB, 1,500 files).
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { PAGES, ORIGIN, url, IS_DRAFTS } from '../site/pages.mjs';
 import { renderPage } from '../site/templates.mjs';
 import { ON as ES_ON, TODO as ES_TODO, MISSES, onPage, word } from '../site/es.mjs';
+import { FILMS, CUTS, STORED, filmFiles } from '../site/films.mjs';
 
 // the site's languages: Hungarian at the root, English under /en/, Spanish under /es/ (site/es.mjs)
 const LANGS = ['hu', 'en', ...(ES_ON ? ['es'] : [])];
@@ -34,7 +37,14 @@ const LANGS = ['hu', 'en', ...(ES_ON ? ['es'] : [])];
 // SS_DRAFTS=1 also builds the draft pages (site/pages.mjs), into their own folder, never into the one that is uploaded
 const OUT = IS_DRAFTS ? 'dist/site-drafts' : 'dist/site';
 const OG = 'assets/og-image.jpg';
-const FILM = ['hero-1080', 'hero-v-720'].flatMap(n => [`assets/${n}.mp4`, `assets/${n}-en.mp4`]);
+// the film's cuts that still travel in the ZIP (site/films.mjs); a stored cut must still be the file that was uploaded
+const FILM = filmFiles(LANGS);
+for (const l of LANGS) for (const k of CUTS) {
+  const c = FILMS[l][k]; if (!c.url) continue;
+  if (!STORED.test(c.url)) throw new Error(`site/films.mjs: ${l} ${k} is not a Media Storage address on socialstream.hu: ${c.url}`);
+  const sha = createHash('sha256').update(fs.readFileSync(c.file)).digest('hex');
+  if (sha !== c.sha256) throw new Error(`${c.file} is not the file Media Storage holds at ${c.url}: upload it again and change its sha256 and address in site/films.mjs`);
+}
 // Pulse's limits (services/page-zip.js): the ZIP up to 60 MiB, unpacked up to 250 MiB, at most 1,500 entries
 const LIMIT_ZIP = 60 * 1048576, LIMIT_UNPACKED = 250 * 1048576, LIMIT_FILES = 1500;
 // the first path segments Pulse keeps for itself on the domain (pulse-site-hosting-answers.md): a file there would

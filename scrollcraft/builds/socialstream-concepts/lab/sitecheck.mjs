@@ -13,10 +13,18 @@
 //   every loaded image decodes, nothing left unarrived after a scroll through the page, no sideways scroll at
 //   390 px; the words the scripts write (the sound and film buttons, the form's topics) in the page's language; on the
 //   home page the title, the share image, and the English and Spanish pages behind the EN and ES links
+// - the brand film (site/films.mjs): each home page names its own language's two cuts and plays them (desktop the
+//   wide one, the card and phones the upright one), its structured data points at its wide cut in its language; a
+//   cut stored in Pulse's Media Storage is fetched from its address, byte for byte the file in this folder (with
+//   seeking), and is not in the site folder; a cut not stored yet is in the folder
 import { createRequire } from 'node:module';
+import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { FILMS, CUTS, STORED, filmSrc, filmUrl } from '../site/films.mjs';
 const { chromium } = createRequire(process.cwd() + '/')('playwright-core');
+const BUILD = path.dirname(path.dirname(fileURLToPath(import.meta.url)));   // the build folder, where the cuts' files are
 const [dir, base] = process.argv.slice(2);
 const ORIGIN = 'https://socialstream.hu';
 const LOCALE = { hu: 'hu_HU', en: 'en_GB', es: 'es_ES' };
@@ -80,7 +88,12 @@ for (const pg of pages) {
     const bc = node('BreadcrumbList');
     ok(pg.path + ' breadcrumb data ends on the page', bc && bc.itemListElement.at(-1).item === pg.loc && bc.itemListElement[0].item === hd.alt[lang].replace(/^(https:\/\/[^/]+\/((en|es)\/)?).*$/, '$1'), JSON.stringify(bc && bc.itemListElement.map(i => i.item)));
     ok(pg.path + ' a visible breadcrumb', /<nav class="pg-crumbs"/.test(html));
-  } else ok(pg.path + ' the film as a video', !!node('VideoObject'));
+  } else {
+    const vo = node('VideoObject');
+    ok(pg.path + ' the film as a video, its own language\'s cut', vo && vo.inLanguage === lang && vo.contentUrl === filmUrl(lang, 'w'), JSON.stringify(vo && [vo.inLanguage, vo.contentUrl]));
+    const boxes = [...html.matchAll(/<div class="film [^"]*" data-film[^>]*>/g)].map(m => m[0]);
+    ok(pg.path + ' every film names its language\'s two cuts', boxes.length > 0 && boxes.every(t => t.includes(`data-src-w="${filmSrc(lang, 'w')}"`) && t.includes(`data-src-v="${filmSrc(lang, 'v')}"`)), boxes.join(' '));
+  }
   if (KIND.service.test(pg.path)) ok(pg.path + ' service data', !!node('Service'));
   if (KIND.faq.test(pg.path)) {
     const shownQ = (html.match(/<details>/g) || []).length, fq = g.find(n => n['@type'] === 'FAQPage');
@@ -130,9 +143,24 @@ const RUNTIME = {
   es: ['Activar sonido', 'Silenciar', 'Reproducir', 'Pausa', 'Producción de vídeo', 'Presencia en redes sociales', 'Publicidad de pago', 'Web y landing pages', 'Automatización y email', 'Estrategia de crecimiento'],
 };
 
+// the film's cuts: a stored one answers at its address with the file's own bytes (and a part of it, for seeking),
+// and stays out of the folder; one not stored yet travels in the folder
+const langsHere = Object.keys(FILMS).filter(l => pages.some(pg => langOf(pg.path) === l && HOME.test(pg.path)));
+for (const l of langsHere) for (const k of CUTS) {
+  const c = FILMS[l][k], own = fs.readFileSync(path.join(BUILD, c.file)), sha = createHash('sha256').update(own).digest('hex');
+  if (!c.url) { ok(`${l} ${k}: the cut not stored yet is in the folder`, files.includes(c.file)); continue; }
+  ok(`${l} ${k}: a stored cut's address`, STORED.test(c.url) && c.sha256 === sha, c.url);
+  ok(`${l} ${k}: a stored cut is not in the folder`, !files.includes(c.file));
+  const r = await fetch(c.url), got = Buffer.from(await r.arrayBuffer());
+  ok(`${l} ${k}: ${c.url} answers with ${c.file}, byte for byte`, r.status === 200 && r.headers.get('content-type') === 'video/mp4' && got.length === own.length && createHash('sha256').update(got).digest('hex') === sha, `${r.status} ${r.headers.get('content-type')} ${got.length}`);
+  const part = await fetch(c.url, { headers: { Range: 'bytes=1000-1999' } }), pb = Buffer.from(await part.arrayBuffer());
+  ok(`${l} ${k}: ${c.url} answers a part of itself (seeking)`, part.status === 206 && pb.equals(own.subarray(1000, 2000)), part.status);
+}
+
 // in a browser
 const b = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', args: ['--autoplay-policy=no-user-gesture-required'] });
-const allowed = [new URL(base).host, 'fonts.googleapis.com', 'fonts.gstatic.com'];
+// the site's own host, Google Fonts, and the domain where Media Storage serves the film (the same one, once live)
+const allowed = [new URL(base).host, 'fonts.googleapis.com', 'fonts.gstatic.com', ...new Set(Object.values(FILMS).flatMap(f => CUTS.map(k => f[k].url)).filter(Boolean).map(u => new URL(u).host))];
 for (const [dev, opts] of [['desktop', { viewport: { width: 1440, height: 900 } }], ['phone', { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 }]]) {
   const ctx = await b.newContext(opts);
   for (const pg of pages) {
@@ -163,6 +191,14 @@ for (const [dev, opts] of [['desktop', { viewport: { width: 1440, height: 900 } 
     if (dev === 'phone') ok(tag + ' no sideways scroll at 390 px', wide <= 0, String(wide));
     const other = st.runtime.filter(t => Object.entries(RUNTIME).some(([l, words]) => l !== st.lang && words.includes(t) && !RUNTIME[st.lang].includes(t)));
     ok(tag + ' the scripts\' words in the page\'s language', other.length === 0, other.join(' | '));
+    if (home(pg)) {
+      // the film in the page's language: the opening plays the wide cut on a computer and the upright one on a phone,
+      // the card the upright one; each source is one of the page's own two cuts
+      await p.evaluate(() => scrollTo(0, 0)); await p.waitForTimeout(1500);
+      const fl = await p.evaluate(() => [...document.querySelectorAll('[data-film]')].map(f => ({ cut: f.dataset.cut, src: f.querySelector('video').currentSrc })).filter(f => f.src));
+      const want = { w: new URL(filmSrc(st.lang, 'w'), base).href, v: new URL(filmSrc(st.lang, 'v'), base).href };
+      ok(tag + ' the film in the page\'s language, the right cut for the frame', fl.length > 0 && fl.every(f => f.src === (f.cut === 'v' || dev === 'phone' ? want.v : want.w)), JSON.stringify(fl));
+    }
     if (home(pg) && pg.path === '/') {
       const head = await p.evaluate(() => ({ title: document.title, canon: document.querySelector('link[rel=canonical]')?.href, og: document.querySelector('meta[property="og:image"]')?.content }));
       ok(dev + ' home title', head.title === 'SocialStream · Interest media ügynökség', head.title);

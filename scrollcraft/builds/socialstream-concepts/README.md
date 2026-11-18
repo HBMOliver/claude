@@ -59,7 +59,10 @@ The published pages are private until they are shared from their Share menu.
     a Spanish page looks each English text up in `es-words.mjs` ([English, Spanish] pairs) through `word()`, and its
     addresses are `es.mjs`'s `SLUGS`. A missing Spanish text stops the build; `SS_ES_TODO=1 node tools/site.mjs`
     writes the missing ones to `dist/es-todo.mjs` instead. Spanish pages show the English page's euros the Spanish
-    way (216K €, 0,29 €) and play the English cuts of the film.
+    way (216K €, 0,29 €) and, since v18, play the film's own Spanish cuts (the English ones before).
+  - `films.mjs` (since v18): where each language's two cuts of the brand film are. Pulse's Media Storage holds
+    them (at `https://socialstream.hu/m/<id>.mp4`, with seeking and a year's cache), so they no longer travel in the
+    site's ZIP; each entry keeps the uploaded file's sha256, and a cut not stored yet travels in the ZIP as before.
   - `templates.mjs`: one template per kind of page (home, services, service, about, audit, faq, contact).
 - `site.css`: the site's additions to Mix's look (subpages, menu, footer links); only the site's pages load it.
 - `base.css`: shared mechanics.
@@ -163,10 +166,12 @@ itself (`p`, `form`, `book`, `fonts`, `socialstream` and more: `tools/site.mjs` 
 - `robots.txt` (every crawler allowed, the AI crawlers named), `sitemap.xml` (every page with its alternates) and
   `llms.txt` (the doc's draft with the pages' addresses; Pulse serves the folder's own instead of its generated one).
 - The pages' own files (`base.css`, `mix.css`, `site.css`, `ss.js`, `kit.js`, `logo-anim.js`, `reels.js`), linked
-  from the root, and only the assets they use, plus the two cuts
-  of the brand film that `kit.js` picks between for Mix (`hero-1080` for the opening on a wide screen, `hero-v-720`
-  in the card and on phones), in Hungarian and in English (`-en`: the page in English plays it). Mix never asks for
-  `hero-540`, so it stays out of the package (since 2026-11-16, when the 59 s sizzle became the film).
+  from the root, and only the assets they use. The brand film's cuts that `kit.js` picks between for Mix
+  (`hero-1080` for the opening on a wide screen, `hero-v-720` in the card and on phones; Hungarian, English `-en`
+  and Spanish `-es`) are not in the package since v18: Pulse's Media Storage holds them, each page names its own
+  language's two by their address there (`site/films.mjs`, `data-src-w` and `data-src-v` on the film), and a cut
+  not stored yet travels in the package as before. Mix never asks for `hero-540`, so it stays out of the package
+  (since 2026-11-16, when the 59 s sizzle became the film).
 - The logo kit's web icons at the root, where the page's head and the manifest ask for them.
 - `404.html` (every link in it starts at the root, so it works at any depth), `robots.txt` and `sitemap.xml`.
 
@@ -174,7 +179,9 @@ It writes real files only (no symlinks), and stops if a file a page names is mis
 another language's words (or forints on a Spanish page), a top-level name is one of Pulse's own paths, or the
 upload breaks Pulse's limits (its `services/page-zip.js`: the ZIP up to 60 MiB, 1,500 entries, 250 MiB unpacked; the
 build zips `dist/site` into `dist/site.zip` and measures it). On 2026-11-12 it was 59 files and 18.8 MB; on 2026-11-15, with the new palette and the remade film, 59 files and 19.8 MB (`socialstream-site-v4.zip`); v10 (the sizzle, one page) 87 files and 55.5 MB; on 2026-11-16 with the 24 pages, 112 files and 56.3 MB; on 2026-11-18 with the film's sound and the Spanish
-pages, 146 files, 60.4 MB unpacked and a 58.7 MiB ZIP. The films are about 50 MB of it, so they move to a video host before many pictures go in (the founder's choice). `tools/og.mjs` renders the share
+pages, 146 files, 60.4 MB unpacked and a 58.7 MiB ZIP; the films were 55.9 MB of it, and a Spanish pair would not
+fit. So since v18 (the Spanish film) all six cuts live in Pulse's Media Storage (the founder's choice, 2026-11-18) and
+the package is 142 files, 7.2 MB unpacked and a 5.52 MiB ZIP. `tools/og.mjs` renders the share
 image from `tools/og.html`: the logo, the claim and three of their reels on the night blue.
 
 To update the live site: change the page, `node build.mjs mix`, `node tools/site.mjs`, run the last three commands

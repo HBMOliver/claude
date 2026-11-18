@@ -7,6 +7,7 @@ import { C } from '../content.mjs';
 import { esc, pair, LANGS } from '../parts.mjs';
 import { ORIGIN, PAGES, byId, url, W } from './pages.mjs';
 import { word } from './es.mjs';
+import { filmUrl } from './films.mjs';
 
 const OG = 'assets/og-image.jpg';
 // the share image shows the logo and the Hungarian claim, so the other languages' alt says what is on it
@@ -20,8 +21,9 @@ const plain = s => String(s).replace(/<[^>]+>/g, '');
 // the claim as a sentence in the page's language (the Spanish from its two English lines, each looked up)
 const claim = l => plain((l === 'hu' ? C.claim.hu : l === 'en' ? C.claim.en : C.claim.en.map(x => word({ en: x }, l))).join(' '));
 const ORG = ORIGIN + '/#org', SITE = ORIGIN + '/#website';
-// the film on the home page (the sizzle, live since 2026-11-16; 59.4 s, tools/hero.sh): what a search engine may show
-const FILM = { date: '2026-11-16', duration: 'PT59.4S' };
+// the film on the home page (the sizzle, 59.4 s, tools/hero.sh): what a search engine may show. Hungarian and English
+// live since 2026-11-16; the Spanish cut since v18 (the Spanish page played the English one until then)
+const FILM = { date: { hu: '2026-11-16', en: '2026-11-16', es: '2026-11-18' }, duration: 'PT59.4S' };
 // the languages a page exists in, in this order
 const langs = pg => LANGS.filter(x => pg.path[x]);
 
@@ -43,11 +45,10 @@ function graph(pg, l) {
     nodes.push({ '@type': 'BreadcrumbList', '@id': u + '#breadcrumb', itemListElement: trail(pg).map((x, i) => ({ '@type': 'ListItem', position: i + 1, name: plain(word(x.crumb || W.home, l)), item: url(x, l) })) });
   }
   if (pg.type === 'home') {
-    // the Spanish page plays the English film
-    const en = l === 'hu' ? '' : '-en';
+    // each language's own cut of the film, the wide one (site/films.mjs: on Pulse's Media Storage)
     page.video = { '@id': u + '#film' };
-    nodes.push({ '@type': 'VideoObject', '@id': u + '#film', name: word(C.film.label, l), description: word(home.desc, l), inLanguage: l === 'hu' ? 'hu' : 'en',
-      thumbnailUrl: ORIGIN + '/assets/hero-poster.jpg', uploadDate: FILM.date, duration: FILM.duration, contentUrl: `${ORIGIN}/assets/hero-1080${en}.mp4` });
+    nodes.push({ '@type': 'VideoObject', '@id': u + '#film', name: word(C.film.label, l), description: word(home.desc, l), inLanguage: l,
+      thumbnailUrl: ORIGIN + '/assets/hero-poster.jpg', uploadDate: FILM.date[l], duration: FILM.duration, contentUrl: filmUrl(l, 'w') });
   }
   if (pg.type === 'service') {
     const s = pg.s, k = word(pair(s.k), l);

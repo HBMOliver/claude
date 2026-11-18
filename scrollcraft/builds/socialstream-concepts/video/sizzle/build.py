@@ -9,9 +9,9 @@ they work; five results; their clients' and viewers' words; the promise; the log
 
 Every line is the site's own copy (../../content.mjs) or a real number or comment (SPEC.md, Honesty); the English
 cut shows money in euros (the conversions and their rates are in SPEC.md).
-Run from this folder: python3 clips.py <photos> <enzo>, then python3 build.py (writes wide/ and wide-en/, 1920 x
-1080, and tall/ and tall-en/, the upright cut on the same clock for the site's card and phones; then render,
-README.md).
+Run from this folder: python3 clips.py <photos> <enzo>, then python3 build.py (writes wide/, wide-en/ and wide-es/,
+1920 x 1080, and tall/, tall-en/ and tall-es/, the upright cut on the same clock for the site's card and phones;
+then render, README.md).
 """
 import json, math, os, random, re, subprocess, sys
 
@@ -149,9 +149,48 @@ TEXT = {
         ], qm=("“", "”"),
         c1=("Videos people watch", "to the end"), c2=("Ads that", "pay off"), cs_eb="Interest media agency",
     ),
+    # Spanish (2026-11-18, for the site's /es/ pages): the Spanish site's own words for the same lines
+    # (../../site/es-words.mjs, Spain Spanish, "tú" to the viewer), so again nothing is translated twice; the reviews
+    # are the site's Spanish quotes cut only with "…"; the English cut's euros, written the Spanish way (216K €, 0,29 €,
+    # 1.650 €, 5.700). FlyX's viewers' comments stay in English, as in both other cuts. The founder approved these
+    # lines before the first render (2026-11-18, "Yes, render them"; the list they saw: sizzle-es-lines.md).
+    "es": dict(
+        p1="Publicas.", p2="Pagas anuncios.", p3='¿Y aun así nadie <span class="acc">compra?</span>',
+        ca=('<span class="w">Las</span> <span class="ss"><span class="w">redes</span> <span class="w">sociales</span>'
+            '<i class="stk" id="op-stk"></i></span>'),
+        ca2="han muerto.",
+        cb=('<div class="hd cb1 l1"><span class="w">El</span> <span class="w it">interés</span></div>\n'
+            '      <div class="hd cb1 l2"><span class="w">ha</span> <span class="w">ocupado</span> <span class="w">su</span> '
+            '<span class="w">lugar<span class="acc">.</span></span></div>'),
+        fx_eb="FlyX Tenerife · Centro de experiencias", fx_lab="visualizaciones en un reel", comment="Comentario",
+        ez_eb="Prof Enzo · Facebook", ez_lab="visualizaciones", ez_f="33K seguidores", ez_num=("9", ",", "8"),
+        pr_eb="Fragmentos de nuestros vídeos", tags=["Rodaje", "Edición", "Subtítulos", "Reels", "Podcast y entrevista"],
+        how=['Hacemos el <span class="it">vídeo</span>,', 'gestionamos los <span class="it">anuncios</span>', "y medimos",
+             'lo que <span class="it hz">generan</span><span class="acc">.</span>'],
+        how_chips=["81×", "216K €", "23×", "0,29 €"],
+        r1_eb="Constructora de naves industriales · B2B · Meta", r1_lab="facturación en una semana",
+        days=["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+        r1_num=("", 3, 216, "K €", 400, 224),               # the euro after the number, in the unit's place
+        r2_eb="Tienda online de puertas · Google Performance Max", r2_c1="1 €", r2_gl="81 €",
+        # (the pill is a flex row with a 12 px gap: the words before the count take it back, as the English € does)
+        r3_eb="Tienda online de relojes · Navidad", r3_p=('<span style="margin-right:-12px">más de&nbsp;</span>', '<span class="kk">K € de facturación</span>'), r3_n=(2, 21),
+        r4_eb="Webinar sanitario", r4_lab="registros con 1.650 €", r4_st=("0,29 €", "por registro"), thou=".",
+        m3_eb="Desde 2022", m3_lab="presupuesto gestionado", m3_num=("", 820, "K+", "€"),
+        v0=("mid", "No te fíes de nuestra palabra."), v1="Fíate de la suya",
+        voices=[
+            ("q", "Péter · Hoofbútor", "“Hubo compras desde el día del lanzamiento…”"),
+            ("q", "Cliente constructor de naves · B2B", "“…tantas solicitudes de presupuesto como antes en medio año.”"),
+            ("q", "Tienda online de relojes", "“…la temporada navideña jugó a nuestro favor y no en contra.”"),
+            ("q", "Empresa sanitaria", "“…el contador se paró en casi 5.700, apenas podíamos creer…”"),
+            ("q", "Rita · Rita’s Beauty Corner", "“Los resultados llegaron rápido…”"),
+            ("q", "János · EJ Massage Therapies", "“Solo puedo recomendarlos.”"),
+        ], qm=("“", "”"),
+        c1=("Vídeos que se ven", "hasta el final"), c2=("Anuncios que", "salen rentables"), cs_eb="Agencia de interest media",
+    ),
 }
 TX = TEXT["hu"]                                             # the language being built (main() switches it)
-OUTS = [("hu", "wide", False), ("en", "wide-en", False), ("hu", "tall", True), ("en", "tall-en", True)]   # language, folder, upright
+OUTS = [("hu", "wide", False), ("en", "wide-en", False), ("hu", "tall", True), ("en", "tall-en", True),
+        ("es", "wide-es", False), ("es", "tall-es", True)]    # language, folder, upright
 
 # ---- helpers every scene's script starts with ----
 JS = r"""
@@ -891,6 +930,26 @@ TALL_TEXT = {
         c1=("Videos people<br>watch", "to the end"),
         t_r1=(286, 164), t_m3=222,
     ),
+    # Spanish runs longer than both: more lines break, and the euro stays on the number's line (t_m3_inline), so
+    # the label under 820K+ € reads as it does in the wide cut
+    "es": dict(
+        p_cls=("big", "big", "mid", "mid"),
+        p2="Pagas<br>anuncios.",
+        p3='¿Y aun así<br>nadie <span class="acc">compra?</span>',
+        ca=('<span class="w">Las</span><br><span class="ss"><span class="w">redes</span> <span class="w">sociales</span>'
+            '<i class="stk" id="op-stk"></i></span>'),
+        ca2="han<br>muerto.",
+        cb=('<div class="hd cb1 l1"><span class="w">El</span> <span class="w it">interés</span></div>\n'
+            '      <div class="hd cb1 l2"><span class="w">ha</span> <span class="w">ocupado</span><br><span class="w">su</span> '
+            '<span class="w">lugar<span class="acc">.</span></span></div>'),
+        how=['Hacemos<br>el <span class="it">vídeo</span>,', 'gestionamos<br>los <span class="it">anuncios</span>', "y medimos",
+             'lo que<br><span class="it hz">generan</span><span class="acc">.</span>'],
+        v0=("mid", "No te fíes de<br>nuestra palabra."), v1="Fíate<br>de la suya", v1_px=200,
+        c1=("Vídeos que<br>se ven", "hasta<br>el final"), c2=("Anuncios que", "salen<br>rentables"),
+        # the holiday pill and the label under 820K+ € set a little smaller, so the results' slow push keeps them
+        # inside the safe box
+        t_r1=(286, 164), t_m3=222, t_m3_inline=True, t_r3_px=50, t_m3_lab_px=64,
+    ),
 }
 TALL_CSS = """
 /* the upright cut: larger labels, phrases that break over two lines, a narrower phone, cards with a smaller corner */
@@ -987,6 +1046,8 @@ def t_r3(s, e):
     #root #r3-p .cnt .d { width: 0.6em; }
     #root #r3-p .eu { margin: 0 -13px 0 -12px; }
     #root #r3-p .kk { margin-left: -11px; }"""
+    if TX.get("t_r3_px"):
+        css += f"\n    #root #r3-p {{ font-size: {TX['t_r3_px']}px; }}"
     return html, js, css
 
 
@@ -1022,15 +1083,21 @@ def t_m300(s, e):
     pre, to, plus, unit = TX["m3_num"]
     px = TX["t_m3"]
     ls = [("m3-l0", 12, 90, 100, "66, 92, 255, 0.5"), ("m3-l1", 90, 8, 96, "136, 78, 255, 0.5"), ("m3-l2", 60, 110, 60, "255, 64, 104, 0.3")]
-    lab = (f'<span class="w it ui2">{unit}</span> ' if unit else "") + wl(TX["m3_lab"])
+    inline = TX.get("t_m3_inline")                          # Spanish: the unit stays after the number (820K+ €)
+    lab = (f'<span class="w it ui2">{unit}</span> ' if unit and not inline else "") + wl(TX["m3_lab"])
+    after = f'<span class="it ui">{unit}</span>' if unit and inline else ""
     html = (field("#070a1c", ls)
             + f'<div class="eb" id="m3-eb" style="position:absolute;left:100px;right:100px;top:730px;text-align:center">{TX["m3_eb"]}</div>'
-            + f'<div class="hd rn" id="m3-n" style="left:0;right:0;top:810px;justify-content:center">{cur(pre)}{digits(3, "m3-cnt")}<span class="mp">{plus}</span></div>'
+            + f'<div class="hd rn" id="m3-n" style="left:0;right:0;top:810px;justify-content:center">{cur(pre)}{digits(3, "m3-cnt")}<span class="mp">{plus}</span>{after}</div>'
             + f'<div class="lab" id="m3-lab" style="position:absolute;left:0;right:0;top:{810 + round(px * 0.84) + 44}px;text-align:center">{lab}</div>')
     css = RES_CSS + f"""
     #root #m3-n .cnt, #root #m3-n .mp, #root #m3-n .cur {{ font-size: {px}px; line-height: 0.84; letter-spacing: -0.055em; }}""" + """
     #root #m3-lab { font-size: 72px; font-weight: 700; font-family: Sora, Inter, sans-serif; letter-spacing: -0.03em; }
     #root #m3-lab .ui2 { font-size: 124px; line-height: 0.6; letter-spacing: -0.01em; margin-right: 0.06em; }"""
+    if inline:                                              # the unit at the wide cut's share of the number (330 of 440)
+        css += f"\n    #root #m3-n .ui {{ font-size: {round(px * 0.75)}px; }}"
+    if TX.get("t_m3_lab_px"):
+        css += f"\n    #root #m3-lab {{ font-size: {TX['t_m3_lab_px']}px; }}"
     return html, js, css
 
 

@@ -13,6 +13,7 @@ import * as mix from '../concepts/mix.mjs';
 import { PAGES, NAV, W, byId } from './pages.mjs';
 import { seo, trail } from './head.mjs';
 import { word } from './es.mjs';
+import { filmSrc } from './films.mjs';
 
 const SERVICES = PAGES.filter(pg => pg.type === 'service');
 const CASES = PAGES.filter(pg => pg.type === 'case');
@@ -310,6 +311,6 @@ ${qa(g.items, l, s)}
 };
 
 export function renderPage(pg, l) {
-  render({ lang: l, root: '/', word });
+  render({ lang: l, root: '/', word, film: k => filmSrc(l, k) });
   try { return T[pg.type](pg, l); } finally { render({}); }
 }

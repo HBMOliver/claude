@@ -198,6 +198,12 @@ instead of 0. The ending was not reworked.
   Ft is €200K). The rounding leaves little room: €216K holds while the rate is at or under 365.74 Ft, €820K+ at
   or under 365.85 Ft, "over €21K" up to 380.9 Ft. Convert again if the cut is published after the forint has
   weakened.
+- **The Spanish cut** (2026-11-18) says nothing the English cut does not: every line is the Spanish site's own for
+  the same English line (`../../site/es-words.mjs`; "views on one reel" and "views" drop "orgánicas" as the English
+  drops "organic"); new strings are plain labels ("Comentario", "Subtítulos", "Podcast y entrevista", the days of
+  the week). The money is the English cut's euros, the same figures at the same rate, written the Spanish way:
+  216K € de facturación en una semana, más de 21K € de facturación, 820K+ € presupuesto gestionado, ≈5.700
+  registros con 1.650 €, 0,29 € por registro, 1 € → 81 €, 9,8M+ visualizaciones. The same limits apply.
 
 ## QA
 

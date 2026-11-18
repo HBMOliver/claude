@@ -47,10 +47,14 @@
     var f = { paused: reduce || SS.saveData, seen: false, loaded: '', started: false, hidden: false };
     box._f = f;
     // a vertical cut where the frame stands upright, the full cut where the film is big, the small one elsewhere;
-    // the film's words are in the page's language (the English cuts end in -en; a Spanish page plays them too)
+    // the film's words are in the page's language. A page in one language names its own two cuts (the site's pages:
+    // data-src-w, the wide one, and data-src-v, the upright one, on Pulse's Media Storage; site/films.mjs); the
+    // concepts pick them from assets/ (the English cuts end in -en)
     function src() {
+      var up = cut === 'v' || (cut === 'auto' && narrow.matches), own = box.getAttribute(up ? 'data-src-v' : 'data-src-w');
+      if (own) return own;
       var en = SS.L === 'hu' ? '' : '-en';
-      if (cut === 'v' || (cut === 'auto' && narrow.matches)) return ASSETS + 'hero-v-720' + en + '.mp4';
+      if (up) return ASSETS + 'hero-v-720' + en + '.mp4';
       if (box.hasAttribute('data-big')) return ASSETS + 'hero-1080' + en + '.mp4';
       return ASSETS + 'hero-' + (box.offsetWidth * (window.devicePixelRatio || 1) < 1300 ? '540' : '1080') + en + '.mp4';
     }
