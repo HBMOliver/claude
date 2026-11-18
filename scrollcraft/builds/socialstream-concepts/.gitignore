@@ -6,3 +6,4 @@ lab/*
 !lab/sitecheck.mjs
 !lab/herocheck-site.mjs
 !lab/soundcheck.mjs
+!lab/lowpower.mjs

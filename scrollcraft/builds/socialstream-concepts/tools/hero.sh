@@ -36,6 +36,10 @@ sound "$O/hero-v-720$S.mp4" "$T"
 if [ -z "$S" ]; then
   ffmpeg -v error -y -ss "$P" -i "$W" -frames:v 1 -vf "scale=1600:900:flags=lanczos" -q:v 3 "$O/hero-poster.jpg"
   ffmpeg -v error -y -ss "$P" -i "$T" -frames:v 1 -vf "scale=720:1280:flags=lanczos" -q:v 3 "$O/hero-v-poster.jpg"
+  # the same two frames at the masters' full size, for sharp screens and for a phone in Low Power Mode, where the still
+  # stays until the visitor touches the page (kit.js; parts.mjs names both sizes)
+  ffmpeg -v error -y -ss "$P" -i "$W" -frames:v 1 -vf "scale=1920:1080:flags=lanczos" -q:v 3 "$O/hero-poster-1920.jpg"
+  ffmpeg -v error -y -ss "$P" -i "$T" -frames:v 1 -vf "scale=1080:1920:flags=lanczos" -q:v 3 "$O/hero-v-poster-1080.jpg"
 fi
 rm -r "${L:?}"
 ls -l "$O"/hero-*"$S".mp4

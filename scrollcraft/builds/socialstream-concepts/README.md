@@ -70,7 +70,8 @@ The published pages are private until they are shared from their Share menu.
 - `ss.js`: language, form helpers. Copied from Daylight.
 - `kit.js`: the behaviour the concepts share:
   - arrivals and counters
-  - the film
+  - the film (since v19: a phone in Low Power Mode refuses a film that starts by itself, so the still stays, without
+    a Play button, and the film starts at the visitor's first touch, click or key)
   - running rows
   - lighting words
   - scroll drift
@@ -82,7 +83,9 @@ The published pages are private until they are shared from their Share menu.
   2.1-5.3 s, 3.0 MB together; since 2026-11-16 the two big ones by the statement are the smartwatch ad and Prof Enzo, and the
   Latvia clips are Up To Youth's with event titles, the Türkiye film DELSAS's) over their posters (`assets/r-*.jpg`), with a reel's furniture in markup: a progress
   bar, the side icons, whose post it is. A clip loads and plays only while its card is on screen. With reduced motion
-  or a data saver only the posters show.
+  or a data saver only the posters show. In Low Power Mode (since v19) the posters show until the visitor's first
+  touch, then the clips play; a refused film or clip sends the event `ss-refused`, so `kit.js` and `reels.js` both
+  wait for that touch and start everything in it, the clips further down too.
 - `tools/reels.py`: cuts those clips and posters from the founder's footage (paths are local to the founder's Mac).
   Captions are burned in only where the words are real: the clients' own edits (FlyX, András, Prof Enzo, Up To
   Youth, Miskolc Plaza), event titles on Up To Youth's Latvia clips (written for the site since 2026-11-16, when the founder asked for them
@@ -107,6 +110,11 @@ The published pages are private until they are shared from their Share menu.
     first screen, the cursor followers, the row running at rest, the form in the page's language, the phone menu, no
     sideways scroll at 1440 and 1100 with a mouse at the edges and at 390 and 320, reduced motion), and that a page's
     language comes from the page alone, not from a choice the browser remembers from the one-page site of before.
+- `lab/lowpower.mjs` (2026-11-18, v19): Low Power Mode played in Chrome. A stub refuses `play()` outside a touch,
+  click or key that counts, as WebKit does (a touchstart does not count, so the page must try again), and the checks
+  follow the films and reels through it: the still without a Play button, everything starting at the first tap, the
+  sound button as the first touch, a computer, a page of reels, and reduced motion and an ordinary phone as before.
+  It is a model of the rule, not an iPhone. `node lab/lowpower.mjs http://localhost:4565 [folder for screenshots]`.
 - `lab/sitecheck.mjs`: the site's folder, served: every file and page answers 200; each page's head (language, one
   h1, a title and description of its own, its canonical address, the alternates both ways, share tags, structured
   data with what its kind of page needs); no words of the other language; every link inside the site goes somewhere
@@ -200,7 +208,8 @@ Before launch (2026-11-12):
   `sh tools/hero.sh <master-wide> <master-tall> [-en] [poster s]` makes the site's cuts from its four masters (wide
   and upright, Hungarian and English, all on one clock): `hero-1080`, `hero-v-720` and `hero-540` (the other
   concepts' smaller frames), silent, and the posters at 2.6 s, where the logo stands whole on the wall (no words, so
-  one pair serves both languages). The upright cut is its own layout, not a crop, so in the card the two dissolve into
+  one pair serves every language; since v19 also at the masters' full size, `hero-poster-1920.jpg` and
+  `hero-v-poster-1080.jpg`, for sharp screens and for Low Power Mode, where the still stays until the first touch). The upright cut is its own layout, not a crop, so in the card the two dissolve into
   each other. After its first play the film loops from 3.2 s (`data-loop` in `parts.mjs`, `kit.js`): the sizzle opens
   and ends on the logo, and a loop to 0 showed the logo twice within five seconds.
 - **Film: v5, "Through the phone" (2026-11-15).** Until 2026-11-16 the site played `video/film/` v5: one moving camera through the

@@ -10,11 +10,34 @@
   if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (navigator.connection && navigator.connection.saveData) return;
   var live = [], raf = 0;
+  function load(v) { if (!v.getAttribute('src')) { v.muted = true; v.src = v.getAttribute('data-src'); } }
   function play(v) {
-    if (!v.getAttribute('src')) { v.muted = true; v.src = v.getAttribute('data-src'); }
+    load(v);
     var p = v.play();
-    if (p && p.catch) p.catch(function () {});
+    if (p && p.catch) p.catch(function (e) { if (e && e.name === 'NotAllowedError') { v._ok = false; document.dispatchEvent(new Event('ss-refused')); } });
   }
+  /* In Low Power Mode an iPhone (and a Mac saving its battery) refuses every clip that starts by itself until the
+     visitor touches the page; the posters stay until then. Once a clip or a film (kit.js) is refused (the event
+     ss-refused), the page listens for the first touch, click or key that the browser counts (a touch that only scrolls
+     may not count), and inside it every clip starts: those on screen play, the others stop again at once, without
+     loading, which lets each of them play by itself later. The page listens until every clip has been let play, and
+     again after any later refusal (kit.js does the same for the films). */
+  var WAKE = ['touchstart', 'touchend', 'pointerdown', 'pointerup', 'mousedown', 'click', 'keydown'], armed = false;
+  function wake() {
+    vids.forEach(function (v) {
+      if (v._ok) return;
+      var on = live.indexOf(v) > -1 && !document.hidden;
+      if (on) load(v);
+      var p = v.play();
+      if (!on) v.pause();
+      if (p && p.then) p.then(function () { v._ok = true; }, function (e) { if (!e || e.name !== 'NotAllowedError') v._ok = true; });
+      else v._ok = true;
+    });
+    if (vids.every(function (v) { return v._ok; })) disarm();
+  }
+  function arm() { if (!armed) { armed = true; WAKE.forEach(function (t) { document.addEventListener(t, wake, { capture: true, passive: true }); }); } }
+  function disarm() { if (armed) { armed = false; WAKE.forEach(function (t) { document.removeEventListener(t, wake, true); }); } }
+  document.addEventListener('ss-refused', arm);
   function bars() {
     raf = 0;
     live.forEach(function (v) { if (v.duration) v.parentNode.style.setProperty('--t', (v.currentTime / v.duration).toFixed(3)); });
@@ -29,7 +52,7 @@
     if (live.length && !raf) raf = requestAnimationFrame(bars);
   }, { rootMargin: '80px 0px', threshold: 0.1 });
   vids.forEach(function (v) {
-    v.addEventListener('playing', function () { v.classList.add('on'); }, { once: true });
+    v.addEventListener('playing', function () { v._ok = true; v.classList.add('on'); }, { once: true });
     io.observe(v);
   });
   document.addEventListener('visibilitychange', function () {

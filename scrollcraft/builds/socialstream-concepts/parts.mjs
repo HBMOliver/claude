@@ -131,10 +131,15 @@ export const ticks = (cls = 'ticks') => `<ul class="${cls}">${C.ticks.map(t => t
 const FILM_LOOP = 3.2;
 
 // the brand film: cut "v" (vertical), "h" (16:9) or "auto" (vertical on phones); kit.js plays it when seen
+// The still under it (tools/hero.sh) comes at the masters' full size too, for sharp screens and for a phone in Low Power
+// Mode, where it stays until the visitor touches the page (kit.js). Sizes as measured: the opening fills the screen,
+// the card is 88% of a phone's width and at most 360 px elsewhere.
 export function film(cls = '', cut = 'auto', big = false, extra = '') {
-  const poster = cut === 'v' ? `<img src="${asset('hero-v-poster.jpg')}" alt="" width="720" height="1280">`
+  const vSet = `${asset('hero-v-poster.jpg')} 720w, ${asset('hero-v-poster-1080.jpg')} 1080w`;
+  const wSet = `${asset('hero-poster.jpg')} 1600w, ${asset('hero-poster-1920.jpg')} 1920w`;
+  const poster = cut === 'v' ? `<img src="${asset('hero-v-poster.jpg')}" srcset="${vSet}" sizes="(max-width: 760px) 88vw, 360px" alt="" width="720" height="1280">`
     : cut === 'h' ? `<img src="${asset('hero-poster.jpg')}" alt="" width="1600" height="900">`
-    : `<picture><source media="(max-width: 760px)" srcset="${asset('hero-v-poster.jpg')}"><img src="${asset('hero-poster.jpg')}" alt="" width="1600" height="900"></picture>`;
+    : `<picture><source media="(max-width: 760px)" srcset="${vSet}" sizes="100vw"><img src="${asset('hero-poster.jpg')}" srcset="${wSet}" sizes="100vw" alt="" width="1600" height="900"></picture>`;
   const own = FILM ? ` data-src-w="${esc(FILM('w'))}" data-src-v="${esc(FILM('v'))}"` : '';
   return `<div class="film ${cls}" data-film data-cut="${cut}"${big ? ' data-big' : ''}${own}>
   <div class="poster">${poster}</div>

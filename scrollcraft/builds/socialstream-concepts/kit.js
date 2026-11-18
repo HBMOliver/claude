@@ -44,7 +44,7 @@
   var PAUSE = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2h3v10H3zM8 2h3v10H8z" fill="currentColor"/></svg>';
   var films = $$('[data-film]').map(function (box) {
     var v = $('video', box), tgl = $('.toggle', box), cut = box.getAttribute('data-cut') || 'auto';
-    var f = { paused: reduce || SS.saveData, seen: false, loaded: '', started: false, hidden: false };
+    var f = { paused: reduce || SS.saveData, seen: false, loaded: '', started: false, hidden: false, ok: false, waiting: false };
     box._f = f;
     // a vertical cut where the frame stands upright, the full cut where the film is big, the small one elsewhere;
     // the film's words are in the page's language. A page in one language names its own two cuts (the site's pages:
@@ -73,14 +73,28 @@
       if (!f.started) { f.state(); return; }
       if (f.paused || !f.seen) v.pause();
       else if (f.hidden) { load(); v.pause(); } // covered by its twin (see the opening below): ready, but waiting
-      else { load(); var p = v.play(); if (p && p.catch) p.catch(function (e) { if (e && e.name === 'NotAllowedError') { f.paused = true; f.state(); } }); }
+      else { load(); var p = v.play(); if (p && p.catch) p.catch(refused); }
       f.state();
+    };
+    // a phone in Low Power Mode refuses a film that starts by itself: the still stays, without the Play button
+    // (base.css, .is-waiting), and the film starts at the visitor's first touch (wakeAll, below)
+    function refused(e) { if (e && e.name === 'NotAllowedError' && !f.paused) { f.ok = false; f.waiting = true; box.classList.add('is-waiting'); document.dispatchEvent(new Event('ss-refused')); } }
+    // inside a touch: the film on screen plays; one out of view (or covered by its twin) starts and stops at once,
+    // without loading, so that it may play by itself later. The browser's answer says whether the touch counted
+    f.wake = function () {
+      if (f.ok || f.paused || !f.started) return;
+      var run = f.seen && !f.hidden;
+      if (run) load();
+      var p = v.play();
+      if (!run) v.pause();
+      if (p && p.then) p.then(function () { f.ok = true; }, function (e) { if (!e || e.name !== 'NotAllowedError') f.ok = true; });
+      else f.ok = true;
     };
     f.mq = function () { if (!f.paused) f.apply(); else f.loaded = ''; };
     // a new language: a film that has loaded switches to that language's cut at the same moment (a paused or unseen
     // one stays paused, so its frame shows the right words); one that has not loaded yet picks it when it starts
     f.lang = function () { if (!f.loaded) return; if (f.paused || !f.seen) load(); else f.apply(); };
-    v.addEventListener('playing', function () { box.classList.add('is-playing'); });
+    v.addEventListener('playing', function () { f.ok = true; f.waiting = false; box.classList.add('is-playing'); box.classList.remove('is-waiting'); });
     // after its first play the film starts again from its loop point (data-loop, seconds), not from 0; without this
     // script the markup's plain loop stays
     var from = parseFloat(v.getAttribute('data-loop'));
@@ -95,6 +109,21 @@
     else f.seen = true;
     return f;
   });
+  /* In Low Power Mode an iPhone (and a Mac saving its battery) refuses every film that starts by itself, even a silent
+     one, until the visitor touches the page; no page can change that. So once a film or a reel is refused (the event
+     ss-refused, which reels.js sends too), the page listens for the first touch, click or key that the browser counts
+     (a touch that only scrolls may not count) and starts every film inside it, the ones further down too. It listens
+     until every film has been let play, and again after any later refusal. reels.js does the same for the reels. */
+  var WAKE = ['touchstart', 'touchend', 'pointerdown', 'pointerup', 'mousedown', 'click', 'keydown'], armed = false;
+  function wakeAll() {
+    films.forEach(function (f) { f.wake(); });
+    if (films.every(function (f) { return f.ok || f.paused; })) disarm();
+  }
+  function arm() { if (!armed) { armed = true; WAKE.forEach(function (t) { document.addEventListener(t, wakeAll, { capture: true, passive: true }); }); } }
+  function disarm() { if (armed) { armed = false; WAKE.forEach(function (t) { document.removeEventListener(t, wakeAll, true); }); } }
+  document.addEventListener('ss-refused', arm);
+  // back on the page (the phone may have left Low Power Mode meanwhile), a waiting film tries again by itself
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) films.forEach(function (f) { if (f.waiting) f.apply(); }); });
   SS.onMQ(narrow, function () { films.forEach(function (f) { f.mq(); }); });
   // a new language: the button's words, and the film in that language from the same moment (or on its next play)
   SS.onLang(function () { films.forEach(function (f) { f.state(); f.lang(); }); });
