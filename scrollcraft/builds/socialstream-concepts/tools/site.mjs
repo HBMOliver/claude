@@ -7,7 +7,7 @@
 //                         (site/templates.mjs): the home page is Aurora Mix (concepts/mix.mjs), the others are built
 //                         from its parts. Each has its own title, description, canonical address, language
 //                         alternates, share tags and structured data (site/head.mjs)
-//   base.css mix.css site.css ss.js kit.js logo-anim.js reels.js   the pages' own files, linked from the root
+//   base.css mix.css site.css ss.js kit.js logo-anim.js reels.js site.js   the pages' own files, linked from the root
 //   assets/               only the files the pages use: named in their markup, styles or scripts, plus the two cuts
 //                         of the brand film that kit.js picks between at runtime for Mix's two film frames (the wide
 //                         1080 where the opening fills a wide screen, the upright 720 in the card and on phones), in

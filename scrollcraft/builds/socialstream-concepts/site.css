@@ -169,6 +169,39 @@ a.pg-case { color: inherit; text-decoration: none; transition: background 200ms;
 .pg-case-grid.n5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .pg-more-grid.few { grid-template-columns: repeat(auto-fill, minmax(220px, 300px)); }
 
+/* ---------- site.js's additions: the film's sound, and two effects after Magic UI (magicui.design, MIT) ---------- */
+/* the brand film's sound, on and off in place: a button like the film's own pause button */
+.film .ss-sound { position: absolute; z-index: 3; left: 14px; bottom: 14px; display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px 0 12px; border: 0; border-radius: 999px; cursor: pointer;
+  font: 700 13px/1 var(--font-b); color: #fff; background: rgba(15, 15, 18, 0.45); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: background 200ms; }
+.film .ss-sound svg { width: 15px; height: 15px; }
+.film .ss-sound[aria-pressed="true"] { background: rgba(var(--hot), 0.7); }
+.mx-post .film .ss-sound { left: auto; bottom: auto; right: 14px; top: 22px; } /* the card: its caption sits bottom left */
+@media (hover: hover) { .film .ss-sound:hover { background: rgba(var(--hot), 0.75); } }
+/* a light that keeps travelling round the audit form's edge (Border Beam): a soft blob runs along the card's outline,
+   and only the 2 px of the edge lets it through */
+.ss-beam { position: absolute; inset: 0; z-index: 0; border: 2px solid transparent; border-radius: inherit; pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0); }
+.ss-beam i { position: absolute; width: 150px; aspect-ratio: 1; background: linear-gradient(to left, rgb(var(--hot-2)), rgb(var(--hot)), transparent); offset-path: rect(0 auto auto 0 round 26px); offset-distance: 0%; animation: ss-beam 9s linear infinite; }
+@keyframes ss-beam { to { offset-distance: 100%; } }
+@supports not (offset-path: rect(0 auto auto 0)) { .ss-beam { display: none; } }
+/* the services page: video, ads, measurement, joined by lines of light (Animated Beam) */
+.pg-flow .pg-beams { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.pg-flow img { z-index: 1; }
+.pg-beams path { fill: none; stroke-width: 3; stroke-linecap: round; }
+.pg-beams .base { stroke: rgba(255, 255, 255, 0.2); }
+.pg-beams .run { stroke: url(#pg-beam-g); stroke-dasharray: 32 68; stroke-dashoffset: 32; animation: pg-beam 2.8s var(--out) infinite; filter: drop-shadow(0 0 6px rgba(var(--hot-2), 0.6)); }
+.pg-beams .run.b1 { animation-delay: 1.4s; }
+@keyframes pg-beam { from { stroke-dashoffset: 32; } to { stroke-dashoffset: -68; } }
+.pg-flow-l { position: absolute; z-index: 2; padding: 7px 11px; border-radius: 999px; background: rgba(8, 10, 24, 0.7); box-shadow: inset 0 0 0 1px var(--line2); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  font: 700 11.5px/1 var(--font-b); letter-spacing: 0.1em; text-transform: uppercase; color: var(--blush); white-space: nowrap; }
+.pg-flow .l1 { left: 12%; top: 50%; }
+.pg-flow .l2 { right: 4%; top: 70%; }
+.pg-flow .l3 { left: 30%; bottom: -3%; }
+@media (prefers-reduced-motion: reduce) {
+  .ss-beam i { animation: none; offset-distance: 30%; }
+  .pg-beams .run { animation: none; stroke-dasharray: none; opacity: 0.55; }
+}
+
 /* ---------- tablets and phones ---------- */
 @media (max-width: 1080px) {
   .pg-hero-in, .pg-audit .pg-hero-in { grid-template-columns: minmax(0, 1fr); }

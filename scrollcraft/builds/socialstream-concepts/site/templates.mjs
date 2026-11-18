@@ -15,6 +15,8 @@ import { seo, trail } from './head.mjs';
 
 const SERVICES = PAGES.filter(pg => pg.type === 'service');
 const CASES = PAGES.filter(pg => pg.type === 'case');
+// the site's own script after Mix's: the film with sound, the light round the audit form, the services' beams
+const SITE_SCRIPTS = [...mix.PAGE_SCRIPTS, 'site.js'];
 const CW = {
   pick: { hu: 'Válassz egy esetet.', en: 'Pick a case.' },
   more: { hu: 'További esetek.', en: 'More cases.' },
@@ -41,7 +43,7 @@ function shell(pg, l, body, film = false) {
   return head({ title: plain(pg.title[l]), desc: pg.desc[l], fonts: mix.FONTS, css: ['mix.css', 'site.css'], theme: mix.THEME, seo: seo(pg, l) })
     + nav('mx-nav', { ground: 'dark', film, site: siteNav(pg, l) })
     + `\n<main>\n${body.filter(Boolean).join('\n\n')}\n</main>\n`
-    + footer('mx-foot', true, true, siteFoot(l)) + scripts(mix.PAGE_SCRIPTS);
+    + footer('mx-foot', true, true, siteFoot(l)) + scripts(SITE_SCRIPTS);
 }
 
 // ---------- the parts a subpage is made of ----------
@@ -198,10 +200,16 @@ const used = (pg, l) => pg.uses ? `  <!-- the services this case took -->
 const T = {
   home: (pg, l) => head({ title: plain(pg.title[l]), desc: pg.desc[l], fonts: mix.FONTS, css: ['mix.css', 'site.css'], theme: mix.THEME, seo: seo(pg, l) })
     + nav('mx-nav', { ground: 'dark', film: true, site: siteNav(pg, l) }) + mix.main()
-    + footer('mx-foot', true, true, siteFoot(l)) + scripts(mix.PAGE_SCRIPTS),
+    + footer('mx-foot', true, true, siteFoot(l)) + scripts(SITE_SCRIPTS),
 
   hub: (pg, l) => shell(pg, l, [
-    hero(pg, l, `<div class="pg-cluster">${obj('i-video-mix.webp', 'c1', 0.035, 6.2)}${obj('i-ads-mix.webp', 'c2', -0.03, 5.6)}${obj('i-social-mix.webp', 'c3', 0.05, 7)}</div>`),
+    // the lead's three verbs as three floating objects, joined by lines of light (site.js, after Magic UI's Animated
+    // Beam): we make the video, we run the ads, we measure what they brought
+    hero(pg, l, `<div class="pg-cluster pg-flow" data-beams>
+          <svg class="pg-beams" aria-hidden="true" focusable="false"><defs><linearGradient id="pg-beam-g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7660ff"/><stop offset="1" stop-color="#ff4d6d"/></linearGradient></defs><path class="base" data-from="0" data-to="1" data-bend="0.2"/><path class="run b0" data-from="0" data-to="1" data-bend="0.2" pathLength="100"/><path class="base" data-from="1" data-to="2" data-bend="0.2"/><path class="run b1" data-from="1" data-to="2" data-bend="0.2" pathLength="100"/></svg>
+          ${obj('i-video-mix.webp', 'c1', 0.035, 6.2)}${obj('i-ads-mix.webp', 'c2', -0.03, 5.6)}${obj('i-strat-mix.webp', 'c3', 0.05, 7)}
+          <span class="pg-flow-l l1">${t({ hu: 'Videó', en: 'Video' })}</span><span class="pg-flow-l l2">${t({ hu: 'Hirdetés', en: 'Ads' })}</span><span class="pg-flow-l l3">${t({ hu: 'Mérés', en: 'Measurement' })}</span>
+        </div>`),
     mix.painsSec(it => SERVICES.find(x => x.svc === it.id).path[l]),
     mix.servicesSec({ href: it => SERVICES.find(x => x.svc === it.id).path[l], label: W.details }),
     mix.compareSec(), mix.stepsSec(), mix.offerSec(),

@@ -20,9 +20,17 @@ enc() { # in out WxH kbps
       -map_metadata -1 -color_primaries bt709 -color_trc bt709 -colorspace bt709 -movflags +faststart -f mp4 "$out"
   done
 }
+# the site's two cuts also carry the film's sound (AAC 96k from their master, the video stream copied), for the
+# "Hang be / Hang ki" button (site.js): the page plays them muted until a visitor turns the sound on. 96k keeps all
+# four inside Pulse's 60 MiB ZIP. The music is Mixkit's (free licence), so it ships only inside the film, never as a
+# sound file of its own.
+sound() { ffmpeg -v error -y -i "$1" -i "$2" -map 0:v:0 -map 1:a:0 -c:v copy -c:a aac -b:a 96k -shortest \
+  -map_metadata -1 -movflags +faststart "$L/sound.mp4" && mv "$L/sound.mp4" "$1"; }
 enc "$W" "$O/hero-1080$S.mp4" 1920:1080 2100
+sound "$O/hero-1080$S.mp4" "$W"
 enc "$W" "$O/hero-540$S.mp4" 960:540 1100
 enc "$T" "$O/hero-v-720$S.mp4" 720:1280 1500
+sound "$O/hero-v-720$S.mp4" "$T"
 if [ -z "$S" ]; then
   ffmpeg -v error -y -ss "$P" -i "$W" -frames:v 1 -vf "scale=1600:900:flags=lanczos" -q:v 3 "$O/hero-poster.jpg"
   ffmpeg -v error -y -ss "$P" -i "$T" -frames:v 1 -vf "scale=720:1280:flags=lanczos" -q:v 3 "$O/hero-v-poster.jpg"
