@@ -2,14 +2,16 @@
 // nothing here calls SS.setLang. Checks the right cut per frame and language, the card taking the opening's clock,
 // the loop from 3.2 s, the counted figures, and that a language stored by v10 ("ss-lang") does not turn either page
 // into the other language. Usage (from a folder with playwright-core): node lab/herocheck-site.mjs <base> [out] [build]
-// (out: where its screenshots go, default here; build: the build folder, default the one this file is in)
+// (out: where its screenshots go, default a new temporary folder; build: the build folder, default this file's)
 // Since v18 (2026-11-18): each language plays its own cuts, the ones its page names (site/films.mjs in the build
 // folder: Pulse's Media Storage addresses, or /assets/ files until stored), Spanish included.
 import { createRequire } from 'node:module';
 import path from 'node:path';
+import fs from 'node:fs';
+import os from 'node:os';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 const { chromium } = createRequire(process.cwd() + '/')('playwright-core');
-const [base, out = '.', build = path.dirname(path.dirname(fileURLToPath(import.meta.url)))] = process.argv.slice(2);
+const [base, out = fs.mkdtempSync(path.join(os.tmpdir(), 'herocheck-')), build = path.dirname(path.dirname(fileURLToPath(import.meta.url)))] = process.argv.slice(2);
 const { filmSrc } = await import(pathToFileURL(path.resolve(build, 'site/films.mjs')).href);
 const cutUrl = (l, k) => new URL(filmSrc(l, k), base).href;
 const b = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', args: ['--autoplay-policy=no-user-gesture-required'] });
