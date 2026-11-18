@@ -1,0 +1,11 @@
+# This repository is PUBLIC. Internal business materials stay out of git until the owner decides otherwise:
+# the content strategy, the format/compliance notes and the per-video scripts and production packages
+# (delivered to the team as a zip instead).
+STRATEGIA-*.md
+FORMAT.md
+videok/
+
+# render outputs and voice-clone material
+**/build/
+assets/*.wav
+assets/*.mp3
