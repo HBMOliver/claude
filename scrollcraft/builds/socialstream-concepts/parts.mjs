@@ -11,9 +11,15 @@
 import { C } from './content.mjs';
 import { LOGO_ANIM } from './logo-anim.mjs';
 
-let L = null, ROOT = '';
-export function render({ lang = null, root = '' } = {}) { L = lang === 'hu' || lang === 'en' ? lang : null; ROOT = root; }
+// word: how a one-language page finds a pair's word (the site passes site/es.mjs's, which looks up the Spanish by
+// the English text); without it, the pair's own
+export const LANGS = ['hu', 'en', 'es'];
+let L = null, ROOT = '', WORD = (p, l) => p[l];
+export function render({ lang = null, root = '', word = null } = {}) { L = LANGS.includes(lang) ? lang : null; ROOT = root; WORD = word || ((p, l) => p[l]); }
 export const lang = () => L;
+// a pair whose two sides are built from parts (the claim's two lines, a heading's pieces): each side built, and on a
+// Spanish page the Spanish built from the English parts, each looked up on its own
+export const per = (p, f) => ({ hu: f(p.hu), en: f(p.en), ...(L === 'es' ? { es: f(Array.isArray(p.en) ? p.en.map(x => WORD({ en: x }, L)) : WORD({ en: p.en }, L)) } : {}) });
 // a file of the page's own: relative for the concepts, from the root on the site
 export const file = f => ROOT + f;
 export const asset = f => ROOT + 'assets/' + f;
@@ -22,13 +28,13 @@ export const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': 
 const attrs = a => (a ? ' ' + a : '');
 // the word of the page's language (Hungarian when the page holds both), escaped (t) or as markup (h); en gives the
 // data-en attribute that carries the English when the page holds both, and nothing on a one-language page
-export const t = p => esc(L ? p[L] : p.hu);
-export const h = p => (L ? p[L] : p.hu);
+export const t = p => esc(L ? WORD(p, L) : p.hu);
+export const h = p => (L ? WORD(p, L) : p.hu);
 export const en = p => (L ? '' : ` data-en="${esc(p.en)}"`);
 // an aria-label in both languages (data-en-aria) or the page's one; alt the same way (data-en-alt)
-export const ar = p => (L ? ` aria-label="${esc(p[L])}"` : ` aria-label="${esc(p.hu)}" data-en-aria="${esc(p.en)}"`);
+export const ar = p => (L ? ` aria-label="${esc(WORD(p, L))}"` : ` aria-label="${esc(p.hu)}" data-en-aria="${esc(p.en)}"`);
 // markup in both languages as twin spans, one shown at a time, or the page's own in its wrapper
-export const twin = p => (L ? `<span data-l="${L}">${p[L]}</span>` : `<span data-l="hu">${p.hu}</span><span data-l="en">${p.en}</span>`);
+export const twin = p => (L ? `<span data-l="${L}">${WORD(p, L)}</span>` : `<span data-l="hu">${p.hu}</span><span data-l="en">${p.en}</span>`);
 // plain text in both languages: Hungarian in the element, English in data-en (ss.js swaps it)
 export const tx = (tag, cls, p, a = '') => `<${tag}${cls ? ` class="${cls}"` : ''}${en(p)}${attrs(a)}>${t(p)}</${tag}>`;
 // text with markup in both languages: twins, one shown at a time
@@ -103,7 +109,7 @@ export function nav(cls = '', { ground = 'light', dark = false, film = false, si
   <nav class="links" id="nav-links"${ar({ hu: 'Fő menü', en: 'Main menu' })}>
     ${site.links.map(l => `<a href="${l.href}"${l.current ? ' aria-current="page"' : ''}>${t(l.label)}</a>`).join('\n    ')}
   </nav>
-  <div class="lang" role="group" aria-label="Nyelv / Language">${['hu', 'en'].map(l => `<a href="${site.alt[l]}" hreflang="${l}" lang="${l}"${l === L ? ' aria-current="page"' : ''}>${l.toUpperCase()}</a>`).join('')}</div>
+  <div class="lang" role="group" aria-label="Nyelv / Language / Idioma">${LANGS.filter(l => site.alt[l]).map(l => `<a href="${site.alt[l]}" hreflang="${l}" lang="${l}"${l === L ? ' aria-current="page"' : ''}>${l.toUpperCase()}</a>`).join('')}</div>
   ${btn(C.navCta, 'btn nav-cta')}
   <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav-links"${ar(site.menu)}>${MENU}</button>
 </header>
@@ -112,9 +118,9 @@ export function nav(cls = '', { ground = 'light', dark = false, film = false, si
 
 // the claim, one line per sentence; the strike and the italic word come from content.mjs
 const lines = p => `<span class="ln">${p[0]}</span> <span class="ln">${p[1]}</span>`;
-export const claim = (cls = '', a = '') => `<h1 class="claim ${cls}" id="hero-h"${attrs(a)}>${twin({ hu: lines(C.claim.hu), en: lines(C.claim.en) })}</h1>`;
+export const claim = (cls = '', a = '') => `<h1 class="claim ${cls}" id="hero-h"${attrs(a)}>${twin(per(C.claim, lines))}</h1>`;
 export const claimLine = (i, cls = '') => `<span class="${cls}">${twin({ hu: C.claim.hu[i], en: C.claim.en[i] })}</span>`;
-export const promise = (cls = 'promise', a = '') => `<p class="${cls}"${attrs(a)}>${twin({ hu: lines(C.promise.hu), en: lines(C.promise.en) })}</p>`;
+export const promise = (cls = 'promise', a = '') => `<p class="${cls}"${attrs(a)}>${twin(per(C.promise, lines))}</p>`;
 export const ticks = (cls = 'ticks') => `<ul class="${cls}">${C.ticks.map(t => tx('li', '', t)).join('')}</ul>`;
 
 // where the film starts again after its first play: the sizzle (the film since 2026-11-16) opens and ends on the logo,
@@ -145,8 +151,10 @@ export const tickerItems = (cls = 'tk') => C.ticker.map(p => `<span class="${cls
 // shows it as it is. Where a figure is money, `en` gives the English page its own in euros, the English film's figures
 // (content.mjs, results): { pre: '€', n, unit }
 const fig = (n, unit, pre, counted) => `${pre ? `<small class="pre">${esc(pre)}</small>` : ''}${counted && Number.isInteger(n) ? `<span data-count="${n}">${n}</span>` : `<span>${n}</span>`}${unit ? `<small>${esc(unit)}</small>` : ''}`;
+// a Spanish page shows the English page's euros the Spanish way: the number with a decimal comma, then "K €"
+const figEs = (en, counted) => fig(Number.isInteger(en.n) ? en.n : String(en.n).replace('.', ','), (en.unit || '') + (en.pre === '€' ? ' €' : ''), en.pre === '€' ? '' : en.pre, counted);
 const both = (n, unit, en, counted) => !L ? (en ? `<span data-l="hu">${fig(n, unit, '', counted)}</span><span data-l="en">${fig(en.n, en.unit, en.pre, counted)}</span>` : fig(n, unit, '', counted))
-  : L === 'en' && en ? fig(en.n, en.unit, en.pre, counted) : fig(n, unit, '', counted);
+  : L === 'en' && en ? fig(en.n, en.unit, en.pre, counted) : L === 'es' && en ? figEs(en, counted) : fig(n, unit, '', counted);
 export const count = (n, unit = '', en = null) => both(n, unit, en, true);
 export const figure = (n, unit = '', en = null) => both(n, unit, en, false);
 

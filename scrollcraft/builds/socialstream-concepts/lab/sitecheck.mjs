@@ -3,20 +3,31 @@
 // The live-site checks for socialstream.hu, every page from the folder's sitemap:
 // - every file answers 200, and every page answers 200 at its own address (with the trailing slash)
 // - each page's head: its language, one h1, a title and a description used by no other page, the canonical address
-//   (its own), the three language alternates (hu, en, x-default) pointing both ways, the share tags, and structured
+//   (its own), the language alternates (hu, en, es where the page has it, x-default) pointing both ways, the share tags, and structured
 //   data that parses, names the page, and has what the kind of page needs (breadcrumb, service, FAQ, team)
-// - no words of the other language and no switch buttons left in a page, no em dash in what a page shows
+// - no words of another language and no switch buttons left in a page, no em dash in what a page shows, no forints
+//   on a Spanish page
 // - every link inside the site goes to a page or file that exists (an address ends in "/"), every #part to a part
 // - the sitemap, robots.txt, llms.txt and the 404 page; no top-level name is one of Pulse's own paths
 // - in a browser, desktop and phone: no failed requests or console errors, no other hosts besides Google Fonts,
 //   every loaded image decodes, nothing left unarrived after a scroll through the page, no sideways scroll at
-//   390 px; on the home page the title, the share image and the English page behind the EN link
+//   390 px; the words the scripts write (the sound and film buttons, the form's topics) in the page's language; on the
+//   home page the title, the share image, and the English and Spanish pages behind the EN and ES links
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
 const { chromium } = createRequire(process.cwd() + '/')('playwright-core');
 const [dir, base] = process.argv.slice(2);
 const ORIGIN = 'https://socialstream.hu';
+const LOCALE = { hu: 'hu_HU', en: 'en_GB', es: 'es_ES' };
+// a page's language from its address: Hungarian at the root, English under /en/, Spanish under /es/
+const langOf = p => (p.match(/^\/(en|es)\//) || [, 'hu'])[1];
+// the language home pages and the paths of each kind of page, in every language
+const HOME = /^\/((en|es)\/)?$/;
+const KIND = {
+  service: /\/(szolgaltatasok|services|servicios)\/[^/]+\/$/, faq: /\/(gyik|faq|preguntas-frecuentes)\/$/, about: /\/(rolunk|about|sobre-nosotros)\/$/,
+  cases: /\/(esettanulmanyok|case-studies|casos-de-exito)\/$/, caseOne: /\/(esettanulmanyok|case-studies|casos-de-exito)\/[^/]+\/$/,
+};
 let fails = 0, checks = 0; const ok = (what, cond, info = '') => { checks++; if (!cond) { fails++; console.log('FAIL', what, info); } };
 const files = []; const walk = d => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p); else files.push(path.relative(dir, p)); } }; walk(dir);
 for (const f of files) { const r = await fetch(base + f.split(path.sep).map(encodeURIComponent).join('/')); ok('200 for ' + f, r.status === 200, r.status); await r.arrayBuffer(); }
@@ -43,41 +54,44 @@ for (const pg of pages) {
     ogImg: attr(html, /<meta property="og:image" content="([^"]+)">/), ogLocale: attr(html, /<meta property="og:locale" content="([^"]+)">/),
     h1: (html.match(/<h1[\s>]/g) || []).length, html,
   };
-  ok(pg.path + ' lang', lang === (pg.path.startsWith('/en/') ? 'en' : 'hu'), lang);
+  ok(pg.path + ' lang', lang === langOf(pg.path), lang);
   ok(pg.path + ' one h1', hd.h1 === 1, hd.h1);
   ok(pg.path + ' title', hd.title && hd.title.length >= 20 && hd.title.length <= 70, hd.title);
   ok(pg.path + ' description', hd.desc && hd.desc.length >= 70 && hd.desc.length <= 170, (hd.desc || '').length + ' ' + hd.desc);
   ok(pg.path + ' canonical is its own address', hd.canon === pg.loc, hd.canon);
-  ok(pg.path + ' alternates hu, en, x-default', hd.alt.hu && hd.alt.en && hd.alt['x-default'] === hd.alt.hu && hd.alt[lang] === pg.loc, JSON.stringify(hd.alt));
-  ok(pg.path + ' sitemap alternates match the page', JSON.stringify(pg.alt) === JSON.stringify({ hu: hd.alt.hu, en: hd.alt.en, 'x-default': hd.alt['x-default'] }), JSON.stringify(pg.alt));
-  ok(pg.path + ' share tags', hd.ogUrl === pg.loc && hd.ogTitle && hd.ogImg === ORIGIN + '/assets/og-image.jpg' && hd.ogLocale === (lang === 'en' ? 'en_GB' : 'hu_HU'), JSON.stringify([hd.ogUrl, hd.ogImg, hd.ogLocale]));
-  // the switch is a link to the twin page; no other language and no switch buttons are left in the page
-  const sw = [...html.matchAll(/<a href="([^"]+)" hreflang="(hu|en)" lang="\2"/g)].map(m => [m[2], m[1]]);
-  ok(pg.path + ' the HU / EN switch goes to the twin pages', sw.length === 2 && sw.every(([l, h]) => ORIGIN + h === hd.alt[l]), JSON.stringify(sw));
-  ok(pg.path + ' no words of the other language', !/ data-en(-aria|-alt|-ph)?="/.test(html) && !/data-set-lang/.test(html) && !html.includes(`data-l="${lang === 'hu' ? 'en' : 'hu'}"`));
+  const langs = Object.keys(hd.alt).filter(k => k !== 'x-default');
+  ok(pg.path + ' alternates hu, en, x-default (and es)', hd.alt.hu && hd.alt.en && hd.alt['x-default'] === hd.alt.hu && hd.alt[lang] === pg.loc && langs.every(l => ['hu', 'en', 'es'].includes(l) && langOf(new URL(hd.alt[l]).pathname) === l), JSON.stringify(hd.alt));
+  ok(pg.path + ' sitemap alternates match the page', JSON.stringify(pg.alt) === JSON.stringify(hd.alt), JSON.stringify(pg.alt));
+  ok(pg.path + ' share tags', hd.ogUrl === pg.loc && hd.ogTitle && hd.ogImg === ORIGIN + '/assets/og-image.jpg' && hd.ogLocale === LOCALE[lang], JSON.stringify([hd.ogUrl, hd.ogImg, hd.ogLocale]));
+  // the switch links every language's page (this one marked current); no other language and no switch buttons are
+  // left in the page
+  const sw = [...html.matchAll(/<a href="([^"]+)" hreflang="(hu|en|es)" lang="\2"/g)].map(m => [m[2], m[1]]);
+  ok(pg.path + ' the language switch goes to the twin pages', sw.length === langs.length && sw.every(([l, h]) => ORIGIN + h === hd.alt[l]), JSON.stringify(sw));
+  ok(pg.path + ' no words of another language', !/ data-en(-aria|-alt|-ph)?="/.test(html) && !/data-set-lang/.test(html) && !['hu', 'en', 'es'].some(l => l !== lang && html.includes(`data-l="${l}"`)));
   const shown = html.replace(/<!--[\s\S]*?-->/g, '').replace(/<script[\s\S]*?<\/script>/g, '');
   ok(pg.path + ' no em dash', !/—/.test(shown));
+  if (lang === 'es') ok(pg.path + ' no forints on a Spanish page', !/\d\s?(M\s?)?Ft\b/.test(shown.replace(/<[^>]+>/g, ' ')));
   // structured data
   let ld = null; try { ld = JSON.parse(attr(html, /<script type="application\/ld\+json">([^<]+)<\/script>/)); } catch (e) {}
   const g = ld && ld['@graph'] || [], node = t => g.find(n => [].concat(n['@type']).includes(t));
   const webpage = g.find(n => n.url === pg.loc && /Page$/.test(n['@type']));
   ok(pg.path + ' structured data parses, with the organisation and the page', !!(ld && node('Organization') && node('WebSite') && webpage && webpage.inLanguage === lang), JSON.stringify(g.map(n => n['@type'])));
-  if (pg.path !== '/' && pg.path !== '/en/') {
+  if (!HOME.test(pg.path)) {
     const bc = node('BreadcrumbList');
-    ok(pg.path + ' breadcrumb data ends on the page', bc && bc.itemListElement.at(-1).item === pg.loc && bc.itemListElement[0].item === hd.alt[lang].replace(/^(https:\/\/[^/]+\/(en\/)?).*$/, '$1'), JSON.stringify(bc && bc.itemListElement.map(i => i.item)));
+    ok(pg.path + ' breadcrumb data ends on the page', bc && bc.itemListElement.at(-1).item === pg.loc && bc.itemListElement[0].item === hd.alt[lang].replace(/^(https:\/\/[^/]+\/((en|es)\/)?).*$/, '$1'), JSON.stringify(bc && bc.itemListElement.map(i => i.item)));
     ok(pg.path + ' a visible breadcrumb', /<nav class="pg-crumbs"/.test(html));
   } else ok(pg.path + ' the film as a video', !!node('VideoObject'));
-  if (/\/(szolgaltatasok|services)\/[^/]+\/$/.test(pg.path)) ok(pg.path + ' service data', !!node('Service'));
-  if (/\/(gyik|faq)\/$/.test(pg.path)) {
+  if (KIND.service.test(pg.path)) ok(pg.path + ' service data', !!node('Service'));
+  if (KIND.faq.test(pg.path)) {
     const shownQ = (html.match(/<details>/g) || []).length, fq = g.find(n => n['@type'] === 'FAQPage');
     ok(pg.path + ' FAQ data has every question shown', fq && fq.mainEntity.length === shownQ && shownQ > 8, (fq && fq.mainEntity.length) + ' vs ' + shownQ);
   }
-  if (/\/(rolunk|about)\/$/.test(pg.path)) ok(pg.path + ' the team as people', g.filter(n => n['@type'] === 'Person').length === 4);
+  if (KIND.about.test(pg.path)) ok(pg.path + ' the team as people', g.filter(n => n['@type'] === 'Person').length === 4);
   // case studies: the hub lists every case as a link; a case sits under the hub and shows its number on its first screen
-  if (/\/(esettanulmanyok|case-studies)\/$/.test(pg.path)) ok(pg.path + ' the case studies as a collection, each case linked', !!node('CollectionPage') && (html.match(/<a class="mx-card mx-stat pg-case" href="/g) || []).length >= 4);
-  if (/\/(esettanulmanyok|case-studies)\/[^/]+\/$/.test(pg.path)) {
+  if (KIND.cases.test(pg.path)) ok(pg.path + ' the case studies as a collection, each case linked', !!node('CollectionPage') && (html.match(/<a class="mx-card mx-stat pg-case" href="/g) || []).length >= 4);
+  if (KIND.caseOne.test(pg.path)) {
     const bc = node('BreadcrumbList');
-    ok(pg.path + ' a case under the case studies', bc && bc.itemListElement.length === 3 && /\/(esettanulmanyok|case-studies)\/$/.test(bc.itemListElement[1].item), JSON.stringify(bc && bc.itemListElement.map(i => i.item)));
+    ok(pg.path + ' a case under the case studies', bc && bc.itemListElement.length === 3 && KIND.cases.test(bc.itemListElement[1].item), JSON.stringify(bc && bc.itemListElement.map(i => i.item)));
     ok(pg.path + ' the case shows its number on its first screen', /<div class="pg-case-art">\s*<article class="mx-card mx-stat pg-case[^"]*"[^>]*>[\s\S]*?<p class="n num">/.test(html));
   }
   // every link inside the site goes somewhere that exists
@@ -89,7 +103,7 @@ for (const pg of pages) {
   for (const m of html.matchAll(/href="#([^"]+)"/g)) ok(`${pg.path} #${m[1]} is on the page`, html.includes(`id="${m[1]}"`));
 }
 // the alternates point both ways, and every title and description is used once
-for (const [loc, hd] of Object.entries(heads)) for (const l of ['hu', 'en']) { const tw = heads[hd.alt[l]]; ok(`${loc} and its ${l} page point at each other`, tw && tw.alt.hu === hd.alt.hu && tw.alt.en === hd.alt.en, hd.alt[l]); }
+for (const [loc, hd] of Object.entries(heads)) for (const l of Object.keys(hd.alt).filter(k => k !== 'x-default')) { const tw = heads[hd.alt[l]]; ok(`${loc} and its ${l} page point at each other`, tw && JSON.stringify(tw.alt) === JSON.stringify(hd.alt), hd.alt[l]); }
 const dup = k => { const s = Object.values(heads).map(h => h[k]); return s.filter((x, i) => s.indexOf(x) !== i); };
 ok('every title is used once', dup('title').length === 0, dup('title').join(' | '));
 ok('every description is used once', dup('desc').length === 0, dup('desc').join(' | '));
@@ -108,6 +122,13 @@ const man = JSON.parse(read('site.webmanifest'));
 for (const i of man.icons) ok('manifest icon in the folder ' + i.src, fs.existsSync(path.join(dir, i.src.replace(/^\//, ''))));
 // STATIC=1: the folder and the served files only, without the browser pass (a quick look, e.g. after an upload)
 if (process.env.STATIC) { console.log(`${files.length} files fetched, ${pages.length} pages, ${checks} checks (no browser); ${fails ? fails + ' FAILED' : 'all static site checks passed'}`); process.exit(fails ? 1 : 0); }
+
+// the words the page scripts write (ss.js, kit.js, site.js), in each language
+const RUNTIME = {
+  hu: ['Hang be', 'Hang ki', 'Lejátszás', 'Szünet', 'Videó tartalomgyártás', 'Social média jelenlét', 'Fizetett hirdetés', 'Weboldal & landing', 'Automatizáció & e-mail', 'Növekedési stratégia'],
+  en: ['Sound on', 'Sound off', 'Play', 'Pause', 'Video content production', 'Social media presence', 'Paid advertising', 'Website & landing pages', 'Automation & email', 'Growth strategy'],
+  es: ['Activar sonido', 'Silenciar', 'Reproducir', 'Pausa', 'Producción de vídeo', 'Presencia en redes sociales', 'Publicidad de pago', 'Web y landing pages', 'Automatización y email', 'Estrategia de crecimiento'],
+};
 
 // in a browser
 const b = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', args: ['--autoplay-policy=no-user-gesture-required'] });
@@ -129,6 +150,8 @@ for (const [dev, opts] of [['desktop', { viewport: { width: 1440, height: 900 } 
       unarrived: [...document.querySelectorAll('[data-r]')].filter(e => !e.classList.contains('in')).length,
       broken: [...document.images].filter(i => i.complete && i.currentSrc && !i.naturalWidth).map(i => i.currentSrc),
       lang: document.documentElement.lang, ssL: window.SS && SS.L,
+      // what the scripts wrote: the sound and film buttons and the form's topics
+      runtime: [...document.querySelectorAll('.ss-sound span, [data-film] .toggle span, .app label span')].map(e => e.textContent.trim()).filter(Boolean),
     }));
     const tag = `${dev} ${pg.path}`;
     ok(tag + ' no 4xx/5xx or failed requests', bad.length === 0, bad.join(' | '));
@@ -138,6 +161,8 @@ for (const [dev, opts] of [['desktop', { viewport: { width: 1440, height: 900 } 
     ok(tag + ' everything arrived', st.unarrived === 0, st.unarrived);
     ok(tag + ' the page and its scripts in its language', st.lang === heads[pg.loc].lang && st.ssL === st.lang, JSON.stringify(st));
     if (dev === 'phone') ok(tag + ' no sideways scroll at 390 px', wide <= 0, String(wide));
+    const other = st.runtime.filter(t => Object.entries(RUNTIME).some(([l, words]) => l !== st.lang && words.includes(t) && !RUNTIME[st.lang].includes(t)));
+    ok(tag + ' the scripts\' words in the page\'s language', other.length === 0, other.join(' | '));
     if (home(pg) && pg.path === '/') {
       const head = await p.evaluate(() => ({ title: document.title, canon: document.querySelector('link[rel=canonical]')?.href, og: document.querySelector('meta[property="og:image"]')?.content }));
       ok(dev + ' home title', head.title === 'SocialStream · Interest media ügynökség', head.title);
@@ -147,18 +172,23 @@ for (const [dev, opts] of [['desktop', { viewport: { width: 1440, height: 900 } 
       await Promise.all([p.waitForURL(/\/en\/$/), p.locator('.lang a[hreflang="en"]').click()]); await p.waitForTimeout(800);
       const en = await p.evaluate(() => [...document.querySelectorAll('#hero-h [data-l="en"]')].some(e => e.textContent.includes('Interest has taken its place')) && document.documentElement.lang === 'en');
       ok(dev + ' the EN link opens the English page', en);
+      // and the ES link the Spanish page, with the claim in Spanish
+      await p.evaluate(() => scrollTo(0, 0)); await p.waitForTimeout(400);
+      await Promise.all([p.waitForURL(/\/es\/$/), p.locator('.lang a[hreflang="es"]').click()]); await p.waitForTimeout(800);
+      const es = await p.evaluate(() => [...document.querySelectorAll('#hero-h [data-l="es"]')].some(e => e.textContent.includes('El interés ha ocupado su lugar')) && document.documentElement.lang === 'es' && SS.L === 'es');
+      ok(dev + ' the ES link opens the Spanish page', es);
     }
     await p.close();
   }
   await ctx.close();
 }
-function home(pg) { return pg.path === '/' || pg.path === '/en/'; }
+function home(pg) { return HOME.test(pg.path); }
 // the 404 page
 const ctx = await b.newContext({ viewport: { width: 390, height: 700 } }), p = await ctx.newPage(), errs = [];
 p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
 await p.goto(base + '404.html', { waitUntil: 'load' }); await p.waitForTimeout(400);
-const nf = await p.evaluate(() => ({ h1: document.querySelector('h1')?.textContent, logo: document.querySelector('img')?.naturalWidth, wide: document.documentElement.scrollWidth > innerWidth, home: document.querySelector('a.btn')?.getAttribute('href') }));
-ok('404 heading', nf.h1 === 'Ez az oldal nem létezik.'); ok('404 logo loads', nf.logo > 0); ok('404 no sideways scroll', !nf.wide); ok('404 links home', nf.home === '/'); ok('404 no console errors', errs.length === 0, errs.join(' | '));
+const nf = await p.evaluate(() => ({ h1: document.querySelector('h1')?.textContent, logo: document.querySelector('img')?.naturalWidth, wide: document.documentElement.scrollWidth > innerWidth, home: document.querySelector('a.btn')?.getAttribute('href'), es: !!document.querySelector('a[href="/es/"]') }));
+ok('404 heading', nf.h1 === 'Ez az oldal nem létezik.'); ok('404 logo loads', nf.logo > 0); ok('404 no sideways scroll', !nf.wide); ok('404 links home', nf.home === '/'); ok('404 links the Spanish home', nf.es); ok('404 no console errors', errs.length === 0, errs.join(' | '));
 if (process.env.SHOTS) await p.screenshot({ path: path.join(process.env.SHOTS, '404-phone.png') });
 await b.close();
 console.log(`${files.length} files fetched, ${pages.length} pages, ${checks} checks; ${fails ? fails + ' FAILED' : 'all site checks passed'}`);

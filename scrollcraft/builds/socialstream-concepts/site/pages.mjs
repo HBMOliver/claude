@@ -13,6 +13,7 @@
 // SS_DRAFTS=1 into dist/site-drafts for review, never into dist/site.
 // No em dashes anywhere in the copy (tools/site.mjs stops on one).
 import { C } from '../content.mjs';
+import { ON as ES_ON, SLUGS } from './es.mjs';
 
 const DRAFTS = !!process.env.SS_DRAFTS;
 export const ORIGIN = 'https://socialstream.hu';
@@ -317,10 +318,12 @@ const ALL = [
 
 // a service page's service (content.mjs) and its page
 for (const pg of ALL) if (pg.svc) { pg.s = svc(pg.svc); pg.crumb = p(...pg.s.k); pg.h1t = p(...pg.s.t); }
+// the Spanish pages (site/es.mjs): every page gets its Spanish address, or the build stops
+if (ES_ON) for (const pg of ALL) { if (!SLUGS[pg.id]) throw new Error('site/es.mjs has no Spanish address for ' + pg.id); pg.path.es = SLUGS[pg.id]; }
 // the pages that are built: drafts only with SS_DRAFTS=1 (tools/site.mjs then writes dist/site-drafts)
 export const PAGES = ALL.filter(pg => DRAFTS || !pg.draft);
 export const IS_DRAFTS = DRAFTS;
 export const byId = id => PAGES.find(pg => pg.id === id);
 export const url = (pg, l) => ORIGIN + pg.path[l];
 // the header's links: the services, the results on the home page, About us, the questions, contact
-export const NAV = [byId('services'), { id: 'results', path: p('/#eredmenyek', '/en/#eredmenyek'), nav: p('Eredmények', 'Results') }, byId('about'), byId('faq'), byId('contact')];
+export const NAV = [byId('services'), { id: 'results', path: { ...p('/#eredmenyek', '/en/#eredmenyek'), ...(ES_ON ? { es: '/es/#eredmenyek' } : {}) }, nav: p('Eredmények', 'Results') }, byId('about'), byId('faq'), byId('contact')];

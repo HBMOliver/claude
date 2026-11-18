@@ -21,15 +21,18 @@
                 set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
 
   /* ---------------- language ---------------- */
-  // A page of the site (socialstream.hu) is in one language, its <html lang>, and its HU / EN switch is a link to the
-  // other language's page. Only a page with switch buttons (the concepts) swaps its words in place and remembers the
-  // choice; on the site a choice remembered from the one-page site of before must not turn a page's language.
+  // A page of the site (socialstream.hu) is in one language, its <html lang> (hu, en or es), and its language switch
+  // is a link to the other languages' pages. Only a page with switch buttons (the concepts, Hungarian and English)
+  // swaps its words in place and remembers the choice; on the site a choice remembered from the one-page site of
+  // before must not turn a page's language.
   SS.single = !document.querySelector('[data-set-lang]');
-  SS.L = SS.single && document.documentElement.lang === 'en' ? 'en' : 'hu';
+  SS.L = SS.single && /^(en|es)$/.test(document.documentElement.lang) ? document.documentElement.lang : 'hu';
   var onLang = [];
   SS.onLang = function (f) { onLang.push(f); };
-  SS.T = function (o) { return SS.L === 'en' ? o.en : o.hu; };
-  SS.fmtN = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, SS.L === 'en' ? ',' : ' '); };
+  // o: { hu, en, es }; a Spanish page takes the English words where o has no Spanish
+  SS.T = function (o) { return SS.L === 'hu' ? o.hu : SS.L === 'es' && o.es != null ? o.es : o.en; };
+  SS.W = function (hu, en, es) { return SS.T({ hu: hu, en: en, es: es }); };
+  SS.fmtN = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, SS.L === 'en' ? ',' : SS.L === 'es' ? '.' : ' '); };
   var htmlEls = [], htmlHu = [];
   function swap(el, attr, prop) {
     var key = 'hu' + attr;
@@ -38,7 +41,7 @@
     if (prop === 'text') el.textContent = val; else el.setAttribute(prop, val);
   }
   SS.setLang = function (l, save) {
-    SS.L = l === 'en' ? 'en' : 'hu'; document.documentElement.lang = SS.L;
+    SS.L = l === 'en' || l === 'es' ? l : 'hu'; document.documentElement.lang = SS.L;
     SS.$$('[data-en]').forEach(function (el) { if (!el.children.length && htmlEls.indexOf(el) < 0) swap(el, '', 'text'); });
     htmlEls.forEach(function (el, i) { if (SS.L === 'en') el.textContent = el.dataset.en; else el.innerHTML = htmlHu[i]; });
     SS.$$('[data-en-alt]').forEach(function (el) { swap(el, 'Alt', 'alt'); });
@@ -52,36 +55,40 @@
   /* ---------------- the audit hand-off ---------------- */
   SS.CONTACT = 'hello@socialstream.hu';
   SS.TOPICS = [
-    { id: 'video', hu: 'Videó tartalomgyártás', en: 'Video content production' },
-    { id: 'social', hu: 'Social média jelenlét', en: 'Social media presence' },
-    { id: 'ads', hu: 'Fizetett hirdetés', en: 'Paid advertising' },
-    { id: 'web', hu: 'Weboldal & landing', en: 'Website & landing pages' },
-    { id: 'auto', hu: 'Automatizáció & e-mail', en: 'Automation & email' },
-    { id: 'strategy', hu: 'Növekedési stratégia', en: 'Growth strategy' }
+    { id: 'video', hu: 'Videó tartalomgyártás', en: 'Video content production', es: 'Producción de vídeo' },
+    { id: 'social', hu: 'Social média jelenlét', en: 'Social media presence', es: 'Presencia en redes sociales' },
+    { id: 'ads', hu: 'Fizetett hirdetés', en: 'Paid advertising', es: 'Publicidad de pago' },
+    { id: 'web', hu: 'Weboldal & landing', en: 'Website & landing pages', es: 'Web y landing pages' },
+    { id: 'auto', hu: 'Automatizáció & e-mail', en: 'Automation & email', es: 'Automatización y email' },
+    { id: 'strategy', hu: 'Növekedési stratégia', en: 'Growth strategy', es: 'Estrategia de crecimiento' }
   ];
   SS.topic = function (id) { return SS.T(SS.TOPICS.filter(function (t) { return t.id === id; })[0]); };
-  SS.ERR = { req: { hu: 'Ezt kérjük kitölteni.', en: 'Please fill this in.' }, mail: { hu: 'Ez nem tűnik e-mail címnek.', en: 'That doesn’t look like an email address.' } };
+  SS.ERR = { req: { hu: 'Ezt kérjük kitölteni.', en: 'Please fill this in.', es: 'Rellena este campo.' }, mail: { hu: 'Ez nem tűnik e-mail címnek.', en: 'That doesn’t look like an email address.', es: 'Esto no parece una dirección de email.' } };
   SS.isMail = function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); };
   // f: { name, email, brand, web, budget, goal, interests: [ids], msg }
   SS.compose = function (f) {
     var ints = (f.interests || []).map(SS.topic).join(', ');
     var lines = SS.L === 'en'
       ? ['Name: ' + f.name, 'Email: ' + f.email, 'Company: ' + f.brand, 'Web / Instagram: ' + (f.web || ''), 'Monthly budget: ' + (f.budget || ''), 'Main goal: ' + (f.goal || ''), 'Interested in: ' + ints]
+      : SS.L === 'es'
+      ? ['Nombre: ' + f.name, 'Email: ' + f.email, 'Empresa: ' + f.brand, 'Web / Instagram: ' + (f.web || ''), 'Presupuesto mensual: ' + (f.budget || ''), 'Objetivo principal: ' + (f.goal || ''), 'Me interesa: ' + ints]
       : ['Név: ' + f.name, 'E-mail: ' + f.email, 'Cég: ' + f.brand, 'Web / Instagram: ' + (f.web || ''), 'Havi büdzsé: ' + (f.budget || ''), 'Fő cél: ' + (f.goal || ''), 'Ami érdekel: ' + ints];
     lines.push('', f.msg || '');
     return lines.join('\n');
   };
   SS.send = function (brand, body) {
-    location.href = 'mailto:' + SS.CONTACT + '?subject=' + encodeURIComponent((SS.L === 'en' ? 'Audit request: ' : 'Audit kérés: ') + brand) + '&body=' + encodeURIComponent(body);
+    location.href = 'mailto:' + SS.CONTACT + '?subject=' + encodeURIComponent(SS.W('Audit kérés: ', 'Audit request: ', 'Solicitud de auditoría: ') + brand) + '&body=' + encodeURIComponent(body);
   };
   // copy inside the click; if the clipboard is refused, the caller's fallback selects the text instead
   SS.copy = function (text, btn, fallback) {
-    var done = function () { btn.textContent = SS.L === 'en' ? 'Copied' : 'Kimásolva'; };
+    var done = function () { btn.textContent = SS.W('Kimásolva', 'Copied', 'Copiado'); };
     try { if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, fallback); else fallback(); } catch (e) { fallback(); }
   };
   SS.sentText = function () {
     return SS.L === 'en'
       ? { b: 'Your email is ready.', s: 'If your mail app opened, just press send there. If it didn’t, copy the text and send it to ' + SS.CONTACT + '.', c: 'Copy the text' }
+      : SS.L === 'es'
+      ? { b: 'Tu email está listo.', s: 'Si se ha abierto tu aplicación de correo, solo tienes que enviarlo. Si no, copia el texto y envíalo a ' + SS.CONTACT + '.', c: 'Copiar el texto' }
       : { b: 'Az e-mailed elkészült.', s: 'Ha megnyílt a leveleződ, ott már csak küldened kell. Ha nem, másold ki a szöveget, és küldd el ide: ' + SS.CONTACT + '.', c: 'Szöveg másolása' };
   };
 
@@ -113,11 +120,11 @@
       v.addEventListener('loadedmetadata', function () { try { v.currentTime = t; } catch (e) {} }, { once: true });
       apply();
     });
-    function word() { return paused ? (SS.L === 'en' ? 'Play' : 'Lejátszás') : (SS.L === 'en' ? 'Pause' : 'Szünet'); }
+    function word() { return paused ? SS.W('Lejátszás', 'Play', 'Reproducir') : SS.W('Szünet', 'Pause', 'Pausa'); }
     function state() {
       sec.classList.toggle('is-paused', paused);
       if (toggle) {
-        toggle.setAttribute('aria-label', paused ? (SS.L === 'en' ? 'Play the film' : 'Film lejátszása') : (SS.L === 'en' ? 'Pause the film' : 'Film megállítása'));
+        toggle.setAttribute('aria-label', paused ? SS.W('Film lejátszása', 'Play the film', 'Reproducir el vídeo') : SS.W('Film megállítása', 'Pause the film', 'Pausar el vídeo'));
         toggle.innerHTML = paused ? PLAY : PAUSE;
       }
     }
@@ -165,7 +172,7 @@
     htmlEls = SS.$$('[data-en]').filter(function (el) { return el.children.length > 0; });
     htmlHu = htmlEls.map(function (el) { return el.innerHTML; });
     SS.$$('[data-set-lang]').forEach(function (b) { b.addEventListener('click', function () { SS.setLang(b.dataset.setLang, true); }); });
-    var initial = SS.single ? SS.L : store.get('ss-lang');
-    SS.setLang(initial === 'en' ? 'en' : 'hu', false);
+    if (SS.single) { SS.setLang(SS.L, false); return; }
+    SS.setLang(store.get('ss-lang') === 'en' ? 'en' : 'hu', false);
   };
 })();

@@ -9,8 +9,8 @@
 (function () {
   'use strict';
   var $ = SS.$, $$ = SS.$$, reduce = SS.reduce;
-  var en = document.documentElement.lang === 'en';
-  var L = function (hu, e) { return en ? e : hu; };
+  // the page's language (hu, en or es), as ss.js reads it
+  var L = SS.W || function (hu, en) { return SS.L === 'en' ? en : hu; };
 
   /* ---------------- the brand film's sound, on and off in place ----------------
      kit.js plays and pauses the films (it keeps them muted); this only decides whether the one that is playing is
@@ -23,7 +23,7 @@
   var films = $$('[data-film]'), vids = films.map(function (box) { return $('video', box); }).filter(Boolean), sound = false, btns = [];
   var show = function () {
     btns.forEach(function (b) {
-      b.innerHTML = (sound ? ON : OFF) + '<span>' + (sound ? L('Hang ki', 'Sound off') : L('Hang be', 'Sound on')) + '</span>';
+      b.innerHTML = (sound ? ON : OFF) + '<span>' + (sound ? L('Hang ki', 'Sound off', 'Silenciar') : L('Hang be', 'Sound on', 'Activar sonido')) + '</span>';
       b.setAttribute('aria-pressed', String(sound));
     });
   };
@@ -42,7 +42,7 @@
     var b = document.createElement('button');
     b.type = 'button';
     b.className = 'ss-sound';
-    b.setAttribute('aria-label', L('A film hangja', 'The film’s sound'));
+    b.setAttribute('aria-label', L('A film hangja', 'The film’s sound', 'El sonido del vídeo'));
     b.addEventListener('click', function () {
       sound = !sound;
       // inside the click every film may take its sound: the one playing is heard at once, the others when they play

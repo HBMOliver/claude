@@ -59,6 +59,17 @@ Heading: Máshol és *nálunk*. / Elsewhere and *with us*.
 - The two arrows beside the reviews (read out by screen readers, not shown): Előző vélemény / Previous review,
   Következő vélemény / Next review
 
+## NEW, live, for the founder to read: the Spanish pages (2026-11-18)
+
+On "Yes, build Spanish", every page also exists in Spanish under `/es/`. The Spanish is in `site/es-words.mjs`, one
+[English, Spanish] pair per text (389 of them), written for Spain: "tú" to the reader, "vosotros" in the questions a
+reader asks the team, euros the Spanish way (216K €, 0,29 €, 1.650 €), the same numbers and nothing new. The claim:
+"Las ~~redes sociales~~ han muerto. El *interés* ha ocupado su lugar." Words kept as they are: interest media,
+landing page(s), leads, copywriting, Reels, Stories, Feed, ROAS, B2B and every name. Hooks are "ganchos", the funnel
+"embudo", a partner a "cliente" ("dos nuevos clientes al mes"). The buttons the scripts write are in ss.js, kit.js
+and site.js ("Activar sonido" / "Silenciar", "Reproducir" / "Pausa", the form's topics and messages). The film stays
+in English on the Spanish pages. Change a line in `site/es-words.mjs` and rebuild.
+
 ## NEW, to confirm: the site's pages (2026-11-16)
 
 socialstream.hu grows from one page into 24: the home page and eleven more, each in Hungarian and in English

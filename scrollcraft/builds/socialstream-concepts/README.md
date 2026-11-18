@@ -46,7 +46,7 @@ The published pages are private until they are shared from their Share menu.
 - `parts.mjs`: shared markup (claim, film, reel, rail, form, questions, footer, `toSvc` link). It renders two ways
   (`render()`): both languages in one page for the concepts (Hungarian in the element, English in `data-en` or a twin
   span, files linked relatively), or one language per page for the live site (`render({ lang, root: '/' })`: only
-  that language's words, files linked from the root, the HU / EN switch a link to the other language's page, a menu
+  that language's words, files linked from the root, the HU / EN / ES switch links to the other languages' pages, a menu
   button on tablets and phones, the footer's links). The concepts' output is byte for byte what it was before.
 - `concepts/<name>.mjs`: each concept's own page. `mix.mjs` exports its sections one by one (`heroSec`, `painsSec`,
   `servicesSec`, `statCards`, `stepsSec`, `whoSec`, `quote`, `teamSec`, `offerSec` and the rest) and `main()`, so the
@@ -54,7 +54,12 @@ The published pages are private until they are shared from their Share menu.
 - `site/` (since 2026-11-16): the pages of socialstream.hu beyond the home page.
   - `pages.mjs`: one entry per page (its address in both languages, title, description, heading, answer, and the
     words only it has), the menu's links. Every word in it is new (COPY.md) but says only what content.mjs says.
-  - `head.mjs`: each page's head lines: canonical, the hu / en / x-default alternates, share tags, structured data.
+  - `head.mjs`: each page's head lines: canonical, the hu / en / es / x-default alternates, share tags, structured data.
+  - `es.mjs` and `es-words.mjs` (since 2026-11-18): the Spanish pages. The site's words stay in Hungarian and English;
+    a Spanish page looks each English text up in `es-words.mjs` ([English, Spanish] pairs) through `word()`, and its
+    addresses are `es.mjs`'s `SLUGS`. A missing Spanish text stops the build; `SS_ES_TODO=1 node tools/site.mjs`
+    writes the missing ones to `dist/es-todo.mjs` instead. Spanish pages show the English page's euros the Spanish
+    way (216K €, 0,29 €) and play the English cuts of the film.
   - `templates.mjs`: one template per kind of page (home, services, service, about, audit, faq, contact).
 - `site.css`: the site's additions to Mix's look (subpages, menu, footer links); only the site's pages load it.
 - `base.css`: shared mechanics.
@@ -143,15 +148,18 @@ itself (`p`, `form`, `book`, `fonts`, `socialstream` and more: `tools/site.mjs` 
 `node tools/site.mjs` writes that folder to `dist/site/`:
 
 - Since 2026-11-16 the site has 24 pages (phase 2 of the Claude Docs doc "SocialStream SEO, AEO and subpage plan"),
-  each in one language: Hungarian at the root, English under `/en/`. The home page (`/`, `/en/`) is Aurora Mix itself;
+  each in one language: Hungarian at the root, English under `/en/`; since 2026-11-18 also Spanish under `/es/`
+  (`/es/servicios/…`, `/es/casos-de-exito/…`, `/es/sobre-nosotros/`, `/es/auditoria-gratuita/`,
+  `/es/preguntas-frecuentes/`, `/es/contacto/`), 19 pages in each language. The home page (`/`, `/en/`) is Aurora Mix itself;
   the others are the services page and the six services (`/szolgaltatasok/…`, `/en/services/…`), About us
   (`/rolunk/`), the free audit (`/ingyenes-audit/`), the questions (`/gyik/`, with the FAQPage data) and contact
   (`/kapcsolat/`), each at `<address>/index.html`. Every page has its own title and description, its canonical
   address, the hu / en / x-default alternates, share tags with `assets/og-image.jpg` (1200 × 630) and structured
   data (the organisation and the site; the page with its breadcrumb; the service, the team, the questions, the film as
   the page shows them). The home page keeps its title "SocialStream · Interest media ügynökség" and its description
-  until the founder approves the doc's drafts. Case studies, the audience pages, `/en/tenerife/` and the legal pages
-  wait for client permissions and the founder's facts (`site/pages.mjs` lists what is left out).
+  until the founder approves the doc's drafts. The case studies (the hub, four anonymous cases, FlyX Tenerife and
+  Prof Enzo) are live since v13 and v15; the audience pages, `/en/tenerife/` and the legal pages wait for the
+  founder's facts (`site/pages.mjs` lists what is left out).
 - `robots.txt` (every crawler allowed, the AI crawlers named), `sitemap.xml` (every page with its alternates) and
   `llms.txt` (the doc's draft with the pages' addresses; Pulse serves the folder's own instead of its generated one).
 - The pages' own files (`base.css`, `mix.css`, `site.css`, `ss.js`, `kit.js`, `logo-anim.js`, `reels.js`), linked
@@ -163,8 +171,10 @@ itself (`p`, `form`, `book`, `fonts`, `socialstream` and more: `tools/site.mjs` 
 - `404.html` (every link in it starts at the root, so it works at any depth), `robots.txt` and `sitemap.xml`.
 
 It writes real files only (no symlinks), and stops if a file a page names is missing, a page carries an em dash or
-the other language's words, a top-level name is one of Pulse's own paths, or the folder breaks Pulse's limits
-(60 MB, 1,500 files). On 2026-11-12 it was 59 files and 18.8 MB; on 2026-11-15, with the new palette and the remade film, 59 files and 19.8 MB (`socialstream-site-v4.zip`); v10 (the sizzle, one page) 87 files and 55.5 MB; on 2026-11-16 with the 24 pages, 112 files and 56.3 MB. The films are about 50 MB of it, so they move to a video host before many pictures go in (the founder's choice). `tools/og.mjs` renders the share
+another language's words (or forints on a Spanish page), a top-level name is one of Pulse's own paths, or the
+upload breaks Pulse's limits (its `services/page-zip.js`: the ZIP up to 60 MiB, 1,500 entries, 250 MiB unpacked; the
+build zips `dist/site` into `dist/site.zip` and measures it). On 2026-11-12 it was 59 files and 18.8 MB; on 2026-11-15, with the new palette and the remade film, 59 files and 19.8 MB (`socialstream-site-v4.zip`); v10 (the sizzle, one page) 87 files and 55.5 MB; on 2026-11-16 with the 24 pages, 112 files and 56.3 MB; on 2026-11-18 with the film's sound and the Spanish
+pages, 146 files, 60.4 MB unpacked and a 58.7 MiB ZIP. The films are about 50 MB of it, so they move to a video host before many pictures go in (the founder's choice). `tools/og.mjs` renders the share
 image from `tools/og.html`: the logo, the claim and three of their reels on the night blue.
 
 To update the live site: change the page, `node build.mjs mix`, `node tools/site.mjs`, run the last three commands

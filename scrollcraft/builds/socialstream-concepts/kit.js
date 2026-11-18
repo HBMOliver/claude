@@ -12,7 +12,8 @@
   // relative to the page when the script is inlined (the published Artifacts)
   var ASSETS = (document.currentScript && document.currentScript.src || '').replace(/[^\/]*$/, '') + 'assets/';
   if (SS.fine) root.classList.add('fine');
-  var L = function (hu, en) { return SS.L === 'en' ? en : hu; };
+  // (a visitor's cached ss.js from before Spanish has no SS.W)
+  var L = SS.W || function (hu, en) { return SS.L === 'en' ? en : hu; };
   var vh = innerHeight, lastY = scrollY, boost = 0;
 
   /* ---------------- arrivals, once, as each thing comes into view ---------------- */
@@ -46,9 +47,9 @@
     var f = { paused: reduce || SS.saveData, seen: false, loaded: '', started: false, hidden: false };
     box._f = f;
     // a vertical cut where the frame stands upright, the full cut where the film is big, the small one elsewhere;
-    // the film's words are in the page's language (the English cuts end in -en)
+    // the film's words are in the page's language (the English cuts end in -en; a Spanish page plays them too)
     function src() {
-      var en = SS.L === 'en' ? '-en' : '';
+      var en = SS.L === 'hu' ? '' : '-en';
       if (cut === 'v' || (cut === 'auto' && narrow.matches)) return ASSETS + 'hero-v-720' + en + '.mp4';
       if (box.hasAttribute('data-big')) return ASSETS + 'hero-1080' + en + '.mp4';
       return ASSETS + 'hero-' + (box.offsetWidth * (window.devicePixelRatio || 1) < 1300 ? '540' : '1080') + en + '.mp4';
@@ -61,8 +62,8 @@
     f.state = function () {
       box.classList.toggle('is-paused', f.paused);
       if (!tgl) return;
-      tgl.innerHTML = (f.paused ? PLAY : PAUSE) + '<span>' + (f.paused ? L('Lejátszás', 'Play') : L('Szünet', 'Pause')) + '</span>';
-      tgl.setAttribute('aria-label', f.paused ? L('Film lejátszása', 'Play the film') : L('Film megállítása', 'Pause the film'));
+      tgl.innerHTML = (f.paused ? PLAY : PAUSE) + '<span>' + (f.paused ? L('Lejátszás', 'Play', 'Reproducir') : L('Szünet', 'Pause', 'Pausa')) + '</span>';
+      tgl.setAttribute('aria-label', f.paused ? L('Film lejátszása', 'Play the film', 'Reproducir el vídeo') : L('Film megállítása', 'Pause the film', 'Pausar el vídeo'));
     };
     f.apply = function () {
       if (!f.started) { f.state(); return; }
@@ -341,10 +342,10 @@
   function renderPick() { pick.innerHTML = SS.TOPICS.map(function (c) { return '<label><input type="checkbox" value="' + c.id + '"' + (chosen.indexOf(c.id) > -1 ? ' checked' : '') + '><span>' + esc(SS.T(c)) + '</span></label>'; }).join(''); }
   pick.addEventListener('change', function (e) { var id = e.target.value, k = chosen.indexOf(id); if (e.target.checked && k < 0) chosen.push(id); else if (!e.target.checked && k > -1) chosen.splice(k, 1); });
   var ERR = {
-    name: { hu: 'Írd be a neved, hogy tudjuk, kinek válaszolunk.', en: 'Enter your name so we know who to reply to.' },
-    email: { hu: 'Írd be az e-mail címed, ide válaszolunk.', en: 'Enter your email. That’s where we’ll reply.' },
-    brand: { hu: 'Írd be a céged vagy a márkád nevét.', en: 'Enter your company or brand name.' },
-    mail: { hu: 'Ez nem tűnik e-mail címnek. Például: nev@ceg.hu', en: 'That doesn’t look like an email address. For example: name@company.com' }
+    name: { hu: 'Írd be a neved, hogy tudjuk, kinek válaszolunk.', en: 'Enter your name so we know who to reply to.', es: 'Escribe tu nombre para saber a quién responder.' },
+    email: { hu: 'Írd be az e-mail címed, ide válaszolunk.', en: 'Enter your email. That’s where we’ll reply.', es: 'Escribe tu email. Te responderemos ahí.' },
+    brand: { hu: 'Írd be a céged vagy a márkád nevét.', en: 'Enter your company or brand name.', es: 'Escribe el nombre de tu empresa o marca.' },
+    mail: { hu: 'Ez nem tűnik e-mail címnek. Például: nev@ceg.hu', en: 'That doesn’t look like an email address. For example: name@company.com', es: 'Esto no parece una dirección de email. Por ejemplo: nombre@empresa.com' }
   };
   function check(focus) {
     var ok = true;
@@ -358,6 +359,8 @@
   function sentText() {
     return SS.L === 'en'
       ? { b: 'Your email is ready. Just press send.', s: 'If your mail app didn’t open, copy the text and send it to ' + SS.CONTACT + '. Once it reaches us, we’ll reply and set a time for the audit.', c: 'Copy the text' }
+      : SS.L === 'es'
+      ? { b: 'Tu email está listo. Solo tienes que enviarlo.', s: 'Si no se ha abierto tu aplicación de correo, copia el texto y envíalo a ' + SS.CONTACT + '. En cuanto nos llegue, te responderemos y fijaremos una hora para la auditoría.', c: 'Copiar el texto' }
       : { b: 'Az e-mailed kész, már csak el kell küldened.', s: 'Ha nem nyílt meg a leveleződ, másold ki a szöveget, és küldd el a ' + SS.CONTACT + ' címre. Amint megkaptuk, válaszolunk, és egyeztetünk egy időpontot az auditra.', c: 'Szöveg másolása' };
   }
   function showSent(body) {
@@ -369,7 +372,7 @@
   if (form) form.addEventListener('submit', function (e) {
     e.preventDefault(); if (!check(true)) return;
     var body = SS.compose({ name: $('#f-name').value.trim(), email: $('#f-email').value.trim(), brand: $('#f-brand').value.trim(), web: $('#f-web').value.trim(), budget: sel('f-budget'), goal: sel('f-goal'), interests: chosen, msg: $('#f-msg').value.trim() });
-    lastBody = body; sent.hidden = true; sending.hidden = false; $('#stext').textContent = L('Megnyitjuk a leveleződ…', 'Opening your mail app…');
+    lastBody = body; sent.hidden = true; sending.hidden = false; $('#stext').textContent = L('Megnyitjuk a leveleződ…', 'Opening your mail app…', 'Abriendo tu aplicación de correo…');
     sending.style.setProperty('--w', '0%'); void sending.offsetWidth;
     var done = function () { sending.hidden = true; showSent(body); SS.send($('#f-brand').value.trim(), body); };
     requestAnimationFrame(function () { sending.style.setProperty('--w', '100%'); });

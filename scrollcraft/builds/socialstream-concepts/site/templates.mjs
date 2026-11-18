@@ -8,10 +8,11 @@
 // and leans toward the cursor; the aurora moves inside and its light follows the cursor; the real numbers (or the
 // service words) run along its foot. Then each kind of page has its own sections, and every page ends on the audit.
 import { C } from '../content.mjs';
-import { render, esc, t, h, ar, twin, asset, tx, tw, pair, btn, head, scripts, nav, footer, rail, tagItems, tickerItems, form, count, figure, ARROW } from '../parts.mjs';
+import { render, esc, t, h, ar, twin, per, asset, tx, tw, pair, btn, head, scripts, nav, footer, rail, tagItems, tickerItems, form, count, figure, ARROW } from '../parts.mjs';
 import * as mix from '../concepts/mix.mjs';
 import { PAGES, NAV, W, byId } from './pages.mjs';
 import { seo, trail } from './head.mjs';
+import { word } from './es.mjs';
 
 const SERVICES = PAGES.filter(pg => pg.type === 'service');
 const CASES = PAGES.filter(pg => pg.type === 'case');
@@ -40,7 +41,7 @@ const siteFoot = l => ({
 });
 
 function shell(pg, l, body, film = false) {
-  return head({ title: plain(pg.title[l]), desc: pg.desc[l], fonts: mix.FONTS, css: ['mix.css', 'site.css'], theme: mix.THEME, seo: seo(pg, l) })
+  return head({ title: plain(word(pg.title, l)), desc: word(pg.desc, l), fonts: mix.FONTS, css: ['mix.css', 'site.css'], theme: mix.THEME, seo: seo(pg, l) })
     + nav('mx-nav', { ground: 'dark', film, site: siteNav(pg, l) })
     + `\n<main>\n${body.filter(Boolean).join('\n\n')}\n</main>\n`
     + footer('mx-foot', true, true, siteFoot(l)) + scripts(SITE_SCRIPTS);
@@ -210,7 +211,7 @@ const used = (pg, l) => pg.uses ? `  <!-- the services this case took -->
 // ---------- the templates ----------
 
 const T = {
-  home: (pg, l) => head({ title: plain(pg.title[l]), desc: pg.desc[l], fonts: mix.FONTS, css: ['mix.css', 'site.css'], theme: mix.THEME, seo: seo(pg, l) })
+  home: (pg, l) => head({ title: plain(word(pg.title, l)), desc: word(pg.desc, l), fonts: mix.FONTS, css: ['mix.css', 'site.css'], theme: mix.THEME, seo: seo(pg, l) })
     + nav('mx-nav', { ground: 'dark', film: true, site: siteNav(pg, l) }) + mix.main()
     + footer('mx-foot', true, true, siteFoot(l)) + scripts(SITE_SCRIPTS),
 
@@ -255,7 +256,7 @@ const T = {
   <section class="pg-name" aria-labelledby="name-h">
     <div class="wrap">
       ${tx('p', 'mx-eyebrow', pg.name.eyebrow, 'data-r')}
-      <h2 class="claim pg-claim" id="name-h" data-r>${twin({ hu: C.claim.hu.map(x => `<span class="ln">${x}</span>`).join(' '), en: C.claim.en.map(x => `<span class="ln">${x}</span>`).join(' ') })}</h2>
+      <h2 class="claim pg-claim" id="name-h" data-r>${twin(per(C.claim, a => a.map(x => `<span class="ln">${x}</span>`).join(' ')))}</h2>
       ${tw('p', 'pg-name-p', C.name, 'data-r')}
     </div>
   </section>`,
@@ -309,6 +310,6 @@ ${qa(g.items, l, s)}
 };
 
 export function renderPage(pg, l) {
-  render({ lang: l, root: '/' });
+  render({ lang: l, root: '/', word });
   try { return T[pg.type](pg, l); } finally { render({}); }
 }

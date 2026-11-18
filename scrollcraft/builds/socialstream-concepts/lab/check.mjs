@@ -179,16 +179,18 @@ for (const name of names.filter(n => n !== 'site')) {
 // 1100. On a phone: the menu button opens the links and a link closes it, nothing follows, no sideways scroll at 390
 // and 320. With reduced motion: everything in place, rows still. And the language comes from the page alone: the home
 // page stays Hungarian (with its Hungarian film) for a visitor whose browser remembers English from the one-page site
-// of before, and the English home plays the English film with nothing remembered.
+// of before, the English home plays the English film with nothing remembered, and the Spanish home shows its claim
+// in Spanish, plays the English film and offers its sound in Spanish.
 if (names.includes('site')) {
   let pass = 0, fail = 0;
   const ok = (what, cond, info = '') => { if (cond) pass++; else { fail++; console.log(`FAIL site: ${what}`, info); } };
   const sm = await (await fetch(BASE + 'sitemap.xml')).text();
-  const paths = [...sm.matchAll(/<loc>https:\/\/socialstream\.hu(\/[^<]*)<\/loc>/g)].map(m => m[1]).filter(p => p !== '/' && p !== '/en/');
+  const paths = [...sm.matchAll(/<loc>https:\/\/socialstream\.hu(\/[^<]*)<\/loc>/g)].map(m => m[1]).filter(p => !/^\/((en|es)\/)?$/.test(p));
   ok('the sitemap lists the pages', paths.length >= 10, paths.length);
   const T = {
     hu: { e: ['Írd be a neved, hogy tudjuk, kinek válaszolunk.', 'Írd be az e-mail címed, ide válaszolunk.', 'Írd be a céged vagy a márkád nevét.'], budget: 'Havi büdzsé: 300 ezer – 1 millió Ft' },
     en: { e: ['Enter your name so we know who to reply to.', 'Enter your email. That’s where we’ll reply.', 'Enter your company or brand name.'], budget: 'Monthly budget: €800–€2,700' },
+    es: { e: ['Escribe tu nombre para saber a quién responder.', 'Escribe tu email. Te responderemos ahí.', 'Escribe el nombre de tu empresa o marca.'], budget: 'Presupuesto mensual: 800–2.700 €' },
   };
   const page = async (opts, p0) => { const ctx = await b.newContext(opts), p = await ctx.newPage(), errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); }); await p.goto(BASE + p0.slice(1), { waitUntil: 'load' }); await p.waitForTimeout(1200); return { ctx, p, errs }; };
   const wideAt = async (p, mouse) => { const H = await p.evaluate(() => document.documentElement.scrollHeight), w = await p.evaluate(() => innerWidth), hh = await p.evaluate(() => innerHeight); let worst = 0;
@@ -196,7 +198,7 @@ if (names.includes('site')) {
       for (const [x, yy] of mouse ? [[w - 6, hh - 6], [6, 6]] : [[0, 0]]) { if (mouse) { await p.mouse.move(x, yy, { steps: 3 }); await p.waitForTimeout(350); } else await p.waitForTimeout(100); worst = Math.max(worst, await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)); } }
     return worst; };
   for (const p0 of paths) {
-    const l = p0.startsWith('/en/') ? 'en' : 'hu';
+    const l = (p0.match(/^\/(en|es)\//) || [, 'hu'])[1];
     // a computer
     {
       const { ctx, p, errs } = await page(DESK, p0);
@@ -276,6 +278,12 @@ if (names.includes('site')) {
     const ctx = await b.newContext(DESK), p = await ctx.newPage(); await p.goto(BASE + 'en/', { waitUntil: 'load' }); await p.waitForTimeout(2600);
     const s = await p.evaluate(() => ({ lang: document.documentElement.lang, L: SS.L, playing: [...document.querySelectorAll('[data-film] video')].filter(v => !v.paused).map(v => v.currentSrc.split('/').pop()) }));
     ok('the English home plays the English film', s.lang === 'en' && s.L === 'en' && s.playing.length > 0 && s.playing.every(f => /-en\.mp4$/.test(f)), JSON.stringify(s));
+    await ctx.close();
+  }
+  {
+    const ctx = await b.newContext(DESK), p = await ctx.newPage(); await p.goto(BASE + 'es/', { waitUntil: 'load' }); await p.waitForTimeout(2600);
+    const s = await p.evaluate(() => ({ lang: document.documentElement.lang, L: SS.L, claim: [...document.querySelectorAll('#hero-h [data-l="es"]')].some(e => e.textContent.includes('Las redes sociales han muerto')), playing: [...document.querySelectorAll('[data-film] video')].filter(v => !v.paused).map(v => v.currentSrc.split('/').pop()), sound: [...document.querySelectorAll('.ss-sound span')].map(e => e.textContent.trim()) }));
+    ok('the Spanish home: the claim in Spanish, the English film, the sound button in Spanish', s.lang === 'es' && s.L === 'es' && s.claim && s.playing.length > 0 && s.playing.every(f => /-en\.mp4$/.test(f)) && s.sound.length > 0 && s.sound.every(t => t === 'Activar sonido'), JSON.stringify(s));
     await ctx.close();
   }
   console.log(`site: ${pass} passed, ${fail} failed`);

@@ -23,14 +23,20 @@
 // (60 MB, 1,500 files).
 import fs from 'node:fs';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { PAGES, ORIGIN, url, IS_DRAFTS } from '../site/pages.mjs';
 import { renderPage } from '../site/templates.mjs';
+import { ON as ES_ON, TODO as ES_TODO, MISSES, onPage, word } from '../site/es.mjs';
+
+// the site's languages: Hungarian at the root, English under /en/, Spanish under /es/ (site/es.mjs)
+const LANGS = ['hu', 'en', ...(ES_ON ? ['es'] : [])];
 
 // SS_DRAFTS=1 also builds the draft pages (site/pages.mjs), into their own folder, never into the one that is uploaded
 const OUT = IS_DRAFTS ? 'dist/site-drafts' : 'dist/site';
 const OG = 'assets/og-image.jpg';
 const FILM = ['hero-1080', 'hero-v-720'].flatMap(n => [`assets/${n}.mp4`, `assets/${n}-en.mp4`]);
-const LIMIT_MB = 60, LIMIT_FILES = 1500;
+// Pulse's limits (services/page-zip.js): the ZIP up to 60 MiB, unpacked up to 250 MiB, at most 1,500 entries
+const LIMIT_ZIP = 60 * 1048576, LIMIT_UNPACKED = 250 * 1048576, LIMIT_FILES = 1500;
 // the first path segments Pulse keeps for itself on the domain (pulse-site-hosting-answers.md): a file there would
 // hide Pulse's own page or link
 const PULSE = ['p', 'form', 'survey', 'survey-assets', 'book', 'a', 'r', 'embed', 'd', 't', 'c', 'o', 'u', 'm', 'chat', 'api', 'fonts', 'page-assets', 'w', 'ct', 'socialstream', 'healthz', '.well-known'];
@@ -38,18 +44,31 @@ const PULSE = ['p', 'form', 'survey', 'survey-assets', 'book', 'a', 'r', 'embed'
 const read = f => fs.readFileSync(f, 'utf8');
 if (!fs.existsSync(OG)) throw new Error(OG + ' is missing: run tools/og.mjs');
 
-// the pages, each in both languages
+// the pages, each in every language
 const pages = [];
-for (const pg of PAGES) for (const l of ['hu', 'en']) {
+for (const pg of PAGES) for (const l of LANGS) {
+  onPage(pg.path[l]);
   const html = renderPage(pg, l), file = pg.path[l].replace(/^\//, '') + 'index.html';
   const visible = html.replace(/<!--[\s\S]*?-->/g, '').replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, '');
   if (/—/.test(visible)) throw new Error(`${file}: an em dash in the visible copy, the title or the description`);
-  if (!/^<!doctype html>\s*<html lang="(hu|en)">/i.test(html) || !html.includes(`<html lang="${l}">`)) throw new Error(file + ' is not a complete page in its language');
+  if (!/^<!doctype html>\s*<html lang="(hu|en|es)">/i.test(html) || !html.includes(`<html lang="${l}">`)) throw new Error(file + ' is not a complete page in its language');
   for (const need of ['<meta charset="utf-8">', '<meta name="viewport"', '<link rel="icon"', '<link rel="manifest"', `<link rel="canonical" href="${url(pg, l)}">`, 'hreflang="x-default"'])
     if (!html.includes(need)) throw new Error(file + ' has no ' + need);
   // a page in one language carries no words of the other, nor the switch buttons of the concepts
-  if (/ data-en(-aria|-alt|-ph)?="/.test(html) || /data-set-lang/.test(html) || html.includes(`data-l="${l === 'hu' ? 'en' : 'hu'}"`)) throw new Error(file + ' still carries the other language');
+  if (/ data-en(-aria|-alt|-ph)?="/.test(html) || /data-set-lang/.test(html) || LANGS.some(x => x !== l && html.includes(`data-l="${x}"`))) throw new Error(file + ' still carries another language');
+  // a Spanish page shows the English page's euros, never forints
+  if (l === 'es' && /\d\s?(M\s?)?Ft\b/.test(visible.replace(/<[^>]+>/g, ' '))) throw new Error(file + ': a figure in forints on a Spanish page');
   pages.push({ pg, l, file, html });
+}
+// every word a Spanish page needs must be in site/es-words.mjs; SS_ES_TODO=1 lists the missing ones instead
+if (ES_ON && MISSES.size) {
+  if (ES_TODO) {
+    fs.mkdirSync('dist', { recursive: true });
+    fs.writeFileSync('dist/es-todo.mjs', '// the English words the Spanish pages still need (copy them into site/es-words.mjs with their Spanish)\nexport const TODO = [\n' + [...MISSES].map(([en, at]) => `  // ${[...at].slice(0, 3).join(' ')}${at.size > 3 ? ' …' : ''}\n  [${JSON.stringify(en)}, ''],`).join('\n') + '\n];\n');
+    console.log(`dist/es-todo.mjs: ${MISSES.size} English words without their Spanish`);
+    process.exit(0);
+  }
+  throw new Error(`the Spanish pages miss ${MISSES.size} words (SS_ES_TODO=1 lists them), the first: ${[...MISSES.keys()].slice(0, 3).map(x => JSON.stringify(x.slice(0, 60))).join(', ')}`);
 }
 const email = (pages[0].html.match(/mailto:([^"?]+)/) || [])[1];
 if (!email) throw new Error('the home page has no contact address');
@@ -87,8 +106,7 @@ fs.writeFileSync(OUT + '/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 ${pages.map(({ pg, l }) => `  <url>
     <loc>${url(pg, l)}</loc>
     <lastmod>${day}</lastmod>
-    <xhtml:link rel="alternate" hreflang="hu" href="${url(pg, 'hu')}"/>
-    <xhtml:link rel="alternate" hreflang="en" href="${url(pg, 'en')}"/>
+${LANGS.filter(x => pg.path[x]).map(x => `    <xhtml:link rel="alternate" hreflang="${x}" href="${url(pg, x)}"/>`).join('\n')}
     <xhtml:link rel="alternate" hreflang="x-default" href="${url(pg, 'hu')}"/>
   </url>`).join('\n')}
 </urlset>
@@ -97,7 +115,7 @@ ${pages.map(({ pg, l }) => `  <url>
 // llms.txt: the doc's draft (facts from the site only), with the pages' own addresses in both languages
 const page = id => PAGES.find(pg => pg.id === id);
 const plain = s => String(s).replace(/<[^>]+>/g, '');
-const link = (id, l) => `- [${plain(page(id).crumb[l])}${page(id).type === 'case' ? (l === 'en' ? ' (case study)' : ' (esettanulmány)') : ''}](${url(page(id), l)})`;
+const link = (id, l) => `- [${plain(word(page(id).crumb, l))}${page(id).type === 'case' ? ({ en: ' (case study)', hu: ' (esettanulmány)', es: ' (caso de éxito)' })[l] : ''}](${url(page(id), l)})`;
 const ids = ['services', ...PAGES.filter(pg => pg.type === 'service').map(pg => pg.id), 'cases', ...PAGES.filter(pg => pg.type === 'case').map(pg => pg.id), 'about', 'audit', 'faq', 'contact'];
 const unlisted = PAGES.filter(pg => !ids.includes(pg.id) && pg.id !== 'home').map(pg => pg.id);
 if (unlisted.length) throw new Error('llms.txt does not list ' + unlisted.join(', '));
@@ -139,7 +157,11 @@ ${ids.map(id => link(id, 'en')).join('\n')}
 ## Pages in Hungarian
 - [Főoldal](${ORIGIN}/)
 ${ids.map(id => link(id, 'hu')).join('\n')}
-`);
+${ES_ON ? `
+## Pages in Spanish
+- [Inicio](${ORIGIN}/es/)
+${ids.map(id => link(id, 'es')).join('\n')}
+` : ''}`);
 
 // 404.html: shown for an unknown address at any depth, so everything it links is from the root
 fs.writeFileSync(OUT + '/404.html', `<!doctype html>
@@ -174,7 +196,8 @@ fs.writeFileSync(OUT + '/404.html', `<!doctype html>
   <h1>Ez az oldal nem létezik.</h1>
   <p>Lehet, hogy elírás van a címben, vagy ez az oldal már nem él.</p>
   <a class="btn" href="/">Vissza a főoldalra</a>
-  <p class="en">This page doesn't exist. <a href="/en/">Go to the home page</a>.</p>
+  <p class="en">This page doesn't exist. <a href="/en/">Go to the home page</a>.</p>${ES_ON ? `
+  <p class="en" lang="es">Esta página no existe. <a href="/es/">Ir a la página de inicio</a>.</p>` : ''}
 </main>
 </body>
 </html>
@@ -188,5 +211,11 @@ walk(OUT);
 const top = fs.readdirSync(OUT).map(n => n.replace(/\.[^.]+$/, '')).filter(n => PULSE.includes(n));
 if (top.length) throw new Error('these top-level names are Pulse\'s own paths: ' + top.join(', '));
 const bytes = all.reduce((t, f) => t + fs.statSync(f).size, 0);
-if (all.length > LIMIT_FILES || bytes > LIMIT_MB * 1048576) throw new Error(`too big for Pulse: ${all.length} files, ${(bytes / 1048576).toFixed(1)} MB`);
-console.log(`${OUT}: ${all.length} files, ${(bytes / 1048576).toFixed(1)} MB (${pages.length} pages, ${assets.size} assets, ${root.size} root icons; contact ${email})`);
+if (all.length > LIMIT_FILES || bytes > LIMIT_UNPACKED) throw new Error(`too big for Pulse: ${all.length} files, ${(bytes / 1048576).toFixed(1)} MB unpacked`);
+// the ZIP as it is uploaded (the folder's files at the top, no ./), measured against Pulse's 60 MiB
+const ZIP = path.resolve(OUT + '.zip');
+fs.rmSync(ZIP, { force: true });
+execFileSync('zip', ['-rXq', ZIP, '.'], { cwd: OUT });
+const zipBytes = fs.statSync(ZIP).size;
+if (zipBytes > LIMIT_ZIP) throw new Error(`the ZIP is too big for Pulse: ${(zipBytes / 1048576).toFixed(2)} MiB of 60`);
+console.log(`${OUT}: ${all.length} files, ${(bytes / 1048576).toFixed(1)} MB (${pages.length} pages, ${assets.size} assets, ${root.size} root icons; contact ${email}); ZIP ${OUT}.zip ${(zipBytes / 1048576).toFixed(2)} of 60 MiB`);

@@ -9,7 +9,7 @@
 // the cursor round the first screen, the reels and the service objects lean toward it, and the buttons are pulled
 // toward it.
 import { C } from '../content.mjs';
-import { esc, t, en, ar, twin, asset, lang, tx, tw, pair, toSvc, btn, head, scripts, nav, claim, promise, film, rail, tagItems, tickerItems, count, form, offerCopy, faqList, footer } from '../parts.mjs';
+import { esc, t, h, en, ar, twin, per, asset, lang, tx, tw, pair, toSvc, btn, head, scripts, nav, claim, promise, film, rail, tagItems, tickerItems, count, form, offerCopy, faqList, footer } from '../parts.mjs';
 
 // labels that only this page has (Hungarian, English); listed in COPY.md as new
 const LB = {
@@ -65,7 +65,7 @@ export const FONTS = 'family=Sora:wght@500..800&family=Inter:wght@400..700&famil
 export const THEME = '#05070f';
 // the two facts beside the statement, and a client's number above their words (the English page's in euros)
 const F300 = { hu: '300M+ Ft', en: '€820K+' }, FSINCE = { hu: 'kezelt büdzsé 2022 óta', en: 'budget managed since 2022' };
-const metricN = m => lang() ? `<b class="num">${esc(lang() === 'en' && m.n_en ? m.n_en : m.n)}</b>` : `<b class="num"${m.n_en ? ` data-en="${esc(m.n_en)}"` : ''}>${esc(m.n)}</b>`;
+const metricN = m => lang() ? `<b class="num">${esc(lang() !== 'hu' && m.n_en ? h({ hu: m.n, en: m.n_en }) : m.n)}</b>` : `<b class="num"${m.n_en ? ` data-en="${esc(m.n_en)}"` : ''}>${esc(m.n)}</b>`;
 
 // The page's parts, one function each, so the site's other pages (site/templates.mjs) can use them as they are.
 // Each returns its section with the comment before it, indented as it sits in <main>.
@@ -107,7 +107,7 @@ export const saySec = () => `  <!-- what we do, lighting as it is read, while th
       ${FLY.map(([id, side, k], i) => `<div class="mx-f f${i}" style="--side:${side}"><div class="mx-f-lean" data-follow data-k="${k}"><div class="bob">${rv(id)}</div></div></div>`).join('\n      ')}
     </div>
     <div class="wrap">
-      <h2 class="mx-statement" id="say-h" data-lit>${twin({ hu: esc(C.lead1.hu), en: esc(C.lead1.en) })}</h2>
+      <h2 class="mx-statement" id="say-h" data-lit>${twin(per(C.lead1, esc))}</h2>
       <p class="mx-facts" data-r><span><b class="num"${en(F300)}>${t(F300)}</b> <span${en(FSINCE)}>${t(FSINCE)}</span></span>${tx('span', '', C.final.small)}</p>
     </div>
   </section>`;
