@@ -40,6 +40,21 @@ python3 build.py mux   ../videok/04-citrus-napfeny vegleges.mp4
 ```
 Vázlat hang nélkül: `plan … --draft`, aztán `video`, `audio`, `mux … vazlat.mp4`. A csomag frissítése: `python3 package.py ../videok/NN-…`.
 
+Mentés a Drive-ra és bemutató:
+```bash
+./drive_preview.sh ../videok/NN-…/build/vazlat.mp4 elonezet.mp4   # kb. 3 MB, 540×960: ekkora fér át a Drive-csatlakozón
+python3 package.py --html ../videok/NN-…                          # build/gyartasi-csomag.html, Google Docként importálható
+python3 showreel.py bemutato.mp4                                    # bemutatóvideó: részlet minden vázlatból
+```
+
+## Drive-mappa
+A csapat Drive-mappája: **Prof Enzo – TikTok videók (Claude)**. Itt is van egy „0 – OLVASS EL” áttekintés.
+- `1 – Vázlatok (hang és szájszinkron nélkül)`: a vázlatok kb. 3 MB-os előnézetei.
+- `2 – Gyártási csomagok`: a csomagok Google Docként. A `Forrásfájlok – timeline.json` almappában vannak a gépi tervek. Egy új munkamenet ezeket visszamásolja a `videok/NN-…/timeline.json` helyre, és onnan folytatja.
+- `3 – Végleges videók (Prof Enzo hangjával)`: a kész, publikálható videók.
+
+A Drive-csatlakozó hívásonként kb. 3 MB-ot visz át, ezért a teljes minőségű MP4-ek nem férnek fel. Ezeket a csapat közvetlenül kapja meg.
+
 ## Új videó a 60 témacímből
 1. Másold le egy meglévő `timeline.json`-t, és írd be a narrációt (a végén az egységes CTA).
 2. A jeleneteket a narráció szavaihoz kell horgonyozni (`"from": "@Állj"`). Elérhető sablonok: `studio`, `cards` (list/grid/vs), `bigtext`, `label`, `kbsearch`, `shelf`, `stop`, `sun`, `house`, `field`, `chroma`, `diffuser`, `carrier`, `concentrate`, `drop`, `plate`, `neurons`, `chart1/2`, `clock`, `phone`, `end`.

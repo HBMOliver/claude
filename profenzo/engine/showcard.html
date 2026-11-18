@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="hu"><head><meta charset="utf-8"><title>Profenzo showreel cards</title>
+<style>
+@font-face { font-family: 'MontserratVF'; src: url('fonts/Montserrat-VF.ttf') format('truetype'); font-weight: 100 900; }
+:root { --amber:#FFB547; --green:#9BE7B4; }
+html,body { margin:0; padding:0; background:transparent; }
+#card { position:relative; width:1080px; height:1920px; overflow:hidden; font-family:'MontserratVF','Inter',sans-serif; color:#fff;
+  background: radial-gradient(ellipse at 75% 45%, rgba(255,170,70,.35), rgba(255,170,70,0) 55%),
+              radial-gradient(ellipse at 20% 20%, rgba(90,140,255,.25), rgba(90,140,255,0) 50%),
+              linear-gradient(180deg,#0a1430 0%,#13214a 50%,#070c20 100%); }
+.bokeh { position:absolute; border-radius:50%; filter:blur(18px); }
+.badge { position:absolute; left:40px; top:70px; height:64px; padding:0 26px 0 10px; display:flex; align-items:center; gap:14px; border-radius:32px;
+  background:rgba(8,14,36,.5); border:1.5px solid rgba(255,255,255,.22); font:600 30px MontserratVF; }
+.badge img { width:48px; height:48px; border-radius:50%; object-fit:cover; object-position:50% 14%; border:2px solid var(--green); }
+.badge .sep { color:var(--amber); }
+.enzo { position:absolute; bottom:-10px; }
+h1 { margin:0; font:900 150px/0.95 MontserratVF; letter-spacing:-4px; color:var(--amber); text-shadow:0 12px 40px rgba(0,0,0,.45); }
+h2 { margin:18px 0 0; font:800 58px/1.05 MontserratVF; letter-spacing:-1px; text-transform:uppercase; }
+.tag { display:inline-block; margin-top:30px; padding:14px 26px; border-radius:22px; background:rgba(155,231,180,.14); border:2px solid rgba(155,231,180,.6); color:var(--green); font:800 36px MontserratVF; }
+.list { margin-top:26px; display:flex; flex-direction:column; gap:16px; }
+.row { display:flex; align-items:center; gap:18px; padding:18px 24px; border-radius:24px; background:rgba(14,22,52,.62); border:1.5px solid rgba(255,255,255,.16); font:700 34px/1.15 MontserratVF; }
+.row .e { font:44px 'Noto Color Emoji'; width:56px; text-align:center; }
+.sec { margin-top:40px; font:900 54px MontserratVF; color:var(--amber); letter-spacing:-1px; }
+.small { font:600 28px Inter; color:rgba(255,255,255,.75); }
+/* banner (transparent page) */
+#banner { position:absolute; left:40px; top:40px; display:inline-flex; align-items:center; gap:18px; padding:16px 30px 16px 16px; border-radius:30px;
+  background:rgba(6,10,26,.78); border:2px solid rgba(255,181,71,.65); box-shadow:0 14px 40px rgba(0,0,0,.45); max-width:960px; box-sizing:border-box; }
+#banner .num { min-width:84px; height:84px; border-radius:22px; background:var(--amber); color:#1a1305; font:900 44px MontserratVF; display:flex; align-items:center; justify-content:center; }
+#banner .t { font:800 36px/1.12 MontserratVF; color:#fff; }
+#banner .c { font:600 24px Inter; color:var(--green); margin-top:4px; }
+</style></head>
+<body><div id="root"></div>
+<script>
+window.renderCard = async (spec) => {
+  const root = document.getElementById('root');
+  if (spec.kind === 'banner') {
+    root.innerHTML = `<div id="banner"><div class="num">${spec.num}</div><div><div class="t">${spec.title}</div><div class="c">${spec.cat}</div></div></div>`;
+  } else {
+    const bok = Array.from({length: 14}, (_, i) => { const x = (i * 97) % 1080, y = 200 + (i * 173) % 1400, r = 40 + (i * 37) % 90, warm = i % 3 !== 0;
+      return `<div class="bokeh" style="left:${x}px;top:${y}px;width:${r}px;height:${r}px;background:${warm ? 'rgba(255,190,110,.18)' : 'rgba(140,180,255,.16)'}"></div>`; }).join('');
+    const badge = `<div class="badge"><img src="${spec.avatar}"><span>Prof. Enzo AI</span><span class="sep">•</span><span>profenzo.com</span></div>`;
+    let body = '';
+    if (spec.kind === 'intro') {
+      body = `<div style="position:absolute;left:70px;right:70px;top:300px;">
+        <h1>PROF<br>ENZO</h1><h2>Új rövidvideós<br>formátum</h2><div class="tag">11 videóvázlat • 21 jelenetsablon</div>
+        <div class="small" style="margin-top:26px">Tartalomstratégia szerint • 2026. november 18.</div></div>
+        <img class="enzo" src="${spec.enzo}" style="width:620px;left:400px;">`;
+    } else {
+      body = `<div style="position:absolute;left:60px;right:60px;top:200px;">
+        <div class="sec" style="margin-top:0">MI KÉSZ?</div>
+        <div class="list">${spec.done.map(([e, t]) => `<div class="row"><span class="e">${e}</span><span>${t}</span></div>`).join('')}</div>
+        <div class="sec">MI HIÁNYZIK?</div>
+        <div class="list">${spec.todo.map(([e, t]) => `<div class="row" style="border-color:rgba(255,181,71,.55)"><span class="e">${e}</span><span>${t}</span></div>`).join('')}</div>
+        <div class="tag" style="margin-top:34px">📁 ${spec.drive}</div></div>
+        <img class="enzo" src="${spec.enzo}" style="width:400px;right:-30px;">`;
+    }
+    root.innerHTML = `<div id="card">${bok}${badge}${body}</div>`;
+  }
+  await Promise.all([...document.images].map(i => i.complete ? 0 : new Promise(r => { i.onload = r; i.onerror = r; })));
+  await document.fonts.load('900 150px MontserratVF'); await document.fonts.load('44px "Noto Color Emoji"'); await document.fonts.ready;
+  return true;
+};
+</script></body></html>

@@ -9,3 +9,6 @@ videok/
 **/build/
 assets/*.wav
 assets/*.mp3
+
+# python bytecode
+__pycache__/
