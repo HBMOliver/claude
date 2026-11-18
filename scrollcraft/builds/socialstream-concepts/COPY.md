@@ -62,7 +62,7 @@ Heading: Máshol és *nálunk*. / Elsewhere and *with us*.
 ## NEW, live, for the founder to read: the Spanish pages (2026-11-18)
 
 On "Yes, build Spanish", every page also exists in Spanish under `/es/`. The Spanish is in `site/es-words.mjs`, one
-[English, Spanish] pair per text (389 of them), written for Spain: "tú" to the reader, "vosotros" in the questions a
+[English, Spanish] pair per text (389 of them), written for Spain: "tú" to the reader, Canarian "ustedes" (since v17) in the questions a
 reader asks the team, euros the Spanish way (216K €, 0,29 €, 1.650 €), the same numbers and nothing new. The claim:
 "Las ~~redes sociales~~ han muerto. El *interés* ha ocupado su lugar." Words kept as they are: interest media,
 landing page(s), leads, copywriting, Reels, Stories, Feed, ROAS, B2B and every name. Hooks are "ganchos", the funnel
