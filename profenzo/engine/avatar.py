@@ -52,21 +52,45 @@ def frames(src, w, h):
 
 
 # ----------------------------------------------------------------------------- matting
-def key_green(rgb):
-    """Alpha from green dominance: G - max(R, B) <= 38 stays opaque, >= 90 is keyed out (teal scrubs survive)."""
-    f = rgb.astype(np.int16)
+def key_green(rgb, bg=(0, 255, 0)):
+    """Alpha for a green-screen frame from green dominance d = G - max(R, B).
+    Interior (d <= 38, so Enzo's teal scrubs stay) is opaque. Edge pixels are a mix of Enzo and the screen, and are
+    measured against the local foreground colour (skin, hair or coat right next to them) instead of a fixed
+    threshold: a skin pixel with 20% screen in it has d near 0 and would otherwise count as opaque (yellow rim)."""
+    from scipy import ndimage
+    f = rgb.astype(np.float32)
     d = f[..., 1] - np.maximum(f[..., 0], f[..., 2])
-    return 1.0 - np.clip((d - 38) / 52.0, 0, 1)
+    d_bg = float(bg[1] - max(bg[0], bg[2]))
+    core = ndimage.binary_erosion(d <= 38, iterations=3)
+    w = ndimage.gaussian_filter(core.astype(np.float32), 6)
+    d_fg = ndimage.gaussian_filter(np.where(core, d, 0).astype(np.float32), 6) / np.maximum(w, 1e-3)
+    d_fg = np.where(w > 0.02, np.minimum(d_fg, d_bg - 60), -30.0)
+    a = np.clip((d_bg - d) / np.maximum(d_bg - d_fg, 1.0), 0, 1)
+    return np.where(core, 1.0, a)
 
 
-def despill(rgb, a):
-    """Pull green spill out of the pixels near the matte edge only (Enzo's own green stays green)."""
-    near = np.asarray(Image.fromarray((a * 255).astype(np.uint8)).filter(ImageFilter.MinFilter(5))) < 250
-    out = rgb.copy()
-    g = out[..., 1].astype(np.int16); mx = np.maximum(out[..., 0], out[..., 2]).astype(np.int16)
-    fix = near & (g > mx)
-    out[..., 1][fix] = mx[fix].astype(np.uint8)
-    return out
+def clean_edges(rgb, a, bg):
+    """Green-screen edge clean-up. Partly transparent edge pixels are a mix of Enzo and the green screen, so the
+    screen colour is unmixed out of them (a plain despill would leave a yellow rim on skin), the outermost ring is
+    choked by about 1 px and softened, and any green left near the edge is clamped (Enzo's own teal stays)."""
+    f = rgb.astype(np.float32)
+    al = np.clip(a, 0.15, 1.0)[..., None]
+    un = (f - (1.0 - al) * np.asarray(bg, np.float32)) / al
+    f = np.where((a < 0.999)[..., None], un, f)
+    a2 = np.asarray(Image.fromarray((a * 255).astype(np.uint8)).filter(ImageFilter.MinFilter(3))
+                    .filter(ImageFilter.GaussianBlur(0.7)), np.float32) / 255.0
+    near = np.asarray(Image.fromarray((a2 * 255).astype(np.uint8)).filter(ImageFilter.MinFilter(7))) < 250
+    mx = np.maximum(f[..., 0], f[..., 2])
+    f[..., 1] = np.where(near & (f[..., 1] > mx), mx, f[..., 1])
+    return np.clip(f, 0, 255).astype(np.uint8), a2
+
+
+def screen_colour(src, w, h):
+    """Median colour of the green screen along the top rows of the first frame (H.264 shifts pure #00FF00)."""
+    for rgb in frames(src, w, h):
+        px = rgb[:6].reshape(-1, 3).astype(np.int16)
+        px = px[(px[:, 1] - np.maximum(px[:, 0], px[:, 2])) > 90]
+        return tuple(int(v) for v in np.median(px, 0)) if len(px) else (0, 255, 0)
 
 
 class AIMatte:
@@ -164,11 +188,14 @@ def prep(video_dir, src, mode="auto", scale=None, dx=0.0, dy=0.0):
 
     # 3) all frames -> keyed, cropped, resized RGBA WebP
     cx0, cy0, cx1, cy1 = max(0, crop[0]), max(0, crop[1]), min(w, crop[2]), min(h, crop[3])
+    bg = screen_colour(src, w, h) if mode == "green" else None
     n = 0
     for rgb in frames(src, w, h):
         part = rgb[cy0:cy1, cx0:cx1]
-        a = matte(part) if mode == "green" else matte(rgb)[cy0:cy1, cx0:cx1]
-        if mode == "green": part = despill(part, a)
+        if mode == "green":
+            part, a = clean_edges(part, matte(part, bg), bg)
+        else:
+            a = matte(rgb)[cy0:cy1, cx0:cx1]
         rgba = np.dstack([part, (a * 255).astype(np.uint8)])
         canvas = Image.new("RGBa", (crop[2] - crop[0], crop[3] - crop[1]))
         canvas.paste(Image.fromarray(rgba, "RGBA").convert("RGBa"), (cx0 - crop[0], cy0 - crop[1]))
@@ -176,7 +203,7 @@ def prep(video_dir, src, mode="auto", scale=None, dx=0.0, dy=0.0):
         n += 1
         img.save(os.path.join(out, f"f{n:05d}.webp"), "WEBP", quality=90, method=3)
         if n % 150 == 0: print(f"  {n} frames")
-    meta = {"n": n, "fps": fps, "box_w": box_w, "box_h": box_h, "q": Q, "scale": k, "dx": dx, "dy": dy, "matte": mode,
+    meta = {"n": n, "fps": fps, "box_w": box_w, "box_h": box_h, "q": Q, "scale": k, "dx": dx, "dy": dy, "matte": mode, "screen": bg,
             "source": os.path.abspath(src), "source_size": [w, h], "duration": dur}
     json.dump(meta, open(os.path.join(out, "meta.json"), "w"), indent=1)
     print(f"avatar frames: {n} -> {out}")
