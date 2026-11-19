@@ -37,9 +37,11 @@ def info(vid, page=None):
     lic = re.findall(r'data-license="(video[A-Za-z]+)"', t)
     title = html.unescape(re.search(r"<title>(.*?)</title>", t, re.S).group(1)).split("|")[0].strip() if "<title>" in t else ""
     dur = re.search(r"Duration\s*</[^>]+>\s*<[^>]+>\s*([0-9:]+)", t) or re.search(r"Duration\s+([0-9:]+)", re.sub(r"<[^>]+>", " ", t))
-    sizes = sorted({int(x) for x in re.findall(rf"assets\.mixkit\.co/videos/{vid}/{vid}-(\d+)\.mp4", t)})
+    files = {}   # size -> URL; older items: videos/<id>/<id>-<size>.mp4, newer: active_storage/video_items/<id>/<ts>/<id>-video-<size>.mp4
+    for u, size in re.findall(rf"(https://assets\.mixkit\.co/videos/{vid}/{vid}-(\d+)\.mp4)", t): files[int(size)] = u
+    for u, size in re.findall(rf"(https://assets\.mixkit\.co/active_storage/video_items/{vid}/\d+/{vid}-video-(\d+)\.mp4)", t): files[int(size)] = u
     return {"id": vid, "title": title, "page": r.url, "license": lic[0] if lic else None,
-            "restricted": "videoRestricted" in lic, "duration": dur.group(1) if dur else None, "sizes": sizes}
+            "restricted": "videoRestricted" in lic, "duration": dur.group(1) if dur else None, "sizes": sorted(files), "files": files}
 
 
 def get(vid):
@@ -49,8 +51,13 @@ def get(vid):
     i = info(vid)
     if i["restricted"] or i["license"] != "videoFree":
         raise SystemExit(f"{vid}: not under the Mixkit Stock Video Free License ({i['license']}) - skipped")
-    for size in (1080, 720, 2160):
-        url = f"https://assets.mixkit.co/videos/{vid}/{vid}-{size}.mp4"
+    cands = [f"https://assets.mixkit.co/videos/{vid}/{vid}-{size}.mp4" for size in (1080, 720, 2160)]
+    known = i["files"]; up = [(sz, u) for sz, u in known.items()]
+    for sz, u in sorted(up, key=lambda x: (x[0] != 1080, x[0] != 720, -x[0])):   # listed files first, 1080p preferred
+        cands.insert(0, u.replace(f"-video-{sz}.mp4", "-video-1080.mp4")) if "-video-" in u and sz != 1080 else None
+        cands.insert(1, u)
+    for url in dict.fromkeys(cands):
+        size = int(re.search(r"-(\d+)\.mp4$", url).group(1))
         r = S.get(url, stream=True, timeout=120)
         if r.status_code == 200:
             with open(out + ".part", "wb") as f:
