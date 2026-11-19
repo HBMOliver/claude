@@ -471,8 +471,32 @@ function setChar(t) {
   return null;
 }
 
+// ---------- scene: real-footage B-roll (frames pre-extracted by build.py, graded and cropped to 9:16) ----------
+const brollImgs = {};
+function brollSrc(s, t) {
+  const b = s.broll, i = Math.max(0, Math.min(b.n - 1, Math.floor((t - s.start) * b.fps + 1e-6)));
+  return `${b.dir}/${String(i + 1).padStart(5, '0')}.jpg`;
+}
+async function prepBroll(s, t) {   // load + decode the frame before the synchronous canvas draw
+  if (!s || s.type !== 'broll' || !s.broll) return;
+  const im = brollImgs[s.broll.dir] || (brollImgs[s.broll.dir] = new Image());
+  const src = brollSrc(s, t);
+  if (im.dataset.src !== src) { im.dataset.src = src; im.src = src; await im.decode().catch(() => {}); }
+}
+function sceneBroll(c, tl, dur, s) {
+  const im = s.broll && brollImgs[s.broll.dir];
+  if (!im || !im.naturalWidth) { c.fillStyle = '#0b1230'; c.fillRect(0, 0, W, H); return; }
+  const q = clamp(tl / Math.max(dur, .01), 0, 1), zz = s.zoom || [1.0, 1.08], z = lerp(zz[0], zz[1], q);
+  const sc = Math.max(W / im.naturalWidth, H / im.naturalHeight) * z, w = im.naturalWidth * sc, h = im.naturalHeight * sc;
+  const p = s.pan || [0, 0, 0, 0];
+  c.drawImage(im, (W - w) / 2 + lerp(p[0], p[2], q), (H - h) / 2 + lerp(p[1], p[3], q), w, h);
+  const g = c.createLinearGradient(0, 0, 0, H);   // keeps the badge, captions and Enzo readable on any footage
+  g.addColorStop(0, 'rgba(5,8,24,.55)'); g.addColorStop(.3, 'rgba(5,8,24,.18)'); g.addColorStop(.6, 'rgba(5,8,24,.12)'); g.addColorStop(1, 'rgba(5,8,24,.62)');
+  c.fillStyle = g; c.fillRect(0, 0, W, H);
+}
+
 // ---------- main ----------
-const SCENES = { clock: sceneClock, chart1: sceneChart1, chart2: sceneChart2, neurons: sceneNeurons, plate: scenePlate, drop: sceneDrop, olf: sceneOlf };
+const SCENES = { clock: sceneClock, chart1: sceneChart1, chart2: sceneChart2, neurons: sceneNeurons, plate: scenePlate, drop: sceneDrop, olf: sceneOlf, broll: sceneBroll };
 function drawScene(c, s, t) {
   const tl = t - s.start, dur = s.end - s.start;
   if (s.type === 'studio') drawStudio(c, t, s.warm || 0, 0, 0);
@@ -493,6 +517,7 @@ const bufA = offscreen(W, H), bufB = offscreen(W, H);
 window.renderAt = async function (t) {
   const sc = CFG.scenes; let i = sc.findIndex(s => t >= s.start && t < s.end); if (i < 0) i = sc.length - 1;
   const s = sc[i], tin = t - s.start, TR = 0.22;
+  await prepBroll(s, t); if (i > 0 && tin < TR) await prepBroll(sc[i - 1], t);
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.filter = 'none';
   if (i > 0 && tin < TR && s.type !== 'phone' && sc[i - 1].type !== 'phone') {
     const q = easeOut(tin / TR); const bc = bufA.getContext('2d'); drawScene(bc, sc[i - 1], t); ctx.drawImage(bufA, 0, 0);

@@ -99,6 +99,37 @@ def auto_captions(toks, keywords, display=None):
 
 
 # ----------------------------------------------------------------------------- plan
+GRADES = {   # B-roll colour grades that sit with the dark-blue / amber look
+    "night": "eq=brightness=-0.05:saturation=0.85:contrast=1.06,colorbalance=bs=0.06:rs=-0.02:bm=0.03",
+    "warm": "eq=brightness=-0.03:saturation=0.95:contrast=1.05,colorbalance=rs=0.06:bs=-0.04:rm=0.03",
+    "neutral": "eq=brightness=-0.04:contrast=1.04:saturation=0.95",
+}
+
+
+def prep_broll(video_dir, s, k, fps):
+    """Cut the scene's stretch of a Mixkit clip (../broll/<id>.mp4) into graded 9:16 JPEG frames for the renderer.
+    s: clip, in (seconds into the clip), x (0..1 horizontal crop position for landscape footage), grade."""
+    clip = os.path.join(os.path.dirname(ENGINE), "broll", f"{s['clip']}.mp4")
+    if not os.path.exists(clip): raise SystemExit(f"B-roll clip missing: {clip} (python3 broll.py get {s['clip']})")
+    dur = s["end"] - s["start"] + 0.4                       # covers the cross-fade into the next scene
+    out = os.path.join(video_dir, "build", f"broll_{k:02d}")
+    key = f"{s['clip']}|{s.get('in', 0)}|{dur:.2f}|{s.get('x', 0.5)}|{s.get('grade', 'night')}|{fps}"
+    if not (os.path.exists(os.path.join(out, "key.txt")) and open(os.path.join(out, "key.txt")).read() == key):
+        import shutil; shutil.rmtree(out, ignore_errors=True); os.makedirs(out)
+        L = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", clip],
+                                 capture_output=True, text=True, check=True).stdout)
+        start = min(float(s.get("in", 0)), max(0.0, L - 1.0))
+        speed = min(1.0, max(0.55, (L - start) / dur))       # slow down a short clip rather than freeze it
+        x = float(s.get("x", 0.5))
+        vf = (f"setpts=PTS/{speed:.4f},fps={fps},scale=-2:2150:flags=lanczos,"
+              f"crop='min(iw,1210)':2150:'(iw-min(iw,1210))*{x}':0,{GRADES[s.get('grade', 'night')]}")
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{start:.3f}", "-i", clip, "-vf", vf, "-t", f"{dur:.3f}",
+                        "-q:v", "3", os.path.join(out, "%05d.jpg")], check=True)
+        open(os.path.join(out, "key.txt"), "w").write(key)
+    n = len([f for f in os.listdir(out) if f.endswith(".jpg")])
+    s["broll"] = {"dir": "file://" + os.path.abspath(out), "n": n, "fps": fps}
+
+
 def plan(video_dir, vo=None, words=None, draft=False):
     tl = json.load(open(os.path.join(video_dir, "timeline.json"), encoding="utf-8"))
     fps = tl["fps"]
@@ -153,6 +184,8 @@ def plan(video_dir, vo=None, words=None, draft=False):
     scenes.sort(key=lambda s: s["start"])
     for a, b in zip(scenes, scenes[1:]):
         a["end"] = b["start"]
+    for k, s in enumerate(x for x in scenes if x["type"] == "broll"):
+        prep_broll(video_dir, s, k, fps)
     end = next(s for s in scenes if s["type"] == "end")
     type_w = tl.get("end_type_word", 0)
     if isinstance(type_w, str): type_w = find_word(type_w, 0)

@@ -12,3 +12,6 @@ assets/*.mp3
 
 # python bytecode
 __pycache__/
+
+# stock B-roll (Mixkit license: no redistribution of the raw files)
+broll/
