@@ -218,10 +218,17 @@ SCENES.house = function (c, tl, dur, s, t) {
   c.globalAlpha = 1; c.textBaseline = 'alphabetic';
   if (s.roof) { const k = tl - (s.roofAt !== undefined ? s.roofAt : n * per); if (k > 0) { const a = clamp(k / .3, 0, 1), y = -(n + 1) * h - 20; c.globalAlpha = a; c.fillStyle = '#9BE7B4'; c.beginPath(); c.moveTo(-170, y + 90); c.lineTo(0, y - 40); c.lineTo(170, y + 90); c.closePath(); c.fill();
       c.fillStyle = '#0B1530'; c.font = '800 26px MontserratVF'; c.textAlign = 'center'; c.fillText(s.roof, 0, y + 70); c.globalAlpha = 1; } }
-  if (s.products) { const a = clamp((tl - (s.productsAt || .3)) / .3, 0, 1); c.globalAlpha = a; c.font = '84px "Noto Color Emoji"'; c.textAlign = 'center';
-    const top = inv ? 40 : -(n * h) - 40; c.font = '72px "Noto Color Emoji"'; ['🧴', '💊', '🌿'].forEach((e, i) => c.fillText(e, (inv ? -150 : 70) + i * 130, top + Math.sin(tl * 3 + i) * 8));
-    if (!inv && s.productsNote) { c.fillStyle = '#fff'; c.font = '700 28px Inter'; c.fillText(s.productsNote, 200, top + 58); } c.globalAlpha = 1; }
-  if (s.side) { const a = clamp((tl - (s.sideAt || dur * .6)) / .3, 0, 1); c.globalAlpha = a; c.fillStyle = '#7FD3FF'; rr(c, 380, -n * h, 70, n * h - 8, 14); c.fill();
+  if (s.products) { const a = clamp((tl - (s.productsAt ?? .3)) / .3, 0, 1); c.globalAlpha = a; c.font = '84px "Noto Color Emoji"'; c.textAlign = 'center';
+    c.font = '72px "Noto Color Emoji"';
+    if (inv) ['🧴', '💊', '🌿'].forEach((e, i) => c.fillText(e, -150 + i * 130, 40 + Math.sin(tl * 3 + i) * 8));
+    else {   // beside the narrow top of the pyramid (left), so they never cover a layer or the header: part of the routine, not the foundation
+      const cx = -355, by = -(n - 1) * h - 18;
+      ['🧴', '💊', '🌿'].forEach((e, i) => c.fillText(e, cx + (i - 1) * 88, by + Math.sin(tl * 3 + i) * 6));
+      if (s.productsNote) { c.fillStyle = '#fff'; c.font = '700 30px Inter';
+        const parts = s.productsNote.split(/\s+(?=[–-]\s)/);   // "rutin része – nem az alap" -> two lines
+        parts.forEach((p, i) => c.fillText(p.trim(), cx, by + 48 + i * 36)); } }
+    c.globalAlpha = 1; }
+  if (s.side) { const a = clamp((tl - (s.sideAt ?? dur * .6)) / .3, 0, 1); c.globalAlpha = a; c.fillStyle = '#7FD3FF'; rr(c, 380, -n * h, 70, n * h - 8, 14); c.fill();
     c.save(); c.translate(415, -n * h / 2); c.rotate(-Math.PI / 2); c.fillStyle = '#0B1530'; c.font = '800 26px MontserratVF'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(s.side, 0, 0); c.restore(); c.globalAlpha = 1; }
   c.restore();
 };
