@@ -109,13 +109,16 @@ if __name__ == "__main__":
             base = piper(text, os.path.join(outd, f"piper_{ls}.wav"), ls)
             y = vc.convert(base, ref, steps=steps, cfg=cfg)
             print("wrote", save(y, os.path.join(outd, f"vc_ls{ls}_s{steps}_c{cfg}.wav"), to_sr=22050), flush=True)
-    elif cmd == "make":
-        vd = os.path.abspath(sys.argv[2]); a = sys.argv[3:]
+    elif cmd == "make":   # make <video_dir> [<video_dir> ...] [--ref reference.wav]; models load once
+        a = sys.argv[2:]
         ref = os.path.abspath(a[a.index("--ref") + 1]) if "--ref" in a else default_ref()
-        tl = json.load(open(os.path.join(vd, "timeline.json"), encoding="utf-8"))
-        b = os.path.join(vd, "build"); os.makedirs(b, exist_ok=True)
-        base = piper(tts_text(tl["script"]), os.path.join(b, "piper.wav"), DEFAULT["length_scale"])
-        y = SeedVC().convert(base, ref, steps=DEFAULT["steps"], cfg=DEFAULT["cfg"])
-        print("wrote", save(y, os.path.join(b, "vo_raw.wav")))
+        dirs = [os.path.abspath(x) for i, x in enumerate(a) if x != "--ref" and (i == 0 or a[i - 1] != "--ref")]
+        vc = SeedVC()
+        for vd in dirs:
+            tl = json.load(open(os.path.join(vd, "timeline.json"), encoding="utf-8"))
+            b = os.path.join(vd, "build"); os.makedirs(b, exist_ok=True)
+            base = piper(tts_text(tl["script"]), os.path.join(b, "piper.wav"), DEFAULT["length_scale"])
+            y = vc.convert(base, ref, steps=DEFAULT["steps"], cfg=DEFAULT["cfg"])
+            print("wrote", save(y, os.path.join(b, "vo_raw.wav")), flush=True)
     else:
         raise SystemExit(__doc__)
