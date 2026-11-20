@@ -76,6 +76,10 @@ def make(video_dir, libs, jump=2.2, hold=1.0, pose_w=1.8, reverse=0.25):
     mu, sd = F.mean(0), F.std(0) + 1e-3
     Fn, Xn = (F - mu) / sd, (X - mu) / sd
     E = ((Xn[:, None, :] - Fn[None, :, :]) ** 2).mean(2)                    # (T, K) how well each frame fits each moment
+    off = 0
+    for l in L:                                                               # frames flagged as damaged are never used
+        if "bad" in l.files and len(l["bad"]): E[:, off + l["bad"]] += 1e3
+        off += len(l["frames"])
     Pd = np.sqrt(((P[:, None, :] - P[None, :, :]) ** 2).mean(2))            # (K, K) head-pose distance
     cont = np.zeros(K, bool); cont[:-1] = Pd[np.arange(K - 1), np.arange(1, K)] < np.percentile(Pd, 5)
     cont[seg_end] = False                                                     # never "play on" across library seams
