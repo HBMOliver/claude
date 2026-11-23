@@ -117,7 +117,7 @@ if __name__ == "__main__":
         for vd in dirs:
             tl = json.load(open(os.path.join(vd, "timeline.json"), encoding="utf-8"))
             b = os.path.join(vd, "build"); os.makedirs(b, exist_ok=True)
-            base = piper(tts_text(tl["script"]), os.path.join(b, "piper.wav"), DEFAULT["length_scale"])
+            base = piper(tts_text(tl["script"]), os.path.join(b, "piper.wav"), tl.get("length_scale", DEFAULT["length_scale"]))   # <1 = faster speech
             y = vc.convert(base, ref, steps=DEFAULT["steps"], cfg=DEFAULT["cfg"])
             print("wrote", save(y, os.path.join(b, "vo_raw.wav")), flush=True)
     else:

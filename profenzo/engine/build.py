@@ -441,7 +441,9 @@ def audio(video_dir):
         duck = np.repeat(1 - 0.45 * np.clip(env * 3, 0, 1), hop)[:n]
     else:
         duck = np.ones(n)
-    mix = vo + 0.20 * mus * duck + 0.30 * fx
+    tl_path = os.path.join(video_dir, "timeline.json")
+    mlevel = json.load(open(tl_path, encoding="utf-8")).get("music_level", 0.20) if os.path.exists(tl_path) else 0.20   # 0 = no music bed
+    mix = vo + mlevel * mus * duck + 0.30 * fx
     stereo = np.stack([mix, mix], 1).astype(np.float32)
     raw = os.path.join(b, "mix_raw.wav")
     import wave
