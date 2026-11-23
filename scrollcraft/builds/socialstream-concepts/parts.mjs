@@ -134,12 +134,17 @@ const FILM_LOOP = 3.2;
 // The still under it (tools/hero.sh) comes at the masters' full size too, for sharp screens and for a phone in Low Power
 // Mode, where it stays until the visitor touches the page (kit.js). Sizes as measured: the opening fills the screen,
 // the card is 88% of a phone's width and at most 360 px elsewhere.
-export function film(cls = '', cut = 'auto', big = false, extra = '') {
+// o.first: the still is the first thing on the screen, so the browser fetches it ahead of everything else
+// (fetchpriority). o.sizes: the card's sizes instead of the measured ones. Mix's card asks for the opening's size on
+// phones, so the browser picks the opening's file for both and fetches one still, not two copies of the same frame
+// (on a 412 px phone at 1.75x the opening took the 1080 file and the card the 720 one: 391 KB instead of 247).
+export function film(cls = '', cut = 'auto', big = false, extra = '', o = {}) {
   const vSet = `${asset('hero-v-poster.jpg')} 720w, ${asset('hero-v-poster-1080.jpg')} 1080w`;
   const wSet = `${asset('hero-poster.jpg')} 1600w, ${asset('hero-poster-1920.jpg')} 1920w`;
-  const poster = cut === 'v' ? `<img src="${asset('hero-v-poster.jpg')}" srcset="${vSet}" sizes="(max-width: 760px) 88vw, 360px" alt="" width="720" height="1280">`
-    : cut === 'h' ? `<img src="${asset('hero-poster.jpg')}" alt="" width="1600" height="900">`
-    : `<picture><source media="(max-width: 760px)" srcset="${vSet}" sizes="100vw"><img src="${asset('hero-poster.jpg')}" srcset="${wSet}" sizes="100vw" alt="" width="1600" height="900"></picture>`;
+  const pri = o.first ? ' fetchpriority="high"' : '';
+  const poster = cut === 'v' ? `<img src="${asset('hero-v-poster.jpg')}" srcset="${vSet}" sizes="${o.sizes || '(max-width: 760px) 88vw, 360px'}" alt="" width="720" height="1280"${pri}>`
+    : cut === 'h' ? `<img src="${asset('hero-poster.jpg')}" alt="" width="1600" height="900"${pri}>`
+    : `<picture><source media="(max-width: 760px)" srcset="${vSet}" sizes="100vw"><img src="${asset('hero-poster.jpg')}" srcset="${wSet}" sizes="100vw" alt="" width="1600" height="900"${pri}></picture>`;
   const own = FILM ? ` data-src-w="${esc(FILM('w'))}" data-src-v="${esc(FILM('v'))}"` : '';
   return `<div class="film ${cls}" data-film data-cut="${cut}"${big ? ' data-big' : ''}${own}>
   <div class="poster">${poster}</div>

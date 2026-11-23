@@ -195,6 +195,28 @@ image from `tools/og.html`: the logo, the claim and three of their reels on the 
 To update the live site: change the page, `node build.mjs mix`, `node tools/site.mjs`, run the last three commands
 under Run, then zip `dist/site/` and upload it for the domain in Pulse.
 
+**Speed (2026-11-23, v20).** A speed report (seodiagnozis.hu) gave the home page a layout shift of 0.82 and a
+largest paint of 5.0 s on its phone test. Both came from the opening:
+- **The jump.** `.mx-open` is `display: none` until `kit.js` adds `is-sheet` or `is-morph`. On a phone the first paint
+  showed the panel at the top; then `kit.js` arrived and the 100svh opening pushed the panel to the screen's foot, a
+  shift of 0.78. Since v20, one line of script under the section's tag adds the class by `kit.js`'s own rule
+  (reduced motion: none; `data-seq` matching: `is-morph`; otherwise `is-sheet`) before the first paint. `kit.js`
+  then finds the class already set.
+- **The largest paint.** It was the card's still, which landed after about 6 s on a slow phone because two copies of
+  the same frame were downloading (the opening took the 1080 file, the card the 720 one). Now the card asks for the
+  opening's size on phones, so one file serves both. The opening's still carries `fetchpriority="high"`.
+- **Measured** on Lighthouse's phone profile (412 x 823 at 1.75x, 562.5 ms RTT, 1.47 Mbps, CPU x4), three runs each,
+  the page served the same way and everything else from socialstream.hu:
+  - layout shift: 0.776 before, 0.001 after;
+  - Chrome's largest paint: about 6.1 s before, about 1.0 s after;
+  - the full-screen still: about 6.7 s to arrive before, about 5.3 s after.
+- **Why the largest paint fell so far.** Chrome does not count an image that fills the whole screen (it treats it as
+  a background), so the largest paint is now the first screen's text.
+- **Measuring trap.** Under phone emulation Chrome flags the old shift as following input (the viewport's resize
+  counts as input for 500 ms), so a sum that drops input-flagged shifts reads 0. Lighthouse counts it.
+- **How it was measured.** The scratch script lives outside the repo: Playwright with PerformanceObserver for
+  `layout-shift` and `largest-contentful-paint`.
+
 Before launch (2026-11-12):
 
 - **Mail: done.** hello@socialstream.hu, which the audit form and the contact link write to, is a free Google

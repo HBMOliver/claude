@@ -74,12 +74,15 @@ export const heroSec = () => `  <!-- the opening: the film alone fills the first
        on, where the screen has room to pin, the film settles into its card beside the claim while the panel, the claim
        and the numbers come in around it; on phones and short screens the panel rises over the film like a sheet.
        kit.js drives it all from one value, --q; without script or with reduced motion the page opens on the panel.
+       The line of script under the section's tag picks the opening's layout by kit.js's own rule before the first
+       paint, so the panel does not drop when kit.js arrives (a layout shift of 0.78 on phones before).
        The panel: the claim on the left, the film standing on the right like a post, the real numbers running along
        its foot; the aurora moves inside, and its brightest light follows the cursor -->
   <section class="mx-hero" id="top" aria-labelledby="hero-h" data-seq="(min-width: 900px) and (min-height: 700px)">
+    <script>(function (s) { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) s.classList.add(matchMedia(s.getAttribute('data-seq') || '(min-width: 900px)').matches ? 'is-morph' : 'is-sheet'); })(document.currentScript.parentNode);</script>
     <div class="mx-open" data-seq-open>
       ${film('mx-openfilm', 'auto', true, `
-  <span class="mx-cue" aria-hidden="true"><i></i></span>`)}
+  <span class="mx-cue" aria-hidden="true"><i></i></span>`, { first: true })}
     </div>
     <div class="mx-panel mx-hero-panel">
       <div class="mx-sky" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i><span class="mx-glow" data-follow="in" data-home="0.3,0.42"></span></div>
@@ -94,7 +97,7 @@ export const heroSec = () => `  <!-- the opening: the film alone fills the first
           ${film('mx-film', 'v', false, `
   <div class="progress" aria-hidden="true"></div>
   <p class="mx-acct" aria-hidden="true"><img src="${asset('socialstream-symbol-corner.svg')}" alt="" width="34" height="34">SocialStream</p>
-  <p class="mx-fcap" aria-hidden="true"${en(LB.film)}>${t(LB.film)}</p>`)}
+  <p class="mx-fcap" aria-hidden="true"${en(LB.film)}>${t(LB.film)}</p>`, { sizes: '(max-width: 760px) 100vw, 360px' })}
         </div>
       </div>
       <div class="mx-band">${rail(tickerItems('mx-tk'), 'mx-band-rail', 1, 46)}</div>

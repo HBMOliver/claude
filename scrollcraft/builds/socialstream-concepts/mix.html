@@ -36,12 +36,15 @@
        on, where the screen has room to pin, the film settles into its card beside the claim while the panel, the claim
        and the numbers come in around it; on phones and short screens the panel rises over the film like a sheet.
        kit.js drives it all from one value, --q; without script or with reduced motion the page opens on the panel.
+       The line of script under the section's tag picks the opening's layout by kit.js's own rule before the first
+       paint, so the panel does not drop when kit.js arrives (a layout shift of 0.78 on phones before).
        The panel: the claim on the left, the film standing on the right like a post, the real numbers running along
        its foot; the aurora moves inside, and its brightest light follows the cursor -->
   <section class="mx-hero" id="top" aria-labelledby="hero-h" data-seq="(min-width: 900px) and (min-height: 700px)">
+    <script>(function (s) { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) s.classList.add(matchMedia(s.getAttribute('data-seq') || '(min-width: 900px)').matches ? 'is-morph' : 'is-sheet'); })(document.currentScript.parentNode);</script>
     <div class="mx-open" data-seq-open>
       <div class="film mx-openfilm" data-film data-cut="auto" data-big>
-  <div class="poster"><picture><source media="(max-width: 760px)" srcset="assets/hero-v-poster.jpg 720w, assets/hero-v-poster-1080.jpg 1080w" sizes="100vw"><img src="assets/hero-poster.jpg" srcset="assets/hero-poster.jpg 1600w, assets/hero-poster-1920.jpg 1920w" sizes="100vw" alt="" width="1600" height="900"></picture></div>
+  <div class="poster"><picture><source media="(max-width: 760px)" srcset="assets/hero-v-poster.jpg 720w, assets/hero-v-poster-1080.jpg 1080w" sizes="100vw"><img src="assets/hero-poster.jpg" srcset="assets/hero-poster.jpg 1600w, assets/hero-poster-1920.jpg 1920w" sizes="100vw" alt="" width="1600" height="900" fetchpriority="high"></picture></div>
   <video muted loop playsinline preload="none" data-loop="3.2" aria-label="A SocialStream márkafilmje" data-en-aria="The SocialStream brand film"></video>
   <button class="toggle" type="button"></button>
   <span class="mx-cue" aria-hidden="true"><i></i></span>
@@ -58,7 +61,7 @@
         </div>
         <div class="mx-post" data-seq-to>
           <div class="film mx-film" data-film data-cut="v">
-  <div class="poster"><img src="assets/hero-v-poster.jpg" srcset="assets/hero-v-poster.jpg 720w, assets/hero-v-poster-1080.jpg 1080w" sizes="(max-width: 760px) 88vw, 360px" alt="" width="720" height="1280"></div>
+  <div class="poster"><img src="assets/hero-v-poster.jpg" srcset="assets/hero-v-poster.jpg 720w, assets/hero-v-poster-1080.jpg 1080w" sizes="(max-width: 760px) 100vw, 360px" alt="" width="720" height="1280"></div>
   <video muted loop playsinline preload="none" data-loop="3.2" aria-label="A SocialStream márkafilmje" data-en-aria="The SocialStream brand film"></video>
   <button class="toggle" type="button"></button>
   <div class="progress" aria-hidden="true"></div>
