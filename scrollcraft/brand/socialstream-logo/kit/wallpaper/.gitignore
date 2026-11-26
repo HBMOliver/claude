@@ -1,0 +1,14 @@
+# the films (too large for the repo; film.sh makes them)
+final/*.mov
+# what build.py and the renders write
+out/
+loop/
+draft/
+still-*/
+assets/*.svg
+.hyperframes/
+.thumbnails/
+snapshots/
+renders/
+node_modules/
+__pycache__/

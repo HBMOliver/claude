@@ -16,6 +16,7 @@ don'ts, which file) and `presentation/board.html` (slides as PNGs in `presentati
 | Corner mark on reels | `source/socialstream-symbol-corner.svg` or `digital/socialstream-symbol-corner-256.png` (cream phone, night S: readable on bright frames too) |
 | End card on reels | `social/socialstream-stacked-night-1080.png` |
 | Logo animation (4.6 s sting or end card) | `motion/socialstream-logo-horizontal.mp4` on 16:9 video, `motion/socialstream-logo-vertical.mp4` on Reels, TikTok and Stories, `motion/socialstream-logo-square.mp4` in feed posts (HyperFrames projects in `motion/`) |
+| Mac wallpaper | `wallpaper/final/SocialStream-wallpaper-3024x1964.png` (MacBook Pro 14) or `-3840x2160.png` (4K); the `-phone-` files have the phone alone. A lock screen that moves: `wallpaper/README.md` |
 | Shirts, merch | stacked or symbol, one colour: `print/socialstream-logo-stacked-white.pdf` on dark fabric |
 | Embroidery under 40 mm | `source/socialstream-symbol-small-*.svg` (its slice stays above 1.5 mm) |
 | Printer (cards, signs) | `print/*.pdf` (vector) + the colour table below |
@@ -38,6 +39,9 @@ don'ts, which file) and `presentation/board.html` (slides as PNGs in `presentati
 - `guide/` the one-page guide as HTML, PNG and A4 PDF.
 - `motion/` the logo animation as MP4s (horizontal 1920 × 1080, vertical 1080 × 1920, square 1080 × 1080)
   and the HyperFrames projects they are rendered from; see `motion/README.md`.
+- `wallpaper/` the Mac wallpaper (a stream of reels around the stacked logo) as PNG stills, and the build of
+  the lock-screen film with the logo animation in it. The films themselves are not in the repo, and the film
+  has not yet been seen playing; see `wallpaper/README.md`.
 - `tests/` the audit report and the preview test sheet of the final symbol and its small cut.
 
 ## Colour
