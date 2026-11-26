@@ -5,7 +5,7 @@
 // links (sameAs) and no credential until the founder sends them.
 import { C } from '../content.mjs';
 import { esc, pair, LANGS } from '../parts.mjs';
-import { ORIGIN, PAGES, byId, url, W } from './pages.mjs';
+import { ORIGIN, ORIGINS, PAGES, byId, url, W } from './pages.mjs';
 import { word } from './es.mjs';
 import { filmUrl } from './films.mjs';
 
@@ -20,7 +20,9 @@ const LOCALE = { hu: 'hu_HU', en: 'en_GB', es: 'es_ES' };
 const plain = s => String(s).replace(/<[^>]+>/g, '');
 // the claim as a sentence in the page's language (the Spanish from its two English lines, each looked up)
 const claim = l => plain((l === 'hu' ? C.claim.hu : l === 'en' ? C.claim.en : C.claim.en.map(x => word({ en: x }, l))).join(' '));
-const ORG = ORIGIN + '/#org', SITE = ORIGIN + '/#website';
+// one organisation (its home is socialstream.hu), and one website per domain: socialstream.hu in Hungarian and English,
+// socialstream.es in Spanish (since 2026-11-26)
+const ORG = ORIGIN + '/#org', SITE = l => ORIGINS[l] + '/#website';
 // the film on the home page (the sizzle, 59.4 s, tools/hero.sh): what a search engine may show. Hungarian and English
 // live since 2026-11-16; the Spanish cut since v18 (the Spanish page played the English one until then)
 const FILM = { date: { hu: '2026-11-16', en: '2026-11-16', es: '2026-11-18' }, duration: 'PT59.4S' };
@@ -35,10 +37,10 @@ function graph(pg, l) {
   const org = { '@type': 'Organization', '@id': ORG, name: 'SocialStream', url: ORIGIN + '/', logo: { '@type': 'ImageObject', url: ORIGIN + '/icon-512.png', width: 512, height: 512 },
     email: 'hello@socialstream.hu', description: word(home.desc, l), slogan: claim(l), foundingDate: '2022',
     founder: { '@type': 'Person', name: 'Olivér', jobTitle: word(pair(C.team.people[0].role), l) } };
-  const site = { '@type': 'WebSite', '@id': SITE, url: ORIGIN + '/', name: 'SocialStream', inLanguage: langs(home), publisher: { '@id': ORG } };
+  const site = { '@type': 'WebSite', '@id': SITE(l), url: ORIGINS[l] + '/', name: 'SocialStream', inLanguage: langs(home).filter(x => ORIGINS[x] === ORIGINS[l]), publisher: { '@id': ORG } };
   // a case stays a WebPage (not an Article) until it has its story and a visible byline
   const type = { about: 'AboutPage', contact: 'ContactPage', faq: 'FAQPage', cases: 'CollectionPage' }[pg.type] || 'WebPage';
-  const page = { '@type': type, '@id': u + '#webpage', url: u, name: plain(word(pg.title, l)), description: word(pg.desc, l), inLanguage: l, isPartOf: { '@id': SITE }, about: { '@id': ORG } };
+  const page = { '@type': type, '@id': u + '#webpage', url: u, name: plain(word(pg.title, l)), description: word(pg.desc, l), inLanguage: l, isPartOf: { '@id': SITE(l) }, about: { '@id': ORG } };
   const nodes = [org, site, page];
   if (pg.id !== 'home') {
     page.breadcrumb = { '@id': u + '#breadcrumb' };
@@ -48,7 +50,7 @@ function graph(pg, l) {
     // each language's own cut of the film, the wide one (site/films.mjs: on Pulse's Media Storage)
     page.video = { '@id': u + '#film' };
     nodes.push({ '@type': 'VideoObject', '@id': u + '#film', name: word(C.film.label, l), description: word(home.desc, l), inLanguage: l,
-      thumbnailUrl: ORIGIN + '/assets/hero-poster.jpg', uploadDate: FILM.date[l], duration: FILM.duration, contentUrl: filmUrl(l, 'w') });
+      thumbnailUrl: ORIGINS[l] + '/assets/hero-poster.jpg', uploadDate: FILM.date[l], duration: FILM.duration, contentUrl: filmUrl(l, 'w') });
   }
   if (pg.type === 'service') {
     const s = pg.s, k = word(pair(s.k), l);
@@ -85,7 +87,7 @@ export function seo(pg, l) {
     `<meta property="og:url" content="${u}">`,
     `<meta property="og:title" content="${esc(plain(word(pg.title, l)))}">`,
     `<meta property="og:description" content="${esc(word(pg.desc, l))}">`,
-    `<meta property="og:image" content="${ORIGIN}/${OG}">`,
+    `<meta property="og:image" content="${ORIGINS[l]}/${OG}">`,
     '<meta property="og:image:width" content="1200">',
     '<meta property="og:image:height" content="630">',
     `<meta property="og:image:alt" content="${esc(OG_ALT[l])}">`,

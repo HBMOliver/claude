@@ -1,9 +1,10 @@
-// The Spanish pages of socialstream.hu (/es/; the founder, 2026-11-18: "build Spanish", for Tenerife). The site's words
+// The Spanish pages (the founder, 2026-11-18: "build Spanish", for Tenerife): under socialstream.hu/es/ until v20, at
+// the root of their own domain, socialstream.es, since 2026-11-26 (site/pages.mjs ORIGINS, DOMAINS). The site's words
 // stay { hu, en } pairs in content.mjs and site/pages.mjs; the Spanish is looked up here by the English text, so a
 // change to an English sentence shows up as a missing Spanish one and stops the build (tools/site.mjs), never as a
 // page that silently falls back to Hungarian or English. The words live in es-words.mjs.
 // Spanish pages show the English page's figures in euros (written the Spanish way, "216K €", "0,29 €") and play the
-// English film; there is no Spanish film.
+// film's Spanish cut (since v18, site/films.mjs).
 import { WORDS } from './es-words.mjs';
 
 // LIVE: the Spanish pages are part of the site; SS_ES=1 builds them anyway, SS_ES_TODO=1 lists what is missing
@@ -19,25 +20,25 @@ for (const [en, es] of WORDS) {
 
 // every page's Spanish address, by its id (site/pages.mjs); the results link of the menu goes to the home page's part
 export const SLUGS = {
-  home: '/es/',
-  services: '/es/servicios/',
-  'svc-video': '/es/servicios/produccion-de-video/',
-  'svc-social': '/es/servicios/gestion-de-redes-sociales/',
-  'svc-ads': '/es/servicios/publicidad-de-pago/',
-  'svc-web': '/es/servicios/paginas-web-y-landing-pages/',
-  'svc-auto': '/es/servicios/automatizacion-y-email/',
-  'svc-strat': '/es/servicios/estrategia-de-crecimiento/',
-  cases: '/es/casos-de-exito/',
-  'case-door': '/es/casos-de-exito/tienda-online-de-puertas/',
-  'case-hall': '/es/casos-de-exito/constructora-de-naves-industriales/',
-  'case-watch': '/es/casos-de-exito/tienda-online-de-relojes/',
-  'case-webinar': '/es/casos-de-exito/webinar-sanitario/',
-  'case-flyx': '/es/casos-de-exito/flyx-tenerife/',
-  'case-enzo': '/es/casos-de-exito/prof-enzo/',
-  about: '/es/sobre-nosotros/',
-  audit: '/es/auditoria-gratuita/',
-  faq: '/es/preguntas-frecuentes/',
-  contact: '/es/contacto/',
+  home: '/',
+  services: '/servicios/',
+  'svc-video': '/servicios/produccion-de-video/',
+  'svc-social': '/servicios/gestion-de-redes-sociales/',
+  'svc-ads': '/servicios/publicidad-de-pago/',
+  'svc-web': '/servicios/paginas-web-y-landing-pages/',
+  'svc-auto': '/servicios/automatizacion-y-email/',
+  'svc-strat': '/servicios/estrategia-de-crecimiento/',
+  cases: '/casos-de-exito/',
+  'case-door': '/casos-de-exito/tienda-online-de-puertas/',
+  'case-hall': '/casos-de-exito/constructora-de-naves-industriales/',
+  'case-watch': '/casos-de-exito/tienda-online-de-relojes/',
+  'case-webinar': '/casos-de-exito/webinar-sanitario/',
+  'case-flyx': '/casos-de-exito/flyx-tenerife/',
+  'case-enzo': '/casos-de-exito/prof-enzo/',
+  about: '/sobre-nosotros/',
+  audit: '/auditoria-gratuita/',
+  faq: '/preguntas-frecuentes/',
+  contact: '/contacto/',
 };
 
 // what a Spanish page could not find, with the page it was on (tools/site.mjs names the page before rendering it)

@@ -70,6 +70,15 @@ landing page(s), leads, copywriting, Reels, Stories, Feed, ROAS, B2B and every n
 and site.js ("Activar sonido" / "Silenciar", "Reproducir" / "Pausa", the form's topics and messages). Since v18 the
 film plays in Spanish on the Spanish pages (its lines below). Change a line in `site/es-words.mjs` and rebuild.
 
+Since 2026-11-26 (the founder: "Spanish site on .es") the Spanish pages live at the root of socialstream.es instead
+of under socialstream.hu's `/es/`, with the same words. New with the move, the 404 page of each domain
+(`tools/site.mjs`):
+- socialstream.es, in Spanish: "Esta página no existe." / "Puede que haya un error en la dirección o que esta página
+  ya no exista." / "Volver a la página de inicio", then a Hungarian line ("Ez az oldal nem létezik. Ugrás a magyar
+  főoldalra.") and the English one ("This page doesn't exist. Go to the home page.") linking socialstream.hu.
+- socialstream.hu keeps its Hungarian page; its Spanish line ("Esta página no existe. Ir a la página de inicio.")
+  now links socialstream.es.
+
 ## Approved: the brand film in Spanish (2026-11-18)
 
 The founder approved these lines before the first render ("Yes, render them"). They are the Spanish site's own

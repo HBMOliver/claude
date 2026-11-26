@@ -15,6 +15,8 @@ const { chromium } = createRequire(process.cwd() + '/')('playwright-core');
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const { FILMS } = await import(path.join(ROOT, 'site/films.mjs'));
 const BASE = (process.argv[2] || 'http://localhost:4566').replace(/\/$/, ''), OUT = process.argv[3] || '';
+// the Spanish site (socialstream.es since 2026-11-26) at its own address: ES_BASE; before the split it was <base>/es/
+const ES_BASE = (process.env.ES_BASE || BASE + '/es/').replace(/\/?$/, '/');
 
 const LOCAL = {}, BYTES = {};
 for (const l of Object.keys(FILMS)) for (const k of Object.keys(FILMS[l])) if (FILMS[l][k].url) LOCAL[FILMS[l][k].url] = path.join(ROOT, FILMS[l][k].file);
@@ -47,11 +49,11 @@ let passed = 0; const failed = [];
 const check = (cond, what) => { if (cond) passed++; else { failed.push(what); console.log('FAIL ' + what); } };
 async function open(opts, url, lpm) {
   const ctx = await b.newContext(opts);
-  await ctx.route(/^https:\/\/socialstream\.hu\/m\/med_[\w-]+\.mp4/, serveFilm);
+  await ctx.route(/^https:\/\/socialstream\.(hu|es)\/m\/med_[\w-]+\.mp4/, serveFilm);
   if (lpm) await ctx.addInitScript(STUB);
   const p = await ctx.newPage(), errors = [];
   p.on('pageerror', e => errors.push(String(e)));
-  await p.goto(BASE + url, { waitUntil: 'load' });
+  await p.goto(/^https?:/.test(url) ? url : BASE + url, { waitUntil: 'load' });
   await p.waitForTimeout(2500);
   return { ctx, p, errors };
 }
@@ -84,7 +86,7 @@ const refused = p => p.evaluate(() => window.__refused || 0);
 const toY = (p, sel, off = 0.25) => p.evaluate(([sel, off]) => { const e = document.querySelector(sel); if (e) scrollTo(0, e.getBoundingClientRect().top + scrollY - innerHeight * off); return !!e; }, [sel, off]);
 
 // 1. a phone in Low Power Mode, the home page in each language: the still, then everything at the first tap
-for (const url of ['/', '/en/', '/es/']) {
+for (const url of ['/', '/en/', ES_BASE]) {
   const { ctx, p, errors } = await open(PHONE, url, true), at = 'phone ' + url;
   let [o] = await films(p);
   check(o.waiting && o.paused && !o.playing, `${at}: the opening waits, not started (${o.cls})`);

@@ -178,7 +178,8 @@ for (const name of names.filter(n => n !== 'site')) {
   total += pass; failed += fail;
 }
 
-// node lab/check.mjs site   (BASE: the site's folder served as the root, e.g. BASE=http://localhost:4565/)
+// node lab/check.mjs site   (BASE: the site's folder served as the root, e.g. BASE=http://localhost:4565/; since
+// 2026-11-26 also ES_BASE: socialstream.es's folder, dist/site-es, served as its root, e.g. ES_BASE=http://localhost:4566/)
 // The site's other pages (index covers the home page): each page from the sitemap, in its own language. On a computer:
 // the heading and the audit button on the first screen, the panel's light following the cursor and the page's
 // picture leaning toward it, the row along the panel's foot running at rest, the audit form in the page's language
@@ -191,21 +192,22 @@ for (const name of names.filter(n => n !== 'site')) {
 if (names.includes('site')) {
   let pass = 0, fail = 0;
   const ok = (what, cond, info = '') => { if (cond) pass++; else { fail++; console.log(`FAIL site: ${what}`, info); } };
-  const sm = await (await fetch(BASE + 'sitemap.xml')).text();
-  const paths = [...sm.matchAll(/<loc>https:\/\/socialstream\.hu(\/[^<]*)<\/loc>/g)].map(m => m[1]).filter(p => !/^\/((en|es)\/)?$/.test(p));
+  // the pages of both domains (since 2026-11-26): socialstream.hu's folder served at BASE, socialstream.es's at ES_BASE
+  const list = async (base, es) => { const sm = await (await fetch(base + 'sitemap.xml')).text();
+    return [...sm.matchAll(/<loc>https:\/\/socialstream\.(?:hu|es)(\/[^<]*)<\/loc>/g)].map(m => m[1]).filter(p => !/^\/(en\/)?$/.test(p)).map(p => ({ url: base + p.slice(1), l: es ? 'es' : /^\/en\//.test(p) ? 'en' : 'hu' })); };
+  const paths = [...await list(BASE, false), ...(process.env.ES_BASE ? await list(process.env.ES_BASE, true) : [])];
   ok('the sitemap lists the pages', paths.length >= 10, paths.length);
   const T = {
     hu: { e: ['Írd be a neved, hogy tudjuk, kinek válaszolunk.', 'Írd be az e-mail címed, ide válaszolunk.', 'Írd be a céged vagy a márkád nevét.'], budget: 'Havi büdzsé: 300 ezer – 1 millió Ft' },
     en: { e: ['Enter your name so we know who to reply to.', 'Enter your email. That’s where we’ll reply.', 'Enter your company or brand name.'], budget: 'Monthly budget: €800–€2,700' },
     es: { e: ['Escribe tu nombre para saber a quién responder.', 'Escribe tu email. Te responderemos ahí.', 'Escribe el nombre de tu empresa o marca.'], budget: 'Presupuesto mensual: 800–2.700 €' },
   };
-  const page = async (opts, p0) => { const ctx = await b.newContext(opts), p = await ctx.newPage(), errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); }); await p.goto(BASE + p0.slice(1), { waitUntil: 'load' }); await p.waitForTimeout(1200); return { ctx, p, errs }; };
+  const page = async (opts, p0) => { const ctx = await b.newContext(opts), p = await ctx.newPage(), errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); }); await p.goto(/^https?:/.test(p0) ? p0 : BASE + p0.slice(1), { waitUntil: 'load' }); await p.waitForTimeout(1200); return { ctx, p, errs }; };
   const wideAt = async (p, mouse) => { const H = await p.evaluate(() => document.documentElement.scrollHeight), w = await p.evaluate(() => innerWidth), hh = await p.evaluate(() => innerHeight); let worst = 0;
     for (let y = 0; y < H; y += 800) { await p.evaluate(y => scrollTo({ top: y, behavior: 'instant' }), y);
       for (const [x, yy] of mouse ? [[w - 6, hh - 6], [6, 6]] : [[0, 0]]) { if (mouse) { await p.mouse.move(x, yy, { steps: 3 }); await p.waitForTimeout(350); } else await p.waitForTimeout(100); worst = Math.max(worst, await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)); } }
     return worst; };
-  for (const p0 of paths) {
-    const l = (p0.match(/^\/(en|es)\//) || [, 'hu'])[1];
+  for (const { url: p0, l } of paths) {
     // a computer
     {
       const { ctx, p, errs } = await page(DESK, p0);
@@ -288,7 +290,7 @@ if (names.includes('site')) {
     await ctx.close();
   }
   {
-    const ctx = await b.newContext(DESK), p = await ctx.newPage(); await p.goto(BASE + 'es/', { waitUntil: 'load' }); await p.waitForTimeout(2600);
+    const ctx = await b.newContext(DESK), p = await ctx.newPage(); await p.goto(process.env.ES_BASE || BASE + 'es/', { waitUntil: 'load' }); await p.waitForTimeout(2600);
     const s = await p.evaluate(() => ({ lang: document.documentElement.lang, L: SS.L, claim: [...document.querySelectorAll('#hero-h [data-l="es"]')].some(e => e.textContent.includes('Las redes sociales han muerto')), playing: [...document.querySelectorAll('[data-film] video')].filter(v => !v.paused).map(v => v.currentSrc), sound: [...document.querySelectorAll('.ss-sound span')].map(e => e.textContent.trim()) }));
     ok('the Spanish home: the claim in Spanish, the Spanish film, the sound button in Spanish', s.lang === 'es' && s.L === 'es' && s.claim && s.playing.length > 0 && s.playing.every(f => cutOf(f) === 'es') && s.sound.length > 0 && s.sound.every(t => t === 'Activar sonido'), JSON.stringify(s));
     await ctx.close();

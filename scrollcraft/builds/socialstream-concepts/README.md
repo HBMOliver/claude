@@ -57,7 +57,8 @@ The published pages are private until they are shared from their Share menu.
   - `head.mjs`: each page's head lines: canonical, the hu / en / es / x-default alternates, share tags, structured data.
   - `es.mjs` and `es-words.mjs` (since 2026-11-18): the Spanish pages. The site's words stay in Hungarian and English;
     a Spanish page looks each English text up in `es-words.mjs` ([English, Spanish] pairs) through `word()`, and its
-    addresses are `es.mjs`'s `SLUGS`. A missing Spanish text stops the build; `SS_ES_TODO=1 node tools/site.mjs`
+    addresses are `es.mjs`'s `SLUGS` (at the root of socialstream.es since 2026-11-26, under socialstream.hu's
+    `/es/` before). A missing Spanish text stops the build; `SS_ES_TODO=1 node tools/site.mjs`
     writes the missing ones to `dist/es-todo.mjs` instead. Spanish pages show the English page's euros the Spanish
     way (216K €, 0,29 €) and, since v18, play the film's own Spanish cuts (the English ones before).
   - `films.mjs` (since v18): where each language's two cuts of the brand film are. Pulse's Media Storage holds
@@ -115,7 +116,8 @@ The published pages are private until they are shared from their Share menu.
   follow the films and reels through it: the still without a Play button, everything starting at the first tap, the
   sound button as the first touch, a computer, a page of reels, and reduced motion and an ordinary phone as before.
   It is a model of the rule, not an iPhone. `node lab/lowpower.mjs http://localhost:4565 [folder for screenshots]`.
-- `lab/sitecheck.mjs`: the site's folder, served: every file and page answers 200; each page's head (language, one
+- `lab/sitecheck.mjs`: each domain's folder with the address it is served at (since 2026-11-26 two pairs, .hu and
+  .es; a folder's domain comes from its sitemap): every file and page answers 200; each page's head (language, one
   h1, a title and description of its own, its canonical address, the alternates both ways, share tags, structured
   data with what its kind of page needs); no words of the other language; every link inside the site goes somewhere
   real; the sitemap, robots.txt, llms.txt and 404 page; and in a browser on every page no failed request, console
@@ -156,12 +158,17 @@ folder exactly as it is, at the domain root: an agency admin uploads it as a ZIP
 Settings → Domains, and a new upload replaces the old version in one step. A folder's `index.html` is served at its
 address with a trailing slash (`/rolunk/`; `/rolunk` redirects there), and Pulse keeps some first path segments for
 itself (`p`, `form`, `book`, `fonts`, `socialstream` and more: `tools/site.mjs` lists them and stops on one).
-`node tools/site.mjs` writes that folder to `dist/site/`:
+`node tools/site.mjs` writes one such folder per domain (since 2026-11-26, the founder: "Spanish site on .es"):
+`dist/site/` for https://socialstream.hu (Hungarian and English) and `dist/site-es/` for https://socialstream.es
+(Spanish), each with its own ZIP (`dist/site.zip`, `dist/site-es.zip`). `site/pages.mjs` holds the two origins
+(`ORIGINS`, `DOMAINS`); a page's address in a language is that language's origin plus its path, and the language
+switch, the alternates, the sitemaps and llms.txt link across the two domains with full addresses. Each folder:
 
 - Since 2026-11-16 the site has 24 pages (phase 2 of the Claude Docs doc "SocialStream SEO, AEO and subpage plan"),
-  each in one language: Hungarian at the root, English under `/en/`; since 2026-11-18 also Spanish under `/es/`
-  (`/es/servicios/…`, `/es/casos-de-exito/…`, `/es/sobre-nosotros/`, `/es/auditoria-gratuita/`,
-  `/es/preguntas-frecuentes/`, `/es/contacto/`), 19 pages in each language. The home page (`/`, `/en/`) is Aurora Mix itself;
+  each in one language: Hungarian at the root of socialstream.hu, English under its `/en/`; since 2026-11-18 also
+  Spanish, under socialstream.hu's `/es/` until v20 and at the root of socialstream.es since 2026-11-26
+  (`/servicios/…`, `/casos-de-exito/…`, `/sobre-nosotros/`, `/auditoria-gratuita/`, `/preguntas-frecuentes/`,
+  `/contacto/`), 19 pages in each language. The home page (`/`, `/en/`, socialstream.es's `/`) is Aurora Mix itself;
   the others are the services page and the six services (`/szolgaltatasok/…`, `/en/services/…`), About us
   (`/rolunk/`), the free audit (`/ingyenes-audit/`), the questions (`/gyik/`, with the FAQPage data) and contact
   (`/kapcsolat/`), each at `<address>/index.html`. Every page has its own title and description, its canonical
@@ -181,7 +188,13 @@ itself (`p`, `form`, `book`, `fonts`, `socialstream` and more: `tools/site.mjs` 
   not stored yet travels in the package as before. Mix never asks for `hero-540`, so it stays out of the package
   (since 2026-11-16, when the 59 s sizzle became the film).
 - The logo kit's web icons at the root, where the page's head and the manifest ask for them.
-- `404.html` (every link in it starts at the root, so it works at any depth), `robots.txt` and `sitemap.xml`.
+- `404.html` in the domain's language (every link in it starts at the root, so it works at any depth; it links
+  the other domain's home too), `robots.txt` and `sitemap.xml` (the domain's own pages, with alternates on both).
+- The Spanish film cuts are named on socialstream.es (`https://socialstream.es/m/<id>.mp4`): Pulse serves Media
+  Storage on every domain of the sub-account (checked: Range requests answer 206 there).
+- The old Spanish addresses (`socialstream.hu/es/…`) are not in the .hu folder any more; Pulse's URL Redirects (exact
+  paths, one row each) send each of the 20 to the same page on socialstream.es. A file in the ZIP wins over a
+  redirect, so the redirects act only once the .hu ZIP without `/es/` is live, and v20 brings the files back.
 
 It writes real files only (no symlinks), and stops if a file a page names is missing, a page carries an em dash or
 another language's words (or forints on a Spanish page), a top-level name is one of Pulse's own paths, or the
@@ -192,8 +205,9 @@ fit. So since v18 (the Spanish film) all six cuts live in Pulse's Media Storage 
 the package is 142 files, 7.2 MB unpacked and a 5.52 MiB ZIP. `tools/og.mjs` renders the share
 image from `tools/og.html`: the logo, the claim and three of their reels on the night blue.
 
-To update the live site: change the page, `node build.mjs mix`, `node tools/site.mjs`, run the last three commands
-under Run, then zip `dist/site/` and upload it for the domain in Pulse.
+To update the live sites: change the page, `node build.mjs mix`, `node tools/site.mjs`, run the checks under Run,
+then upload `dist/site.zip` for socialstream.hu and `dist/site-es.zip` for socialstream.es in Pulse (each domain has
+its own card under Sites → Websites).
 
 **Speed (2026-11-23, v20).** A speed report (seodiagnozis.hu) gave the home page a layout shift of 0.82 and a
 largest paint of 5.0 s on its phone test. Both came from the opening:
@@ -251,14 +265,21 @@ node tools/artifact.mjs
 BASE=http://localhost:4560/dist/ node lab/check.mjs
 node tools/site.mjs
 node ../../../.claude/skills/scroll-craft/scripts/serve.mjs --root dist/site --port 4565
-BASE=http://localhost:4565/ node lab/check.mjs index,site
-node lab/sitecheck.mjs dist/site http://localhost:4565/
+node ../../../.claude/skills/scroll-craft/scripts/serve.mjs --root dist/site-es --port 4566
+BASE=http://localhost:4565/ ES_BASE=http://localhost:4566/ node lab/check.mjs index,site
+node lab/sitecheck.mjs dist/site http://localhost:4565/ dist/site-es http://localhost:4566/
+ES_BASE=http://localhost:4566/ node lab/soundcheck.mjs http://localhost:4565/
+ES_BASE=http://localhost:4566/ node lab/herocheck-site.mjs http://localhost:4565/
+ES_BASE=http://localhost:4566/ node lab/lowpower.mjs http://localhost:4565
 ```
 
-The checks need `playwright-core` and Google Chrome. The fourth command packages the pages, and the
-fifth runs the same checks on the packaged pages. The last four build the socialstream.hu folder, serve it
-as a domain root, run the page's checks on it and then `lab/sitecheck.mjs`: every file answers 200, the head,
-no failed requests, console errors or other hosts besides Google Fonts, English, and the 404 page.
+The checks need `playwright-core` and Google Chrome (run them from a folder that has it). The fourth command
+packages the pages, and the fifth runs the same checks on the packaged pages. The rest build the two domains'
+folders, serve each as a domain root, run the page's checks on both and then `lab/sitecheck.mjs`, which takes a
+folder and its address per domain: every file answers 200, the head, the alternates and links across the two
+domains, no failed requests, console errors or other hosts besides Google Fonts and the films', the languages, and
+each 404 page. `ES_BASE` is where the Spanish folder is served; the sound, film and Low Power Mode checks open the
+Spanish home there.
 
 ## Measured (2026-11-11)
 

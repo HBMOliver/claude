@@ -10,12 +10,14 @@
 // file, then change its sha256 and address here); lab/sitecheck.mjs fetches every address and compares the bytes.
 //   w: the wide cut (hero-1080, 1920 x 1080), where Mix's opening fills a wide screen
 //   v: the upright cut (hero-v-720, 720 x 1280), in Mix's card and on phones
-import { ORIGIN } from './pages.mjs';
+import { ORIGINS } from './pages.mjs';
 
 // a cut: its file here, that file's sha256, and its id in Media Storage (all six are in the folder "socialstream.hu
 // website films" of the SocialStream sub-account, uploaded 2026-11-18 as socialstream-film-<lang>-<wide|upright>.mp4;
 // no id: not stored, it travels in the ZIP). Deleting one there stops that film on the site.
-const cut = (file, sha256 = null, id = null) => ({ file, sha256, url: id && `https://socialstream.hu/m/${id}.mp4` });
+// Pulse serves a stored file at /m/<id>.mp4 on every domain of the sub-account, so each cut is named on the domain of
+// its language: the Spanish ones on socialstream.es since 2026-11-26 (checked there: a Range request answers 206).
+const cut = (file, sha256 = null, id = null, host = ORIGINS.hu) => ({ file, sha256, url: id && `${host}/m/${id}.mp4` });
 export const FILMS = {
   hu: {
     w: cut('assets/hero-1080.mp4', '436cfd6d20ca013f53476d20c6f49e86bc6c52ec1824838c651f662239ae4984', 'med_lf1pIO1lKXtKqA'),
@@ -26,17 +28,17 @@ export const FILMS = {
     v: cut('assets/hero-v-720-en.mp4', '0dd0635b1cfcce8802b7a315b3b68237f21edbf9ff0f3730f870a9d6963ee4f0', 'med_2AUSm2GZuMdxpw'),
   },
   es: {
-    w: cut('assets/hero-1080-es.mp4', '5a5c84fde8b2b920cf9d09c8c77b37176280181d468f9fd578dcc56e0cabd293', 'med_fSLq-WYiV4u8vQ'),
-    v: cut('assets/hero-v-720-es.mp4', 'e507ffedf70388c40c0c2f217bd962790b2a3d0a495dd52317dcfdc96a48fa12', 'med_BwnDucjcd5Jgvw'),
+    w: cut('assets/hero-1080-es.mp4', '5a5c84fde8b2b920cf9d09c8c77b37176280181d468f9fd578dcc56e0cabd293', 'med_fSLq-WYiV4u8vQ', ORIGINS.es),
+    v: cut('assets/hero-v-720-es.mp4', 'e507ffedf70388c40c0c2f217bd962790b2a3d0a495dd52317dcfdc96a48fa12', 'med_BwnDucjcd5Jgvw', ORIGINS.es),
   },
 };
 export const CUTS = ['w', 'v'];
 // a stored cut's address, as Pulse makes it (newId('med') and FILE_RE in media.js)
-export const STORED = /^https:\/\/socialstream\.hu\/m\/med_[\w-]{1,40}\.mp4$/;
+export const STORED = /^https:\/\/socialstream\.(hu|es)\/m\/med_[\w-]{1,40}\.mp4$/;
 
 // the address a page names for a cut: Media Storage's, or its own file in the ZIP
 export const filmSrc = (l, k) => FILMS[l][k].url || '/' + FILMS[l][k].file;
 // the same as a full address (the structured data's contentUrl)
-export const filmUrl = (l, k) => FILMS[l][k].url || ORIGIN + '/' + FILMS[l][k].file;
+export const filmUrl = (l, k) => FILMS[l][k].url || ORIGINS[l] + '/' + FILMS[l][k].file;
 // the cuts of these languages that still travel in the ZIP
 export const filmFiles = langs => langs.flatMap(l => CUTS.filter(k => !FILMS[l][k].url).map(k => FILMS[l][k].file));

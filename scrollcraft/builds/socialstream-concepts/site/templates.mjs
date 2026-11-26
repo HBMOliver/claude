@@ -10,7 +10,7 @@
 import { C } from '../content.mjs';
 import { render, esc, t, h, ar, twin, per, asset, tx, tw, pair, btn, head, scripts, nav, footer, rail, tagItems, tickerItems, form, count, figure, ARROW } from '../parts.mjs';
 import * as mix from '../concepts/mix.mjs';
-import { PAGES, NAV, W, byId } from './pages.mjs';
+import { PAGES, NAV, W, byId, hrefTo } from './pages.mjs';
 import { seo, trail } from './head.mjs';
 import { word } from './es.mjs';
 import { filmSrc } from './films.mjs';
@@ -31,7 +31,8 @@ const plain = s => String(s).replace(/<[^>]+>/g, '');
 const siteNav = (pg, l) => ({
   home: byId('home').path[l],
   links: NAV.map(x => ({ href: x.path[l], label: x.nav, current: x.id === pg.id })),
-  alt: pg.path, menu: W.menu,
+  // the language switch: the same page in each language, a full address where that language has its own domain
+  alt: Object.fromEntries(Object.entries(pg.path).map(([x, path]) => [x, hrefTo(path, x, l)])), menu: W.menu,
 });
 const siteFoot = l => ({
   home: byId('home').path[l], line: W.line,

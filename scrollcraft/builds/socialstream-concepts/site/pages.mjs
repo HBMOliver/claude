@@ -16,7 +16,17 @@ import { C } from '../content.mjs';
 import { ON as ES_ON, SLUGS } from './es.mjs';
 
 const DRAFTS = !!process.env.SS_DRAFTS;
+// The site's two domains (2026-11-26, the founder: "Spanish site on .es"): Hungarian and English on socialstream.hu,
+// Spanish at the root of socialstream.es. Each domain is its own folder and ZIP (tools/site.mjs); a page's address in
+// a language is that language's origin plus its path (url below), and links across domains are full addresses.
 export const ORIGIN = 'https://socialstream.hu';
+export const ORIGINS = { hu: ORIGIN, en: ORIGIN, es: 'https://socialstream.es' };
+export const DOMAINS = [
+  { origin: ORIGIN, langs: ['hu', 'en'], out: 'dist/site' },
+  { origin: ORIGINS.es, langs: ['es'], out: 'dist/site-es' },
+];
+// a link from a page in language `from` to a path of language `l`: the path itself on the same domain, else the full address
+export const hrefTo = (path, l, from) => (ORIGINS[l] === ORIGINS[from] ? path : ORIGINS[l] + path);
 const p = (hu, en) => ({ hu, en });
 const svc = id => C.services.items.find(s => s.id === id);
 // a question from the home page's eight (content.mjs, faq), as it stands there
@@ -324,6 +334,6 @@ if (ES_ON) for (const pg of ALL) { if (!SLUGS[pg.id]) throw new Error('site/es.m
 export const PAGES = ALL.filter(pg => DRAFTS || !pg.draft);
 export const IS_DRAFTS = DRAFTS;
 export const byId = id => PAGES.find(pg => pg.id === id);
-export const url = (pg, l) => ORIGIN + pg.path[l];
+export const url = (pg, l) => ORIGINS[l] + pg.path[l];
 // the header's links: the services, the results on the home page, About us, the questions, contact
-export const NAV = [byId('services'), { id: 'results', path: { ...p('/#eredmenyek', '/en/#eredmenyek'), ...(ES_ON ? { es: '/es/#eredmenyek' } : {}) }, nav: p('Eredmények', 'Results') }, byId('about'), byId('faq'), byId('contact')];
+export const NAV = [byId('services'), { id: 'results', path: { ...p('/#eredmenyek', '/en/#eredmenyek'), ...(ES_ON ? { es: '/#eredmenyek' } : {}) }, nav: p('Eredmények', 'Results') }, byId('about'), byId('faq'), byId('contact')];
