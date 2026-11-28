@@ -11,10 +11,15 @@
 .lang a[aria-current] { opacity: 1; }
 @media (hover: hover) { .lang a:hover { opacity: 1; } }
 
-/* ---------- the menu: on tablets and phones the links open under the bar from a button ---------- */
+/* ---------- the menu: on tablets, small laptops and phones the links open under the bar from a button ---------- */
+/* six links since 2026-11-27 ("Kikkel dolgozunk" added): on one line the bar needs 1058 px in English, 1152 in
+   Hungarian and 1214 in Spanish, so it may grow to 1240 px and the menu button takes over below 1240 px */
 .menu-btn { display: none; }
+.mx-nav { width: min(calc(100% - 24px), 1240px); }
+.mx-nav .links a { white-space: nowrap; }
 .mx-nav .links a[aria-current] { color: var(--fg); background: rgba(255, 255, 255, 0.07); }
-@media (max-width: 1080px) {
+@media (max-width: 1240px) {
+  .mx-nav .lang { margin-left: auto; }
   .mx-nav .menu-btn { display: grid; place-items: center; flex: none; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; cursor: pointer; color: var(--fg); background: rgba(255, 255, 255, 0.07); box-shadow: inset 0 0 0 1px var(--line2); }
   .menu-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
   .menu-btn path { transform-origin: 10px 10px; transition: transform 300ms var(--out); }
@@ -146,6 +151,9 @@
 .pg-more-card .k { font: 700 1.02rem/1.25 var(--font-d); }
 .pg-more-card .d { font-size: 14px; line-height: 1.45; color: var(--fg2); }
 .pg-more-card svg { width: 16px; height: 16px; margin-top: 4px; color: var(--pink); transition: transform 260ms var(--out); }
+/* the arrows sit level at the cards' foot along a row (2026-11-28) */
+.pg-more-card { grid-template-rows: auto auto auto 1fr; }
+.pg-more-card svg { align-self: end; }
 @media (hover: hover) { .pg-more-card:hover { background: rgba(255, 255, 255, 0.08); } .pg-more-card:hover svg { transform: translateX(3px); } }
 
 /* ---------- questions ---------- */
@@ -174,13 +182,49 @@ a.pg-case { color: inherit; text-decoration: none; transition: background 200ms;
 .pg-case-go { display: inline-flex; align-items: center; gap: 7px; margin-top: 16px; font: 600 13.5px/1 var(--font-b); color: var(--fg); }
 .pg-case-go svg { width: 15px; height: 15px; color: var(--pink); transition: transform 260ms var(--out); }
 @media (hover: hover) { a.pg-case:hover { background: rgba(255, 255, 255, 0.08); } a.pg-case:hover .pg-case-go svg { transform: translateX(3px); } }
-.pg-case-grid.n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.pg-case-grid.n5, .pg-case-grid.n6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 /* a named client's card: one of their own reels, leaning, where the result cards have their object */
 .mx-stat img.pg-case-reel { width: 64px; height: auto; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 10px; filter: none; box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.75), inset 0 0 0 1px var(--line2); --r0: -7deg; --r1: -3deg; }
 .pg-case-art .mx-stat img.pg-case-reel { width: 104px; border-radius: 14px; }
-.pg-case-grid.n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 760px; }
+/* real clients in one section (2026-11-28): the cases and the clients the founder named are the same cards. Three to
+   a row (c3; c1 and c2 for one or two cards), on a grid of six so a last row that is not full sits in the middle; two
+   on a tablet, one on a phone. The text starts below the card's object, however long it is. */
+.pg-proof-grid.c1 { grid-template-columns: minmax(0, 1fr); max-width: 380px; }
+.pg-proof-grid.c2 { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 760px; }
+.pg-proof-grid.c3 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.pg-proof-grid.c3 > * { grid-column: span 2; }
+.pg-proof-grid.c3 > :last-child:nth-child(3n + 1) { grid-column: 3 / span 2; }
+.pg-proof-grid.c3 > :nth-last-child(2):nth-child(3n + 1) { grid-column: 2 / span 2; }
+.pg-proof-grid .mx-stat { justify-content: flex-start; padding-top: 120px; }
+/* the numbers start level along a row, the ways on sit level at the cards' foot */
+.pg-proof-grid .mx-stat .pg-case-go { margin-top: auto; padding-top: 16px; }
+@media (min-width: 761px) and (max-width: 1080px) {
+  .pg-proof-grid.c3 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .pg-proof-grid.c3 > *, .pg-proof-grid.c3 > :last-child:nth-child(3n + 1), .pg-proof-grid.c3 > :nth-last-child(2):nth-child(3n + 1) { grid-column: span 2; }
+  .pg-proof-grid.c3 > :last-child:nth-child(2n + 1) { grid-column: 2 / span 2; }
+}
+@media (max-width: 760px) {
+  .pg-proof-grid.c2, .pg-proof-grid.c3 { grid-template-columns: minmax(0, 1fr); max-width: none; }
+  .pg-proof-grid.c3 > *, .pg-proof-grid.c3 > :last-child:nth-child(3n + 1), .pg-proof-grid.c3 > :nth-last-child(2):nth-child(3n + 1), .pg-proof-grid.c3 > :last-child:nth-child(2n + 1) { grid-column: auto; }
+  .pg-proof-grid .mx-stat { padding-top: 96px; }
+}
+/* a client without a figure: its name leads the card, at a size that fits a name */
+.mx-stat.pg-noun .n { font-size: clamp(1.45rem, 2.1vw, 1.85rem); line-height: 1.15; letter-spacing: -0.02em; white-space: normal; }
 .pg-more-grid.few { grid-template-columns: repeat(auto-fill, minmax(220px, 300px)); }
+.pg-more-grid.few.fit { grid-template-columns: repeat(var(--n), minmax(0, 300px)); }
+
+/* ---------- the fields we work in: the home page's "who it is for" cards, each going to its page ---------- */
+.pg-fields { padding: clamp(80px, 11vh, 130px) 0 clamp(40px, 6vh, 70px); }
+.pg-fields-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 48px 0 0; padding: 0; list-style: none; }
+.pg-field { display: grid; align-content: start; gap: 8px; height: 100%; padding: 22px; background: rgba(255, 255, 255, 0.05); color: inherit; text-decoration: none; transition: background 200ms; }
+/* the pictures differ in shape, so each sits in the same box */
+.pg-field img { width: 100%; height: clamp(130px, 13vw, 180px); margin-bottom: 12px; object-fit: contain; filter: drop-shadow(0 16px 16px rgba(0, 0, 0, 0.5)); }
+.pg-field .k { font: 700 1.1rem/1.25 var(--font-d); }
+.pg-field .d { font-size: 14.5px; line-height: 1.55; color: var(--fg2); }
+.pg-field b { color: var(--fg); }
+.pg-field .pg-case-go { margin-top: 8px; }
+@media (hover: hover) { .pg-field:hover { background: rgba(255, 255, 255, 0.09); } .pg-field:hover .pg-case-go svg { transform: translateX(3px); } }
+/* the footer with a third group (the fields we work in) */
+.foot .foot-nav:has(> :nth-child(3)) { grid-template-columns: repeat(3, max-content); }
 
 /* ---------- the buttons in the red-pink third colour (the founder, 2026-11-18: the blue was too much; the buttons
    should stand out). A deeper shade than the claim's #ff5272, so the white words read at 4.7:1; the ghost buttons
@@ -229,7 +273,9 @@ a.pg-case { color: inherit; text-decoration: none; transition: background 200ms;
   .pg-art { min-height: 0; }
   .pg-more-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .pg-quote-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .pg-case-grid.n3, .pg-case-grid.n5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pg-fields-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pg-more-grid.few.fit { grid-template-columns: repeat(auto-fill, minmax(220px, 300px)); }
+  .foot .foot-nav:has(> :nth-child(3)) { grid-template-columns: repeat(2, max-content); }
 }
 @media (max-width: 760px) {
   .pg-hero { padding-top: 72px; }
@@ -249,17 +295,36 @@ a.pg-case { color: inherit; text-decoration: none; transition: background 200ms;
   .pg-split, .pg-qgroup .pg-split { grid-template-columns: minmax(0, 1fr); }
   .pg-qgroup .pg-split-l { position: static; }
   .pg-quote-grid, .pg-quote-grid.n2 { grid-template-columns: minmax(0, 1fr); }
-  .pg-more-grid, .pg-more-grid.few { grid-template-columns: minmax(0, 1fr); }
+  .pg-more-grid, .pg-more-grid.few, .pg-more-grid.few.fit { grid-template-columns: minmax(0, 1fr); }
   .pg-case-art { width: 100%; }
   .pg-case-art .mx-stat { min-height: 280px; }
   .pg-case-art .mx-stat img { width: 116px; height: 116px; }
   .pg-more-card { grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center; column-gap: 14px; }
   .pg-more-card img { grid-row: 1 / 3; width: 56px; height: 56px; margin: 0; }
   .pg-more-card .k, .pg-more-card .d { grid-column: 2; }
-  .pg-more-card svg { grid-column: 3; grid-row: 1 / 3; margin: 0; }
+  .pg-more-card { grid-template-rows: none; }
+  .pg-more-card svg { grid-column: 3; grid-row: 1 / 3; margin: 0; align-self: center; }
   .pg-qlinks { margin-left: 0; }
-  .foot .foot-nav { grid-template-columns: minmax(0, 1fr); gap: 26px; padding-top: 48px; }
+  .foot .foot-nav, .foot .foot-nav:has(> :nth-child(3)) { grid-template-columns: minmax(0, 1fr); gap: 26px; padding-top: 48px; }
+  .pg-fields-grid { grid-template-columns: minmax(0, 1fr); }
+  .pg-field { grid-template-columns: 96px minmax(0, 1fr); align-items: center; column-gap: 16px; }
+  .pg-field img { grid-row: 1 / 4; width: 96px; height: 96px; margin: 0; }
+  .pg-field .k, .pg-field .d, .pg-field .pg-case-go { grid-column: 2; }
 }
 @media (prefers-reduced-motion: reduce) {
   .menu-btn path, .mx-nav .links { transition: none; }
 }
+/* the home page's cards go to their pages (2026-11-27): the stat and who cards take the services' stretched link */
+.mx-stat .pg-card-link, .mx-who-grid .pg-card-link { color: inherit; text-decoration: none; }
+.mx-stat:has(.pg-card-link:focus-visible), .mx-who-grid .mx-card:has(.pg-card-link:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
+.mx-who-grid .pg-more-l { margin-top: 12px; }
+/* a result card's way on reads the same everywhere (2026-11-28): as a case card's "Az eset", white with the pink arrow */
+.mx-stat .pg-more-l { gap: 7px; margin-top: 16px; font: 600 13.5px/1 var(--font-b); color: var(--fg); }
+.mx-stat .pg-more-l svg { color: var(--pink); }
+@media (hover: hover) { .mx-stat:has(.pg-card-link):hover, .mx-who-grid .mx-card:has(.pg-card-link):hover { background: rgba(255, 255, 255, 0.08); } .mx-card:has(.pg-card-link):hover .pg-more-l svg { transform: translateX(3px); } }
+/* "all case studies", "all six fields": a quiet pill under the cards */
+.pg-all { margin: 26px 0 0; }
+.pg-all.center { text-align: center; }
+.pg-all a { display: inline-flex; align-items: center; gap: 9px; padding: 12px 20px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line2); color: var(--fg); font: 600 15px/1 var(--font-b); text-decoration: none; transition: background 200ms; }
+.pg-all a svg { width: 16px; height: 16px; color: var(--pink); transition: transform 260ms var(--out); }
+@media (hover: hover) { .pg-all a:hover { background: rgba(255, 255, 255, 0.08); } .pg-all a:hover svg { transform: translateX(3px); } }

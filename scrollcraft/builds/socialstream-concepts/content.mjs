@@ -79,8 +79,8 @@ export const C = {
   },
 
   who: {
-    eyebrow: { hu: 'Kiknek dolgozunk', en: 'Who we work with' },
-    h2: { hu: 'Márkáknak, amelyek már működnek, és most <em>nőni akarnak</em>.', en: 'Brands that already work, and now <em>want to grow</em>.' },
+    eyebrow: { hu: 'Kikkel dolgozunk', en: 'Who we work with' },
+    h2: { hu: 'Márkákkal, amelyek már működnek, és most <em>nőni akarnak</em>.', en: 'Brands that already work, and now <em>want to grow</em>.' },
     lead: { hu: 'Akkor vagyunk jó választás, ha a vállalkozásod stabil bevételt termel, hosszú távon gondolkodsz, és befektetésnek látod a marketinget.', en: 'We are a good fit if your business has steady revenue, you think long term and you see marketing as an investment.' },
     cards: [
       { img: 'a-shop', hu: ['Webshopok', 'Vásárlások Google és Meta kampányokból. A legjobb e-commerce eredményünk: <b>81× ROAS</b> egy ajtó webshopnál.'], en: ['Webshops', 'Sales from Google and Meta campaigns. Our best e-commerce result: <b>81× ROAS</b> for a door webshop.'] },
@@ -123,7 +123,7 @@ export const C = {
     eyebrow: { hu: 'Valódi ügyfelek · valódi számok', en: 'Real clients · real numbers' },
     h2: { hu: 'Számok, amiket az ügyfeleinknek hoztunk.', en: 'Numbers we brought our clients.' },
     items: [
-      { obj: 'o-door', n: 81, unit: '× ROAS', who: ['Ajtó webshop · Google Performance Max', 'Door webshop · Google Performance Max'], p: ['1 forint hirdetésből 81 forint bevétel.', '€81 of revenue for every €1 of ads.'] },
+      { obj: 'o-door', n: 81, unit: '× ROAS', who: ['onlineajtok.hu · Google Performance Max', 'onlineajtok.hu · Google Performance Max'], p: ['1 forint hirdetésből 81 forint bevétel.', '€81 of revenue for every €1 of ads.'] },
       { obj: 'o-hall', n: 79, unit: 'M Ft', en: { pre: '€', n: 216, unit: 'K' }, who: ['Csarnoképítő ügyfél · Meta', 'Industrial hall builder · Meta'], p: ['Bevétel egy hét alatt, egy B2B kampányból.', 'Revenue in one week, from one B2B campaign.'] },
       { obj: 'o-watch', n: 23, unit: '× ROAS', who: ['Karóra webshop · Karácsony', 'Watch webshop · Christmas'], p: ['Ünnepi kampány, több mint 8M Ft bevétellel.', 'A holiday campaign with over €21K in revenue.'] },
       { obj: 'o-webinar', n: 105, unit: 'Ft', en: { pre: '€', n: 0.29, unit: '' }, who: ['Egészségügyi webinár', 'Healthcare webinar'], p: ['Ennyibe került egy jelentkező: körülbelül 5700 jelentkező 600K Ft-ból.', 'The cost of one registrant: about 5,700 registrants from €1,650.'] },
@@ -132,7 +132,7 @@ export const C = {
   },
   // a running band of the same real numbers, word for word from the results above
   ticker: [
-    { hu: '81× ROAS · Ajtó webshop', en: '81× ROAS · Door webshop' },
+    { hu: '81× ROAS · onlineajtok.hu', en: '81× ROAS · onlineajtok.hu' },
     { hu: '79M Ft bevétel egy hét alatt · B2B', en: '€216K of revenue in one week · B2B' },
     { hu: '23× ROAS · Karóra webshop, karácsony', en: '23× ROAS · Watch webshop, Christmas' },
     { hu: '105 Ft egy jelentkező · Egészségügyi webinár', en: '€0.29 per registrant · Healthcare webinar' },

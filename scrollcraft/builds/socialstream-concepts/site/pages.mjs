@@ -8,9 +8,9 @@
 // a phone number or address, profile links, proof for automation, the audience pages and /en/tenerife/.
 // Case studies (2026-11-16, the founder: "Case studies first"): the hub and the four anonymous cases, from the
 // site's own results and their clients' words only. The named clients agreed to be named with numbers (the
-// founder, "i have everyones approval"), but what SocialStream did for FlyX and Prof Enzo, and since when, is not
-// on the site yet: their cases and their numbers on the social media page are drafts (draft: true), built only with
-// SS_DRAFTS=1 into dist/site-drafts for review, never into dist/site.
+// founder, "i have everyones approval"). FlyX's and Prof Enzo's cases and their numbers on the social media page were
+// drafts until v22 (2026-11-27, the founder: "all of our results"). A page with draft: true is built only with
+// SS_DRAFTS=1 into dist/site-drafts for review, never into dist/site; none has it now.
 // No em dashes anywhere in the copy (tools/site.mjs stops on one).
 import { C } from '../content.mjs';
 import { ON as ES_ON, SLUGS } from './es.mjs';
@@ -43,6 +43,59 @@ const NAMED = [
   { n: '69K', who: p('FlyX Tenerife · Élményközpont', 'FlyX Tenerife · Experience centre'), d: p('organikus megtekintés egy reelen', 'organic views on one reel'), page: 'case-flyx', img: 'r-flyx-1.jpg' },
   { n: p('9,8M+', '9.8M+'), who: p('Prof Enzo · Facebook', 'Prof Enzo · Facebook'), d: p('organikus megtekintés · 33K követő', 'organic views · 33K followers'), page: 'case-enzo', img: 'r-enzo-1.jpg' },
 ];
+
+// Clients the founder named for the field pages and the website page (2026-11-27): the names as the founder wrote them,
+// what we did, and a figure only where the founder gave one plainly; without a figure the name leads the card.
+// Euros at the ECB rate of 13 November 2026 (365.6 Ft), costs rounded up: 800 Ft = €2.19, 2500 Ft = €6.84, 26 997 Ft = €73.85,
+// 12 028 Ft = €32.90. Later figures from the founder's case-study PDF (Esettanulmányok, vélemények.pdf).
+// obj: the card's 3D object (assets/<obj>-mix.webp), one per client, the same wherever the client appears (2026-11-28:
+// made in the founder's Figma with GPT Image 2.5 in the 2026-11-11 objects' words, then tools/objects-*.py; no logos).
+export const CLIENTS = {
+  hoof: { obj: 'c-hoof', n: 28, unit: '× ROAS', name: 'Hoofbútor', kind: p('Bútor webshop', 'Furniture webshop'),
+    d: p('1 forint hirdetésből 28 forint bevétel, az évek alatt összesen. Évek óta mi futtatjuk a hirdetéseiket.', '€28 of revenue for every €1 of ads, over the years in total. We have run their ads for years.') },
+  zsm: { obj: 'c-zsm', n: 800, unit: 'Ft', en: { pre: '€', n: 2.19, unit: '' }, name: 'ZsM Sportruházat', kind: p('Webshop', 'Webshop'),
+    d: p('Ennyibe került egy okosóra-eladás az első karácsonyi kampányukban. Hosszabb ideig dolgoztunk együtt.', 'The cost of one smartwatch sale in their first Christmas campaign. We worked together for a long time.') },
+  // 15x: the PDF's "15x ROAS kozmetikai webshopnál" (Google, on average), which the founder says is Karaja; the sales and
+  // their cost the founder's own reading of the account (the PDF's Facebook ad sets: 1968 and 2680 Ft a purchase)
+  karajaShop: { obj: 'c-karaja', n: 15, unit: '× ROAS', name: 'Karaja Makeup Hungary', kind: p('Kozmetikai webshop', 'Cosmetics webshop'),
+    d: p('Átlagos megtérülés a Google-kampányaikban. A Facebook-hirdetéseinkből több mint 200 eladás jött, egyenként nagyjából 2500 Ft-ért.', 'Average return on their Google campaigns. Our Facebook ads brought in over 200 sales, at about €6.84 each.') },
+  realbeauty: { obj: 'c-realbeauty', n: 2, unit: '×', name: 'Realbeauty.hu', kind: p('Kozmetikai webshop', 'Cosmetics webshop'),
+    d: p('Az első hónapban megdupláztuk az addigi legjobb havi bevételüket. 2023 júliusában kezdtünk.', 'In the first month we doubled their best month’s revenue so far. We started in July 2023.') },
+  // a webshop the founder could not name (the PDF's "9x alacsonyabb költség eredményenként"): it stays unnamed
+  traffic: { obj: 'c-traffic', n: 9, unit: '×', name: p('Webshop', 'Webshop'), kind: p('Forgalmi kampány', 'Traffic campaign'),
+    d: p('Ennyivel olcsóbb lett egy kattintás: a korábbi hirdetéseik 0,18 €-ba kerültek kattintásonként, a mieink 0,02 €-ba, egy érkezésioldal-megtekintés pedig 0,03 €-ba.', 'That much cheaper per click: their earlier ads cost €0.18 a click, ours €0.02, and a landing page view €0.03.') },
+  tony: { obj: 'c-tony', n: 200, unit: '+', name: 'Tony Web Studio', kind: p('Webstúdió', 'Web studio'),
+    d: p('Lead a hirdetéseinkből, hónapokon át.', 'Leads from our ads, over several months.') },
+  // Olivér's own result as a Meta Marketing Pro (October 2022 to February 2023), before the agency: the PDF's "2x lead
+  // növekedés" screenshots, counted over the whole account as the founder asked (2026-11-27): October 2022, 84 leads
+  // (79 + 3 + 1 + 1) from 2 623 941 Ft in all; 29 January to 27 February 2023, 193 leads (184 + 9) from 2 622 409 Ft:
+  // 31 237 Ft then 13 588 Ft a lead (€85.45, €37.17), 2.3x. Big George Properties is not named until they agree to it.
+  // the founder asked for it a little more dramatic (2026-11-27): +130% leads (193 against 84), not a forint more spent
+  // (2 622 409 Ft against 2 623 941), and October's dearest campaign (181 627 Ft for one website lead, €496.80) as the
+  // before; the averages stay in the sentence. Not used: "181 627 Ft to 12 028 Ft" as a headline (worst set against best).
+  bgp: { obj: 'c-bgp', n: '+130', unit: '%', en: { pre: '+', n: 130, unit: '%' }, name: p('Luxusingatlan-cég', 'Luxury real estate company'), kind: p('Olivér, Meta Marketing Pro-ként', 'Olivér, as a Meta Marketing Pro'),
+    d: p('Egy forinttal sem több pénzből: havi 84 helyett 193 lead. Októberben még volt kampány, ahol egyetlen lead 181 627 Ft-ba került; négy hónappal később egy lead átlagosan 13 588 Ft volt, a korábbi 31 237 Ft helyett. (A fiók összes kampánya, 2022. október – 2023. február.)', 'Not a cent more spent: 193 leads a month instead of 84. In October one campaign was still paying €496.80 for a single lead; four months later a lead cost €37.17 on average, down from €85.45. (Every campaign in the account, October 2022 to February 2023.)') },
+  karajaEvents: { obj: 'c-karaja', name: 'Karaja Makeup Hungary', kind: p('Workshopok', 'Workshops'),
+    d: p('Évekig mi hirdettük a workshop-bemutatóikat: több száz jelentkező az ország minden pontjáról.', 'For years we ran the ads for their workshop demos: several hundred sign-ups from all over the country.') },
+  bridle: { obj: 'c-bridle', name: 'Bridle Up Hope', kind: p('Alapítvány', 'Foundation'),
+    d: p('Mi indítottuk el a marketingjüket Magyarországon: fotózás és videó a nyílt napjaikon, közösségi média hirdetések, jelentkezési és adományozási platform, e-mail marketing és CRM.', 'We started their marketing in Hungary: photo and video at their open days, social media ads, sign-up and donation platforms, email marketing and a CRM.') },
+  // the Church's official name in each language (the founder wrote "Az Utolsó Napi Szentek Jézus Krisztus Egyháza")
+  church: { obj: 'c-church', n: 30, unit: '+', name: p('Jézus Krisztus Utolsó Napi Szentjeinek Egyháza', 'The Church of Jesus Christ of Latter-day Saints'), kind: p('Húsvéti kampány', 'Easter campaign'),
+    d: p('Ország és nyelv egy húsvéti kampányban, Európa-szerte: hirdetések az Instagramon, a Facebookon és a YouTube-on, weboldallal. Közösségi média tanácsadást is adtunk nekik.', 'Countries and languages in one Easter campaign across Europe: ads on Instagram, Facebook and YouTube, with a website. We also gave them social media consulting.') },
+  ritas: { obj: 'c-ritas', name: 'Rita’s Beauty Corner', kind: p('Szépségszalon', 'Beauty salon'), url: 'https://ritasbeautycorner.hu/',
+    d: p('A weboldalukat és a teljes marketingjüket mi csináltuk.', 'We made their website and all of their marketing.') },
+  lunelle: { obj: 'c-lunelle', name: 'Lunelle Aesthetics', kind: p('Esztétikai klinika, Budapest', 'Aesthetics clinic, Budapest'), url: 'https://lunelleclinic.hu/',
+    d: p('Az eredeti weboldalukat mi készítettük. Azóta ők viszik, alig változtattak rajta.', 'We built their original website. They have run it themselves since, with only small changes.') },
+  dorombolda: { obj: 'c-dorombolda', name: 'Dorombolda Cicahotel', kind: p('Macskahotel', 'Cat hotel'),
+    d: p('Mi indítottuk az első hirdetéseiket, és ezekből jött össze a kezdőtőke a további fejlődésükhöz.', 'We started their first ads, and those brought in the starting capital for their next steps.') },
+};
+
+// The definition of interest media, the founder's choice (2026-11-26, "Feeds + what we make"): the explainer's answer
+// and its structured data. The two halves after the colon are the home page's promise, word for word.
+const DEF = p('Az interest media olyan marketing, ami azoknak a feedeknek szól, amelyek azt mutatják az embereknek, ami érdekli őket, nem csak azt, amit a követett fiókok posztolnak: videók, amiket végignéznek, és hirdetések, amik megtérülnek.',
+  'Interest media is marketing for feeds that show people what interests them, not just what the accounts they follow post: videos people watch to the end, and ads that pay off.');
+// a card of the home page's "who it is for" (content.mjs), by its picture: the line under its name
+const whoCard = img => { const c = C.who.cards.find(x => x.img === img); return p(c.hu[1], c.en[1]); };
 
 // shared words of the site's pages
 export const W = {
@@ -133,7 +186,7 @@ const ALL = [
       'We build fast, mobile-first landing pages and websites that convert. We make the video and run the ads too, so the page finishes what the video started.'),
     included: [p('Landing oldalak', 'Landing pages'), p('Weboldalak', 'Websites'), p('Mobilra tervezve', 'Designed for phones first'), p('Gyors betöltés', 'Fast to load'), p('Konverzióra építve', 'Built to convert')],
     // "we built this site too" is left out until the founder says so (the doc suggests it; the site does not say it)
-    proof: { quotes: [5, 4] },
+    clients: ['lunelle', 'ritas'], proof: { quotes: [5, 4] },
     faq: [q('Landing oldalt vagy teljes weboldalt készítetek?', 'Do you build landing pages or whole websites?', 'Mindkettőt: gyors, mobilra tervezett landing oldalakat és weboldalakat, amik konvertálnak.', 'Both: fast, mobile-first landing pages and websites that convert.'),
       q('Ki építi az oldalt?', 'Who builds the site?', 'David, a fejlesztőnk: weboldalak, landing oldalak, automatizálás.', 'David, our developer: websites, landing pages, automation.'),
       q('A hirdetést is ti futtatjátok hozzá?', 'Do you run the ads for it too?', 'Igen. Mi gyártjuk a videót, mi futtatjuk a hirdetést, és mi építjük az oldalt, ami befejezi, amit a videó elkezdett.', 'Yes. We make the video, we run the ads, and we build the page that finishes what the video started.')],
@@ -179,14 +232,14 @@ const ALL = [
   },
   {
     id: 'case-door', type: 'case', parent: 'cases', res: 'o-door', uses: ['svc-ads'], path: p('/esettanulmanyok/ajto-webshop/', '/en/case-studies/door-webshop/'),
-    title: p('Ajtó webshop: 81× ROAS Google Performance Maxszel · SocialStream', 'Door webshop: 81× ROAS with Google Performance Max · SocialStream'),
-    desc: p('Egy ajtó webshop Google Performance Max kampányában 1 forint hirdetésből 81 forint bevétel lett. Esettanulmány valódi számokkal.',
-      'In a door webshop’s Google Performance Max campaign, every €1 of ads brought in €81 of revenue. A case study with real numbers.'),
-    crumb: p('Ajtó webshop', 'Door webshop'),
-    h1k: p('Ajtó webshop · Google Performance Max', 'Door webshop · Google Performance Max'),
+    title: p('onlineajtok.hu: 81× ROAS Google Performance Maxszel · SocialStream', 'onlineajtok.hu: 81× ROAS with Google Performance Max · SocialStream'),
+    desc: p('Az onlineajtok.hu ajtó webshop Google Performance Max kampányában 1 forint hirdetésből 81 forint bevétel lett. Esettanulmány valódi számokkal.',
+      'In the Google Performance Max campaign of onlineajtok.hu, a door webshop, every €1 of ads brought in €81 of revenue. A case study with real numbers.'),
+    crumb: p('onlineajtok.hu', 'onlineajtok.hu'),
+    h1k: p('onlineajtok.hu · Google Performance Max', 'onlineajtok.hu · Google Performance Max'),
     h1t: p('1 forint hirdetésből <em>81 forint</em> bevétel.', '<em>€81</em> of revenue for every €1 of ads.'),
-    lead: p('Ezt egy ajtó webshop Google Performance Max kampányában értük el: 1 forint hirdetésből 81 forint bevétel lett, vagyis 81× ROAS.',
-      'We reached it in a door webshop’s Google Performance Max campaign: every €1 of ads brought in €81 of revenue, that is 81× ROAS.'),
+    lead: p('Ezt az onlineajtok.hu ajtó webshop Google Performance Max kampányában értük el: 1 forint hirdetésből 81 forint bevétel lett, vagyis 81× ROAS. A kampányaik folyamatosan 50× és 80× közötti megtérülést hoztak.',
+      'We reached it in the Google Performance Max campaign of onlineajtok.hu, a door webshop: every €1 of ads brought in €81 of revenue, that is 81× ROAS. Their campaigns kept bringing between 50× and 80× ROAS.'),
   },
   {
     id: 'case-hall', type: 'case', parent: 'cases', res: 'o-hall', quote: 1, uses: ['svc-ads'], path: p('/esettanulmanyok/b2b-csarnokepito/', '/en/case-studies/industrial-hall-builder/'),
@@ -244,6 +297,108 @@ const ALL = [
     lead: p('Prof Enzo animált MI-orvos karakter: az egészséges életmódról, étkezésről, szokásokról és a jóllétről beszél, és doTERRA-termékeket ajánl. Az első posztja óta mi készítjük a videóit, mi visszük a Facebook-oldalát és mi tervezzük a stratégiáját; az oldal organikusan nőtt 9,8M+ megtekintésre és 33K követőre.',
       'Prof Enzo is an animated AI doctor character who talks about healthy living, healthy eating, good habits and well-being, and recommends doTERRA products. Since his first post we have made his videos, run his Facebook page and planned its strategy; the page grew organically to 9.8M+ views and 33K followers.'),
     did: [p('A videók, az ötlettől a vágásig', 'The videos, from idea to edit'), p('A Facebook-oldal vezetése', 'Running the Facebook page'), p('Stratégia: mit posztol az oldal és miért', 'Strategy: what the page posts and why'), p('Hirdetések, amik érdeklődőket hoznak, nem megtekintést', 'Ads that bring in leads, not views')],
+  },
+  // The interest media explainer and the fields we work in (the founder, 2026-11-26: "Explainer + industry pages", then
+  // "all 8 above": the home page's four groups and two more, health and wellness, tourism and experiences). Drafts
+  // first, live since v22 (2026-11-27). Their words say only what the site already says, and the approved
+  // definition; their questions are the FAQ page's own (faqFrom: 'group:i' there, or 'page:i' a page's own list).
+  {
+    id: 'interest-media', type: 'explainer', path: p('/mi-az-interest-media/', '/en/what-is-interest-media/'),
+    title: p('Mi az interest media? Meghatározás és példák · SocialStream', 'What is interest media? Definition and examples · SocialStream'),
+    desc: p('Az interest media a feedekre épülő marketing: azt mutatják, ami érdekli az embereket. Videók, amiket végignéznek, és hirdetések, amik megtérülnek.',
+      'Interest media is marketing for feeds that show people what interests them: videos people watch to the end, and ads that pay off. With real examples.'),
+    crumb: p('Mi az interest media?', 'What is interest media?'),
+    h1k: p('Interest media', 'Interest media'), h1t: p('Marketing a feedekre, amelyek azt mutatják, <em>ami érdekel</em>.', 'Marketing for feeds that show people <em>what interests them</em>.'),
+    lead: DEF,
+    faq: [q('Mi az interest media?', 'What is interest media?', DEF.hu, DEF.en)], faqFrom: ['munka:0', 'eredmenyek-kerdesek:0', 'rolunk-kerdesek:0'],
+  },
+  {
+    id: 'audiences', type: 'audiences', path: p('/kikkel-dolgozunk/', '/en/who-we-work-with/'),
+    title: p('Kikkel dolgozunk? Területek, valódi esetekkel · SocialStream', 'Who we work with: fields, with real cases · SocialStream'),
+    desc: p('Webshopok, B2B cégek, webinárok és események, helyi szolgáltatók, egészség és turizmus: mit hozott a munkánk az egyes területeken, valódi esetekkel.',
+      'Webshops, B2B companies, webinars and events, local services, health and tourism: what our work brought in each field, with real cases.'),
+    crumb: p('Kikkel dolgozunk', 'Who we work with'),
+    h1k: p('Kikkel dolgozunk', 'Who we work with'), h1t: C.who.h2, lead: C.who.lead,
+  },
+  {
+    id: 'ind-shop', type: 'industry', parent: 'audiences', art: 'a-shop', card: whoCard('a-shop'),
+    path: p('/kikkel-dolgozunk/webshopok/', '/en/who-we-work-with/webshops/'),
+    title: p('Webshopok: vásárlások Google és Meta kampányokból · SocialStream', 'Webshops: sales from Google and Meta campaigns · SocialStream'),
+    desc: p('Webshopoknak vásárlásokat hozunk Google és Meta kampányokból: 81× ROAS egy ajtó webshopnál, 23× ROAS egy karóra webshop karácsonyi szezonjában.',
+      'We bring webshops sales from Google and Meta campaigns: 81× ROAS for a door webshop, 23× ROAS in a watch webshop’s Christmas season.'),
+    crumb: p('Webshopok', 'Webshops'), h1k: p('Webshopok', 'Webshops'),
+    h1t: p('Vásárlások <em>Google és Meta</em> kampányokból.', 'Sales from <em>Google and Meta</em> campaigns.'),
+    lead: p('A legjobb e-commerce eredményünk 81× ROAS egy ajtó webshopnál. Egy karóra webshopnak a karácsonyi kampány 23× ROAS-t és több mint 8M Ft bevételt hozott.',
+      'Our best e-commerce result is 81× ROAS for a door webshop. For a watch webshop, the Christmas campaign brought 23× ROAS and over €21K in revenue.'),
+    pains: ['ads', 'web', 'video'], cases: ['case-door', 'case-watch'], clients: ['hoof', 'karajaShop', 'traffic', 'realbeauty', 'zsm'], quotes: [0, 2], uses: ['svc-ads', 'svc-web', 'svc-video'],
+    faqFrom: ['svc-ads:3', 'munka:2', 'munka:3'],
+  },
+  {
+    id: 'ind-b2b', type: 'industry', parent: 'audiences', art: 'a-b2b', card: whoCard('a-b2b'),
+    path: p('/kikkel-dolgozunk/b2b-cegek/', '/en/who-we-work-with/b2b-companies/'),
+    title: p('B2B cégek: ajánlatkérések Meta-kampányokból · SocialStream', 'B2B companies: quote requests from Meta campaigns · SocialStream'),
+    desc: p('B2B cégeknek ajánlatkéréseket hozunk hirdetésekből ott is, ahol „a Facebook nem működik”: egy csarnoképítő ügyfelünknél egy hét alatt 79M Ft bevétel lett.',
+      'We bring B2B companies quote requests from ads even where “Facebook doesn’t work”: for an industrial hall builder, €216K of revenue in one week.'),
+    crumb: p('B2B cégek', 'B2B companies'), h1k: p('B2B cégek', 'B2B companies'),
+    h1t: p('Ajánlatkérések ott is, ahol <em>„a Facebook nem működik”</em>.', 'Quote requests even where <em>“Facebook doesn’t work”</em>.'),
+    lead: p('Egy csarnoképítő ügyfelünknek egy B2B kampány a Metán egy hét alatt 79M Ft bevételt hozott. Ők is azt hitték, a Facebook a fiataloknak és a webshopoknak való.',
+      'For an industrial hall builder, one B2B campaign on Meta brought in €216K of revenue in one week. They too thought Facebook was for young people and webshops.'),
+    pains: ['ads', 'auto', 'web'], cases: ['case-hall'], clients: ['tony', 'bgp'], quotes: [1], uses: ['svc-ads', 'svc-auto', 'svc-web'],
+    faqFrom: ['eredmenyek-kerdesek:1', 'munka:4', 'munka:2'],
+  },
+  {
+    id: 'ind-events', type: 'industry', parent: 'audiences', art: 'a-events', card: whoCard('a-events'),
+    path: p('/kikkel-dolgozunk/webinarok-es-esemenyek/', '/en/who-we-work-with/webinars-and-events/'),
+    title: p('Webinárok és események: 105 Ft egy jelentkező · SocialStream', 'Webinars and events: €0.29 per registrant · SocialStream'),
+    desc: p('Webinárokra és eseményekre hozunk jelentkezőket alacsony költséggel: egy egészségügyi webinárra 600K Ft-ból körülbelül 5700 jelentkező érkezett.',
+      'We bring sign-ups to webinars and events at a low cost: about 5,700 people registered for a healthcare webinar from €1,650.'),
+    crumb: p('Webinárok és események', 'Webinars and events'), h1k: p('Webinárok és események', 'Webinars and events'),
+    h1t: p('Jelentkezők <em>alacsony költséggel</em>.', 'Sign-ups at a <em>low cost</em>.'),
+    lead: p('Egy egészségügyi webinárra körülbelül 5700 jelentkező érkezett 600K Ft-ból, egyenként 105 Ft-ért. A szervező pár száz jelentkezőre számított.',
+      'About 5,700 people registered for a healthcare webinar from €1,650, at €0.29 each. The organiser expected a few hundred.'),
+    pains: ['ads', 'auto', 'video'], cases: ['case-webinar'], clients: ['karajaEvents', 'bridle', 'church'], quotes: [3], reels: ['r-uty', 'r-lv-sunset', 'r-lv-yellow', 'r-lv-hoodie', 'r-lv-cap'],
+    uses: ['svc-ads', 'svc-video', 'svc-auto'], faqFrom: ['munka:4', 'munka:1', 'eredmenyek-kerdesek:0'],
+  },
+  {
+    id: 'ind-local', type: 'industry', parent: 'audiences', art: 'a-local', card: whoCard('a-local'),
+    path: p('/kikkel-dolgozunk/helyi-szolgaltatok/', '/en/who-we-work-with/local-services/'),
+    title: p('Helyi szolgáltatók: videó, social és hirdetés · SocialStream', 'Local services: video, social and ads from one team · SocialStream'),
+    desc: p('Szépségszalontól a tenerifei élményprogramig: helyi szolgáltatóknak egy csapattól készítünk videót, visszük a social médiát és futtatjuk a hirdetéseket.',
+      'From beauty salons to experiences on Tenerife: for local services, one team makes the video and runs the social media and the ads.'),
+    crumb: p('Helyi szolgáltatók és élményprogramok', 'Local services and experiences'), h1k: p('Helyi szolgáltatók és élményprogramok', 'Local services and experiences'),
+    h1t: p('Videó, social és hirdetés <em>egy csapattól</em>.', 'Video, social and ads <em>from one team</em>.'),
+    lead: p('Szépségszalontól a tenerifei élményprogramig dolgozunk helyi szolgáltatókkal. A FlyX Tenerife élményközpont egyik reelje organikusan 69K megtekintést ért el.',
+      'From beauty salons to experiences on Tenerife, we work with local services. One of the FlyX Tenerife experience centre’s reels reached 69K organic views.'),
+    pains: ['social', 'video', 'ads'], cases: ['case-flyx'], clients: ['ritas', 'lunelle', 'dorombolda'], quotes: [4, 5], uses: ['svc-social', 'svc-video', 'svc-ads', 'svc-web'],
+    faqFrom: ['svc-social:0', 'munka:3', 'rolunk-kerdesek:3'],
+  },
+  {
+    id: 'ind-health', type: 'industry', parent: 'audiences', art: 'o-webinar',
+    card: p('Videók és oldalak az egészségről: Prof Enzo oldala organikusan <b>9,8M+</b> megtekintést ért el a Facebookon.', 'Videos and pages about health: Prof Enzo’s page reached <b>9.8M+</b> organic views on Facebook.'),
+    path: p('/kikkel-dolgozunk/egeszseg-es-wellness/', '/en/who-we-work-with/health-and-wellness/'),
+    title: p('Egészség és wellness: videók, oldalak, hirdetések · SocialStream', 'Health and wellness: videos, pages and ads · SocialStream'),
+    desc: p('Prof Enzo animált MI-orvos oldala organikusan 9,8M+ megtekintést ért el a Facebookon, egy egészségügyi webinárra 105 Ft-ért érkezett egy jelentkező.',
+      'Prof Enzo, an animated AI doctor, reached 9.8M+ organic views on Facebook, and a healthcare webinar drew registrants at €0.29 each.'),
+    crumb: p('Egészség és wellness', 'Health and wellness'), h1k: p('Egészség és wellness', 'Health and wellness'),
+    h1t: p('<em>9,8M+</em> organikus megtekintés a Facebookon, egy MI-orvossal.', '<em>9.8M+</em> organic views on Facebook, with an AI doctor.'),
+    lead: p('Prof Enzo animált MI-orvos az egészséges életről beszél; az első posztja óta mi készítjük a videóit és visszük az oldalát. Egy egészségügyi szolgáltató webinárjára 105 Ft-ért érkezett egy jelentkező.',
+      'Prof Enzo, an animated AI doctor, talks about healthy living; we have made his videos and run his page since his first post. A healthcare provider’s webinar drew registrants at €0.29 each.'),
+    pains: ['video', 'social', 'ads'], cases: ['case-enzo', 'case-webinar'], quotes: [3, 4, 5], reels: ['r-enzo-1', 'r-enzo-2'],
+    uses: ['svc-video', 'svc-social', 'svc-ads', 'svc-strat'], faqFrom: ['munka:1', 'svc-social:0', 'eredmenyek-kerdesek:0'],
+  },
+  {
+    id: 'ind-tourism', type: 'industry', parent: 'audiences', art: 'i-video',
+    card: p('Reelek, oldalak, hirdetések és foglalási rendszer egy tenerifei élményközpontnak.', 'Reels, pages, ads and a booking system for an experience centre on Tenerife.'),
+    path: p('/kikkel-dolgozunk/turizmus-es-elmenyek/', '/en/who-we-work-with/tourism-and-experiences/'),
+    title: p('Turizmus és élmények: reelek, foglalási rendszer · SocialStream', 'Tourism and experiences: reels and a booking system · SocialStream'),
+    desc: p('Egy tenerifei élményközpontnak az első posztjuk óta mi forgatjuk a reeleket, visszük az oldalakat és a hirdetéseket, és mi programoztuk a foglalási rendszert.',
+      'For an experience centre on Tenerife we have shot the reels, run the pages and the ads, and programmed the booking system since their first post.'),
+    crumb: p('Turizmus és élmények', 'Tourism and experiences'), h1k: p('Turizmus és élmények', 'Tourism and experiences'),
+    h1t: p('Reelek, oldalak és <em>foglalási rendszer</em>.', 'Reels, pages and a <em>booking system</em>.'),
+    lead: p('A FlyX Tenerife élményközpontnak az első posztjuk óta mi forgatjuk a reeleket, mi visszük az oldalaikat és a hirdetéseiket, és mi programoztuk a foglalási rendszerüket. Egyik reeljük organikusan 69K megtekintést ért el.',
+      'For the FlyX Tenerife experience centre we have shot the reels, run their pages and ads, and programmed their booking system since their first post. One of their reels reached 69K organic views.'),
+    pains: ['video', 'ads', 'auto'], cases: ['case-flyx'], reels: ['r-flyx-1', 'r-flyx-2', 'r-flyx-3'],
+    uses: ['svc-video', 'svc-social', 'svc-ads', 'svc-web', 'svc-auto'], faqFrom: ['munka:1', 'munka:4', 'munka:2'],
   },
   {
     id: 'about', type: 'about', path: p('/rolunk/', '/en/about/'),
@@ -328,6 +483,13 @@ const ALL = [
 
 // a service page's service (content.mjs) and its page
 for (const pg of ALL) if (pg.svc) { pg.s = svc(pg.svc); pg.crumb = p(...pg.s.k); pg.h1t = p(...pg.s.t); }
+// a page's questions taken from the FAQ page ('group:i') or another page's own list ('page:i'), as they stand there
+const FAQ_PAGE = ALL.find(x => x.id === 'faq');
+for (const pg of ALL) if (pg.faqFrom) pg.faq = [...(pg.faq || []), ...pg.faqFrom.map(ref => {
+  const [a, i] = ref.split(':'), g = FAQ_PAGE.groups.find(x => x.id === a), it = g ? g.items[+i] : (ALL.find(x => x.id === a) || {}).faq?.[+i];
+  if (!it) throw new Error(`site/pages.mjs: ${pg.id} asks for the question ${ref}, which is not there`);
+  return it;
+})];
 // the Spanish pages (site/es.mjs): every page gets its Spanish address, or the build stops
 if (ES_ON) for (const pg of ALL) { if (!SLUGS[pg.id]) throw new Error('site/es.mjs has no Spanish address for ' + pg.id); pg.path.es = SLUGS[pg.id]; }
 // the pages that are built: drafts only with SS_DRAFTS=1 (tools/site.mjs then writes dist/site-drafts)
@@ -336,4 +498,6 @@ export const IS_DRAFTS = DRAFTS;
 export const byId = id => PAGES.find(pg => pg.id === id);
 export const url = (pg, l) => ORIGINS[l] + pg.path[l];
 // the header's links: the services, the results on the home page, About us, the questions, contact
-export const NAV = [byId('services'), { id: 'results', path: { ...p('/#eredmenyek', '/en/#eredmenyek'), ...(ES_ON ? { es: '/#eredmenyek' } : {}) }, nav: p('Eredmények', 'Results') }, byId('about'), byId('faq'), byId('contact')];
+// the founder, 2026-11-27: the case studies and the new pages were hard to reach from the home page, so the header names
+// "Kikkel dolgozunk" and its "Eredmények" goes to the case studies page (it was the home page's #eredmenyek)
+export const NAV = [byId('services'), { ...byId('audiences'), nav: p('Kikkel dolgozunk', 'Who we work with') }, { ...byId('cases'), nav: p('Eredmények', 'Results') }, byId('about'), byId('faq'), byId('contact')];

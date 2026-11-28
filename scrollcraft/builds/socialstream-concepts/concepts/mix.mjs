@@ -116,7 +116,8 @@ export const saySec = () => `  <!-- what we do, lighting as it is read, while th
   </section>`;
 
 // href: where each problem's link goes (its card on this page, or on the site its service's own page)
-export const painsSec = (href = it => `#svc-${it.id}`) => { const s = C.services, p = C.problem; return `  <!-- what goes wrong for a business, each problem joined by a running line of light to the service that answers
+// ids: only these services' problems (the site's field pages); without them, all six, as on the concept pages
+export const painsSec = (href = it => `#svc-${it.id}`, ids = null) => { const s = C.services, p = C.problem; return `  <!-- what goes wrong for a business, each problem joined by a running line of light to the service that answers
        it (new, to confirm) -->
   <section class="mx-pains" aria-labelledby="prob-h">
     <div class="mx-sky low" aria-hidden="true"><i class="b2"></i></div>
@@ -127,7 +128,7 @@ export const painsSec = (href = it => `#svc-${it.id}`) => { const s = C.services
         ${tx('p', 'mx-sub', p.body, 'data-r')}
       </div>
       <ul class="mx-pain-list">
-        ${s.items.map((it, i) => `<li class="mx-card mx-pain" data-r style="--d:${i % 2};--flow:-${(i * 0.55).toFixed(2)}s">
+        ${s.items.filter(it => !ids || ids.includes(it.id)).map((it, i) => `<li class="mx-card mx-pain" data-r style="--d:${i % 2};--flow:-${(i * 0.55).toFixed(2)}s">
           ${tx('p', 'q', pair(it.pain))}
           <span class="mx-pain-line" aria-hidden="true"></span>
           <div class="mx-pain-to">
@@ -167,22 +168,26 @@ export const servicesSec = (more = null) => { const s = C.services; return `  <!
   </section>`; };
 
 // the four stat cards alone (the site's paid-advertising page shows them too)
-export const statCards = () => `<div class="mx-stats">
+// links (the site's home page): { href: item => its case page, label }: the card goes to its case, as the services' cards do
+export const statCards = (links = null) => `<div class="mx-stats">
         ${C.results.items.map((it, i) => `<article class="mx-card mx-stat" data-r style="--d:${i}">
           <img class="bob" style="--dur:${6.2 + i * 0.5}s;--delay:-${i * 1.2}s;--amp:-10px" src="${asset(it.obj + '-mix.webp')}" alt="" width="400" height="400" loading="lazy">
           <p class="n num">${count(it.n, it.unit, it.en)}</p>
-          ${tx('p', 'who', pair(it.who))}
-          ${tx('p', 'd', pair(it.p))}
+          ${links ? `<p class="who"><a class="pg-card-link" href="${links.href(it)}">${t(pair(it.who))}</a></p>` : tx('p', 'who', pair(it.who))}
+          ${tx('p', 'd', pair(it.p))}${links ? `
+          <p class="pg-more-l" aria-hidden="true"><span>${t(links.label)}</span>${ARR(1)}</p>` : ''}
         </article>`).join('\n        ')}
       </div>`;
-export const resultsSec = () => { const r = C.results; return `  <!-- results: four stat cards that count up, then a row of reel frames that keeps running -->
+// links (the site's home page): { card: for statCards, all: { href, label } under the cards }
+export const resultsSec = (links = null) => { const r = C.results; return `  <!-- results: four stat cards that count up, then a row of reel frames that keeps running -->
   <section class="mx-res" id="eredmenyek" aria-labelledby="res-h">
     <div class="wrap">
       <div class="mx-head row">
         <div>${tx('p', 'mx-eyebrow', r.eyebrow, 'data-r')}${tx('h2', 'mx-h2', r.h2, 'id="res-h" data-r')}</div>
         <div data-r>${btn(r.cta)}</div>
       </div>
-      ${statCards()}
+      ${statCards(links && links.card)}${links && links.all ? `
+      <p class="pg-all" data-r><a href="${links.all.href}">${t(links.all.label)}${ARR(1)}</a></p>` : ''}
     </div>
     <div class="mx-reels">
       <div class="wrap mx-reels-head">${tw('h3', 'mx-h3', C.reels.h2, 'data-r')}${tx('p', 'mx-cap', C.reels.caption, 'data-r')}</div>
@@ -219,7 +224,8 @@ export const stepsSec = () => { const st = C.steps; return `  <!-- how we work: 
     </div>
   </section>`; };
 
-export const whoSec = () => { const w = C.who; return `  <!-- who it is for, in a panel, each card's object floating -->
+// links (the site's home page): { href: card => its field page, label, all: { href, label } under the cards }
+export const whoSec = (links = null) => { const w = C.who; return `  <!-- who it is for, in a panel, each card's object floating -->
   <section class="mx-who" id="kiknek" aria-labelledby="who-h">
     <div class="mx-panel">
       <div class="mx-sky low" aria-hidden="true"><i class="b3"></i><i class="b2"></i></div>
@@ -232,10 +238,12 @@ export const whoSec = () => { const w = C.who; return `  <!-- who it is for, in 
         <div class="mx-who-grid">
           ${w.cards.map((c, i) => `<article class="mx-card" data-r style="--d:${i}">
             <img class="bob" style="--dur:${6 + i * 0.5}s;--delay:-${i}s;--amp:-12px" src="${asset(c.img + '-mix.webp')}" alt="" width="640" height="560" loading="lazy">
-            <h3${en({ en: c.en[0] })}>${t({ hu: c.hu[0], en: c.en[0] })}</h3>
-            <p>${twin({ hu: c.hu[1], en: c.en[1] })}</p>
+            ${links ? `<h3><a class="pg-card-link" href="${links.href(c)}">${t({ hu: c.hu[0], en: c.en[0] })}</a></h3>` : `<h3${en({ en: c.en[0] })}>${t({ hu: c.hu[0], en: c.en[0] })}</h3>`}
+            <p>${twin({ hu: c.hu[1], en: c.en[1] })}</p>${links ? `
+            <p class="pg-more-l" aria-hidden="true"><span>${t(links.label)}</span>${ARR(1)}</p>` : ''}
           </article>`).join('\n          ')}
         </div>
+        ${links && links.all ? `<p class="pg-all center" data-r><a href="${links.all.href}">${t(links.all.label)}${ARR(1)}</a></p>` : ''}
         ${tx('p', 'mx-notfor', w.notfor, 'data-r')}
       </div>
     </div>
@@ -307,9 +315,10 @@ export const finalSec = () => `  <!-- the last call in a panel, under the aurora
   </section>`;
 
 // the page's <main>, the same on the concept page and on the site's home
-export const main = () => `
+// opts (the site's home page): links for the services', results' and who cards; the concept page passes none
+export const main = (opts = {}) => `
 <main>
-${[heroSec(), saySec(), painsSec(), servicesSec(), resultsSec(), compareSec(), stepsSec(), whoSec(), voicesSec(), teamSec(), offerSec(), faqSec(), finalSec()].join('\n\n')}
+${[heroSec(), saySec(), painsSec(), servicesSec(opts.services || null), resultsSec(opts.results || null), compareSec(), stepsSec(), whoSec(opts.who || null), voicesSec(), teamSec(), offerSec(), faqSec(), finalSec()].join('\n\n')}
 </main>
 `;
 export const PAGE_SCRIPTS = ['logo-anim.js', 'reels.js'];

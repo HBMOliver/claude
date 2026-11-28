@@ -184,7 +184,7 @@ for (const name of names.filter(n => n !== 'site')) {
 // the heading and the audit button on the first screen, the panel's light following the cursor and the page's
 // picture leaning toward it, the row along the panel's foot running at rest, the audit form in the page's language
 // (its errors and the email it writes), and nothing widening the page with a mouse at the screen's edges at 1440 and
-// 1100. On a phone: the menu button opens the links and a link closes it, nothing follows, no sideways scroll at 390
+// 1100. On a phone: the menu button opens all six links (since v23) and a link closes it, nothing follows, no sideways scroll at 390
 // and 320. With reduced motion: everything in place, rows still. And the language comes from the page alone: the home
 // page stays Hungarian (with its Hungarian film) for a visitor whose browser remembers English from the one-page site
 // of before, the English home plays the English film with nothing remembered, and the Spanish home shows its claim
@@ -251,7 +251,7 @@ if (names.includes('site')) {
       const m0 = await p.evaluate(() => { const b = document.querySelector('.menu-btn'), r = b.getBoundingClientRect(); return { shown: r.width > 0 && r.right <= innerWidth, links: getComputedStyle(document.querySelector('.nav .links')).visibility }; });
       await p.locator('.menu-btn').click(); await p.waitForTimeout(450);
       const m1 = await p.evaluate(() => ({ open: document.querySelector('.nav').classList.contains('menu-open'), exp: document.querySelector('.menu-btn').getAttribute('aria-expanded'), vis: getComputedStyle(document.querySelector('.nav .links')).visibility, n: [...document.querySelectorAll('.nav .links a')].filter(a => { const r = a.getBoundingClientRect(); return r.height > 30 && r.bottom <= innerHeight; }).length }));
-      ok(`${p0} phone: the menu button opens the links`, m0.shown && m0.links === 'hidden' && m1.open && m1.exp === 'true' && m1.vis === 'visible' && m1.n === 5, JSON.stringify({ m0, m1 }));
+      ok(`${p0} phone: the menu button opens the links`, m0.shown && m0.links === 'hidden' && m1.open && m1.exp === 'true' && m1.vis === 'visible' && m1.n === 6, JSON.stringify({ m0, m1 }));
       await p.keyboard.press('Escape'); await p.waitForTimeout(400);
       ok(`${p0} phone: Escape closes the menu`, await p.evaluate(() => !document.querySelector('.nav').classList.contains('menu-open') && document.querySelector('.menu-btn').getAttribute('aria-expanded') === 'false'));
       const still = await p.evaluate(() => [...document.querySelectorAll('[data-follow]')].every(e => !e.style.getPropertyValue('--fx')));

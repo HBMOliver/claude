@@ -36,7 +36,8 @@ import { FILMS, CUTS, STORED, filmFiles } from '../site/films.mjs';
 // the site's languages: Hungarian and English on socialstream.hu, Spanish on socialstream.es (site/es.mjs)
 const LANGS = ['hu', 'en', ...(ES_ON ? ['es'] : [])];
 
-const OG = 'assets/og-image.jpg';
+// the share images, one per language (site/head.mjs)
+import { OG } from '../site/head.mjs';
 // a stored cut must still be the file that was uploaded to Media Storage (site/films.mjs)
 for (const l of LANGS) for (const k of CUTS) {
   const c = FILMS[l][k]; if (!c.url) continue;
@@ -51,7 +52,7 @@ const LIMIT_ZIP = 60 * 1048576, LIMIT_UNPACKED = 250 * 1048576, LIMIT_FILES = 15
 const PULSE = ['p', 'form', 'survey', 'survey-assets', 'book', 'a', 'r', 'embed', 'd', 't', 'c', 'o', 'u', 'm', 'chat', 'api', 'fonts', 'page-assets', 'w', 'ct', 'socialstream', 'healthz', '.well-known', 'portal'];
 
 const read = f => fs.readFileSync(f, 'utf8');
-if (!fs.existsSync(OG)) throw new Error(OG + ' is missing: run tools/og.mjs');
+for (const f of Object.values(OG)) if (!fs.existsSync(f)) throw new Error(f + ' is missing: run tools/og.mjs');
 
 // the pages, each in every language
 const pages = [];
@@ -84,13 +85,17 @@ if (ES_ON && MISSES.size) {
 const page = id => PAGES.find(pg => pg.id === id);
 const plain = s => String(s).replace(/<[^>]+>/g, '');
 const link = (id, l) => `- [${plain(word(page(id).crumb, l))}${page(id).type === 'case' ? ({ en: ' (case study)', hu: ' (esettanulmány)', es: ' (caso de éxito)' })[l] : ''}](${url(page(id), l)})`;
-const ids = ['services', ...PAGES.filter(pg => pg.type === 'service').map(pg => pg.id), 'cases', ...PAGES.filter(pg => pg.type === 'case').map(pg => pg.id), 'about', 'audit', 'faq', 'contact'];
+// the interest media page, the fields we work in and their pages come after the cases, once they are built (drafts until then)
+const ids = ['services', ...PAGES.filter(pg => pg.type === 'service').map(pg => pg.id), 'cases', ...PAGES.filter(pg => pg.type === 'case').map(pg => pg.id),
+  ...PAGES.filter(pg => ['explainer', 'audiences', 'industry'].includes(pg.type)).map(pg => pg.id), 'about', 'audit', 'faq', 'contact'];
 const unlisted = PAGES.filter(pg => !ids.includes(pg.id) && pg.id !== 'home').map(pg => pg.id);
 if (unlisted.length) throw new Error('llms.txt does not list ' + unlisted.join(', '));
 const HOME = { hu: 'Főoldal', en: 'Home', es: 'Inicio' };
 const pagesIn = l => `## Pages in ${({ hu: 'Hungarian', en: 'English', es: 'Spanish' })[l]}
 - [${HOME[l]}](${url(page('home'), l)})
 ${ids.map(id => link(id, l)).join('\n')}`;
+// an amount in euros, as the English and Spanish pages give it, with the forints beside it on socialstream.hu (2026-11-28)
+const money = (origin, eur, ft) => origin === ORIGINS.hu ? `${eur} (${ft})` : eur;
 const llms = (origin, langs, email) => `# SocialStream
 
 > Interest media agency: we make the video, run the ads on Meta, TikTok and Google,
@@ -105,14 +110,24 @@ const llms = (origin, langs, email) => `# SocialStream
 - Growth strategy: campaign strategy, funnel audit, market positioning
 
 ## Results from client campaigns
-- 81x ROAS for a door webshop (Google Performance Max)
-- 79M Ft (about EUR 216K) revenue in one week for an industrial hall builder (Meta, B2B)
-- 23x ROAS for a watch webshop's Christmas campaign, over 8M Ft revenue
-- About 5,700 registrants for a healthcare webinar from 600K Ft: 105 Ft each
-- 300M+ Ft of ad budget managed since 2022
+- 81x ROAS for onlineajtok.hu, a door webshop (Google Performance Max); its campaigns kept bringing 50x to 80x
+- ${money(origin, '€216K', '79M Ft')} revenue in one week for an industrial hall builder (Meta, B2B)
+- 28x ROAS over the years for Hoofbútor, a furniture webshop
+- 23x ROAS for a watch webshop's Christmas campaign, over ${money(origin, '€21K', '8M Ft')} revenue
+- 15x ROAS on Google for Karaja Makeup Hungary, a cosmetics webshop, and 200+ sales from Facebook ads at about ${money(origin, '€6.84', '2,500 Ft')} each
+- 9x cheaper clicks for a webshop's traffic campaign: €0.18 a click before, €0.02 with our ads
+- Realbeauty.hu, a cosmetics webshop: its best monthly revenue doubled in the first month (July 2023)
+- ${money(origin, '€2.19', '800 Ft')} per smartwatch sale in ZsM Sportruházat's first Christmas campaign
+- 200+ leads from ads for Tony Web Studio
+- About 5,700 registrants for a healthcare webinar from ${money(origin, '€1,650', '600K Ft')}: ${money(origin, '€0.29', '105 Ft')} each
+- 69K organic views on one reel for FlyX Tenerife, an experience centre
+- 9.8M+ organic views on Facebook for Prof Enzo, with 33K followers
+- An Easter campaign across Europe in 30+ countries and languages for The Church of Jesus Christ of Latter-day Saints (Instagram, Facebook, YouTube)
+- ${money(origin, '€820K+', '300M+ Ft')} of ad budget managed since 2022
 
 ## Who we work with
-Webshops, B2B companies, webinars and events, local services and experiences.
+Webshops, B2B companies, webinars and events, local services and experiences, health and wellness, tourism and experiences.
+Clients include FlyX Tenerife, Hoofbútor, onlineajtok.hu, Karaja Makeup Hungary, Realbeauty.hu, ZsM Sportruházat, Tony Web Studio, Rita’s Beauty Corner, Lunelle Aesthetics, EJ Massage Therapies, Dorombolda Cicahotel, Bridle Up Hope and The Church of Jesus Christ of Latter-day Saints.
 At most two new partners a month.
 
 ## Free audit
@@ -194,7 +209,7 @@ for (const D of DOMAINS) {
     named(html).forEach(a => assets.add(a));
   }
   for (const f of local) named(read(f)).forEach(a => assets.add(a));
-  assets.add(OG);
+  for (const l of langs) assets.add(OG[l]);
   assets.add('assets/socialstream-logo-horizontal-small-dark.svg'); // the 404 page's logo
   const root = new Set(); for (const { html } of mine) for (const m of html.matchAll(/<link rel="(?:icon|apple-touch-icon|manifest)"[^>]*href="\/([^"]+)"/g)) root.add(m[1]);
   for (const i of JSON.parse(read('site.webmanifest')).icons || []) root.add(i.src.replace(/^\//, ''));
@@ -210,7 +225,8 @@ for (const D of DOMAINS) {
 
   // robots.txt: the doc's draft, the same effect as before (every crawler allowed), with the AI crawlers named
   // (whether to keep them allowed is the founder's call; recommended yes)
-  fs.writeFileSync(OUT + '/robots.txt', ['*', 'GPTBot', 'OAI-SearchBot', 'ClaudeBot', 'PerplexityBot', 'Google-Extended', 'Applebot-Extended'].map(a => `User-agent: ${a}\nAllow: /\n`).join('\n') + `\nSitemap: ${D.origin}/sitemap.xml\n`);
+  // (2026-11-28: the assistants' search and on-request fetchers named too, from the SEO/AEO check)
+  fs.writeFileSync(OUT + '/robots.txt', ['*', 'GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot', 'Perplexity-User', 'Google-Extended', 'Applebot-Extended', 'Bingbot'].map(a => `User-agent: ${a}\nAllow: /\n`).join('\n') + `\nSitemap: ${D.origin}/sitemap.xml\n`);
 
   // sitemap.xml: the domain's pages, each with its language alternates on both domains (the same as its hreflang links)
   fs.writeFileSync(OUT + '/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>

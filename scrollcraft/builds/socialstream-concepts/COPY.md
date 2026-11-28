@@ -4,6 +4,113 @@ All the words live in `content.mjs`, Hungarian first and English after. Almost a
 copy, already agreed. This file lists only what is new in the four concepts and still needs a yes.
 There are no new numbers: the only figures on the pages are the real ones.
 
+## LIVE since v22: the interest media page and the fields we work in (2026-11-27)
+
+On "Explainer + industry pages" and "all 8 above" (2026-11-26), eight new pages, each in Hungarian, English and
+Spanish. Built first as drafts (`SS_DRAFTS=1`), they are live since v22 (.hu) and v2 (.es), 2026-11-27 22:33 UTC, on
+the founder's "all of our results". Every sentence restates what the site already says, plus the definition the
+founder chose ("Feeds + what we make"); the questions are the FAQ page's own, word for word, and the reviews are the
+home page's.
+
+The definition (the explainer's first screen, its first question and its structured data):
+"Az interest media olyan marketing, ami azoknak a feedeknek szól, amelyek azt mutatják az embereknek, ami érdekli
+őket, nem csak azt, amit a követett fiókok posztolnak: videók, amiket végignéznek, és hirdetések, amik megtérülnek." /
+"Interest media is marketing for feeds that show people what interests them, not just what the accounts they follow
+post: videos people watch to the end, and ads that pay off."
+
+| Page | Address (HU · EN · ES on socialstream.es) | Title (HU / EN) |
+|---|---|---|
+| Interest media | /mi-az-interest-media/ · /en/what-is-interest-media/ · /que-es-interest-media/ | Mi az interest media? Meghatározás és példák / What is interest media? Definition and examples |
+| Kikkel dolgozunk / Who we work with | /kikkel-dolgozunk/ · /en/who-we-work-with/ · /con-quien-trabajamos/ | Kikkel dolgozunk? Területek, valódi esetekkel / Who we work with: fields, with real cases |
+| Webshopok / Webshops | …/webshopok/ · …/webshops/ · …/tiendas-online/ | Webshopok: vásárlások Google és Meta kampányokból / Webshops: sales from Google and Meta campaigns |
+| B2B cégek / B2B companies | …/b2b-cegek/ · …/b2b-companies/ · …/empresas-b2b/ | B2B cégek: ajánlatkérések Meta-kampányokból / B2B companies: quote requests from Meta campaigns |
+| Webinárok és események / Webinars and events | …/webinarok-es-esemenyek/ · …/webinars-and-events/ · …/webinars-y-eventos/ | Webinárok és események: 105 Ft egy jelentkező / Webinars and events: €0.29 per registrant |
+| Helyi szolgáltatók / Local services | …/helyi-szolgaltatok/ · …/local-services/ · …/servicios-locales/ | Helyi szolgáltatók: videó, social és hirdetés / Local services: video, social and ads from one team |
+| Egészség és wellness / Health and wellness | …/egeszseg-es-wellness/ · …/health-and-wellness/ · …/salud-y-bienestar/ | Egészség és wellness: videók, oldalak, hirdetések / Health and wellness: videos, pages and ads |
+| Turizmus és élmények / Tourism and experiences | …/turizmus-es-elmenyek/ · …/tourism-and-experiences/ · …/turismo-y-experiencias/ | Turizmus és élmények: reelek, foglalási rendszer / Tourism and experiences: reels and a booking system |
+
+Each ends in " · SocialStream"; descriptions, headings and leads are in `site/pages.mjs`, the Spanish (40 new pairs,
+not yet read by a native speaker) at the end of `site/es-words.mjs`.
+
+"Kikkel dolgozunk" (who we work with), never "Kiknek dolgozunk" (who we work for): the founder's word, 2026-11-27.
+It changed the live who section too (the home and About pages, out with the next upload): the eyebrow "Kikkel
+dolgozunk" and the heading "Márkákkal, amelyek már működnek, és most *nőni akarnak*." (were "Kiknek dolgozunk" and
+"Márkáknak, …"). The local services lead says "dolgozunk helyi szolgáltatókkal" / "we work with local services" /
+"trabajamos con servicios locales" (were "-nak", "for", "para").
+
+The clients the founder named for the pages (2026-11-27), with the results of the founder's case-study PDF
+(~/Downloads/Esettanulmányok, vélemények.pdf, 7 pages: three reviews and seven cases with Ads Manager screenshots), as
+cards. Since v24 (2026-11-28) the hub and every field page show the cases and the clients as one section, under the
+results' eyebrow "Valódi ügyfelek · valódi számok" / "Real clients · real numbers": "Akikkel dolgoztunk." / "Who we
+have worked with.", the case cards first, then the clients, each client with its own floating 3D object
+(assets/c-*-mix.webp). The founder asked why these were two categories (2026-11-28): until then the field pages had
+"Valódi esetek, valódi számok." and, apart, "Ügyfeleink" / "Akikkel még dolgoztunk.". The website service page keeps
+"Ügyfeleink" / "Our clients" over "Weboldalak, amiket mi készítettünk." / "Websites we built." Each card:
+the figure (or, without one, the name), "name · kind", what we did; the wording is `CLIENTS` in `site/pages.mjs`.
+Names as the founder confirmed them; a figure only where the founder or the PDF gives it plainly.
+
+- Webshops: Hoofbútor · Bútor webshop (one word, as in the PDF), 28× ROAS over the years in total, with Péter's review
+  beside it (its ad account is named "Medina Shop", never printed); Karaja Makeup Hungary · Kozmetikai webshop, 15× ROAS
+  on Google on average (the PDF's "15x ROAS kozmetikai webshopnál", which the founder says is Karaja) and 200+ sales from
+  our Facebook ads at about 2500 Ft each (the PDF's ad sets: 1968 and 2680 Ft a purchase); a webshop the founder could
+  not name, 9× cheaper per click (€0.18 before, €0.02 ours, €0.03 a landing page view); Realbeauty.hu · Kozmetikai
+  webshop, 2×: their best month's revenue doubled in the first month (from July 2023); ZsM Sportruházat · Webshop, 800 Ft
+  (€2.19) per smartwatch sale in their first Christmas campaign.
+- B2B: Tony Web Studio · Webstúdió, 200+ leads over several months; a luxury real estate company · "Olivér, Meta
+  Marketing Pro-ként": +130% leads from not a forint more (the whole account: October 2022, 84 leads from 2 623 941 Ft;
+  29 January to 27 February 2023, 193 from 2 622 409 Ft; 31 237 Ft then 13 588 Ft a lead; October's dearest campaign
+  181 627 Ft for one lead). It was Big George Properties, advised by the founder as a Meta Marketing Pro, not an agency
+  client: unnamed until they agree (the advice to the founder). "A bit more dramatic" was asked for and given with these
+  true numbers; "181 627 Ft to 12 028 Ft" is not a headline (the worst campaign set against the best).
+- Webinars and events: Karaja Makeup Hungary · Workshopok (several hundred sign-ups from all over the country); Bridle
+  Up Hope · Alapítvány (the marketing start in Hungary, no figure); Jézus Krisztus Utolsó Napi Szentjeinek Egyháza ·
+  Húsvéti kampány, 30+ countries and languages (Instagram, Facebook, YouTube, a website, social media consulting).
+- Local services: Rita’s Beauty Corner · Szépségszalon (website and all marketing, linked to ritasbeautycorner.hu);
+  Lunelle Aesthetics · Esztétikai klinika, Budapest (the original website, linked to lunelleclinic.hu); Dorombolda
+  Cicahotel · Macskahotel (first ads).
+- Website service page: Lunelle Aesthetics and Rita’s Beauty Corner.
+- The door webshop is named (live): onlineajtok.hu on its case page (title, crumb, eyebrow, lead, with the PDF's
+  "folyamatosan 50-80x" as "50× és 80× közötti megtérülés"), on the result cards and in the running band of numbers.
+  The domain no longer answers, so it is not linked. 23× ROAS stays the unnamed watch webshop's.
+
+Waiting for the founder: Tony Web Studio's cost per lead ("2500-3000 forint környékén ... 2024-ben ... igen, 3500"), the
+Church's name (the official Hungarian form is on the page; the founder wrote "Az Utolsó Napi Szentek Jézus Krisztus
+Egyháza"), Big George Properties' OK to be named, and which old websites to show as demos (with their files). Left out:
+the ChatGPT notes' 300% more leads, −50% CPA and 20× average ROAS (no client or dates; some may be Meta work).
+
+What each page shows:
+
+- Interest media: the definition, the claim ("Miért interest media?" / "Why interest media?"), the six problems with
+  their services, FlyX Tenerife's 69K and Prof Enzo's 9,8M+ (views on Facebook), the four results, four questions.
+- Kikkel dolgozunk / Who we work with: the home page's "who" heading and lead, then under "Területek" / "Fields"
+  (since v24; it repeated the page's name before) "Válaszd ki a területed." / "Pick your field." with six cards: the home page's four, plus two new lines: "Videók és oldalak az egészségről:
+  Prof Enzo oldala organikusan 9,8M+ megtekintést ért el a Facebookon." / "Videos and pages about health: Prof Enzo's
+  page reached 9.8M+ organic views on Facebook." and "Reelek, oldalak, hirdetések és foglalási rendszer egy tenerifei
+  élményközpontnak." / "Reels, pages, ads and a booking system for an experience centre on Tenerife."
+  Since v23 it also shows all six cases and the twelve clients, each client once (one section since v24, above).
+- Each field: three problems (each to its service), "Akikkel dolgoztunk." / "Who we have worked with." (its cases,
+  then its clients; "Valódi esetek, valódi számok." until v24), the reviews, a row of clips, "Amivel elérjük." / "What it takes." over the services, three questions.
+  Webshops: the door and watch cases, the watch webshop's review. B2B: the hall builder and his review. Webinars and
+  events: the healthcare webinar and its review, Up To Youth's clips with their note. Local services: FlyX Tenerife,
+  Rita's and János's reviews. Health and wellness: Prof Enzo and the healthcare webinar, three reviews (the webinar's,
+  Rita's, János's), Prof Enzo's clips. Tourism: FlyX Tenerife and its clips.
+- The footer gains a third group, "Kikkel dolgozunk" / "Who we work with", and "Mi az interest media?" in the
+  SocialStream group.
+- The menu (since v23): "Kikkel dolgozunk" / "Who we work with" joins it (six links), and its "Eredmények" /
+  "Results" goes to the case studies page (it was the home page's #eredmenyek). The home page's service, result and
+  field cards link to their pages ("Részletek" / "Details", "Az eset" / "The case"), with "Minden esettanulmány" /
+  "All case studies" under the results and "Mind a hat terület és az ügyfeleink" / "All six fields and our clients"
+  under the fields.
+
+Still open (the pages went live with these as they are):
+
+- Two pairs overlap: webinars and health both show the healthcare webinar; local services and tourism both lead with
+  FlyX Tenerife. Keep both of each pair, or merge one away.
+- "Tenerife" is on the first screen of the local services and tourism pages (FlyX Tenerife's name, as on its case
+  page), never in a "where we work" sense.
+- Rita's and János's reviews sit on both the local services and the health pages.
+- The explainer's first question repeats the definition its first screen shows.
+
 ## NEW, to confirm: a business problem for each service
 
 Each concept has a block before the services that names the problems businesses run into. Every problem
@@ -98,7 +205,7 @@ in `video/sizzle/build.py`, `TEXT["es"]`):
 - Webinar sanitario · ≈5.700 · registros con 1.650 € · 0,29 € por registro
 - Desde 2022 · 820K+ € · presupuesto gestionado
 - No te fíes de nuestra palabra. *Fíate de la suya.*
-- Péter · Hoofbútor: “Hubo compras desde el día del lanzamiento…” · Cliente constructor de naves · B2B: “…tantas
+- Péter · Hoof Bútor: “Hubo compras desde el día del lanzamiento…” · Cliente constructor de naves · B2B: “…tantas
   solicitudes de presupuesto como antes en medio año.” · Tienda online de relojes: “…la temporada navideña jugó a
   nuestro favor y no en contra.” · Empresa sanitaria: “…el contador se paró en casi 5.700, apenas podíamos creer…” ·
   Rita · Rita’s Beauty Corner: “Los resultados llegaron rápido…” · János · EJ Massage Therapies: “Solo puedo
@@ -183,7 +290,7 @@ the period, the budget, what was made and changed.
 - A case: its result as the heading (e.g. "*79M Ft* bevétel egy hét alatt."), a sentence from the site's own words
   (the B2B card, the FAQ's "Ezt egy ajtó webshop Google Performance Max kampányában értük el", the watch webshop's
   and the webinar's quotes retold), the stat card, the client's words where the site has them (none for the door
-  webshop: Péter's Hoofbútor quote is not tied to it), "Amivel elértük." / "What it took." (Fizetett hirdetés), and
+  webshop: Péter's Hoof Bútor quote is not tied to it), "Amivel elértük." / "What it took." (Fizetett hirdetés), and
   "További esetek." / "More cases.".
 - Every footer adds "Esettanulmányok" / "Case studies" to the SocialStream column. The header's "Eredmények" still
   goes to the home page's results (the founder's call).

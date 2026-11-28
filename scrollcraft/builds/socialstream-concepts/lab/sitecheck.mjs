@@ -92,7 +92,7 @@ for (const pg of pages) {
   const langs = Object.keys(hd.alt).filter(k => k !== 'x-default');
   ok(at + ' alternates hu, en, x-default (and es)', hd.alt.hu && hd.alt.en && hd.alt['x-default'] === hd.alt.hu && hd.alt[lang] === pg.loc && langs.every(l => ['hu', 'en', 'es'].includes(l) && langOf(hd.alt[l]) === l), JSON.stringify(hd.alt));
   ok(at + ' sitemap alternates match the page', JSON.stringify(pg.alt) === JSON.stringify(hd.alt), JSON.stringify(pg.alt));
-  ok(at + ' share tags', hd.ogUrl === pg.loc && hd.ogTitle && hd.ogImg === S.origin + '/assets/og-image.jpg' && hd.ogLocale === LOCALE[lang], JSON.stringify([hd.ogUrl, hd.ogImg, hd.ogLocale]));
+  ok(at + ' share tags', hd.ogUrl === pg.loc && hd.ogTitle && hd.ogImg === S.origin + '/assets/' + ({ hu: 'og-image.jpg', en: 'og-image-en.jpg', es: 'og-image-es.jpg' })[lang] && hd.ogLocale === LOCALE[lang], JSON.stringify([hd.ogUrl, hd.ogImg, hd.ogLocale]));
   // the switch links every language's page (this one marked current), on its own domain; no other language and no
   // switch buttons are left in the page
   const sw = [...html.matchAll(/<a href="([^"]+)" hreflang="(hu|en|es)" lang="\2"/g)].map(m => [m[2], m[1]]);

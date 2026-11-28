@@ -9,12 +9,12 @@ import { ORIGIN, ORIGINS, PAGES, byId, url, W } from './pages.mjs';
 import { word } from './es.mjs';
 import { filmUrl } from './films.mjs';
 
-const OG = 'assets/og-image.jpg';
-// the share image shows the logo and the Hungarian claim, so the other languages' alt says what is on it
+// the share image, each language its own since 2026-11-28 (tools/og.mjs): the logo and the claim as its home page says it
+export const OG = { hu: 'assets/og-image.jpg', en: 'assets/og-image-en.jpg', es: 'assets/og-image-es.jpg' };
 const OG_ALT = {
   hu: 'A SocialStream logója és a mondat: A social media meghalt. Az érdeklődés vette át a helyét.',
-  en: 'The SocialStream logo and its line in Hungarian: A social media meghalt. (Social media is dead.)',
-  es: 'El logotipo de SocialStream y su frase en húngaro: A social media meghalt. (Las redes sociales han muerto.)',
+  en: 'The SocialStream logo and its line: Social media is dead. Interest has taken its place.',
+  es: 'El logotipo de SocialStream y su frase: Las redes sociales han muerto. El interés ha ocupado su lugar.',
 };
 const LOCALE = { hu: 'hu_HU', en: 'en_GB', es: 'es_ES' };
 const plain = s => String(s).replace(/<[^>]+>/g, '');
@@ -36,10 +36,14 @@ function graph(pg, l) {
   const u = url(pg, l), home = byId('home');
   const org = { '@type': 'Organization', '@id': ORG, name: 'SocialStream', url: ORIGIN + '/', logo: { '@type': 'ImageObject', url: ORIGIN + '/icon-512.png', width: 512, height: 512 },
     email: 'hello@socialstream.hu', description: word(home.desc, l), slogan: claim(l), foundingDate: '2022',
-    founder: { '@type': 'Person', name: 'Olivér', jobTitle: word(pair(C.team.people[0].role), l) } };
+    // the founder as the same person the About page names (its #person-1), and what the agency does, its six services
+    // as the site names them; the contact point is the address every page shows (2026-11-28, from the SEO/AEO check)
+    founder: { '@type': 'Person', '@id': url(byId('about'), l) + '#person-1', name: 'Olivér', jobTitle: word(pair(C.team.people[0].role), l) },
+    knowsAbout: PAGES.filter(x => x.type === 'service').map(x => plain(word(x.crumb, l))),
+    contactPoint: { '@type': 'ContactPoint', email: 'hello@socialstream.hu', contactType: 'customer service' } };
   const site = { '@type': 'WebSite', '@id': SITE(l), url: ORIGINS[l] + '/', name: 'SocialStream', inLanguage: langs(home).filter(x => ORIGINS[x] === ORIGINS[l]), publisher: { '@id': ORG } };
   // a case stays a WebPage (not an Article) until it has its story and a visible byline
-  const type = { about: 'AboutPage', contact: 'ContactPage', faq: 'FAQPage', cases: 'CollectionPage' }[pg.type] || 'WebPage';
+  const type = { about: 'AboutPage', contact: 'ContactPage', faq: 'FAQPage', cases: 'CollectionPage', audiences: 'CollectionPage' }[pg.type] || 'WebPage';
   const page = { '@type': type, '@id': u + '#webpage', url: u, name: plain(word(pg.title, l)), description: word(pg.desc, l), inLanguage: l, isPartOf: { '@id': SITE(l) }, about: { '@id': ORG } };
   const nodes = [org, site, page];
   if (pg.id !== 'home') {
@@ -64,8 +68,23 @@ function graph(pg, l) {
     org.founder = { '@id': people[0]['@id'] };
     page.mainEntity = { '@id': ORG };
   }
-  if (pg.type === 'contact') {
-    org.contactPoint = { '@type': 'ContactPoint', email: 'hello@socialstream.hu', contactType: 'customer service' };
+  if (pg.type === 'explainer') {
+    // the term and its definition, as the first screen says it (site/pages.mjs DEF, the founder's choice)
+    nodes.push({ '@type': 'DefinedTerm', '@id': u + '#term', name: plain(word(pg.h1k, l)), description: plain(word(pg.lead, l)), url: u });
+    page.about = page.mainEntity = { '@id': u + '#term' };
+  }
+  if (pg.type === 'hub' || pg.type === 'cases') {
+    // the services, or the case studies, the page lists, each with its page (2026-11-28, as the fields' hub has it)
+    page.mainEntity = { '@type': 'ItemList', itemListElement: PAGES.filter(x => x.type === (pg.type === 'hub' ? 'service' : 'case')).map((x, i) => ({ '@type': 'ListItem', position: i + 1, name: plain(word(x.crumb, l)), url: url(x, l) })) };
+  }
+  if (pg.type === 'audiences') {
+    // the fields the page lists, each with its page
+    page.mainEntity = { '@type': 'ItemList', itemListElement: PAGES.filter(x => x.type === 'industry').map((x, i) => ({ '@type': 'ListItem', position: i + 1, name: plain(word(x.crumb, l)), url: url(x, l) })) };
+  }
+  if (pg.type === 'industry') {
+    // who the page is for, and the services it shows (each described on its own page)
+    page.audience = { '@type': 'BusinessAudience', audienceType: plain(word(pg.crumb, l)) };
+    page.mentions = pg.uses.map(id => ({ '@id': url(byId(id), l) + '#service' }));
   }
   if (pg.type === 'faq') {
     // every question on the page, as it is shown (an answer's links become plain words)
@@ -87,7 +106,7 @@ export function seo(pg, l) {
     `<meta property="og:url" content="${u}">`,
     `<meta property="og:title" content="${esc(plain(word(pg.title, l)))}">`,
     `<meta property="og:description" content="${esc(word(pg.desc, l))}">`,
-    `<meta property="og:image" content="${ORIGINS[l]}/${OG}">`,
+    `<meta property="og:image" content="${ORIGINS[l]}/${OG[l]}">`,
     '<meta property="og:image:width" content="1200">',
     '<meta property="og:image:height" content="630">',
     `<meta property="og:image:alt" content="${esc(OG_ALT[l])}">`,
